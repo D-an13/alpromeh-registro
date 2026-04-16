@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPROMEH - REGISTRO ORDENES</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+
+    <style>
+        :root { 
+            --bg-body: #f0f2f5; --bg-card: #ffffff; --text-main: #1e293b; 
+            --primary: #1e3a8a; --secondary: #10b981; --border: #cbd5e1; 
+            --input-bg: #ffffff; --placeholder: #94a3b8;
+        }
+        [data-theme="dark"] { 
+            --bg-body: #0f172a; --bg-card: #1e293b; --text-main: #f1f5f9; 
+            --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        .contenedor { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 950px; margin-bottom: 20px; border-top: 5px solid var(--primary); }
+        
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+        input::placeholder { color: var(--placeholder); font-weight: normal; opacity: 0.8; }
+        input, select { 
+            width: 100%; padding: 10px; border: 2px solid var(--border); 
+            border-radius: 8px; background: var(--input-bg); color: var(--text-main); font-size: 14px; box-sizing: border-box;
+        }
+
+        /* COLORES POR RESPONSABLE */
+        .color-yanet { background-color: #fef3c7 !important; color: #92400e !important; }
+        .color-carmen { background-color: #f3e8ff !important; color: #6b21a8 !important; }
+        .color-danna { background-color: #fae8ff !important; color: #86198f !important; }
+        .color-claudia-nata { background-color: #ffedd5 !important; color: #9a3412 !important; }
+        .color-dan-susan { background-color: #f1f5f9 !important; color: #475569 !important; }
+        .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
+
+        /* --- EL RETOQUE ESTÉTICO QUE PEDISTE --- */
+        option { 
+            padding: 12px !important; 
+            border-bottom: 1px solid rgba(0,0,0,0.08) !important; /* Línea sutil entre nombres */
+            margin-bottom: 2px;
+        }
+        /* --------------------------------------- */
+
+        .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
+        
+        .btn-filtro { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
+        .btn-filtro.activo-pend { background: #dc2626; }
+        .btn-filtro.activo-hoy { background: #1e3a8a; }
+
+        .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: underline; font-size: 1.1rem; }
+
+        .mood-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; padding: 10px; background: rgba(120, 120, 120, 0.1); border-radius: 50px; }
+        .mood-face { font-size: 35px; min-width: 45px; text-align: center; }
+        .barra-fondo { flex-grow: 1; background: #e2e8f0; border-radius: 20px; height: 12px; overflow: hidden; }
+        .barra-llenado { background: linear-gradient(90deg, #f59e0b, #10b981); height: 100%; width: 0%; transition: width 0.8s ease; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.85em; }
+        
+        .fila-despachada { background-color: #dcfce7 !important; color: #166534 !important; opacity: 0.9; }
+        .check-axel { width: 18px; height: 18px; cursor: pointer; accent-color: #10b981; vertical-align: middle; }
+
+        .btn-guardar { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
+        .btn-sync { background: #4f46e5; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+        .btn-excel { text-decoration: none; padding: 8px 12px; background: #166534; color: white; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+
+        .theme-switch { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 100; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
+        th { background: var(--primary); color: white; text-transform: uppercase; }
+        #toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 1000; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <button class="theme-switch" onclick="toggleTheme()">🌓</button>
+    <div id="toast"></div>
+    
+    <div class="contenedor">
+        <div class="mood-container">
+            <div id="moodFace" class="mood-face">😟</div>
+            <div class="barra-fondo">
+                <div id="barraProgreso" class="barra-llenado"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contenedor">
+        <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">📦 REGISTRO ÓRDENES</h2>
+        <form id="formOrdenes">
+            <div class="form-grid">
+                <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" required></div>
+                <div><label>FECHA DE IMPRESIÓN:</label><input type="date" id="fecha" required></div>
+                <div><label>INSTITUCIÓN:</label><input type="text" id="institucion" placeholder="Nombre de la entidad" required></div>
+                <div><label>PERSONA QUE RECIBIÓ:</label><input type="text" id="persona" placeholder="Tu nombre" required></div>
+            </div>
+            <div style="margin-top: 15px;">
+                <label>RESPONSABLE ACTUAL:</label>
+                <select id="responsableSelect" onchange="aplicarColorUnico(this)">
+                    <option value="Yanet" class="color-yanet">Yanet</option>
+                    <option value="Carmen" class="color-carmen">Carmen</option>
+                    <option value="Nata" class="color-claudia-nata">Nata</option>
+                    <option value="Claudia" class="color-claudia-nata">Claudia</option>
+                    <option value="Danna" class="color-danna">Danna</option>
+                    <option value="Susan" class="color-dan-susan">Susan</option>
+                    <option value="Dan" class="color-dan-susan" selected>Dan</option>
+                    <option value="Axel" class="color-axel">Axel</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-guardar">GUARDAR REGISTRO</button>
+        </form>
+    </div>
+
+    <div class="contenedor">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-weight: bold; color: var(--primary);">HISTORIAL (2 SEMANAS)</span>
+            <div style="display: flex; gap: 8px;">
+                <a href="https://docs.google.com/spreadsheets/d/1IHm9PobTkGtNdZCIJ8Up7CRRkykwaMdV4NJGdPogEB8/edit" target="_blank" class="btn-excel">📊 Ver Excel</a>
+                <button onclick="sincronizar()" id="btnSync" class="btn-sync">🔄 Sincronizar</button>
+            </div>
+        </div>
+
+        <div class="busqueda-container">
+            <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden o Institución..." onkeyup="renderTable()">
+            <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
+            <button id="filtroPendientes" class="btn-filtro" onclick="toggleFiltroPendientes()">⏳ Pendientes de Hoy</button>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr><th>ORDEN</th><th>FECHA</th><th>INSTITUCIÓN</th><th>RESPONSABLE</th><th style="text-align:center;">¿LISTO?</th></tr>
+                </thead>
+                <tbody id="tablaBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwPgzMWVsUqhmggFbehT_4XQNEBEhAaNeg5Tf5nK4ToG9vPq09npjYrHZ5CWXBQiO69/exec";
+        let datosLocales = JSON.parse(localStorage.getItem('alpromeh_vFinal_v10')) || [];
+        let modoFiltro = "todo"; 
+
+        function getStyleClass(nombre) {
+            const map = { "Yanet": "color-yanet", "Carmen": "color-carmen", "Nata": "color-claudia-nata", "Claudia": "color-claudia-nata", "Danna": "color-danna", "Susan": "color-dan-susan", "Dan": "color-dan-susan", "Axel": "color-axel" };
+            return map[nombre] || "";
+        }
+
+        function aplicarColorUnico(el) {
+            el.className = getStyleClass(el.value);
+        }
+
+        function toggleFiltroHoy() {
+            modoFiltro = (modoFiltro === "hoy") ? "todo" : "hoy";
+            actualizarBotones();
+            renderTable();
+        }
+
+        function toggleFiltroPendientes() {
+            modoFiltro = (modoFiltro === "pendientes") ? "todo" : "pendientes";
+            actualizarBotones();
+            renderTable();
+        }
+
+        function actualizarBotones() {
+            const btnHoy = document.getElementById('filtroHoy');
+            const btnPend = document.getElementById('filtroPendientes');
+            btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
+            btnPend.className = "btn-filtro" + (modoFiltro === "pendientes" ? " activo-pend" : "");
+            btnHoy.innerText = (modoFiltro === "hoy") ? "❌ Quitar Filtro" : "📅 Ordenes de Hoy";
+            btnPend.innerText = (modoFiltro === "pendientes") ? "❌ Quitar Filtro" : "⏳ Pendientes de Hoy";
+        }
+
+        function setFechaHoy() {
+            const hoy = new Date();
+            const offset = hoy.getTimezoneOffset() * 60000;
+            document.getElementById('fecha').value = new Date(hoy.getTime() - offset).toISOString().split('T')[0];
+        }
+
+        function toggleTheme() {
+            const body = document.documentElement;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+
+        window.onload = () => {
+            setFechaHoy();
+            aplicarColorUnico(document.getElementById('responsableSelect'));
+            renderTable();
+            sincronizar();
+        };
+
+        function renderTable() {
+            const tbody = document.getElementById('tablaBody');
+            const busqueda = document.getElementById('inputBuscar').value.toLowerCase();
+            tbody.innerHTML = '';
+            const hoyFull = new Date();
+            const offset = hoyFull.getTimezoneOffset() * 60000;
+            const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
+            const limiteAlerta = new Date();
+            limiteAlerta.setDate(limiteAlerta.getDate() - 2);
+
+            let filtrados = datosLocales.filter(item => {
+                const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
+                if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
+                if (modoFiltro === "pendientes") return coincideBusqueda && item.fecha === hoyStr && !item.despachado;
+                return coincideBusqueda;
+            });
+
+            filtrados.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = item.despachado ? 'fila-despachada' : getStyleClass(item.responsable);
+                const fechaOrden = new Date(item.fecha + "T00:00:00");
+                const esAntigua = !item.despachado && fechaOrden <= limiteAlerta;
+
+                tr.innerHTML = `
+                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
+                        ${esAntigua ? '⚠️ ' : ''}${item.orden}
+                    </td>
+                    <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
+                    <td style="font-weight:normal;">${item.inst}</td>
+                    <td>
+                        <select onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:pointer; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
+                            <option value="Yanet" class="color-yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
+                            <option value="Carmen" class="color-carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
+                            <option value="Nata" class="color-claudia-nata" ${item.responsable==='Nata'?'selected':''}>Nata</option>
+                            <option value="Claudia" class="color-claudia-nata" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
+                            <option value="Danna" class="color-danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
+                            <option value="Susan" class="color-dan-susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
+                            <option value="Dan" class="color-dan-susan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
+                            <option value="Axel" class="color-axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
+                        </select>
+                        <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}</b></small>
+                    </td>
+                    <td style="text-align:center;"><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            actualizarBarra(hoyStr);
+        }
+
+        function actualizarBarra(hoyStr) {
+            const hoyData = datosLocales.filter(d => d.fecha === hoyStr);
+            const despachadas = hoyData.filter(d => d.despachado).length;
+            const pct = hoyData.length ? (despachadas / hoyData.length) * 100 : 0;
+            document.getElementById('barraProgreso').style.width = pct + "%";
+            document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
+        }
+
+        document.getElementById('formOrdenes').onsubmit = function(e) {
+            e.preventDefault();
+            const num = document.getElementById('orden').value;
+            if(datosLocales.some(d => d.orden.toString() === num)) {
+                showToast("❌ La OC. " + num + " ya está registrada", true);
+                return;
+            }
+            const payload = {
+                orden: num, fecha: document.getElementById('fecha').value,
+                inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
+                responsable: document.getElementById('responsableSelect').value, despachado: false,
+                hora: new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false}),
+                movimiento: "Ingresada por " + document.getElementById('persona').value, ultimoMov: "" 
+            };
+            datosLocales.unshift(payload);
+            save();
+            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+            this.reset(); setFechaHoy(); aplicarColorUnico(document.getElementById('responsableSelect'));
+        };
+
+        function toggle(orden) {
+            const item = datosLocales.find(d => d.orden === orden);
+            item.despachado = !item.despachado;
+            item.movimiento = item.despachado ? "LISTO ✅" : (item.ultimoMov ? "Regresó a: " + item.ultimoMov : "PENDIENTE ⚠️");
+            save();
+            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+        }
+
+        function cambiarResp(orden, nuevo) {
+            const item = datosLocales.find(d => d.orden === orden);
+            const viejo = item.responsable;
+            item.responsable = nuevo;
+            const track = "De: " + viejo + " Para: " + nuevo;
+            item.movimiento = track;
+            item.ultimoMov = track;
+            save();
+            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+        }
+
+        function save() {
+            localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
+            renderTable();
+        }
+
+        async function sincronizar() {
+            document.getElementById('btnSync').innerText = "...";
+            try {
+                const r = await fetch(URL_SCRIPT);
+                const d = await r.json();
+                if(Array.isArray(d)) { datosLocales = d; save(); }
+            } catch(e) { showToast("Error de conexión", true); }
+            document.getElementById('btnSync').innerText = "🔄 Sincronizar";
+        }
+
+        function showToast(m, err) {
+            const t = document.getElementById('toast');
+            t.innerText = m; t.style.background = err ? "#ef4444" : "#10b981";
+            t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
+        }
+    </script>
+</body>
+</html>
