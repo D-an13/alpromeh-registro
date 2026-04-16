@@ -59,6 +59,9 @@
         .check-axel { width: 18px; height: 18px; cursor: pointer; accent-color: #10b981; vertical-align: middle; }
         .label-axel { font-size: 0.65em; color: var(--placeholder); display: block; font-weight: normal; margin-top: 2px; }
 
+        /* MAGIA: Si no es Axel, ocultamos el check */
+        .oculto { display: none !important; }
+
         .btn-guardar { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
         .btn-sync { background: #4f46e5; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
         .btn-excel { text-decoration: none; padding: 8px 12px; background: #166534; color: white; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
@@ -211,6 +214,9 @@
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const esAntigua = !item.despachado && fechaOrden <= limiteAlerta;
 
+                // Verificamos si el responsable es Axel para mostrar el check
+                const esAxel = item.responsable === "Axel";
+
                 tr.innerHTML = `
                     <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
                         ${esAntigua ? '⚠️ ' : ''}${item.orden}
@@ -231,8 +237,10 @@
                         <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}</b></small>
                     </td>
                     <td style="text-align:center;">
-                        <input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Uso exclusivo para Axel">
-                        <span class="label-axel">Solo Axel</span>
+                        <div class="${esAxel ? '' : 'oculto'}">
+                            <input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Uso exclusivo para Axel">
+                            <span class="label-axel">Solo Axel</span>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -262,7 +270,8 @@
                 inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
                 responsable: document.getElementById('responsableSelect').value, despachado: false,
                 hora: new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false}),
-                movimiento: "Ingresada por " + document.getElementById('persona').value, ultimoMov: "Ingresada por " + document.getElementById('persona').value
+                movimiento: "Ingresada por " + document.getElementById('persona').value, 
+                ultimoMov: "Ingresada por " + document.getElementById('persona').value
             };
             datosLocales.unshift(payload);
             save();
@@ -277,7 +286,6 @@
             if(item.despachado) {
                 item.movimiento = "LISTO ✅";
             } else {
-                // LOGICA MEJORADA: Recupera el historial real
                 if (item.ultimoMov) {
                     item.movimiento = item.ultimoMov;
                 } else if (item.pers) {
