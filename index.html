@@ -46,14 +46,12 @@
         .color-dan-susan { background-color: #f1f5f9 !important; color: #475569 !important; }
         .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
 
-        option { padding: 12px !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important; margin-bottom: 2px; }
-
         .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
         
         .btn-filtro { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
-        .btn-filtro.activo-pend { background: #dc2626; }
         .btn-filtro.activo-hoy { background: #1e3a8a; }
+        .btn-filtro.activo-preparando { background: #8b5cf6; }
 
         .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: underline; font-size: 1.1rem; }
 
@@ -134,7 +132,7 @@
         <div class="busqueda-container">
             <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden o Institución..." onkeyup="renderTable()">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
-            <button id="filtroPendientes" class="btn-filtro" onclick="toggleFiltroPendientes()">⏳ Pendientes de Hoy</button>
+            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
         </div>
 
         <div style="overflow-x: auto;">
@@ -152,7 +150,6 @@
         let datosLocales = JSON.parse(localStorage.getItem('alpromeh_vFinal_v10')) || [];
         let modoFiltro = "todo"; 
 
-        // --- VARIABLES DEL EASTER EGG ---
         let clicsRapidos = 0;
         let timerClics;
 
@@ -171,19 +168,21 @@
             renderTable();
         }
 
-        function toggleFiltroPendientes() {
-            modoFiltro = (modoFiltro === "pendientes") ? "todo" : "pendientes";
+        function toggleFiltroPreparando() {
+            modoFiltro = (modoFiltro === "preparando") ? "todo" : "preparando";
             actualizarBotones();
             renderTable();
         }
 
         function actualizarBotones() {
             const btnHoy = document.getElementById('filtroHoy');
-            const btnPend = document.getElementById('filtroPendientes');
+            const btnPrep = document.getElementById('filtroPreparando');
+            
             btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
-            btnPend.className = "btn-filtro" + (modoFiltro === "pendientes" ? " activo-pend" : "");
+            btnPrep.className = "btn-filtro" + (modoFiltro === "preparando" ? " activo-preparando" : "");
+
             btnHoy.innerText = (modoFiltro === "hoy") ? "❌ Quitar Filtro" : "📅 Ordenes de Hoy";
-            btnPend.innerText = (modoFiltro === "pendientes") ? "❌ Quitar Filtro" : "⏳ Pendientes de Hoy";
+            btnPrep.innerText = (modoFiltro === "preparando") ? "❌ Quitar Filtro" : "🛠️ Preparando";
         }
 
         function setFechaHoy() {
@@ -195,18 +194,15 @@
         function toggleTheme() {
             const body = document.documentElement;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-
             clicsRapidos++;
             const mood = document.getElementById('moodFace');
             const emojisRaros = ["👽", "🤖", "🤠", "👻", "🎃", "🐶", "🦄", "🥨", "🍕", "🧨", "🚀", "🎭", "🐱", "🦖", "🍩", "🤑"];
-
             if (clicsRapidos > 5) {
                 const randomEmoji = emojisRaros[Math.floor(Math.random() * emojisRaros.length)];
                 mood.innerText = randomEmoji;
                 mood.style.transform = "scale(1.7) rotate(20deg)";
                 setTimeout(() => { mood.style.transform = "scale(1) rotate(0deg)"; }, 150);
             }
-
             clearTimeout(timerClics);
             timerClics = setTimeout(() => {
                 clicsRapidos = 0;
@@ -237,7 +233,7 @@
             let filtrados = datosLocales.filter(item => {
                 const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
                 if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
-                if (modoFiltro === "pendientes") return coincideBusqueda && item.fecha === hoyStr && !item.despachado;
+                if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel";
                 return coincideBusqueda;
             });
 
@@ -284,7 +280,6 @@
             const despachadas = hoyData.filter(d => d.despachado).length;
             const pct = hoyData.length ? (despachadas / hoyData.length) * 100 : 0;
             document.getElementById('barraProgreso').style.width = pct + "%";
-            
             if(clicsRapidos <= 5) {
                 document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
             }
@@ -293,18 +288,13 @@
         document.getElementById('formOrdenes').onsubmit = function(e) {
             e.preventDefault();
             const num = document.getElementById('orden').value;
-            
-            // --- LÓGICA DE SHAKE SI ESTÁ DUPLICADO ---
             if(datosLocales.some(d => d.orden.toString() === num)) {
                 const formCard = document.getElementById('contenedorForm');
                 formCard.classList.add('shake');
                 showToast("❌ La OC. " + num + " ya existe en el sistema.", true);
-                
-                // Quitamos la clase después de la animación para que pueda repetirse
                 setTimeout(() => { formCard.classList.remove('shake'); }, 400);
                 return;
             }
-
             const payload = {
                 orden: num, fecha: document.getElementById('fecha').value,
                 inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
