@@ -29,7 +29,6 @@
             border-radius: 8px; background: var(--input-bg); color: var(--text-main); font-size: 14px; box-sizing: border-box;
         }
 
-        /* COLORES POR RESPONSABLE */
         .color-yanet { background-color: #fef3c7 !important; color: #92400e !important; }
         .color-carmen { background-color: #f3e8ff !important; color: #6b21a8 !important; }
         .color-danna { background-color: #fae8ff !important; color: #86198f !important; }
@@ -37,13 +36,7 @@
         .color-dan-susan { background-color: #f1f5f9 !important; color: #475569 !important; }
         .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
 
-        /* --- EL RETOQUE ESTÉTICO QUE PEDISTE --- */
-        option { 
-            padding: 12px !important; 
-            border-bottom: 1px solid rgba(0,0,0,0.08) !important; /* Línea sutil entre nombres */
-            margin-bottom: 2px;
-        }
-        /* --------------------------------------- */
+        option { padding: 12px !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important; margin-bottom: 2px; }
 
         .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
@@ -64,6 +57,7 @@
         
         .fila-despachada { background-color: #dcfce7 !important; color: #166534 !important; opacity: 0.9; }
         .check-axel { width: 18px; height: 18px; cursor: pointer; accent-color: #10b981; vertical-align: middle; }
+        .label-axel { font-size: 0.65em; color: var(--placeholder); display: block; font-weight: normal; margin-top: 2px; }
 
         .btn-guardar { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
         .btn-sync { background: #4f46e5; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
@@ -236,7 +230,10 @@
                         </select>
                         <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}</b></small>
                     </td>
-                    <td style="text-align:center;"><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"></td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Uso exclusivo para Axel">
+                        <span class="label-axel">Solo Axel</span>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -254,16 +251,18 @@
         document.getElementById('formOrdenes').onsubmit = function(e) {
             e.preventDefault();
             const num = document.getElementById('orden').value;
+            
             if(datosLocales.some(d => d.orden.toString() === num)) {
-                showToast("❌ La OC. " + num + " ya está registrada", true);
+                showToast("❌ La OC. " + num + " ya existe en el sistema.", true);
                 return;
             }
+
             const payload = {
                 orden: num, fecha: document.getElementById('fecha').value,
                 inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
                 responsable: document.getElementById('responsableSelect').value, despachado: false,
                 hora: new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false}),
-                movimiento: "Ingresada por " + document.getElementById('persona').value, ultimoMov: "" 
+                movimiento: "Ingresada por " + document.getElementById('persona').value, ultimoMov: "Ingresada por " + document.getElementById('persona').value
             };
             datosLocales.unshift(payload);
             save();
@@ -274,7 +273,20 @@
         function toggle(orden) {
             const item = datosLocales.find(d => d.orden === orden);
             item.despachado = !item.despachado;
-            item.movimiento = item.despachado ? "LISTO ✅" : (item.ultimoMov ? "Regresó a: " + item.ultimoMov : "PENDIENTE ⚠️");
+            
+            if(item.despachado) {
+                item.movimiento = "LISTO ✅";
+            } else {
+                // LOGICA MEJORADA: Recupera el historial real
+                if (item.ultimoMov) {
+                    item.movimiento = item.ultimoMov;
+                } else if (item.pers) {
+                    item.movimiento = "Ingresada por " + item.pers;
+                } else {
+                    item.movimiento = "PENDIENTE ⚠️";
+                }
+            }
+            
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
@@ -285,7 +297,7 @@
             item.responsable = nuevo;
             const track = "De: " + viejo + " Para: " + nuevo;
             item.movimiento = track;
-            item.ultimoMov = track;
+            item.ultimoMov = track; 
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
