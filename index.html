@@ -276,9 +276,11 @@
         }
 
         function actualizarBarra(hoyStr) {
-            const hoyData = datosLocales.filter(d => d.fecha === hoyStr);
-            const despachadas = hoyData.filter(d => d.despachado).length;
-            const pct = hoyData.length ? (despachadas / hoyData.length) * 100 : 0;
+            // Ahora filtra SOLO lo que tiene asignado Axel el día de hoy
+            const hoyAxel = datosLocales.filter(d => d.fecha === hoyStr && d.responsable === "Axel");
+            const despachadas = hoyAxel.filter(d => d.despachado).length;
+            const pct = hoyAxel.length ? (despachadas / hoyAxel.length) * 100 : 0;
+            
             document.getElementById('barraProgreso').style.width = pct + "%";
             if(clicsRapidos <= 5) {
                 document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
