@@ -18,8 +18,18 @@
             --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
         }
 
+        /* --- ANIMACIÓN SHAKE --- */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+            100% { transform: translateX(0); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; border-top-color: #dc2626 !important; }
+
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-        .contenedor { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 950px; margin-bottom: 20px; border-top: 5px solid var(--primary); }
+        .contenedor { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 950px; margin-bottom: 20px; border-top: 5px solid var(--primary); transition: transform 0.3s; }
         
         [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
 
@@ -48,7 +58,7 @@
         .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: underline; font-size: 1.1rem; }
 
         .mood-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; padding: 10px; background: rgba(120, 120, 120, 0.1); border-radius: 50px; }
-        .mood-face { font-size: 35px; min-width: 45px; text-align: center; }
+        .mood-face { font-size: 35px; min-width: 45px; text-align: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .barra-fondo { flex-grow: 1; background: #e2e8f0; border-radius: 20px; height: 12px; overflow: hidden; }
         .barra-llenado { background: linear-gradient(90deg, #f59e0b, #10b981); height: 100%; width: 0%; transition: width 0.8s ease; }
 
@@ -59,7 +69,6 @@
         .check-axel { width: 18px; height: 18px; cursor: pointer; accent-color: #10b981; vertical-align: middle; }
         .label-axel { font-size: 0.65em; color: var(--placeholder); display: block; font-weight: normal; margin-top: 2px; }
 
-        /* MAGIA: Si no es Axel, ocultamos el check */
         .oculto { display: none !important; }
 
         .btn-guardar { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
@@ -87,7 +96,7 @@
         </div>
     </div>
 
-    <div class="contenedor">
+    <div class="contenedor" id="contenedorForm">
         <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">📦 REGISTRO ÓRDENES</h2>
         <form id="formOrdenes">
             <div class="form-grid">
@@ -143,6 +152,10 @@
         let datosLocales = JSON.parse(localStorage.getItem('alpromeh_vFinal_v10')) || [];
         let modoFiltro = "todo"; 
 
+        // --- VARIABLES DEL EASTER EGG ---
+        let clicsRapidos = 0;
+        let timerClics;
+
         function getStyleClass(nombre) {
             const map = { "Yanet": "color-yanet", "Carmen": "color-carmen", "Nata": "color-claudia-nata", "Claudia": "color-claudia-nata", "Danna": "color-danna", "Susan": "color-dan-susan", "Dan": "color-dan-susan", "Axel": "color-axel" };
             return map[nombre] || "";
@@ -182,6 +195,26 @@
         function toggleTheme() {
             const body = document.documentElement;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+
+            clicsRapidos++;
+            const mood = document.getElementById('moodFace');
+            const emojisRaros = ["👽", "🤖", "🤠", "👻", "🎃", "🐶", "🦄", "🥨", "🍕", "🧨", "🚀", "🎭", "🐱", "🦖", "🍩", "🤑"];
+
+            if (clicsRapidos > 5) {
+                const randomEmoji = emojisRaros[Math.floor(Math.random() * emojisRaros.length)];
+                mood.innerText = randomEmoji;
+                mood.style.transform = "scale(1.7) rotate(20deg)";
+                setTimeout(() => { mood.style.transform = "scale(1) rotate(0deg)"; }, 150);
+            }
+
+            clearTimeout(timerClics);
+            timerClics = setTimeout(() => {
+                clicsRapidos = 0;
+                const hoyFull = new Date();
+                const offset = hoyFull.getTimezoneOffset() * 60000;
+                const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
+                actualizarBarra(hoyStr); 
+            }, 2000);
         }
 
         window.onload = () => {
@@ -213,8 +246,6 @@
                 tr.className = item.despachado ? 'fila-despachada' : getStyleClass(item.responsable);
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const esAntigua = !item.despachado && fechaOrden <= limiteAlerta;
-
-                // Verificamos si el responsable es Axel para mostrar el check
                 const esAxel = item.responsable === "Axel";
 
                 tr.innerHTML = `
@@ -225,14 +256,14 @@
                     <td style="font-weight:normal;">${item.inst}</td>
                     <td>
                         <select onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:pointer; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
-                            <option value="Yanet" class="color-yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
-                            <option value="Carmen" class="color-carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
-                            <option value="Nata" class="color-claudia-nata" ${item.responsable==='Nata'?'selected':''}>Nata</option>
-                            <option value="Claudia" class="color-claudia-nata" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
-                            <option value="Danna" class="color-danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
-                            <option value="Susan" class="color-dan-susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
-                            <option value="Dan" class="color-dan-susan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
-                            <option value="Axel" class="color-axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
+                            <option value="Yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
+                            <option value="Carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
+                            <option value="Nata" ${item.responsable==='Nata'?'selected':''}>Nata</option>
+                            <option value="Claudia" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
+                            <option value="Danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
+                            <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
+                            <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
+                            <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
                         </select>
                         <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}</b></small>
                     </td>
@@ -253,15 +284,24 @@
             const despachadas = hoyData.filter(d => d.despachado).length;
             const pct = hoyData.length ? (despachadas / hoyData.length) * 100 : 0;
             document.getElementById('barraProgreso').style.width = pct + "%";
-            document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
+            
+            if(clicsRapidos <= 5) {
+                document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
+            }
         }
 
         document.getElementById('formOrdenes').onsubmit = function(e) {
             e.preventDefault();
             const num = document.getElementById('orden').value;
             
+            // --- LÓGICA DE SHAKE SI ESTÁ DUPLICADO ---
             if(datosLocales.some(d => d.orden.toString() === num)) {
+                const formCard = document.getElementById('contenedorForm');
+                formCard.classList.add('shake');
                 showToast("❌ La OC. " + num + " ya existe en el sistema.", true);
+                
+                // Quitamos la clase después de la animación para que pueda repetirse
+                setTimeout(() => { formCard.classList.remove('shake'); }, 400);
                 return;
             }
 
@@ -282,30 +322,16 @@
         function toggle(orden) {
             const item = datosLocales.find(d => d.orden === orden);
             item.despachado = !item.despachado;
-            
-            if(item.despachado) {
-                item.movimiento = "LISTO ✅";
-            } else {
-                if (item.ultimoMov) {
-                    item.movimiento = item.ultimoMov;
-                } else if (item.pers) {
-                    item.movimiento = "Ingresada por " + item.pers;
-                } else {
-                    item.movimiento = "PENDIENTE ⚠️";
-                }
-            }
-            
+            item.movimiento = item.despachado ? "LISTO ✅" : (item.ultimoMov || "PENDIENTE ⚠️");
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
 
         function cambiarResp(orden, nuevo) {
             const item = datosLocales.find(d => d.orden === orden);
-            const viejo = item.responsable;
+            const track = "De: " + item.responsable + " Para: " + nuevo;
             item.responsable = nuevo;
-            const track = "De: " + viejo + " Para: " + nuevo;
-            item.movimiento = track;
-            item.ultimoMov = track; 
+            item.movimiento = track; item.ultimoMov = track; 
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
