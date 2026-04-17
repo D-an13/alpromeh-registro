@@ -95,7 +95,9 @@
     </div>
 
     <div class="contenedor" id="contenedorForm">
-        <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">📦 REGISTRO ÓRDENES</h2>
+        <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">
+            <span id="triggerHuevo" style="cursor: pointer;">📦</span> REGISTRO ÓRDENES
+        </h2>
         <form id="formOrdenes">
             <div class="form-grid">
                 <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" required></div>
@@ -233,7 +235,8 @@
             let filtrados = datosLocales.filter(item => {
                 const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
                 if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
-                if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel";
+                // AJUSTE AQUÍ: Ahora filtrando solo lo de Axel QUE SEA DE HOY
+                if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
                 return coincideBusqueda;
             });
 
@@ -276,7 +279,6 @@
         }
 
         function actualizarBarra(hoyStr) {
-            // Ahora filtra SOLO lo que tiene asignado Axel el día de hoy
             const hoyAxel = datosLocales.filter(d => d.fecha === hoyStr && d.responsable === "Axel");
             const despachadas = hoyAxel.filter(d => d.despachado).length;
             const pct = hoyAxel.length ? (despachadas / hoyAxel.length) * 100 : 0;
@@ -348,6 +350,11 @@
             t.innerText = m; t.style.background = err ? "#ef4444" : "#10b981";
             t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
         }
+
+        // Easter Egg: Doble clic en la cajita
+        document.getElementById('triggerHuevo').addEventListener('dblclick', function() {
+            window.location.href = "juego.html";
+        });
     </script>
 </body>
 </html>
