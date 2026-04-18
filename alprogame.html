@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>ALPROGAME</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍎</text></svg>">
+    
     <style>
         :root { --main: #10b981; --accent: #fbbf24; --error: #7f1d1d; --player: #60a5fa; }
         body { 
@@ -86,7 +88,7 @@
             <h2 style="margin: 5px 0; color: var(--accent);">¡EVENTO ADJUDICADO!</h2>
             <p style="margin: 10px 0 25px 0; opacity: 0.9; font-size: 1.1rem;">¡Gracias por jugar!<br><b>att: Dan</b></p>
             <button class="btn-win btn-play" onclick="location.reload()">NUEVA ORDEN</button>
-            <button class="btn-win btn-exit" onclick="window.history.back()">VOLVER AL TRABAJO</button>
+            <button class="btn-win btn-exit" onclick="window.close()">VOLVER AL TRABAJO</button>
         </div>
     </div>
 
@@ -170,7 +172,6 @@
         function createItem() {
             let rand = Math.random();
             let x = Math.random() * (canvas.width - 45) + 15;
-            // VELOCIDAD SUBIDA: Empezamos con 7.0 de base + azar para que sea un reto desde el inicio
             let item = { x, y: -45, speed: 7.0 + Math.random() * 3.5 };
 
             if (goldRain) {
