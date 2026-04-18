@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>ALPROGAME</title>
+    <style>
+        :root { --main: #10b981; --accent: #fbbf24; --error: #7f1d1d; --player: #60a5fa; }
+        body { 
+            background: #064e3b; margin: 0; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; height: 100vh; 
+            font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden; 
+            transition: background 1.5s ease-out; position: relative;
+        }
+
+        .stars-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; opacity: 0; transition: opacity 3s ease-in;
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            opacity: 0.8; animation: twiddle 3s infinite;
+        }
+        @keyframes twiddle { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 0.2; transform: scale(0.6); } }
+
+        .game-container { position: relative; border-radius: 20px; overflow: hidden; cursor: none; box-shadow: 0 0 50px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1); }
+        canvas { background: rgba(255, 255, 255, 0.05); display: block; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        
+        .ui { width: 400px; display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; z-index: 5; }
+        .score { font-size: 2.5rem; font-weight: 900; }
+        .meta-text { opacity: 0.9; font-size: 0.9rem; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 15px; }
+        
+        .pause-hint { position: absolute; bottom: 10px; width: 100%; text-align: center; font-size: 0.7rem; opacity: 0.5; letter-spacing: 1px; }
+
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; justify-content: center; align-items: center;
+            z-index: 10; background: rgba(0,0,0,0.6); pointer-events: none;
+        }
+        .pause-icon { width: 18px; height: 60px; background: white; margin: 6px; border-radius: 10px; }
+        #countdown { font-size: 6rem; font-weight: 900; }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+            75% { transform: translate(-5px, -5px); }
+        }
+        .shake { animation: shake 0.2s ease-in-out 2; background-color: var(--error) !important; }
+
+        .flash-nova {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 50; display: none;
+            animation: flashWhite 0.6s ease-out;
+        }
+        @keyframes flashWhite { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        
+        #win-msg { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: none; flex-direction: column; align-items: center; z-index: 20; text-align: center;
+            background: rgba(0,0,0,0.9); padding: 30px; border-radius: 20px; width: 85%;
+            border: 2px solid var(--accent);
+        }
+        .btn-win { width: 100%; padding: 14px; margin-top: 12px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .btn-play { background: var(--main); color: white; }
+        .btn-exit { background: rgba(255,255,255,0.1); color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="stars-container" id="starsContainer"></div>
+
+    <div class="ui">
+        <div class="score">🪙 <span id="scoreDisplay">0</span></div>
+        <div class="meta-text">META: Q90,000</div>
+    </div>
+
+    <div class="game-container" id="container">
+        <div class="flash-nova" id="flashNova"></div>
+        <canvas id="game" width="400" height="550"></canvas>
+        <div class="pause-hint" id="pHint">CLICK PARA PAUSAR</div>
+        <div id="pauseOverlay" class="overlay"><div class="pause-icon"></div><div class="pause-icon"></div></div>
+        <div id="countOverlay" class="overlay"><div id="countdown"></div></div>
+        <div id="win-msg">
+            <h1 style="font-size: 3.5rem; margin: 0;">🎉</h1>
+            <h2 style="margin: 5px 0; color: var(--accent);">¡EVENTO ADJUDICADO!</h2>
+            <p style="margin: 10px 0 25px 0; opacity: 0.9; font-size: 1.1rem;">¡Gracias por jugar!<br><b>att: Dan</b></p>
+            <button class="btn-win btn-play" onclick="location.reload()">NUEVA ORDEN</button>
+            <button class="btn-win btn-exit" onclick="window.history.back()">VOLVER AL TRABAJO</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+        const container = document.getElementById("container");
+        const scoreDisplay = document.getElementById("scoreDisplay");
+        const pauseOverlay = document.getElementById("pauseOverlay");
+        const countOverlay = document.getElementById("countOverlay");
+        const countdownEl = document.getElementById("countdown");
+        const winMsg = document.getElementById("win-msg");
+        const flashNova = document.getElementById("flashNova");
+        const starsContainer = document.getElementById("starsContainer");
+        const pHint = document.getElementById("pHint");
+
+        let score = 0;
+        let visualScore = 0;
+        let player = { x: 160, y: 430, w: 85, h: 14, color: '#60a5fa', radius: 7, glow: 15 }; 
+        let items = [];
+        let particles = [];
+        let isPaused = false;
+        let isCounting = false;
+        let isGameOver = false;
+        let isGalactic = false;
+        let frame = 0;
+        let goldRain = false;
+        let rainCounter = 0;
+
+        (function initStars() {
+            for(let i=0; i<150; i++) {
+                let star = document.createElement("div");
+                star.className = "star";
+                star.style.width = Math.random()*2.5+"px";
+                star.style.height = star.style.width;
+                star.style.top = Math.random()*100+"vh";
+                star.style.left = Math.random()*100+"vw";
+                star.style.animationDelay = Math.random()*2+"s";
+                starsContainer.appendChild(star);
+            }
+        })();
+
+        const move = (e) => {
+            if (isPaused || isCounting || isGameOver) return;
+            let rect = canvas.getBoundingClientRect();
+            let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            player.x = Math.max(0, Math.min(canvas.width - player.w, x - player.w / 2));
+        };
+        canvas.addEventListener('mousemove', move);
+        canvas.addEventListener('touchmove', e => { e.preventDefault(); move(e); }, {passive: false});
+
+        container.addEventListener('click', () => {
+            if (isCounting || isGameOver) return;
+            if (!isPaused) { 
+                isPaused = true; 
+                pauseOverlay.style.display = "flex"; 
+                pHint.style.display = "none";
+            }
+            else { startCountdown(); }
+        });
+
+        function startCountdown() {
+            pauseOverlay.style.display = "none";
+            countOverlay.style.display = "flex";
+            isCounting = true;
+            let count = 3;
+            countdownEl.innerText = count;
+            let timer = setInterval(() => {
+                count--;
+                if (count > 0) countdownEl.innerText = count;
+                else {
+                    clearInterval(timer);
+                    countOverlay.style.display = "none";
+                    isCounting = false;
+                    isPaused = false;
+                    pHint.style.display = "block";
+                }
+            }, 700);
+        }
+
+        function createItem() {
+            let rand = Math.random();
+            let x = Math.random() * (canvas.width - 45) + 15;
+            // VELOCIDAD SUBIDA: Empezamos con 7.0 de base + azar para que sea un reto desde el inicio
+            let item = { x, y: -45, speed: 7.0 + Math.random() * 3.5 };
+
+            if (goldRain) {
+                item = { ...item, icon: isGalactic ? '☄️' : '🧈', pts: 1500, type: 'gold', color: '#fbbf24' };
+            } else if (rand < 0.13) {
+                item = { ...item, icon: '💩', pts: -3000, type: 'bad', color: '#78350f' };
+            } else if (rand > 0.96) {
+                item = { ...item, icon: isGalactic ? '🌙' : '💎', pts: 5000, type: 'rare', color: '#f472b6', speed: 10.5 };
+            } else {
+                item = { ...item, icon: isGalactic ? '⭐' : '🍎', pts: 500, type: 'normal', color: '#ef4444' };
+            }
+            items.push(item);
+        }
+
+        function spawnParticles(x, y, color, scale = 1) {
+            let finalColor = (isGalactic && color !== '#78350f') ? '#fbbf24' : color;
+            let pCount = (finalColor === '#fbbf24' || color === 'yellow') ? 25 : 8;
+            
+            for(let i=0; i<pCount; i++) {
+                particles.push({ 
+                    x, y, 
+                    vx: (Math.random()-0.5)*18*scale, 
+                    vy: (Math.random()-0.5)*18*scale, 
+                    a: 1, 
+                    color: (finalColor === '#fbbf24' || color === 'yellow') ? (Math.random()>0.5 ? '#fbbf24' : '#fff') : finalColor 
+                });
+            }
+        }
+
+        function fillRoundedRect(x, y, w, h, r, color) {
+            ctx.beginPath(); ctx.fillStyle = color;
+            ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y);
+            ctx.quadraticCurveTo(x+w, y, x+w, y+r); ctx.lineTo(x+w, y+h-r);
+            ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h); ctx.lineTo(x+r, y+h);
+            ctx.quadraticCurveTo(x, y+h, x, y+h-r); ctx.lineTo(x, y+r);
+            ctx.quadraticCurveTo(x, y, x+r, y); ctx.fill();
+        }
+
+        function update() {
+            if (isPaused || isCounting || isGameOver) return;
+            frame++;
+            if (frame % 28 === 0) createItem();
+
+            if (visualScore < score) visualScore += 250;
+            if (visualScore > score) visualScore = score;
+            
+            if (score >= 90000) {
+                visualScore = 90000;
+                score = 90000; 
+                isGameOver = true; 
+                winMsg.style.display = "flex"; 
+                pHint.style.display = "none";
+            }
+            
+            scoreDisplay.innerText = visualScore.toLocaleString();
+
+            if (score >= 60000 && !isGalactic) {
+                isGalactic = true;
+                flashNova.style.display = "block";
+                setTimeout(() => flashNova.style.display = "none", 600);
+                spawnParticles(200, 275, 'yellow', 3);
+                
+                document.body.style.background = "#020617"; 
+                starsContainer.style.opacity = "1"; 
+                player.glow = 30;
+                player.color = "#00f2ff";
+            }
+
+            if (score >= 25000 && rainCounter === 0) {
+                rainCounter = 1; goldRain = true;
+                document.body.style.background = "#b45309";
+                setTimeout(() => { goldRain = false; document.body.style.background = isGalactic ? "#020617" : "#064e3b"; }, 5000);
+            }
+
+            items.forEach((it, i) => {
+                it.y += it.speed;
+                if (it.y + 25 >= player.y && it.y <= player.y + player.h && it.x + 35 >= player.x && it.x <= player.x + player.w) {
+                    score += it.pts; if (score < 0) score = 0;
+                    spawnParticles(it.x, it.y, it.color);
+                    if (it.type === 'bad') {
+                        container.classList.add('shake');
+                        setTimeout(() => container.classList.remove('shake'), 400);
+                    }
+                    items.splice(i, 1);
+                }
+                if (it.y > canvas.height) items.splice(i, 1);
+            });
+
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy; p.a -= 0.04;
+                if (p.a <= 0) particles.splice(i, 1);
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.shadowBlur = player.glow; ctx.shadowColor = player.color;
+            fillRoundedRect(player.x, player.y, player.w, player.h, player.radius, player.color);
+            ctx.shadowBlur = 0;
+            ctx.font = "36px Arial";
+            items.forEach(it => ctx.fillText(it.icon, it.x, it.y));
+            particles.forEach(p => {
+                ctx.globalAlpha = p.a; ctx.fillStyle = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, isGalactic ? 4 : 3.5, 0, 7); ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+            update();
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
