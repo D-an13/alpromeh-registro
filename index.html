@@ -12,15 +12,10 @@
             --bg-body: #f0f2f5; --bg-card: #ffffff; --text-main: #1e293b; 
             --primary: #1e3a8a; --secondary: #10b981; --border: #cbd5e1; 
             --input-bg: #ffffff; --placeholder: #94a3b8;
-            /* Color de tu imagen para el botón */
-            --pausa-bg: #6155fd; 
-            --pausa-text: #ffffff;
         }
         [data-theme="dark"] { 
             --bg-body: #0f172a; --bg-card: #1e293b; --text-main: #f1f5f9; 
             --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
-            /* Tono adaptado para modo oscuro */
-            --pausa-bg: #4f46e5;
         }
 
         /* --- ANIMACIÓN SHAKE --- */
@@ -80,10 +75,6 @@
 
         .theme-switch { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 100; }
         
-        /* ESTILOS BOTÓN PAUSA ACTIVA */
-        .btn-pausa { position: fixed; bottom: 25px; left: 25px; background: var(--pausa-bg); color: var(--pausa-text); border: none; padding: 12px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 14px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 100; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
-        .btn-pausa:hover { transform: scale(1.05); opacity: 0.9; }
-
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
         th { background: var(--primary); color: white; text-transform: uppercase; }
@@ -92,11 +83,6 @@
 </head>
 <body>
     <button class="theme-switch" onclick="toggleTheme()">🌓</button>
-    
-    <a href="https://d-an13.github.io/alpromeh-registro/alprogame.html" target="_blank" class="btn-pausa">
-        🎮 Pausa Activa
-    </a>
-
     <div id="toast"></div>
     
     <div class="contenedor">
@@ -364,9 +350,9 @@
             t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        // Easter Egg: Doble clic en la cajita
+        // Easter Egg: Doble clic en la cajita (Ahora abre en otra pestaña)
         document.getElementById('triggerHuevo').addEventListener('dblclick', function() {
-            window.location.href = "alprogame.html";
+            window.open("https://d-an13.github.io/alpromeh-registro/alprogame.html", "_blank");
         });
     </script>
 </body>
