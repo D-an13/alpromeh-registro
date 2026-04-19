@@ -222,13 +222,11 @@
             }, 2000);
         }
 
-        // --- NUEVA FUNCIÓN PARA CALCULAR DÍAS HÁBILES ---
         function calcularDiasHabiles(fechaInicio, fechaFin) {
             let fecha = new Date(fechaInicio);
             let dias = 0;
             while (fecha < fechaFin) {
                 fecha.setDate(fecha.getDate() + 1);
-                // 0 es Domingo, 6 es Sábado. Solo sumamos si no es fin de semana.
                 if (fecha.getDay() !== 0 && fecha.getDay() !== 6) {
                     dias++;
                 }
@@ -262,13 +260,12 @@
                 const tr = document.createElement('tr');
                 const esAxel = item.responsable === "Axel";
                 
-                // Lógica de Alerta de Días Hábiles
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyFull);
                 const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
 
                 tr.className = item.despachado ? 'fila-despachada' : getStyleClass(item.responsable);
-                if (esAntigua) tr.classList.add('alerta-total'); // Agregamos la clase de parpadeo
+                if (esAntigua) tr.classList.add('alerta-total');
 
                 tr.innerHTML = `
                     <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
@@ -315,6 +312,7 @@
         document.getElementById('formOrdenes').onsubmit = function(e) {
             e.preventDefault();
             const num = document.getElementById('orden').value;
+            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
             if(datosLocales.some(d => d.orden.toString() === num)) {
                 const formCard = document.getElementById('contenedorForm');
                 formCard.classList.add('shake');
@@ -326,7 +324,8 @@
                 orden: num, fecha: document.getElementById('fecha').value,
                 inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
                 responsable: document.getElementById('responsableSelect').value, despachado: false,
-                hora: new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false}),
+                hora: horaActual,
+                ultimaHora: horaActual, // Guardamos la hora inicial
                 movimiento: "Ingresada por " + document.getElementById('persona').value, 
                 ultimoMov: "Ingresada por " + document.getElementById('persona').value
             };
@@ -339,16 +338,31 @@
         function toggle(orden) {
             const item = datosLocales.find(d => d.orden === orden);
             item.despachado = !item.despachado;
-            item.movimiento = item.despachado ? "LISTO ✅" : (item.ultimoMov || "PENDIENTE ⚠️");
+            
+            if (item.despachado) {
+                item.ultimaHora = item.hora; // Guardamos la hora que tenía antes de pasar a LISTO
+                item.movimiento = "LISTO ✅";
+                item.hora = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+            } else {
+                item.movimiento = item.ultimoMov || ("Ingresada por " + item.pers);
+                item.hora = item.ultimaHora || item.hora; // Recuperamos la hora del movimiento anterior
+            }
+            
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
 
         function cambiarResp(orden, nuevo) {
             const item = datosLocales.find(d => d.orden === orden);
+            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
             const track = "De: " + item.responsable + " Para: " + nuevo;
+            
             item.responsable = nuevo;
-            item.movimiento = track; item.ultimoMov = track; 
+            item.movimiento = track; 
+            item.ultimoMov = track; 
+            item.hora = horaActual;
+            item.ultimaHora = horaActual; // Cada vez que cambia responsable, actualizamos el respaldo de la hora
+            
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
