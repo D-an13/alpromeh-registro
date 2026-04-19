@@ -18,7 +18,7 @@
             --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
         }
 
-        /* --- ANIMACIÓN SHAKE --- */
+        /* --- ANIMACIONES --- */
         @keyframes shake {
             0% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
@@ -27,6 +27,13 @@
             100% { transform: translateX(0); }
         }
         .shake { animation: shake 0.4s ease-in-out; border-top-color: #dc2626 !important; }
+
+        @keyframes pulse-red {
+            0% { background-color: rgba(220, 38, 38, 0.1); }
+            50% { background-color: rgba(220, 38, 38, 0.3); }
+            100% { background-color: rgba(220, 38, 38, 0.1); }
+        }
+        .alerta-total { animation: pulse-red 1.5s infinite ease-in-out; }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         .contenedor { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 950px; margin-bottom: 20px; border-top: 5px solid var(--primary); transition: transform 0.3s; }
@@ -215,6 +222,20 @@
             }, 2000);
         }
 
+        // --- NUEVA FUNCIÓN PARA CALCULAR DÍAS HÁBILES ---
+        function calcularDiasHabiles(fechaInicio, fechaFin) {
+            let fecha = new Date(fechaInicio);
+            let dias = 0;
+            while (fecha < fechaFin) {
+                fecha.setDate(fecha.getDate() + 1);
+                // 0 es Domingo, 6 es Sábado. Solo sumamos si no es fin de semana.
+                if (fecha.getDay() !== 0 && fecha.getDay() !== 6) {
+                    dias++;
+                }
+            }
+            return dias;
+        }
+
         window.onload = () => {
             setFechaHoy();
             aplicarColorUnico(document.getElementById('responsableSelect'));
@@ -229,8 +250,6 @@
             const hoyFull = new Date();
             const offset = hoyFull.getTimezoneOffset() * 60000;
             const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
-            const limiteAlerta = new Date();
-            limiteAlerta.setDate(limiteAlerta.getDate() - 2);
 
             let filtrados = datosLocales.filter(item => {
                 const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
@@ -241,10 +260,15 @@
 
             filtrados.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = item.despachado ? 'fila-despachada' : getStyleClass(item.responsable);
-                const fechaOrden = new Date(item.fecha + "T00:00:00");
-                const esAntigua = !item.despachado && fechaOrden <= limiteAlerta;
                 const esAxel = item.responsable === "Axel";
+                
+                // Lógica de Alerta de Días Hábiles
+                const fechaOrden = new Date(item.fecha + "T00:00:00");
+                const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyFull);
+                const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
+
+                tr.className = item.despachado ? 'fila-despachada' : getStyleClass(item.responsable);
+                if (esAntigua) tr.classList.add('alerta-total'); // Agregamos la clase de parpadeo
 
                 tr.innerHTML = `
                     <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
@@ -350,7 +374,6 @@
             t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
         }
 
-        // Easter Egg: Doble clic en la cajita (Ahora abre en otra pestaña)
         document.getElementById('triggerHuevo').addEventListener('dblclick', function() {
             window.open("https://d-an13.github.io/alpromeh-registro/alprogame.html", "_blank");
         });
