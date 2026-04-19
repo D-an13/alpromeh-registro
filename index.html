@@ -35,6 +35,18 @@
         }
         .alerta-total { animation: pulse-red 1.5s infinite ease-in-out; }
 
+        /* NUEVA ANIMACIÓN DE PULSO PARA EL BORDE NARANJA (DUDA AXEL) */
+        @keyframes pulse-orange-border {
+            0% { border-left: 10px solid #ff9800; }
+            50% { border-left: 10px solid #e65100; }
+            100% { border-left: 10px solid #ff9800; }
+        }
+
+        .alerta-duda { 
+            animation: pulse-orange-border 1.5s infinite ease-in-out !important;
+            background-color: #f7fee7 !important; /* Mantiene el color suave de Axel */
+        }
+
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
         .contenedor { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 950px; margin-bottom: 20px; border-top: 5px solid var(--primary); transition: transform 0.3s; }
         
@@ -262,14 +274,28 @@
                 
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyFull);
+                
+                // LÓGICA DE DUDA: Es Axel + No despachada + No es de hoy
+                const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
                 const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
 
-                tr.className = item.despachado ? 'fila-despachada' : getStyleClass(item.responsable);
+                if (item.despachado) {
+                    tr.className = 'fila-despachada';
+                } else if (esDudaAxel) {
+                    tr.className = 'alerta-duda';
+                } else {
+                    tr.className = getStyleClass(item.responsable);
+                }
+
                 if (esAntigua) tr.classList.add('alerta-total');
 
+                // Si es duda de Axel, metemos el aviso sin el emoji de caja y bien visible
+                const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
+                const emojiPrioridad = (esDudaAxel || esAntigua) ? "⚠️ " : "";
+
                 tr.innerHTML = `
-                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
-                        ${esAntigua ? '⚠️ ' : ''}${item.orden}
+                    <td style="font-weight:bold;" class="${esAntigua || esDudaAxel ? 'alerta-atraso' : ''}">
+                        ${emojiPrioridad}${item.orden}
                     </td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
                     <td style="font-weight:normal;">${item.inst}</td>
@@ -284,7 +310,7 @@
                             <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
                             <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
                         </select>
-                        <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}</b></small>
+                        <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
                     </td>
                     <td style="text-align:center;">
                         <div class="${esAxel ? '' : 'oculto'}">
@@ -325,7 +351,7 @@
                 inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
                 responsable: document.getElementById('responsableSelect').value, despachado: false,
                 hora: horaActual,
-                ultimaHora: horaActual, // Guardamos la hora inicial
+                ultimaHora: horaActual, 
                 movimiento: "Ingresada por " + document.getElementById('persona').value, 
                 ultimoMov: "Ingresada por " + document.getElementById('persona').value
             };
@@ -340,12 +366,12 @@
             item.despachado = !item.despachado;
             
             if (item.despachado) {
-                item.ultimaHora = item.hora; // Guardamos la hora que tenía antes de pasar a LISTO
+                item.ultimaHora = item.hora; 
                 item.movimiento = "LISTO ✅";
                 item.hora = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
             } else {
                 item.movimiento = item.ultimoMov || ("Ingresada por " + item.pers);
-                item.hora = item.ultimaHora || item.hora; // Recuperamos la hora del movimiento anterior
+                item.hora = item.ultimaHora || item.hora; 
             }
             
             save();
@@ -361,7 +387,7 @@
             item.movimiento = track; 
             item.ultimoMov = track; 
             item.hora = horaActual;
-            item.ultimaHora = horaActual; // Cada vez que cambia responsable, actualizamos el respaldo de la hora
+            item.ultimaHora = horaActual; 
             
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
