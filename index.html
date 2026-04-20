@@ -28,12 +28,13 @@
         }
         .shake { animation: shake 0.4s ease-in-out; border-top-color: #dc2626 !important; }
 
-        @keyframes pulse-red {
-            0% { background-color: rgba(220, 38, 38, 0.1); }
-            50% { background-color: rgba(220, 38, 38, 0.3); }
-            100% { background-color: rgba(220, 38, 38, 0.1); }
+        /* PULSO ROJO SUAVE PARA FILA COMPLETA */
+        @keyframes pulse-soft-red {
+            0% { background-color: rgba(254, 226, 226, 0.4); }
+            50% { background-color: rgba(252, 165, 165, 0.6); }
+            100% { background-color: rgba(254, 226, 226, 0.4); }
         }
-        .alerta-total { animation: pulse-red 1.5s infinite ease-in-out; }
+        .alerta-total { animation: pulse-soft-red 2s infinite ease-in-out; }
 
         @keyframes pulse-orange-border {
             0% { border-left: 10px solid #ff9800; }
@@ -73,7 +74,8 @@
         .btn-filtro.activo-hoy { background: #1e3a8a; }
         .btn-filtro.activo-preparando { background: #8b5cf6; }
 
-        .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: underline; font-size: 1.1rem; }
+        /* ESTILO PARA NÚMERO DE ORDEN EN ATRASO (SIN SUBRAYADO) */
+        .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: none !important; font-size: 1.1rem; }
 
         .mood-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; padding: 10px; background: rgba(120, 120, 120, 0.1); border-radius: 50px; }
         .mood-face { font-size: 35px; min-width: 45px; text-align: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -300,13 +302,16 @@
                     tr.className = getStyleClass(item.responsable);
                 }
 
+                // SI ES ANTIGUA, ACTIVA PARPADEO ROJO ESTÉTICO
                 if (esAntigua) tr.classList.add('alerta-total');
 
                 const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
-                const emojiPrioridad = (esDudaAxel || esAntigua) ? "⚠️ " : "";
+                
+                // EL EMOJI SOLO SALE SI ES ANTIGUA (+2 DÍAS)
+                const emojiPrioridad = esAntigua ? "⚠️ " : "";
 
                 tr.innerHTML = `
-                    <td style="font-weight:bold;" class="${esAntigua || esDudaAxel ? 'alerta-atraso' : ''}">
+                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
                         ${emojiPrioridad}${item.orden}
                     </td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
