@@ -28,12 +28,12 @@
         }
         .shake { animation: shake 0.4s ease-in-out; border-top-color: #dc2626 !important; }
 
-        @keyframes pulse-soft-red {
-            0% { background-color: rgba(254, 226, 226, 0.4); }
-            50% { background-color: rgba(252, 165, 165, 0.6); }
-            100% { background-color: rgba(254, 226, 226, 0.4); }
+        @keyframes pulse-red-intense {
+            0% { background-color: rgba(220, 38, 38, 0.1); }
+            50% { background-color: rgba(220, 38, 38, 0.4); }
+            100% { background-color: rgba(220, 38, 38, 0.1); }
         }
-        .alerta-total { animation: pulse-soft-red 2s infinite ease-in-out; }
+        .alerta-total { animation: pulse-red-intense 1.5s infinite ease-in-out !important; }
 
         @keyframes pulse-orange-border {
             0% { border-left: 10px solid #ff9800; }
@@ -57,7 +57,6 @@
             border-radius: 8px; background: var(--input-bg); color: var(--text-main); font-size: 14px; box-sizing: border-box;
         }
 
-        /* --- COLORES RESPONSABLES --- */
         .color-yanet { background-color: #fef3c7 !important; color: #92400e !important; }
         .color-carmen { background-color: #f3e8ff !important; color: #6b21a8 !important; }
         .color-danna { background-color: #fae8ff !important; color: #86198f !important; }
@@ -72,10 +71,9 @@
         .btn-filtro { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
         .btn-filtro.activo-hoy { background: #1e3a8a; }
         .btn-filtro.activo-preparando { background: #8b5cf6; }
-        /* Estilo para botón de atraso */
         .btn-filtro.activo-atraso { background: #dc2626 !important; box-shadow: 0 0 10px #dc2626; }
 
-        .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: none !important; font-size: 1.1rem; }
+        .alerta-atraso { color: #ff0000 !important; font-weight: 900 !important; text-decoration: none !important; font-size: 1.1rem; }
 
         .mood-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; padding: 10px; background: rgba(120, 120, 120, 0.1); border-radius: 50px; }
         .mood-face { font-size: 35px; min-width: 45px; text-align: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -253,7 +251,6 @@
         function calcularDiasHabiles(fechaInicio, fechaFin) {
             let fecha = new Date(fechaInicio);
             let dias = 0;
-            // No contamos el primer día (el de la orden) como transcurrido
             while (fecha < fechaFin) {
                 fecha.setDate(fecha.getDate() + 1);
                 if (fecha.getDay() !== 0 && fecha.getDay() !== 6) {
@@ -302,25 +299,37 @@
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
                 
                 const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
-                // Lógica: 2 o más días hábiles ya es atraso crítico
                 const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
 
                 if (item.despachado) {
                     tr.className = 'fila-despachada';
                 } else if (esDudaAxel) {
                     tr.className = 'alerta-duda';
+                } else if (esAntigua) {
+                    tr.className = 'alerta-total'; 
                 } else {
                     tr.className = getStyleClass(item.responsable);
                 }
 
-                if (esAntigua) tr.classList.add('alerta-total');
-
                 const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
-                const emojiPrioridad = esAntigua ? "⚠️ " : "";
+                
+                // --- CAMBIO SOLICITADO: Lógica de la columna ¿LISTO? ---
+                let contenidoColumnaListo = "";
+                if (esAxel) {
+                    contenidoColumnaListo = `
+                        <div>
+                            <input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Uso exclusivo para Axel">
+                            <span class="label-axel">Solo Axel</span>
+                        </div>
+                    `;
+                } else if (esAntigua) {
+                    // Si no es Axel y tiene +2 días, ponemos el emoji aquí
+                    contenidoColumnaListo = `<span style="font-size: 1.4rem;">⚠️</span>`;
+                }
 
                 tr.innerHTML = `
                     <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
-                        ${emojiPrioridad}${item.orden}
+                        ${item.orden}
                     </td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
                     <td style="font-weight:normal;">${item.inst}</td>
@@ -339,10 +348,7 @@
                         <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
                     </td>
                     <td style="text-align:center;">
-                        <div class="${esAxel ? '' : 'oculto'}">
-                            <input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Uso exclusivo para Axel">
-                            <span class="label-axel">Solo Axel</span>
-                        </div>
+                        ${contenidoColumnaListo}
                     </td>
                 `;
                 tbody.appendChild(tr);
