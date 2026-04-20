@@ -258,6 +258,9 @@
             const busqueda = document.getElementById('inputBuscar').value.toLowerCase();
             tbody.innerHTML = '';
             const hoyFull = new Date();
+            // Normalizamos hoy a medianoche para que la comparación sea de días naturales completos
+            const hoyMedianoche = new Date(hoyFull.getFullYear(), hoyFull.getMonth(), hoyFull.getDate());
+            
             const offset = hoyFull.getTimezoneOffset() * 60000;
             const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
 
@@ -273,11 +276,12 @@
                 const esAxel = item.responsable === "Axel";
                 
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
-                const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyFull);
+                const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
                 
-                // LÓGICA DE DUDA: Es Axel + No despachada + No es de hoy
                 const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
-                const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
+                
+                // AJUSTE SOLICITADO: Solo activa la alerta si han pasado estrictamente más de 2 días hábiles
+                const esAntigua = !item.despachado && !esAxel && diasTranscurridos > 2;
 
                 if (item.despachado) {
                     tr.className = 'fila-despachada';
@@ -289,7 +293,6 @@
 
                 if (esAntigua) tr.classList.add('alerta-total');
 
-                // Si es duda de Axel, metemos el aviso sin el emoji de caja y bien visible
                 const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
                 const emojiPrioridad = (esDudaAxel || esAntigua) ? "⚠️ " : "";
 
