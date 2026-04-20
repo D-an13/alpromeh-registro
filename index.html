@@ -35,7 +35,6 @@
         }
         .alerta-total { animation: pulse-red 1.5s infinite ease-in-out; }
 
-        /* NUEVA ANIMACIÓN DE PULSO PARA EL BORDE NARANJA (DUDA AXEL) */
         @keyframes pulse-orange-border {
             0% { border-left: 10px solid #ff9800; }
             50% { border-left: 10px solid #e65100; }
@@ -44,7 +43,7 @@
 
         .alerta-duda { 
             animation: pulse-orange-border 1.5s infinite ease-in-out !important;
-            background-color: #f7fee7 !important; /* Mantiene el color suave de Axel */
+            background-color: #f7fee7 !important;
         }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
@@ -58,11 +57,13 @@
             border-radius: 8px; background: var(--input-bg); color: var(--text-main); font-size: 14px; box-sizing: border-box;
         }
 
+        /* --- COLORES RESPONSABLES --- */
         .color-yanet { background-color: #fef3c7 !important; color: #92400e !important; }
         .color-carmen { background-color: #f3e8ff !important; color: #6b21a8 !important; }
         .color-danna { background-color: #fae8ff !important; color: #86198f !important; }
-        .color-claudia-nata { background-color: #ffedd5 !important; color: #9a3412 !important; }
-        .color-dan-susan { background-color: #f1f5f9 !important; color: #475569 !important; }
+        .color-nata-claudia { background-color: #ffedd5 !important; color: #9a3412 !important; }
+        .color-gris { background-color: #f1f5f9 !important; color: #475569 !important; }
+        .color-especial-dan-susan { background-color: #e0f2fe !important; color: #0369a1 !important; }
         .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
 
         .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -128,12 +129,13 @@
                 <label>RESPONSABLE ACTUAL:</label>
                 <select id="responsableSelect" onchange="aplicarColorUnico(this)">
                     <option value="Yanet" class="color-yanet">Yanet</option>
-                    <option value="Carmen" class="color-carmen">Carmen</option>
-                    <option value="Nata" class="color-claudia-nata">Nata</option>
-                    <option value="Claudia" class="color-claudia-nata">Claudia</option>
                     <option value="Danna" class="color-danna">Danna</option>
-                    <option value="Susan" class="color-dan-susan">Susan</option>
-                    <option value="Dan" class="color-dan-susan" selected>Dan</option>
+                    <option value="Carmen" class="color-carmen">Carmen</option>
+                    <option value="Daniela" class="color-gris">Daniela</option>
+                    <option value="Nata" class="color-nata-claudia">Nata</option>
+                    <option value="Claudia" class="color-nata-claudia">Claudia</option>
+                    <option value="Dan" class="color-especial-dan-susan" selected>Dan</option>
+                    <option value="Susan" class="color-especial-dan-susan">Susan</option>
                     <option value="Axel" class="color-axel">Axel</option>
                 </select>
             </div>
@@ -175,7 +177,17 @@
         let timerClics;
 
         function getStyleClass(nombre) {
-            const map = { "Yanet": "color-yanet", "Carmen": "color-carmen", "Nata": "color-claudia-nata", "Claudia": "color-claudia-nata", "Danna": "color-danna", "Susan": "color-dan-susan", "Dan": "color-dan-susan", "Axel": "color-axel" };
+            const map = { 
+                "Yanet": "color-yanet", 
+                "Danna": "color-danna",
+                "Carmen": "color-carmen", 
+                "Daniela": "color-gris",
+                "Nata": "color-nata-claudia", 
+                "Claudia": "color-nata-claudia", 
+                "Dan": "color-especial-dan-susan",
+                "Susan": "color-especial-dan-susan", 
+                "Axel": "color-axel" 
+            };
             return map[nombre] || "";
         }
 
@@ -258,7 +270,6 @@
             const busqueda = document.getElementById('inputBuscar').value.toLowerCase();
             tbody.innerHTML = '';
             const hoyFull = new Date();
-            // Normalizamos hoy a medianoche para que la comparación sea de días naturales completos
             const hoyMedianoche = new Date(hoyFull.getFullYear(), hoyFull.getMonth(), hoyFull.getDate());
             
             const offset = hoyFull.getTimezoneOffset() * 60000;
@@ -279,8 +290,6 @@
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
                 
                 const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
-                
-                // AJUSTE SOLICITADO: Solo activa la alerta si han pasado estrictamente más de 2 días hábiles
                 const esAntigua = !item.despachado && !esAxel && diasTranscurridos > 2;
 
                 if (item.despachado) {
@@ -305,12 +314,13 @@
                     <td>
                         <select onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:pointer; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
                             <option value="Yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
+                            <option value="Danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
                             <option value="Carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
+                            <option value="Daniela" ${item.responsable==='Daniela'?'selected':''}>Daniela</option>
                             <option value="Nata" ${item.responsable==='Nata'?'selected':''}>Nata</option>
                             <option value="Claudia" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
-                            <option value="Danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
-                            <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
                             <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
+                            <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
                             <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
                         </select>
                         <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
