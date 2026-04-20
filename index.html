@@ -28,7 +28,6 @@
         }
         .shake { animation: shake 0.4s ease-in-out; border-top-color: #dc2626 !important; }
 
-        /* PULSO ROJO SUAVE PARA FILA COMPLETA */
         @keyframes pulse-soft-red {
             0% { background-color: rgba(254, 226, 226, 0.4); }
             50% { background-color: rgba(252, 165, 165, 0.6); }
@@ -73,8 +72,9 @@
         .btn-filtro { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
         .btn-filtro.activo-hoy { background: #1e3a8a; }
         .btn-filtro.activo-preparando { background: #8b5cf6; }
+        /* Estilo para botón de atraso */
+        .btn-filtro.activo-atraso { background: #dc2626 !important; box-shadow: 0 0 10px #dc2626; }
 
-        /* ESTILO PARA NÚMERO DE ORDEN EN ATRASO (SIN SUBRAYADO) */
         .alerta-atraso { color: #dc2626 !important; font-weight: 900 !important; text-decoration: none !important; font-size: 1.1rem; }
 
         .mood-container { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; padding: 10px; background: rgba(120, 120, 120, 0.1); border-radius: 50px; }
@@ -158,6 +158,7 @@
             <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden o Institución..." onkeyup="renderTable()">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
             <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
+            <button id="filtroAtraso" class="btn-filtro" style="background: #b91c1c;" onclick="toggleFiltroAtraso()">⚠️ En Atraso (+2d)</button>
         </div>
 
         <div style="overflow-x: auto;">
@@ -180,22 +181,14 @@
 
         function getStyleClass(nombre) {
             const map = { 
-                "Yanet": "color-yanet", 
-                "Danna": "color-danna",
-                "Carmen": "color-carmen", 
-                "Daniela": "color-gris",
-                "Nata": "color-nata-claudia", 
-                "Claudia": "color-nata-claudia", 
-                "Dan": "color-especial-dan-susan",
-                "Susan": "color-especial-dan-susan", 
-                "Axel": "color-axel" 
+                "Yanet": "color-yanet", "Danna": "color-danna", "Carmen": "color-carmen", 
+                "Daniela": "color-gris", "Nata": "color-nata-claudia", "Claudia": "color-nata-claudia", 
+                "Dan": "color-especial-dan-susan", "Susan": "color-especial-dan-susan", "Axel": "color-axel" 
             };
             return map[nombre] || "";
         }
 
-        function aplicarColorUnico(el) {
-            el.className = getStyleClass(el.value);
-        }
+        function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
 
         function toggleFiltroHoy() {
             modoFiltro = (modoFiltro === "hoy") ? "todo" : "hoy";
@@ -209,15 +202,24 @@
             renderTable();
         }
 
+        function toggleFiltroAtraso() {
+            modoFiltro = (modoFiltro === "atraso") ? "todo" : "atraso";
+            actualizarBotones();
+            renderTable();
+        }
+
         function actualizarBotones() {
             const btnHoy = document.getElementById('filtroHoy');
             const btnPrep = document.getElementById('filtroPreparando');
+            const btnAtraso = document.getElementById('filtroAtraso');
             
             btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
             btnPrep.className = "btn-filtro" + (modoFiltro === "preparando" ? " activo-preparando" : "");
+            btnAtraso.className = "btn-filtro" + (modoFiltro === "atraso" ? " activo-atraso" : "");
 
             btnHoy.innerText = (modoFiltro === "hoy") ? "❌ Quitar Filtro" : "📅 Ordenes de Hoy";
             btnPrep.innerText = (modoFiltro === "preparando") ? "❌ Quitar Filtro" : "🛠️ Preparando";
+            btnAtraso.innerText = (modoFiltro === "atraso") ? "❌ Quitar Filtro" : "⚠️ En Atraso (+2d)";
         }
 
         function setFechaHoy() {
@@ -251,6 +253,7 @@
         function calcularDiasHabiles(fechaInicio, fechaFin) {
             let fecha = new Date(fechaInicio);
             let dias = 0;
+            // No contamos el primer día (el de la orden) como transcurrido
             while (fecha < fechaFin) {
                 fecha.setDate(fecha.getDate() + 1);
                 if (fecha.getDay() !== 0 && fecha.getDay() !== 6) {
@@ -279,8 +282,15 @@
 
             let filtrados = datosLocales.filter(item => {
                 const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
+                
+                const fechaOrden = new Date(item.fecha + "T00:00:00");
+                const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
+                const esAtrasada = !item.despachado && item.responsable !== "Axel" && diasTranscurridos >= 2;
+
                 if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
                 if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
+                if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
+                
                 return coincideBusqueda;
             });
 
@@ -292,7 +302,8 @@
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
                 
                 const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
-                const esAntigua = !item.despachado && !esAxel && diasTranscurridos > 2;
+                // Lógica: 2 o más días hábiles ya es atraso crítico
+                const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
 
                 if (item.despachado) {
                     tr.className = 'fila-despachada';
@@ -302,12 +313,9 @@
                     tr.className = getStyleClass(item.responsable);
                 }
 
-                // SI ES ANTIGUA, ACTIVA PARPADEO ROJO ESTÉTICO
                 if (esAntigua) tr.classList.add('alerta-total');
 
                 const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
-                
-                // EL EMOJI SOLO SALE SI ES ANTIGUA (+2 DÍAS)
                 const emojiPrioridad = esAntigua ? "⚠️ " : "";
 
                 tr.innerHTML = `
@@ -368,8 +376,7 @@
                 orden: num, fecha: document.getElementById('fecha').value,
                 inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
                 responsable: document.getElementById('responsableSelect').value, despachado: false,
-                hora: horaActual,
-                ultimaHora: horaActual, 
+                hora: horaActual, ultimaHora: horaActual, 
                 movimiento: "Ingresada por " + document.getElementById('persona').value, 
                 ultimoMov: "Ingresada por " + document.getElementById('persona').value
             };
@@ -382,7 +389,6 @@
         function toggle(orden) {
             const item = datosLocales.find(d => d.orden === orden);
             item.despachado = !item.despachado;
-            
             if (item.despachado) {
                 item.ultimaHora = item.hora; 
                 item.movimiento = "LISTO ✅";
@@ -391,7 +397,6 @@
                 item.movimiento = item.ultimoMov || ("Ingresada por " + item.pers);
                 item.hora = item.ultimaHora || item.hora; 
             }
-            
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
@@ -400,13 +405,11 @@
             const item = datosLocales.find(d => d.orden === orden);
             const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
             const track = "De: " + item.responsable + " Para: " + nuevo;
-            
             item.responsable = nuevo;
             item.movimiento = track; 
             item.ultimoMov = track; 
             item.hora = horaActual;
             item.ultimaHora = horaActual; 
-            
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
@@ -417,13 +420,14 @@
         }
 
         async function sincronizar() {
-            document.getElementById('btnSync').innerText = "...";
+            const btn = document.getElementById('btnSync');
+            btn.innerText = "...";
             try {
                 const r = await fetch(URL_SCRIPT);
                 const d = await r.json();
                 if(Array.isArray(d)) { datosLocales = d; save(); }
             } catch(e) { showToast("Error de conexión", true); }
-            document.getElementById('btnSync').innerText = "🔄 Sincronizar";
+            btn.innerText = "🔄 Sincronizar";
         }
 
         function showToast(m, err) {
