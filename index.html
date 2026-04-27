@@ -18,6 +18,30 @@
             --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
         }
 
+        /* --- MODAL ESTILOS --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: var(--bg-card); padding: 30px; border-radius: 15px;
+            width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); border-top: 5px solid #dc2626;
+            color: var(--text-main);
+        }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-modal { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-cancelar { background: var(--border); color: var(--text-main); }
+        .btn-confirmar { background: #dc2626; color: white; }
+
+        /* --- NUEVA CLASE: ANULADA (GRIS OSCURO) --- */
+        .color-anulada { 
+            background-color: #475569 !important; 
+            color: #ffffff !important; 
+        }
+        .color-anulada td, .color-anulada select { color: #ffffff !important; }
+
         /* --- ANIMACIONES --- */
         @keyframes shake {
             0% { transform: translateX(0); }
@@ -98,12 +122,23 @@
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
         th { background: var(--primary); color: white; text-transform: uppercase; }
-        #toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 1000; font-weight: bold; }
+        #toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 3000; font-weight: bold; }
     </style>
 </head>
 <body>
     <button class="theme-switch" onclick="toggleTheme()">🌓</button>
     <div id="toast"></div>
+
+    <div id="modalConfirm" class="modal-overlay">
+        <div class="modal-content" id="modalFrame">
+            <h3 style="margin-top:0;" id="modalTitle">¿Anular Orden?</h3>
+            <p id="modalMsg">¿Estás seguro que deseas eliminar esta Orden de Compra?</p>
+            <div class="modal-btns">
+                <button class="btn-modal btn-cancelar" onclick="cerrarModal()">CANCELAR</button>
+                <button id="btnConfirmarAnular" class="btn-modal btn-confirmar">ACEPTAR</button>
+            </div>
+        </div>
+    </div>
     
     <div class="contenedor">
         <div class="mood-container">
@@ -181,7 +216,8 @@
             const map = { 
                 "Yanet": "color-yanet", "Danna": "color-danna", "Carmen": "color-carmen", 
                 "Daniela": "color-gris", "Nata": "color-nata-claudia", "Claudia": "color-nata-claudia", 
-                "Dan": "color-especial-dan-susan", "Susan": "color-especial-dan-susan", "Axel": "color-axel" 
+                "Dan": "color-especial-dan-susan", "Susan": "color-especial-dan-susan", "Axel": "color-axel",
+                "ANULADA": "color-anulada"
             };
             return map[nombre] || "";
         }
@@ -267,42 +303,105 @@
             sincronizar();
         };
 
+        // --- LÓGICA DE ANULACIÓN Y RECUPERACIÓN ---
+        function abrirModalAnular(numOrden) {
+            const modal = document.getElementById('modalConfirm');
+            const frame = document.getElementById('modalFrame');
+            const title = document.getElementById('modalTitle');
+            const msg = document.getElementById('modalMsg');
+            const btnSi = document.getElementById('btnConfirmarAnular');
+            
+            const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
+            const esAnulada = item && item.responsable === "ANULADA";
+
+            if (esAnulada) {
+                title.innerText = "¿Recuperar Orden?";
+                title.style.color = "#10b981";
+                frame.style.borderTopColor = "#10b981";
+                msg.innerHTML = `La Orden <b>${numOrden}</b> está anulada.<br>¿Deseas restaurarla al sistema?`;
+                btnSi.innerText = "RECUPERAR ORDEN";
+                btnSi.style.background = "#10b981";
+                btnSi.onclick = function() {
+                    recuperarOrden(numOrden);
+                    cerrarModal();
+                };
+            } else {
+                title.innerText = "¿Anular Orden?";
+                title.style.color = "#dc2626";
+                frame.style.borderTopColor = "#dc2626";
+                msg.innerHTML = `¿Estás seguro que deseas anular la<br>Orden de Compra <b>${numOrden}</b>?`;
+                btnSi.innerText = "ANULAR ORDEN";
+                btnSi.style.background = "#dc2626";
+                btnSi.onclick = function() {
+                    anularOrden(numOrden);
+                    cerrarModal();
+                };
+            }
+            modal.style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalConfirm').style.display = 'none';
+        }
+
+        function anularOrden(numOrden) {
+            const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
+            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+            item.movimiento = "ANULADA 🚫";
+            item.ultimoMov = "ANULADA";
+            item.responsable = "ANULADA";
+            item.despachado = false;
+            item.hora = horaActual;
+            save();
+            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+            showToast("🚫 Orden " + numOrden + " anulada.");
+        }
+
+        function recuperarOrden(numOrden) {
+            const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
+            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+            item.responsable = "Dan"; // Se asigna a Dan al recuperar
+            item.movimiento = "✅ RECUPERADA";
+            item.ultimoMov = "RECUPERADA";
+            item.hora = horaActual;
+            save();
+            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+            showToast("✅ Orden " + numOrden + " recuperada.");
+        }
+
         function renderTable() {
             const tbody = document.getElementById('tablaBody');
             const busqueda = document.getElementById('inputBuscar').value.toLowerCase();
             tbody.innerHTML = '';
             const hoyFull = new Date();
             const hoyMedianoche = new Date(hoyFull.getFullYear(), hoyFull.getMonth(), hoyFull.getDate());
-            
             const offset = hoyFull.getTimezoneOffset() * 60000;
             const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
 
             let filtrados = datosLocales.filter(item => {
                 const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
-                
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
-                const esAtrasada = !item.despachado && item.responsable !== "Axel" && diasTranscurridos >= 2;
-
+                const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
                 if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
                 if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
                 if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
-                
                 return coincideBusqueda;
             });
 
             filtrados.forEach(item => {
                 const tr = document.createElement('tr');
                 const esAxel = item.responsable === "Axel";
-                
+                const esAnulada = item.responsable === "ANULADA";
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
-                
                 const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
-                const esAntigua = !item.despachado && !esAxel && diasTranscurridos >= 2;
+                const esAntigua = !item.despachado && !esAxel && !esAnulada && diasTranscurridos >= 2;
 
                 if (item.despachado) {
                     tr.className = 'fila-despachada';
+                } else if (esAnulada) {
+                    tr.className = 'color-anulada';
                 } else if (esDudaAxel) {
                     tr.className = 'alerta-duda';
                 } else if (esAntigua) {
@@ -311,30 +410,28 @@
                     tr.className = getStyleClass(item.responsable);
                 }
 
+                tr.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    abrirModalAnular(item.orden);
+                });
+
                 const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
-                
-                // --- CAMBIO SOLICITADO: Lógica de la columna ¿LISTO? ---
                 let contenidoColumnaListo = "";
                 if (esAxel) {
-                    contenidoColumnaListo = `
-                        <div>
-                            <input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Uso exclusivo para Axel">
-                            <span class="label-axel">Solo Axel</span>
-                        </div>
-                    `;
+                    contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"><span class="label-axel">Solo Axel</span></div>`;
                 } else if (esAntigua) {
-                    // Si no es Axel y tiene +2 días, ponemos el emoji aquí
                     contenidoColumnaListo = `<span style="font-size: 1.4rem;">⚠️</span>`;
                 }
 
+                const selectBloqueado = esAnulada ? "disabled" : "";
+
                 tr.innerHTML = `
-                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">
-                        ${item.orden}
-                    </td>
+                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">${item.orden}</td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
                     <td style="font-weight:normal;">${item.inst}</td>
                     <td>
-                        <select onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:pointer; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
+                        <select ${selectBloqueado} onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:${esAnulada ? 'not-allowed' : 'pointer'}; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
+                            ${esAnulada ? '<option value="ANULADA" selected>🚫 ANULADA</option>' : ''}
                             <option value="Yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
                             <option value="Danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
                             <option value="Carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
@@ -347,9 +444,7 @@
                         </select>
                         <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
                     </td>
-                    <td style="text-align:center;">
-                        ${contenidoColumnaListo}
-                    </td>
+                    <td style="text-align:center;">${esAnulada ? '' : contenidoColumnaListo}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -360,7 +455,6 @@
             const hoyAxel = datosLocales.filter(d => d.fecha === hoyStr && d.responsable === "Axel");
             const despachadas = hoyAxel.filter(d => d.despachado).length;
             const pct = hoyAxel.length ? (despachadas / hoyAxel.length) * 100 : 0;
-            
             document.getElementById('barraProgreso').style.width = pct + "%";
             if(clicsRapidos <= 5) {
                 document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
@@ -374,7 +468,7 @@
             if(datosLocales.some(d => d.orden.toString() === num)) {
                 const formCard = document.getElementById('contenedorForm');
                 formCard.classList.add('shake');
-                showToast("❌ La OC. " + num + " ya existe en el sistema.", true);
+                showToast("❌ La OC. " + num + " ya existe.", true);
                 setTimeout(() => { formCard.classList.remove('shake'); }, 400);
                 return;
             }
