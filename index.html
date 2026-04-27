@@ -18,6 +18,9 @@
             --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
         }
 
+        /* --- AJUSTE GLOBAL PARA EVITAR DESFASES --- */
+        * { box-sizing: border-box; }
+
         /* --- MODAL ESTILOS --- */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -26,11 +29,13 @@
         }
         .modal-content {
             background: var(--bg-card); padding: 30px; border-radius: 15px;
-            width: 90%; max-width: 400px; text-align: center;
+            width: 90%; max-width: 400px; 
+            /* AJUSTE: Flexbox para centrado interno perfecto */
+            display: flex; flex-direction: column; align-items: center; text-align: center;
             box-shadow: 0 15px 30px rgba(0,0,0,0.4); border-top: 5px solid #dc2626;
             color: var(--text-main);
         }
-        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; width: 100%; }
         .btn-modal { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .btn-cancelar { background: var(--border); color: var(--text-main); }
         .btn-confirmar { background: #dc2626; color: white; }
@@ -148,9 +153,9 @@
 
     <div id="modalProducto" class="modal-overlay">
         <div class="modal-content" style="border-top-color: var(--primary);">
-            <h3 style="margin-top:0;">Detalle del Producto</h3>
+            <h3 style="margin-top:0; width: 100%;">Detalle del Producto</h3>
             <textarea id="inputProducto" maxlength="120" placeholder="Ej: cateter intravenoso, bajalenguas, jeringa..." 
-                      style="width:100%; height:80px; border-radius:8px; padding:10px; border:2px solid var(--border); background:var(--input-bg); color:var(--text-main); font-family:inherit;"></textarea>
+                      style="width:100%; height:80px; border-radius:8px; padding:10px; border:2px solid var(--border); background:var(--input-bg); color:var(--text-main); font-family:inherit; resize: none;"></textarea>
             <div class="modal-btns">
                 <button class="btn-modal btn-confirmar" style="background:var(--primary);" onclick="cerrarModalProducto()">LISTO</button>
             </div>
@@ -455,7 +460,6 @@
 
                 const selectBloqueado = esAnulada ? "disabled" : "";
 
-                /* MODIFICACIÓN AQUÍ: Se eliminó color:var(--primary) de Institución para que herede el del Responsable */
                 tr.innerHTML = `
                     <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">${item.orden}</td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
