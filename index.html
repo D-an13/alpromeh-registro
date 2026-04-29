@@ -365,12 +365,18 @@
             return dias;
         }
 
-        window.onload = () => {
-            setFechaHoy();
-            aplicarColorUnico(document.getElementById('responsableSelect'));
-            renderTable();
-            sincronizar();
-        };
+window.onload = () => {
+    setFechaHoy();
+    aplicarColorUnico(document.getElementById('responsableSelect'));
+    renderTable();
+    sincronizar(); // Primera carga
+
+    // --- AUTO-SYNC CADA 30 SEGUNDOS ---
+    setInterval(() => {
+        console.log("Sincronizando automáticamente...");
+        sincronizarSilencioso(); 
+    }, 10000); 
+};
 
         function abrirModalAnular(numOrden) {
             const modal = document.getElementById('modalConfirm');
@@ -652,6 +658,26 @@ if (esAxel && !item.despachado) {
             } catch(e) { showToast("Error de conexión", true); }
             btn.innerText = "🔄 Sincronizar";
         }
+
+// --- SINCRONIZACION SILENCIOSA ---
+async function sincronizarSilencioso() {
+    try {
+        const r = await fetch(URL_SCRIPT);
+        const d = await r.json();
+        if(Array.isArray(d)) { 
+            // La magia: solo guarda y refresca si hay algo nuevo en la nube
+            if (JSON.stringify(d) !== JSON.stringify(datosLocales)) {
+                datosLocales = d; 
+                localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
+                renderTable(); 
+                console.log("Sistema actualizado automáticamente.");
+            }
+        }
+    } catch(e) { 
+        // No hace nada si falla, para no molestar al usuario
+        console.log("Auto-sync falló (posible falta de internet)");
+    }
+}
 
         function showToast(msj, tipo) {
             const toast = document.getElementById('toast');
