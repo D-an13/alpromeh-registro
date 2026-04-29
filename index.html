@@ -134,6 +134,13 @@
         th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
         th { background: var(--primary); color: white; text-transform: uppercase; }
         #toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 3000; font-weight: bold; }
+        #toast.warning { background-color: #ffc400; color: #000; visibility: visible; display: block; }
+
+        .resaltar-actualizacion {
+            background-color: #fff9c4 !important;
+            border-top: 5px solid #ffc400 !important;
+            transition: all 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -496,35 +503,77 @@
             }
         }
 
-        document.getElementById('formOrdenes').onsubmit = function(e) {
-            e.preventDefault();
-            const num = document.getElementById('orden').value;
-            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
-            if(datosLocales.some(d => d.orden.toString() === num)) {
-                const formCard = document.getElementById('contenedorForm');
-                formCard.classList.add('shake');
-                showToast("❌ La OC. " + num + " ya existe.", true);
-                setTimeout(() => { formCard.classList.remove('shake'); }, 400);
-                return;
-            }
-            const payload = {
-                orden: num, fecha: document.getElementById('fecha').value,
-                inst: document.getElementById('institucion').value, pers: document.getElementById('persona').value,
-                responsable: document.getElementById('responsableSelect').value, despachado: false,
-                hora: horaActual, ultimaHora: horaActual, 
-                movimiento: "Ingresada por " + document.getElementById('persona').value, 
-                ultimoMov: "Ingresada por " + document.getElementById('persona').value,
-                producto: productoTemporal 
-            };
-            datosLocales.unshift(payload);
-            save();
-            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-            this.reset(); setFechaHoy(); 
-            productoTemporal = ""; 
-            document.getElementById('btnProducto').classList.remove('lleno');
-            document.getElementById('btnProducto').innerText = "📝";
-            aplicarColorUnico(document.getElementById('responsableSelect'));
-        };
+    document.getElementById('formOrdenes').onsubmit = function(e) {
+    e.preventDefault();
+    
+    const btnGuardar = document.querySelector('.btn-guardar');
+    const formCard = document.getElementById('contenedorForm');
+    if (btnGuardar.disabled) return; 
+    
+    const num = document.getElementById('orden').value;
+    const ordenPrevia = datosLocales.find(d => d.orden.toString() === num.toString());
+    const yaExiste = !!ordenPrevia;
+
+    if(yaExiste) {
+        showToast("⚙️ La OC. " + num + " se está actualizando...", "warning");
+        formCard.classList.add('resaltar-actualizacion');
+    }
+
+    btnGuardar.disabled = true;
+    btnGuardar.innerText = "REGISTRANDO...";
+    btnGuardar.style.opacity = "0.5";
+    btnGuardar.style.cursor = "not-allowed";
+
+    const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+    const fechaActual = document.getElementById('fecha').value;
+
+    const fechaARegistrar = yaExiste ? ordenPrevia.fecha : fechaActual;
+    const horaARegistrar = yaExiste ? ordenPrevia.hora : horaActual;
+
+    datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
+
+    const payload = {
+        orden: num, 
+        fecha: fechaARegistrar, 
+        inst: document.getElementById('institucion').value, 
+        pers: document.getElementById('persona').value,
+        responsable: document.getElementById('responsableSelect').value, 
+        despachado: false,
+        hora: horaARegistrar, 
+        ultimaHora: horaARegistrar, 
+        movimiento: "Ingreso/Edición: " + document.getElementById('persona').value, 
+        ultimoMov: "Ingreso/Edición: " + document.getElementById('persona').value,
+        producto: productoTemporal 
+    };
+
+    datosLocales.unshift(payload);
+    save(); 
+
+    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+    .then(() => {
+        formCard.classList.remove('resaltar-actualizacion');
+        this.reset(); 
+        setFechaHoy(); 
+        productoTemporal = ""; 
+        document.getElementById('btnProducto').classList.remove('lleno');
+        document.getElementById('btnProducto').innerText = "📝";
+        aplicarColorUnico(document.getElementById('responsableSelect'));
+        
+        btnGuardar.disabled = false;
+        btnGuardar.innerText = "GUARDAR REGISTRO";
+        btnGuardar.style.opacity = "1";
+        btnGuardar.style.cursor = "pointer";
+        
+        if(!yaExiste) showToast("✅ OC. " + num + " guardada correctamente");
+    })
+    .catch(err => {
+        formCard.classList.remove('resaltar-actualizacion');
+        btnGuardar.disabled = false;
+        btnGuardar.innerText = "GUARDAR REGISTRO";
+        btnGuardar.style.opacity = "1";
+        showToast("❌ Error de red, verifique conexión", true);
+    });
+};
 
         function toggle(orden) {
             const item = datosLocales.find(d => d.orden === orden);
@@ -570,10 +619,26 @@
             btn.innerText = "🔄 Sincronizar";
         }
 
-        function showToast(m, err) {
-            const t = document.getElementById('toast');
-            t.innerText = m; t.style.background = err ? "#ef4444" : "#10b981";
-            t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 3000);
+        function showToast(msj, tipo) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msj;
+            toast.className = ''; // Limpiamos clases previas
+            
+            if (tipo === true) {
+                toast.style.background = "#dc2626"; // Rojo error
+                toast.style.display = "block";
+            } else if (tipo === "warning") {
+                toast.id = "toast";
+                toast.className = "warning"; // Usará el amarillo #ffc400 del CSS
+            } else {
+                toast.style.background = "#10b981"; // Verde éxito
+                toast.style.display = "block";
+            }
+            
+            setTimeout(() => { 
+                toast.style.display = "none"; 
+                toast.className = "";
+            }, 3000);
         }
 
         document.getElementById('triggerHuevo').addEventListener('dblclick', function() {
