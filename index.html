@@ -141,6 +141,21 @@
             border-top: 5px solid #ffc400 !important;
             transition: all 0.5s ease;
         }
+/* Brillo verde al tocar en celulares y prevención de zoom */
+@media (pointer: coarse) {
+    .fila-axel-movil {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(16, 185, 129, 0.3);
+    }
+}
+
+/* Animación rápida de éxito */
+@keyframes flash-success {
+    0% { background-color: transparent; }
+    50% { background-color: #10b981; }
+    100% { background-color: transparent; }
+}
+.animar-listo { animation: flash-success 0.4s ease-out; }
     </style>
 </head>
 <body>
@@ -466,9 +481,28 @@
                 }
 
                 const selectBloqueado = esAnulada ? "disabled" : "";
+// --- LÓGICA DE DOBLE TOQUE PARA AXEL (SOLO MÓVIL) ---
+if (esAxel && !item.despachado) {
+    const esMovil = window.matchMedia("(pointer: coarse)").matches;
+    if (esMovil) {
+        tr.classList.add('fila-axel-movil');
+        let ultimoToque = 0;
+        tr.addEventListener('touchend', function(e) {
+            const tiempoActual = new Date().getTime();
+            const diferencia = tiempoActual - ultimoToque;
+            if (diferencia < 300 && diferencia > 0) {
+                // Doble toque detectado
+                tr.classList.add('animar-listo');
+                toggle(item.orden); // Marcamos como listo
+                showToast("📦 Orden " + item.orden + " lista");
+            }
+            ultimoToque = tiempoActual;
+        });
+    }
+}
 
                 tr.innerHTML = `
-                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}">${item.orden}</td>
+                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">${item.orden}</td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
                     <td style="font-weight:600; cursor:help;" title="Producto: ${item.producto || 'Sin descripción'}">${item.inst}</td>
                     <td>
