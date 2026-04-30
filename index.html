@@ -548,6 +548,8 @@ if (esAxel && !item.despachado) {
     
     const btnGuardar = document.querySelector('.btn-guardar');
     const formCard = document.getElementById('contenedorForm');
+    
+    // --- ESCUDO ANTI-DUPLICADOS ---
     if (btnGuardar.disabled) return; 
     
     const num = document.getElementById('orden').value;
@@ -559,6 +561,7 @@ if (esAxel && !item.despachado) {
         formCard.classList.add('resaltar-actualizacion');
     }
 
+    // Bloqueo visual y lógico inmediato
     btnGuardar.disabled = true;
     btnGuardar.innerText = "REGISTRANDO...";
     btnGuardar.style.opacity = "0.5";
@@ -566,10 +569,10 @@ if (esAxel && !item.despachado) {
 
     const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
     const fechaActual = document.getElementById('fecha').value;
-
     const fechaARegistrar = yaExiste ? ordenPrevia.fecha : fechaActual;
     const horaARegistrar = yaExiste ? ordenPrevia.hora : horaActual;
 
+    // Limpiamos versión vieja si existe para evitar duplicados en la lista local
     datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
 
     const payload = {
@@ -591,7 +594,7 @@ if (esAxel && !item.despachado) {
 
     fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
     .then(() => {
-        formCard.classList.remove('resaltar-actualizacion');
+        // Limpieza de interfaz
         this.reset(); 
         setFechaHoy(); 
         productoTemporal = ""; 
@@ -599,19 +602,21 @@ if (esAxel && !item.despachado) {
         document.getElementById('btnProducto').innerText = "📝";
         aplicarColorUnico(document.getElementById('responsableSelect'));
         
-        btnGuardar.disabled = false;
-        btnGuardar.innerText = "GUARDAR REGISTRO";
-        btnGuardar.style.opacity = "1";
-        btnGuardar.style.cursor = "pointer";
-        
         if(!yaExiste) showToast("✅ OC. " + num + " guardada correctamente");
     })
     .catch(err => {
-        formCard.classList.remove('resaltar-actualizacion');
-        btnGuardar.disabled = false;
-        btnGuardar.innerText = "GUARDAR REGISTRO";
-        btnGuardar.style.opacity = "1";
         showToast("❌ Error de red, verifique conexión", true);
+    })
+    .finally(() => {
+        // El "superpoder": el botón se libera solo después de terminar el proceso
+        // Agregamos 500ms de seguridad para evitar clics fantasma
+        setTimeout(() => {
+            formCard.classList.remove('resaltar-actualizacion');
+            btnGuardar.disabled = false;
+            btnGuardar.innerText = "GUARDAR REGISTRO";
+            btnGuardar.style.opacity = "1";
+            btnGuardar.style.cursor = "pointer";
+        }, 500);
     });
 };
 
