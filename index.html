@@ -337,7 +337,7 @@ let guardandoAhora = false;
             body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
             clicsRapidos++;
             const mood = document.getElementById('moodFace');
-            const emojisRaros = ["👽", "🤖", "🤠", "👻", "🎃", "🐶", "🙈", "🙉", "🙊", "🦄", "🥨", "🍕", "🧨", "🚀", "🦖", "🎭", "🐱", "🦆", "🍩", "🍭", "🎮", "💖", "🐣", "🤑"];
+            const emojisRaros = ["👽", "🤖", "🤠", "👻", "🎃", "🐶", "🙈", "🦄", "🥨", "🍕", "🧨", "🚀", "🦖", "🎭", "🐱", "🦆", "🍩", "🍭", "🎮", "💖", "🐣", "🤑"];
             if (clicsRapidos > 5) {
                 const randomEmoji = emojisRaros[Math.floor(Math.random() * emojisRaros.length)];
                 mood.innerText = randomEmoji;
@@ -635,10 +635,11 @@ if (esAxel && !item.despachado) {
                 item.hora = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
             } else {
                 item.movimiento = item.ultimoMov || ("Ingresada por " + item.pers);
-                item.hora = item.ultimaHora || item.hora; 
-            }
+                item.hora = item.ultimaHora || item.hora;
+}
+item.miCambioReciente = Date.now();
             save();
-            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
 
         function cambiarResp(orden, nuevo) {
@@ -670,26 +671,39 @@ if (esAxel && !item.despachado) {
             btn.innerText = "🔄 Sincronizar";
         }
 
-// --- SINCRONIZACION SILENCIOSA ---
+// --- SINCRONIZACION SILENCIOSA INTELIGENTE ---
 async function sincronizarSilencioso() {
-if (guardandoAhora) return;
+    // Quitamos el bloqueo global para que los cambios de Danna sigan entrando
     try {
         const r = await fetch(URL_SCRIPT);
         const d = await r.json();
+        
         if(Array.isArray(d)) { 
-            if (JSON.stringify(d) !== JSON.stringify(datosLocales)) {
-                datosLocales = d; 
+            // 🛡️ REGLA DE MEZCLA: Comparamos lo que viene de Google vs lo que tengo yo
+            const datosMezclados = d.map(ordenGoogle => {
+                const local = datosLocales.find(l => l.orden === ordenGoogle.orden);
+                
+                // Si yo toqué esta orden hace menos de 15 segundos (15000 ms), 
+                // mi cel manda y se queda con la versión local.
+                if (local && (Date.now() - (local.miCambioReciente || 0) < 15000)) {
+                    return local; 
+                }
+                // Si no la he tocado, acepto lo que diga Google (cambios de Danna o Axel)
+                return ordenGoogle;
+            });
+
+            // Solo renderizamos si de verdad hay algo nuevo que mostrar
+            if (JSON.stringify(datosMezclados) !== JSON.stringify(datosLocales)) {
+                datosLocales = datosMezclados; 
                 localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
                 renderTable(); 
-                console.log("Sistema actualizado automáticamente.");
+                console.log("Sincronización inteligente completada.");
             }
         }
     } catch(e) { 
-        // No hace nada si falla, para no molestar al usuario
-        console.log("Auto-sync falló (posible falta de internet)");
+        console.log("Auto-sync falló o no hay internet");
     }
 }
-
         function showToast(msj, tipo) {
             const toast = document.getElementById('toast');
             toast.innerText = msj;
