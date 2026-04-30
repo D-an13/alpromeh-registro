@@ -255,6 +255,7 @@
     </div>
 
     <script>
+let guardandoAhora = false;
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzFmaW8FCIHpKUOk6jdbce6qBJQ2vUFd_VepPJXhlVi4Sc0dFaKLIosvrLD2WiFGSh5/exec";
         let datosLocales = JSON.parse(localStorage.getItem('alpromeh_vFinal_v10')) || [];
         let modoFiltro = "todo"; 
@@ -371,7 +372,7 @@ window.onload = () => {
     renderTable();
     sincronizar(); // Primera carga
 
-    // --- AUTO-SYNC CADA 30 SEGUNDOS ---
+    // --- AUTO-SYNC CADA 20 SEGUNDOS ---
     setInterval(() => {
         console.log("Sincronizando automáticamente...");
         sincronizarSilencioso(); 
@@ -551,6 +552,9 @@ if (esAxel && !item.despachado) {
     
     // --- ESCUDO ANTI-DUPLICADOS ---
     if (btnGuardar.disabled) return; 
+
+// --- EL FRENO DE MANO AQUÍ ---
+    guardandoAhora = true;
     
     const num = document.getElementById('orden').value;
     const ordenPrevia = datosLocales.find(d => d.orden.toString() === num.toString());
@@ -608,15 +612,17 @@ if (esAxel && !item.despachado) {
         showToast("❌ Error de red, verifique conexión", true);
     })
     .finally(() => {
-        // El "superpoder": el botón se libera solo después de terminar el proceso
-        // Agregamos 500ms de seguridad para evitar clics fantasma
+        // Le damos 2 segundos de "paz" al sistema para que Google asiente los datos
         setTimeout(() => {
             formCard.classList.remove('resaltar-actualizacion');
             btnGuardar.disabled = false;
             btnGuardar.innerText = "GUARDAR REGISTRO";
             btnGuardar.style.opacity = "1";
             btnGuardar.style.cursor = "pointer";
-        }, 500);
+            
+            // LIBERAMOS EL FRENO: El sistema ya puede volver a sincronizar solo
+            guardandoAhora = false; 
+        }, 2000); 
     });
 };
 
@@ -666,11 +672,11 @@ if (esAxel && !item.despachado) {
 
 // --- SINCRONIZACION SILENCIOSA ---
 async function sincronizarSilencioso() {
+if (guardandoAhora) return;
     try {
         const r = await fetch(URL_SCRIPT);
         const d = await r.json();
         if(Array.isArray(d)) { 
-            // La magia: solo guarda y refresca si hay algo nuevo en la nube
             if (JSON.stringify(d) !== JSON.stringify(datosLocales)) {
                 datosLocales = d; 
                 localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
