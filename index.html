@@ -456,6 +456,17 @@ window.onload = () => {
                 return coincideBusqueda;
             });
 
+filtrados.sort((a, b) => {
+    const fechaA = new Date(a.fecha + "T00:00:00");
+    const fechaB = new Date(b.fecha + "T00:00:00");
+    
+    if (fechaB - fechaA !== 0) {
+        return fechaB - fechaA;
+    }
+    
+        return datosLocales.indexOf(b) - datosLocales.indexOf(a);
+});
+
             filtrados.forEach(item => {
                 const tr = document.createElement('tr');
                 const esAxel = item.responsable === "Axel";
