@@ -532,7 +532,11 @@ if (esAxel && !item.despachado) {
                 tr.innerHTML = `
                     <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">${item.orden}</td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
-                    <td style="font-weight:600; cursor:help;" title="Producto: ${item.producto || 'Sin descripción'}">${item.inst}</td>
+                    <td style="font-weight:600; cursor:help;" 
+        title="Producto: ${item.producto || 'Sin descripción'}" 
+        ondblclick="editarInstitucion('${item.orden}', this)">
+        ${item.inst}
+</td>
                     <td>
                         <select ${selectBloqueado} onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:${esAnulada ? 'not-allowed' : 'pointer'}; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
                             ${esAnulada ? '<option value="ANULADA" selected>🚫 ANULADA</option>' : ''}
@@ -672,6 +676,7 @@ fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) 
             item.ultimoMov = track; 
             item.hora = horaActual;
             item.ultimaHora = horaActual; 
+            item.miCambioReciente = Date.now();
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
         }
@@ -766,6 +771,41 @@ async function sincronizarSilencioso() {
         document.getElementById('triggerHuevo').addEventListener('dblclick', function() {
             window.open("https://d-an13.github.io/alpromeh-registro/alprogame.html", "_blank");
         });
+function editarInstitucion(numOrden, celda) {
+    // Si ya hay un input, no hacer nada
+    if (celda.querySelector('input')) return;
+
+    const valorOriginal = celda.innerText;
+    celda.innerHTML = `<input type="text" value="${valorOriginal}" 
+                        style="width:100%; padding:5px; font-weight:600; border:2px solid var(--primary);">`;
+    
+    const input = celda.querySelector('input');
+    input.focus();
+
+    // Función para guardar el cambio
+    const guardarCambio = () => {
+        const nuevoValor = input.value.trim();
+        if (nuevoValor !== "" && nuevoValor !== valorOriginal) {
+            const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
+            if (item) {
+                item.inst = nuevoValor;
+                item.movimiento = "NOMBRE EDITADO";
+                item.ultimoMov = "EDITADO";
+                item.miCambioReciente = Date.now();
+                
+                // Guardar local y en la nube
+                save(); 
+                fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+                showToast("Institución actualizada");
+            }
+        }
+        celda.innerText = nuevoValor || valorOriginal;
+    };
+
+    // Eventos para finalizar la edición
+    input.onblur = guardarCambio;
+    input.onkeydown = (e) => { if (e.key === 'Enter') guardarCambio(); };
+}
     </script>
 </body>
 </html>
