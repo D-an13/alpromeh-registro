@@ -156,6 +156,16 @@
     100% { background-color: transparent; }
 }
 .animar-listo { animation: flash-success 0.4s ease-out; }
+@keyframes pulsoVerde {
+          0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+          70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .animar-pulso {
+          animation: pulsoVerde 0.8s ease-out;
+          border: 2px solid #10b981 !important;
+        }
     </style>
 </head>
 <body>
@@ -673,15 +683,31 @@ fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) 
 
         async function sincronizar() {
             const btn = document.getElementById('btnSync');
-            btn.innerText = "...";
+            btn.innerText = "Sincronizando...";
+            btn.disabled = true;
             try {
                 const r = await fetch(URL_SCRIPT);
                 const d = await r.json();
-                if(Array.isArray(d)) { datosLocales = d; save(); }
-            } catch(e) { showToast("Error de conexión", true); }
-            btn.innerText = "🔄 Sincronizar";
-        }
+if(Array.isArray(d)) { 
+            datosLocales = d; 
+            save(); 
 
+            // 2. ÉXITO: Aplicamos el pulso verde
+            btn.classList.add('animar-pulso');
+            
+            // Esperamos un segundo para que se vea el efecto antes de volver al original
+            setTimeout(() => {
+                btn.classList.remove('animar-pulso');
+                btn.innerText = "🔄 Sincronizar";
+                btn.disabled = false;
+            }, 1000);
+        }
+    } catch(e) { 
+        showToast("Error de conexión", true); 
+        btn.innerText = "🔄 Sincronizar";
+        btn.disabled = false;
+    }
+}
 // --- SINCRONIZACION SILENCIOSA INTELIGENTE ---
 async function sincronizarSilencioso() {
     // Quitamos el bloqueo global para que los cambios de Danna sigan entrando
