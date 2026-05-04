@@ -775,9 +775,22 @@ function editarInstitucion(numOrden, celda) {
     // Si ya hay un input, no hacer nada
     if (celda.querySelector('input')) return;
 
-    const valorOriginal = celda.innerText;
-    celda.innerHTML = `<input type="text" value="${valorOriginal}" 
-                        style="width:100%; padding:5px; font-weight:600; border:2px solid var(--primary);">`;
+const valorOriginal = celda.innerText.trim();
+    celda.innerHTML = `
+        <input type="text" value="${valorOriginal}" 
+            style="
+                width: 100%; 
+                padding: 4px 8px; 
+                font-weight: 600; 
+                font-family: inherit; 
+                font-size: inherit;
+                color: #1e293b; 
+                background: rgba(255, 255, 255, 0.7); 
+                border: 2px solid var(--primary); 
+                border-radius: 8px; 
+                outline: none;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            ">`;
     
     const input = celda.querySelector('input');
     input.focus();
@@ -792,8 +805,6 @@ function editarInstitucion(numOrden, celda) {
                 item.movimiento = "NOMBRE EDITADO";
                 item.ultimoMov = "EDITADO";
                 item.miCambioReciente = Date.now();
-                
-                // Guardar local y en la nube
                 save(); 
                 fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
                 showToast("Institución actualizada");
