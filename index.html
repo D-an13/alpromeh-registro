@@ -694,8 +694,18 @@ fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) 
                 const r = await fetch(URL_SCRIPT);
                 const d = await r.json();
 if(Array.isArray(d)) { 
-            datosLocales = d; 
-            save(); 
+            // 🛡️ APLICAMOS EL MISMO ESCUDO QUE EN EL SILENCIOSO
+            const datosMezclados = d.map(ordenGoogle => {
+                const local = datosLocales.find(l => l.orden === ordenGoogle.orden);
+                // Si lo editaste hace menos de 15 segundos, protegemos tu versión local
+                if (local && (Date.now() - (local.miCambioReciente || 0) < 15000)) {
+                    return local; 
+                }
+                return ordenGoogle;
+            });
+
+            datosLocales = datosMezclados; 
+            save();
 
             // 2. ÉXITO: Aplicamos el pulso verde
             btn.classList.add('animar-pulso');
