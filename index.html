@@ -201,6 +201,11 @@
                 <div id="barraProgreso" class="barra-llenado"></div>
             </div>
         </div>
+<div style="text-align: center; font-size: 0.8rem; margin-top: 8px; font-weight: bold; font-family: sans-serif; opacity: 0.6;">
+            <span style="color: #b91c1c;">Urgentes: <span id="count-atrasadas">0</span></span> | 
+            <span style="color: var(--primary);">Hoy: <span id="count-hoy">0</span></span> | 
+            <span style="color: #10b981;">Listas: <span id="count-listos">0</span></span>
+        </div>
     </div>
 
     <div class="contenedor" id="contenedorForm">
@@ -387,6 +392,7 @@ window.onload = () => {
         console.log("Sincronizando automáticamente...");
         sincronizarSilencioso(); 
     }, 20000); 
+actualizarContadores()
 };
 
         function abrirModalAnular(numOrden) {
@@ -464,6 +470,7 @@ window.onload = () => {
                 if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
                 if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
                 return coincideBusqueda;
+actualizarContadores()
             });
 
 filtrados.sort((a, b) => {
@@ -684,6 +691,7 @@ fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) 
         function save() {
             localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
             renderTable();
+actualizarContadores()
         }
 
         async function sincronizar() {
@@ -826,6 +834,33 @@ const valorOriginal = celda.innerText.trim();
     // Eventos para finalizar la edición
     input.onblur = guardarCambio;
     input.onkeydown = (e) => { if (e.key === 'Enter') guardarCambio(); };
+}
+
+function actualizarContadores() {
+    const hoyInput = document.getElementById('fecha').value; 
+    let urgentes = 0;
+    let hoyTotal = 0;
+    let listasHoy = 0;
+
+    datosLocales.forEach(item => {
+        // 1. Urgentes: No despachadas, no son de Axel/Anuladas y tienen fecha anterior a hoy
+        if (!item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && item.fecha < hoyInput) {
+            urgentes++;
+        }
+        // 2. Ingresadas Hoy: Todo lo que tiene la fecha del input
+        if (item.fecha === hoyInput) {
+            hoyTotal++;
+        }
+        // 3. Listas Hoy: Marcadas como despachadas con la fecha del input
+        if (item.despachado && item.fecha === hoyInput) {
+            listasHoy++;
+        }
+    });
+
+    // Inyectar valores en los spans
+    document.getElementById('count-atrasadas').innerText = urgentes;
+    document.getElementById('count-hoy').innerText = hoyTotal;
+    document.getElementById('count-listos').innerText = listasHoy;
 }
     </script>
 </body>
