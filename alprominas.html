@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALPROMINAS</title>
+    <style>
+        :root {
+            --primary: #1e293b; --accent: #3b82f6; --bg: #0f172a; 
+            --cell-bg: #334155; --cell-hover: #475569; --cell-revealed: #1e293b;
+            --rojo-brillante: #ef4444; --verde-brillante: #10b981;
+            --celeste-vivo: #00d2ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; width: 100vw; margin: 0; color: white;
+            overflow-y: hidden; 
+            overflow-x: auto;   
+        }
+
+        #main-layout { 
+            display: flex; flex-direction: row;
+            width: 100%; height: 100%;
+            padding: 10px; box-sizing: border-box;
+            align-items: center; justify-content: center; gap: 15px;
+        }
+
+        /* --- TIENDA FIJA LATERAL (PC) --- */
+        #shop-container {
+            display: flex; flex-direction: column; gap: 10px;
+            background: rgba(30, 41, 59, 0.6); padding: 10px;
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px); z-index: 5;
+            position: fixed; left: 15px; top: 50%; transform: translateY(-50%);
+        }
+
+        .shop-item {
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 15px; min-width: 90px;
+        }
+        .shop-item:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+        .shop-item.disabled { opacity: 0.2; cursor: not-allowed; filter: grayscale(1); }
+        .shop-item.owned { border: 2px solid var(--verde-brillante); background: rgba(16, 185, 129, 0.1); }
+        .shop-item .emoji { font-size: 1.4rem; }
+        .shop-item .price-tag { font-size: 0.65rem; font-weight: bold; color: #fbbf24; margin-top: 2px; }
+        .shop-item .desc { font-size: 0.55rem; opacity: 0.9; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; text-align: center; font-weight: 600; }
+
+        #game-container {
+            background: rgba(30, 41, 59, 0.8); padding: 10px 20px; border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: center; 
+            position: relative; border: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; justify-content: center;
+            max-height: 98vh;
+            margin-left: 110px; 
+        }
+
+        #points-display { font-size: 1.1rem; font-weight: 800; color: #fbbf24; margin-bottom: 2px; }
+        
+        /* --- ESTILO ACTUALIZADO DEL MULTIPLICADOR --- */
+        .multiplicador-wrapper { 
+            margin-bottom: 8px; 
+            width: 100%; 
+            transition: opacity 0.5s ease; /* Transición suave al hacerse transparente */
+        }
+        
+        #multi-text { font-size: 0.65rem; font-weight: 900; color: #fbbf24; text-transform: uppercase; }
+        .multiplicador-container {
+            width: 100%; height: 5px; background: rgba(255,255,255,0.1);
+            border-radius: 10px; margin-top: 2px; overflow: hidden;
+        }
+        #barra-progreso {
+            width: 100%; height: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            transition: width 0.1s linear;
+        }
+
+        .bomba-icon { font-size: 1.5rem; margin-bottom: 0; }
+        h2 { margin: 0 0 8px 0; font-size: 0.9rem; letter-spacing: 2px; font-weight: 900; }
+
+        .menu-dificultad {
+            margin-bottom: 10px; display: flex; gap: 5px; justify-content: center;
+            background: rgba(0,0,0,0.3); padding: 4px; border-radius: 15px;
+        }
+
+        .btn-nivel {
+            border: none; padding: 5px 12px; border-radius: 10px;
+            color: rgba(255,255,255,0.5); font-weight: bold; cursor: pointer;
+            background: transparent; transition: 0.2s; font-size: 0.7rem;
+        }
+        .btn-nivel.active { 
+            background: var(--accent); 
+            color: white; 
+            box-shadow: 0 0 15px var(--accent); 
+        }
+
+        .tablero-scroll-area {
+            width: 100%; 
+            max-width: 90vw;
+            overflow-x: auto; 
+            overflow-y: hidden;
+            margin: 5px 0;
+            display: flex;
+            justify-content: center;
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        #tablero { 
+            display: grid; gap: 3px; margin: 0 auto; padding: 10px; 
+            background: rgba(0,0,0,0.3); border-radius: 15px; width: max-content;
+        }
+        .celda { 
+            width: 32px; height: 32px; 
+            min-width: 32px; min-height: 32px;
+            background: var(--cell-bg); 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 6px; cursor: pointer; font-weight: 800; 
+            transition: 0.15s; font-size: 0.8rem; user-select: none;
+        }
+        .celda:hover { background: var(--cell-hover); transform: scale(1.05); }
+        .celda.revelada { background: var(--cell-revealed); cursor: default; transform: none; }
+        .celda.mina { background: var(--rojo-brillante) !important; box-shadow: 0 0 10px var(--rojo-brillante); }
+        .celda.flash-red { background: var(--rojo-brillante) !important; }
+
+        @media (max-width: 800px) {
+            #main-layout { flex-direction: column; padding: 5px; height: auto; }
+            #shop-container { 
+                position: relative; left: 0; top: 0; transform: none; 
+                flex-direction: row; order: 2; width: auto; justify-content: center;
+                margin-top: 10px; padding: 8px;
+            }
+            #game-container { order: 1; width: 98%; margin-left: 0; padding: 10px; max-height: none; }
+            .celda { width: 35px; height: 35px; min-width: 35px; min-height: 35px; }
+            body { overflow-y: auto; height: auto; } 
+            .tablero-scroll-area { justify-content: flex-start; } 
+        }
+
+        .overlay {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 30px; flex-direction: column; justify-content: center; 
+            align-items: center; z-index: 10; backdrop-filter: blur(10px);
+        }
+
+        #pantalla-boom h1 { font-size: 3rem; margin: 0; color: var(--rojo-brillante); text-shadow: 0 0 20px var(--rojo-brillante); }
+        #pantalla-victoria h1 { font-size: 1.5rem; margin: 0; color: var(--verde-brillante); }
+
+        .btn-retry-celeste {
+            background: var(--celeste-vivo); color: white; border: none; padding: 10px 25px;
+            font-size: 0.9rem; font-weight: 900; border-radius: 50px; cursor: pointer; margin-top: 15px;
+        }
+
+        .regalo-container { margin-top: 10px; background: rgba(255,255,255,0.08); padding: 10px; border-radius: 20px; }
+        .regalo-opciones { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-regalo { background: rgba(255,255,255,0.1); border: 2px solid var(--accent); color: white; padding: 8px; border-radius: 12px; cursor: pointer; font-size: 1.2rem; }
+
+        .btn-next { background: var(--verde-brillante); color: white; border: none; padding: 10px 25px; font-size: 0.9rem; font-weight: 900; border-radius: 50px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div id="main-layout">
+    <div id="shop-container">
+        <div class="shop-item" id="item-flash" onclick="comprarItem('revelar')">
+            <span class="emoji">👁️</span>
+            <span class="price-tag">1500 ⭐</span>
+            <span class="desc">VER MINAS</span>
+        </div>
+        <div class="shop-item" id="item-escudo" onclick="comprarItem('escudo')">
+            <span class="emoji">🛡️</span>
+            <span class="price-tag">3000 ⭐</span>
+            <span class="desc">TE PROTEGE 1 VEZ</span>
+        </div>
+        <div class="shop-item" id="item-auditoria" onclick="comprarItem('auditoria')">
+            <span class="emoji">🚩</span>
+            <span class="price-tag">1000 ⭐</span>
+            <span class="desc">3 BANDERAS SEGURAS</span>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <div id="points-display">⭐ <span id="puntos-val">0</span></div>
+        
+        <div class="multiplicador-wrapper" id="multi-wrapper">
+            <span id="multi-text">BONO DE TIEMPO: ⭐ x2</span>
+            <div class="multiplicador-container">
+                <div id="barra-progreso"></div>
+            </div>
+        </div>
+
+        <div class="bomba-icon">💣</div>
+        <h2>ALPROMINAS</h2>
+        <div class="menu-dificultad">
+            <button class="btn-nivel active" onclick="seleccionarNivel(8, 8, 10, this)">Fácil</button>
+            <button class="btn-nivel" onclick="seleccionarNivel(8, 12, 18, this)">Normal</button>
+            <button class="btn-nivel" onclick="seleccionarNivel(10, 16, 30, this)">Difícil</button>
+        </div>
+
+        <div class="tablero-scroll-area">
+            <div id="tablero"></div>
+        </div>
+
+        <div id="pantalla-boom" class="overlay">
+            <h1>¡BOOM!</h1>
+            <button class="btn-retry-celeste" onclick="cerrarPantallas()">Reintentar</button>
+        </div>
+
+        <div id="pantalla-victoria" class="overlay">
+            <h1>¡ENTREGADA! 🎉</h1>
+            <div class="regalo-container">
+                <p style="font-size: 0.7rem; margin: 0; color: #fbbf24;">ELIGE UN BONO</p>
+                <div class="regalo-opciones">
+                    <button class="btn-regalo" onclick="reclamarRegalo('revelar')">👁️</button>
+                    <button class="btn-regalo" onclick="reclamarRegalo('escudo')">🛡️</button>
+                    <button class="btn-regalo" onclick="reclamarRegalo('auditoria')">🚩</button>
+                </div>
+            </div>
+            <button class="btn-next" onclick="cerrarPantallas()">SIGUIENTE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let tableroLogico = [];
+    let filasGlobal, columnasGlobal, minasGlobal;
+    let juegoTerminado = false;
+    let puntos = 0;
+    let tieneEscudo = false;
+    let itemsUsados = { revelar: false, escudo: false, auditoria: false };
+    let itemsRegalados = { revelar: false, escudo: false, auditoria: false };
+    let multiplicadorActivo = true;
+    let tiempoMultiplicador;
+
+    function actualizarPuntos(n) {
+        puntos += n; if (puntos < 0) puntos = 0;
+        document.getElementById('puntos-val').innerText = puntos;
+    }
+
+    function seleccionarNivel(f, c, m, elemento) {
+        document.querySelectorAll('.btn-nivel').forEach(btn => btn.classList.remove('active'));
+        elemento.classList.add('active');
+        puntos = 0; document.getElementById('puntos-val').innerText = '0';
+        iniciarJuego(f, c, m);
+    }
+
+    function iniciarJuego(f, c, m) {
+        filasGlobal = f; columnasGlobal = c; minasGlobal = m;
+        tableroLogico = []; juegoTerminado = false; 
+        itemsUsados = { ...itemsRegalados };
+        tieneEscudo = itemsRegalados.escudo;
+        
+        multiplicadorActivo = true;
+        const barra = document.getElementById('barra-progreso');
+        const wrapper = document.getElementById('multi-wrapper');
+        
+        // Reiniciar visuales del multiplicador
+        barra.style.width = '100%';
+        wrapper.style.opacity = '1';
+        
+        clearInterval(tiempoMultiplicador);
+        let ancho = 100;
+        tiempoMultiplicador = setInterval(() => {
+            ancho -= 1.5; 
+            barra.style.width = ancho + '%';
+            if (ancho <= 0) { 
+                clearInterval(tiempoMultiplicador); 
+                multiplicadorActivo = false; 
+                wrapper.style.opacity = '0.3'; // Se vuelve transparente al terminar
+            }
+        }, 100);
+
+        actualizarTiendaUI();
+        document.getElementById('pantalla-boom').style.display = 'none';
+        document.getElementById('pantalla-victoria').style.display = 'none';
+        
+        const divTablero = document.getElementById('tablero');
+        divTablero.style.gridTemplateColumns = `repeat(${columnasGlobal}, auto)`;
+        divTablero.innerHTML = '';
+
+        for (let row = 0; row < filasGlobal; row++) {
+            tableroLogico[row] = [];
+            for (let col = 0; col < columnasGlobal; col++) {
+                tableroLogico[row][col] = { esMina: false, revelada: false, vecinas: 0, bandera: false };
+                const btn = document.createElement('div');
+                btn.className = 'celda';
+                btn.id = `c-${row}-${col}`;
+                btn.onclick = () => revelarCelda(row, col);
+                btn.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    if (!tableroLogico[row][col].revelada && !juegoTerminado) {
+                        tableroLogico[row][col].bandera = !tableroLogico[row][col].bandera;
+                        btn.innerText = tableroLogico[row][col].bandera ? '🚩' : '';
+                        verificarVictoria();
+                    }
+                };
+                divTablero.appendChild(btn);
+            }
+        }
+
+        let minasPuestas = 0;
+        while (minasPuestas < minasGlobal) {
+            let rF = Math.floor(Math.random() * filasGlobal);
+            let rC = Math.floor(Math.random() * columnasGlobal);
+            if (!tableroLogico[rF][rC].esMina) {
+                tableroLogico[rF][rC].esMina = true; minasPuestas++;
+            }
+        }
+        calcularNumeros();
+    }
+
+    function calcularNumeros() {
+        for (let f = 0; f < filasGlobal; f++) {
+            for (let c = 0; c < columnasGlobal; c++) {
+                if (!tableroLogico[f][c].esMina) {
+                    let contador = 0;
+                    for (let i = -1; i <= 1; i++) {
+                        for (let j = -1; j <= 1; j++) {
+                            if (tableroLogico[f + i]?.[c + j]?.esMina) contador++;
+                        }
+                    }
+                    tableroLogico[f][c].vecinas = contador;
+                }
+            }
+        }
+    }
+
+    function revelarCelda(f, c) {
+        if (juegoTerminado || tableroLogico[f][c].revelada || tableroLogico[f][c].bandera) return;
+        const celda = tableroLogico[f][c];
+        const el = document.getElementById(`c-${f}-${c}`);
+        
+        if (celda.esMina) {
+            if (tieneEscudo) {
+                tieneEscudo = false; itemsRegalados.escudo = false;
+                celda.revelada = true; el.classList.add('revelada');
+                el.innerText = '🛡️'; actualizarTiendaUI();
+                return;
+            }
+            finalizarJuego(false);
+        } else {
+            celda.revelada = true; el.classList.add('revelada');
+            actualizarPuntos(multiplicadorActivo ? 200 : 100);
+            if (celda.vecinas > 0) {
+                el.innerText = celda.vecinas;
+                el.style.color = ['#60a5fa','#34d399','#f87171','#a78bfa','#fbbf24','#22d3ee','#f472b6','#ffffff'][celda.vecinas-1];
+            } else {
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        if (tableroLogico[f + i]?.[c + j]) revelarCelda(f + i, c + j);
+                    }
+                }
+            }
+            verificarVictoria();
+        }
+    }
+
+    function comprarItem(tipo) {
+        if (juegoTerminado || itemsUsados[tipo]) return;
+        let costos = { revelar: 1500, escudo: 3000, auditoria: 1000 };
+        if (puntos >= costos[tipo]) { actualizarPuntos(-costos[tipo]); ejecutarItem(tipo); }
+    }
+
+    function ejecutarItem(tipo) {
+        itemsUsados[tipo] = true; actualizarTiendaUI();
+        if (tipo === 'revelar') flashMinas();
+        if (tipo === 'escudo') tieneEscudo = true;
+        if (tipo === 'auditoria') marcarAuditoria();
+    }
+
+    function reclamarRegalo(tipo) {
+        itemsRegalados = { revelar: false, escudo: false, auditoria: false };
+        itemsRegalados[tipo] = true;
+        alert("¡Item Guardado!");
+    }
+
+    function marcarAuditoria() {
+        let celdasConMina = [];
+        for (let f = 0; f < filasGlobal; f++) {
+            for (let c = 0; c < columnasGlobal; c++) {
+                if (tableroLogico[f][c].esMina && !tableroLogico[f][c].bandera) celdasConMina.push({f,c});
+            }
+        }
+        celdasConMina.sort(() => Math.random() - 0.5);
+        for (let i = 0; i < Math.min(3, celdasConMina.length); i++) {
+            let p = celdasConMina[i];
+            tableroLogico[p.f][p.c].bandera = true;
+            document.getElementById(`c-${p.f}-${p.c}`).innerText = '🚩';
+        }
+        itemsRegalados.auditoria = false;
+        verificarVictoria();
+    }
+
+    function flashMinas() {
+        for (let f = 0; f < filasGlobal; f++) {
+            for (let c = 0; c < columnasGlobal; c++) {
+                if (tableroLogico[f][c].esMina && !tableroLogico[f][c].revelada) document.getElementById(`c-${f}-${c}`).classList.add('flash-red');
+            }
+        }
+        setTimeout(() => {
+            document.querySelectorAll('.flash-red').forEach(el => el.classList.remove('flash-red'));
+            itemsRegalados.revelar = false;
+        }, 1200);
+    }
+
+    function finalizarJuego(victoria) {
+        juegoTerminado = true;
+        clearInterval(tiempoMultiplicador);
+        if (!victoria) {
+            puntos = 0; document.getElementById('puntos-val').innerText = '0';
+            itemsRegalados = { revelar: false, escudo: false, auditoria: false };
+            document.querySelectorAll('.celda').forEach(el => {
+                let parts = el.id.split('-');
+                let f = parseInt(parts[1]), c = parseInt(parts[2]);
+                if (tableroLogico[f][c].esMina) { el.innerText = '💣'; el.classList.add('mina'); }
+            });
+            setTimeout(() => { document.getElementById('pantalla-boom').style.display = 'flex'; }, 400);
+        } else {
+            setTimeout(() => { document.getElementById('pantalla-victoria').style.display = 'flex'; }, 300);
+        }
+    }
+
+    function verificarVictoria() {
+        let ganaste = true;
+        for (let f = 0; f < filasGlobal; f++) {
+            for (let c = 0; c < columnasGlobal; c++) {
+                if (!tableroLogico[f][c].esMina && !tableroLogico[f][c].revelada) ganaste = false;
+            }
+        }
+        if (ganaste) finalizarJuego(true);
+    }
+
+    function actualizarTiendaUI() {
+        ['revelar', 'escudo', 'auditoria'].forEach(t => {
+            let id = t === 'revelar' ? 'flash' : t === 'auditoria' ? 'auditoria' : 'escudo';
+            let el = document.getElementById(`item-${id}`);
+            el.className = 'shop-item' + (itemsUsados[t] ? ' disabled' : '') + (itemsRegalados[t] ? ' owned' : '');
+        });
+    }
+
+    function cerrarPantallas() { iniciarJuego(filasGlobal, columnasGlobal, minasGlobal); }
+    iniciarJuego(8, 8, 10);
+</script>
+</body>
+</html>
