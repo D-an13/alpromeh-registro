@@ -20,52 +20,55 @@
             overflow: hidden; display: flex;
             justify-content: center; align-items: center;
             height: 100vh; color: var(--text);
-            user-select: none; touch-action: manipulation;
+            user-select: none; touch-action: none;
+            /* Quitamos la transición de color de fondo del body */
         }
         #game-ui {
-            position: absolute; top: 8%; text-align: center;
-            z-index: 10; width: 100%; pointer-events: none;
+            position: absolute; top: 5%; z-index: 10; width: 100%; pointer-events: none;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         #score { 
             font-size: 7rem; font-weight: 200; opacity: 0.4; margin: 0; 
-            letter-spacing: -5px; line-height: 1;
+            letter-spacing: -5px; line-height: 1; text-align: center;
         }
         #highscore-ui {
             font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; color: var(--oro);
-            margin-top: -10px; text-transform: uppercase;
+            margin-top: -10px; text-transform: uppercase; text-align: center;
         }
         #perfect-msg {
             position: absolute; top: 40%; width: 100%; text-align: center;
-            color: var(--oro); font-weight: 900; font-size: 2.5rem;
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
-            pointer-events: none; opacity: 0; transform: translateY(20px);
-            transition: all 0.5s ease; z-index: 15;
+            color: var(--oro); font-weight: 900; font-size: 3.5rem;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 1);
+            pointer-events: none; opacity: 0; 
+            transform: scale(2); /* Empieza desde afuera (gigante) */
+            z-index: 15;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             display: none; flex-direction: column;
             justify-content: center; align-items: center; z-index: 20;
             backdrop-filter: blur(15px); text-align: center; padding: 20px;
         }
         #msg { 
-            font-size: 2.2rem; margin: 0; color: var(--verde-exito); 
+            font-size: 2.5rem; margin: 0; color: var(--verde-exito); 
             font-weight: 900; letter-spacing: 1px;
             text-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
-            text-transform: uppercase;
+            text-transform: uppercase; text-align: center;
         }
         #final-score { font-size: 1.2rem; opacity: 0.8; margin: 10px 0 30px 0; }
         .btn-retry {
-            background: var(--celeste); color: white; border: none;
-            padding: 18px 45px; font-size: 0.9rem; font-weight: 900;
-            border-radius: 50px; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
-            letter-spacing: 2px; text-transform: uppercase;
+            background: linear-gradient(135deg, var(--celeste), #0080ff);
+            color: white; border: none; padding: 18px 45px; font-size: 0.9rem; 
+            font-weight: 900; border-radius: 50px; cursor: pointer; 
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
+            letter-spacing: 2px; text-transform: uppercase; pointer-events: auto;
         }
         .btn-retry:hover {
-            transform: scale(1.1); box-shadow: 0 0 40px rgba(0, 210, 255, 0.8);
-            background: #fff; color: var(--bg);
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
         }
     </style>
 </head>
@@ -79,9 +82,9 @@
 <div id="perfect-msg">¡PERFECTO!</div>
 
 <div id="overlay">
-    <h1 id="msg">¡QUÉ ALTO CRECIÓ LA EMPRESA!</h1>
-    <p id="final-score">Pisos: 0</p>
-    <button class="btn-retry" onclick="restart()">NUEVO PROYECTO</button>
+    <h1 id="msg">¡QUE ALTO CRECIÓ LA EMPRESA!</h1>
+    <p id="final-score">Pisos logrados: 0</p>
+    <button class="btn-retry" onclick="event.stopPropagation(); restart();">INICIAR OTRO PROYECTO</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -107,34 +110,41 @@
         
         const starGeo = new THREE.BufferGeometry();
         const starCoords = [];
-        for(let i=0; i<1000; i++) {
-            starCoords.push((Math.random()-0.5)*100, (Math.random())*200, (Math.random()-0.5)*100);
+        for(let i=0; i<1500; i++) {
+            starCoords.push((Math.random()-0.5)*150, (Math.random())*300, (Math.random()-0.5)*150);
         }
         starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
-        const starMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.1});
+        const starMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.15, transparent: true, opacity: 0.8});
         const starPoints = new THREE.Points(starGeo, starMat);
         scene.add(starPoints);
 
         const aspect = window.innerWidth / window.innerHeight;
-        const d = 10;
+        const d = 14; 
         camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 1000);
         camera.position.set(10, 10, 10);
         camera.lookAt(0, 0, 0);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-        directionalLight.position.set(10, 20, 0);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 20, 10);
         scene.add(directionalLight);
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         document.body.appendChild(renderer.domElement);
 
+        function handleInput(e) {
+            if (gameOver) return;
+            if (e.target.classList.contains('btn-retry')) return;
+            if (e.type === 'touchstart') e.preventDefault();
+            handleAction();
+        }
+
+        window.addEventListener('mousedown', handleInput);
+        window.addEventListener('touchstart', handleInput, { passive: false });
         window.addEventListener('resize', onWindowResize, false);
-        window.addEventListener('mousedown', handleAction);
-        window.addEventListener('touchstart', (e) => { e.preventDefault(); handleAction(); });
 
         updateHighscoreUI();
         restart();
@@ -143,12 +153,12 @@
 
     function createParticles(x, y, z, color, count = 15) {
         for(let i=0; i<count; i++) {
-            const geo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-            const mat = new THREE.MeshBasicMaterial({color: color});
+            const geo = new THREE.BoxGeometry(0.25, 0.25, 0.25);
+            const mat = new THREE.MeshLambertMaterial({color: color});
             const p = new THREE.Mesh(geo, mat);
             p.position.set(x, y, z);
             p.userData = {
-                v: new THREE.Vector3((Math.random()-0.5)*0.3, Math.random()*0.3, (Math.random()-0.5)*0.3),
+                v: new THREE.Vector3((Math.random()-0.5)*0.4, Math.random()*0.4, (Math.random()-0.5)*0.4),
                 life: 1.0
             };
             scene.add(p);
@@ -157,16 +167,28 @@
     }
 
     function showPerfectFeedback() {
+        // 1. Efecto de texto: Explosión de afuera hacia adentro
+        perfectDisplay.style.transition = "none";
+        perfectDisplay.style.transform = "scale(2)"; // Empieza gigante
+        perfectDisplay.style.opacity = "0";
+        
+        perfectDisplay.offsetHeight; // Forzar reflow
+
+        perfectDisplay.style.transition = "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
         perfectDisplay.style.opacity = "1";
-        perfectDisplay.style.transform = "translateY(0)";
+        perfectDisplay.style.transform = "scale(1)"; // Se asienta en tamaño normal
+        
+        // 2. Fondo SE QUEDA IGUAL (Sin cambio dorado)
+        // Eliminamos las líneas que cambiaban scene.background y body.style.backgroundColor
+
         setTimeout(() => {
             perfectDisplay.style.opacity = "0";
-            perfectDisplay.style.transform = "translateY(-20px)";
-        }, 600);
+            perfectDisplay.style.transform = "scale(0.5)"; // Efecto de salida sutil
+        }, 400); 
     }
 
     function generateBox(x, y, z, width, depth, index) {
-        const color = new THREE.Color(`hsl(${200 + index * 3}, 80%, 55%)`);
+        const color = new THREE.Color(`hsl(${210 + index * 4}, 85%, 60%)`);
         const geometry = new THREE.BoxGeometry(width, boxHeight, depth);
         const material = new THREE.MeshLambertMaterial({ color });
         const mesh = new THREE.Mesh(geometry, material);
@@ -196,20 +218,17 @@
 
         if (overlap <= 0) return finishGame();
 
-        // Lógica de PERFECTO (menos de 0.2 de error)
-        if (Math.abs(delta) < 0.2) {
-            overlap = size; // Snap al tamaño original para facilitar el juego un poco
+        if (Math.abs(delta) < 0.25) {
+            overlap = size; 
             if (direction === 'x') topLayer.threejs.position.x = prevLayer.threejs.position.x;
             else topLayer.threejs.position.z = prevLayer.threejs.position.z;
             
             showPerfectFeedback();
-            createParticles(topLayer.threejs.position.x, topLayer.threejs.position.y, topLayer.threejs.position.z, 0xfbbf24, 25);
-            shakeAmount = 0.4; // Más impacto al ser perfecto
+            createParticles(topLayer.threejs.position.x, topLayer.threejs.position.y, topLayer.threejs.position.z, 0xffffff, 30);
+            shakeAmount = 0.5;
         } else {
             shakeAmount = 0.2;
             createParticles(topLayer.threejs.position.x, topLayer.threejs.position.y, topLayer.threejs.position.z, topLayer.color);
-            
-            // Recortar bloque si no es perfecto
             if (direction === 'x') {
                 topLayer.width = overlap;
                 topLayer.threejs.scale.x = overlap / size;
@@ -219,18 +238,20 @@
                 topLayer.threejs.scale.z = overlap / size;
                 topLayer.threejs.position.z = prevLayer.threejs.position.z + delta / 2;
             }
+            
+            // Actualizar color de fondo normal (progresión del nivel)
+            const darkFactor = Math.min(stack.length * 0.015, 0.9);
+            const nextColor = new THREE.Color(0x0f172a).lerp(new THREE.Color(0x020617), darkFactor);
+            scene.background = nextColor;
+            // Quitamos el cambio de background del body para mantener el CSS limpio
         }
 
         scoreDisplay.innerText = stack.length - 1;
         checkHighscore(stack.length - 1);
 
-        const darkFactor = Math.min(stack.length * 0.015, 0.9);
-        const newBg = new THREE.Color(0x0f172a).lerp(new THREE.Color(0x020617), darkFactor);
-        scene.background = newBg;
-
         const nextDirection = direction === 'x' ? 'z' : 'x';
-        addLayer(nextDirection === 'x' ? -10 : topLayer.threejs.position.x, 
-                 nextDirection === 'z' ? -10 : topLayer.threejs.position.z, 
+        addLayer(nextDirection === 'x' ? -12 : topLayer.threejs.position.x, 
+                 nextDirection === 'z' ? -12 : topLayer.threejs.position.z, 
                  topLayer.width, topLayer.depth, nextDirection);
     }
 
@@ -244,7 +265,7 @@
 
     function updateHighscoreUI() {
         let high = localStorage.getItem('alprostack_high') || 0;
-        highscoreDisplay.innerText = "Record: " + high;
+        highscoreDisplay.innerText = "Record Personal: " + high;
     }
 
     function addLayer(x, z, width, depth, direction) {
@@ -268,43 +289,40 @@
         scene.background = new THREE.Color(0x0f172a);
         document.getElementById('overlay').style.display = 'none';
         addLayer(0, 0, worldWidth, worldDepth, null);
-        addLayer(-10, 0, worldWidth, worldDepth, 'x');
+        addLayer(-12, 0, worldWidth, worldDepth, 'x'); 
         camera.position.set(10, 10, 10);
         updateHighscoreUI();
     }
 
     function onWindowResize() {
         const aspect = window.innerWidth / window.innerHeight;
-        const d = 10;
+        const d = 14; 
         camera.left = -d * aspect; camera.right = d * aspect;
+        camera.top = d; camera.bottom = -d;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
     function animate() {
         requestAnimationFrame(animate);
-        
         if (gameStarted && !gameOver) {
             const topLayer = stack[stack.length - 1];
-            const speed = 0.15 + (stack.length * 0.006); 
+            const speed = 0.16 + (stack.length * 0.007); // Progresión de velocidad sutil
             if (topLayer.direction === 'x') {
                 topLayer.threejs.position.x += speed;
-                if (topLayer.threejs.position.x > 10) topLayer.threejs.position.x = -10;
+                if (topLayer.threejs.position.x > 12) topLayer.threejs.position.x = -12;
             } else {
                 topLayer.threejs.position.z += speed;
-                if (topLayer.threejs.position.z > 10) topLayer.threejs.position.z = -10;
+                if (topLayer.threejs.position.z > 12) topLayer.threejs.position.z = -12;
             }
         }
 
         for(let i = particles.length - 1; i >= 0; i--) {
             const p = particles[i];
             p.position.add(p.userData.v);
-            p.userData.life -= 0.02;
-            p.scale.setScalar(p.userData.life);
-            if(p.userData.life <= 0) {
-                scene.remove(p);
-                particles.splice(i, 1);
-            }
+            p.userData.life -= 0.025;
+            p.scale.setScalar(Math.max(0, p.userData.life));
+            if(p.userData.life <= 0) { scene.remove(p); particles.splice(i, 1); }
         }
 
         const targetY = (stack.length - 1) * boxHeight + 10;
@@ -313,12 +331,10 @@
         if(shakeAmount > 0) {
             camera.position.x = 10 + (Math.random() - 0.5) * shakeAmount;
             camera.position.z = 10 + (Math.random() - 0.5) * shakeAmount;
-            shakeAmount *= 0.9;
+            shakeAmount *= 0.85;
         } else {
-            camera.position.x = 10;
-            camera.position.z = 10;
+            camera.position.x = 10; camera.position.z = 10;
         }
-
         renderer.render(scene, camera);
     }
 </script>
