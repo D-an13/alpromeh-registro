@@ -166,6 +166,16 @@
           animation: pulsoVerde 0.8s ease-out;
           border: 2px solid #10b981 !important;
         }
+
+input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
 <body>
@@ -214,7 +224,7 @@
         </h2>
         <form id="formOrdenes">
             <div class="form-grid">
-                <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" required></div>
+                <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" min="0" required></div>
                 <div><label>FECHA DE IMPRESIÓN:</label><input type="date" id="fecha" required></div>
                 <div><label>INSTITUCIÓN:</label><input type="text" id="institucion" placeholder="Nombre de la entidad" required></div>
                 <div>
