@@ -176,6 +176,70 @@ input::-webkit-outer-spin-button,
         input[type=number] {
             -moz-appearance: textfield;
         }
+
+/* --- ESTILOS ALPROGAMES: MINIMALISTA & CLEAN --- */
+.alpro-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Oscurece el fondo suavemente */
+    z-index: 5000; flex-direction: column;
+    align-items: center; justify-content: center; backdrop-filter: blur(8px);
+}
+
+.alpro-content {
+    background: var(--bg-card); 
+    padding: 30px; border-radius: 24px;
+    width: 90%; max-width: 450px; /* Ancho controlado para que no se estire */
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+}
+
+.alpro-title {
+    color: var(--primary);
+    font-size: 1.8rem; font-weight: 800; margin-bottom: 5px;
+    font-style: normal !important;
+}
+
+.alpro-subtitle {
+    color: var(--placeholder); font-size: 0.9rem; margin-bottom: 25px;
+    font-style: normal !important;
+}
+
+.alpro-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+    width: 100%;
+}
+
+.game-card {
+    background: var(--bg-body); /* Color de fondo del sistema */
+    border: 2px solid transparent;
+    border-radius: 16px; padding: 20px;
+    cursor: pointer; transition: all 0.2s ease;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+.game-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    background: var(--bg-card);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* FUERA CURSIVAS */
+.game-card span, .game-card i, .alpro-title, .alpro-subtitle {
+    font-style: normal !important;
+    display: block;
+}
+
+.game-emoji { font-size: 2.2rem; margin-bottom: 8px; }
+.game-name { font-weight: 700; font-size: 0.8rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; }
+
+.btn-close-games {
+    margin-top: 25px; background: #dc2626; color: white; border: none;
+    padding: 12px 30px; border-radius: 12px; font-weight: bold;
+    cursor: pointer; transition: 0.3s; width: 100%;
+}
+
     </style>
 </head>
 <body>
@@ -796,9 +860,16 @@ async function sincronizarSilencioso() {
             }, 3000);
         }
 
-        document.getElementById('triggerHuevo').addEventListener('dblclick', function() {
-            window.open("https://d-an13.github.io/alpromeh-registro/alprogame.html", "_blank");
-        });
+// --- LÓGICA DE ALPROGAMES (Doble Clic) ---
+document.getElementById('triggerHuevo').addEventListener('dblclick', () => {
+    document.getElementById('modalAlproGames').style.display = 'flex';
+    showToast("Shhhh...");
+});
+
+function cerrarAlproGames() {
+    document.getElementById('modalAlproGames').style.display = 'none';
+}
+
 function editarInstitucion(numOrden, celda) {
     // Si ya hay un input, no hacer nada
     if (celda.querySelector('input')) return;
@@ -873,5 +944,33 @@ function actualizarContadores() {
     document.getElementById('count-listos').innerText = listasHoy;
 }
     </script>
+
+<div id="modalAlproGames" class="alpro-modal" onclick="cerrarAlproGames()">
+    <div class="alpro-content" onclick="event.stopPropagation()">
+        <span class="alpro-title">ALPROGAMES 🎮</span>
+        <span class="alpro-subtitle">Módulos de entrenamiento activos</span>
+        
+        <div class="alpro-grid">
+            <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/alprogame.html', '_blank')">
+                <span class="game-emoji">🍎</span>
+                <span class="game-name">ALPRODROP</span>
+            </div>
+            <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/alprominas.html', '_blank')">
+                <span class="game-emoji">💣</span>
+                <span class="game-name">ALPROMINAS</span>
+            </div>
+            <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/alprostack.html', '_blank')">
+                <span class="game-emoji">🧩</span>
+                <span class="game-name">ALPROSTACK</span>
+            </div>
+            <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/neonflow.html', '_blank')">
+                <span class="game-emoji">✨</span>
+                <span class="game-name">ALPRONEON</span>
+            </div>
+        </div>
+        
+        <button class="btn-close-games" onclick="cerrarAlproGames()">VOLVER AL REGISTRO</button>
+    </div>
+</div>
 </body>
 </html>
