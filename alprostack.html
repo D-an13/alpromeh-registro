@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALPROSTACK</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --accent: #3b82f6;
+            --text: #ffffff;
+            --celeste: #00d2ff;
+            --verde-exito: #22c55e; 
+            --oro: #fbbf24;
+        }
+        body {
+            margin: 0; background-color: var(--bg);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; display: flex;
+            justify-content: center; align-items: center;
+            height: 100vh; color: var(--text);
+            user-select: none; touch-action: manipulation;
+        }
+        #game-ui {
+            position: absolute; top: 8%; text-align: center;
+            z-index: 10; width: 100%; pointer-events: none;
+        }
+        #score { 
+            font-size: 7rem; font-weight: 200; opacity: 0.4; margin: 0; 
+            letter-spacing: -5px; line-height: 1;
+        }
+        #highscore-ui {
+            font-size: 0.8rem; letter-spacing: 2px; opacity: 0.6; color: var(--oro);
+            margin-top: -10px; text-transform: uppercase;
+        }
+        #perfect-msg {
+            position: absolute; top: 40%; width: 100%; text-align: center;
+            color: var(--oro); font-weight: 900; font-size: 2.5rem;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+            pointer-events: none; opacity: 0; transform: translateY(20px);
+            transition: all 0.5s ease; z-index: 15;
+        }
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 20;
+            backdrop-filter: blur(15px); text-align: center; padding: 20px;
+        }
+        #msg { 
+            font-size: 2.2rem; margin: 0; color: var(--verde-exito); 
+            font-weight: 900; letter-spacing: 1px;
+            text-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+            text-transform: uppercase;
+        }
+        #final-score { font-size: 1.2rem; opacity: 0.8; margin: 10px 0 30px 0; }
+        .btn-retry {
+            background: var(--celeste); color: white; border: none;
+            padding: 18px 45px; font-size: 0.9rem; font-weight: 900;
+            border-radius: 50px; cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+        .btn-retry:hover {
+            transform: scale(1.1); box-shadow: 0 0 40px rgba(0, 210, 255, 0.8);
+            background: #fff; color: var(--bg);
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-ui">
+    <p id="score">0</p>
+    <p id="highscore-ui">Record: 0</p>
+</div>
+
+<div id="perfect-msg">¡PERFECTO!</div>
+
+<div id="overlay">
+    <h1 id="msg">¡QUÉ ALTO CRECIÓ LA EMPRESA!</h1>
+    <p id="final-score">Pisos: 0</p>
+    <button class="btn-retry" onclick="restart()">NUEVO PROYECTO</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    let camera, scene, renderer;
+    let boxHeight = 1;
+    let stack = [];
+    let particles = [];
+    let gameStarted = false;
+    let gameOver = false;
+    let shakeAmount = 0;
+    let scoreDisplay = document.getElementById('score');
+    let highscoreDisplay = document.getElementById('highscore-ui');
+    let perfectDisplay = document.getElementById('perfect-msg');
+    const worldWidth = 10;
+    const worldDepth = 10;
+
+    init();
+
+    function init() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0f172a);
+        
+        const starGeo = new THREE.BufferGeometry();
+        const starCoords = [];
+        for(let i=0; i<1000; i++) {
+            starCoords.push((Math.random()-0.5)*100, (Math.random())*200, (Math.random()-0.5)*100);
+        }
+        starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+        const starMat = new THREE.PointsMaterial({color: 0xffffff, size: 0.1});
+        const starPoints = new THREE.Points(starGeo, starMat);
+        scene.add(starPoints);
+
+        const aspect = window.innerWidth / window.innerHeight;
+        const d = 10;
+        camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 0.1, 1000);
+        camera.position.set(10, 10, 10);
+        camera.lookAt(0, 0, 0);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        directionalLight.position.set(10, 20, 0);
+        scene.add(directionalLight);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        window.addEventListener('resize', onWindowResize, false);
+        window.addEventListener('mousedown', handleAction);
+        window.addEventListener('touchstart', (e) => { e.preventDefault(); handleAction(); });
+
+        updateHighscoreUI();
+        restart();
+        animate();
+    }
+
+    function createParticles(x, y, z, color, count = 15) {
+        for(let i=0; i<count; i++) {
+            const geo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+            const mat = new THREE.MeshBasicMaterial({color: color});
+            const p = new THREE.Mesh(geo, mat);
+            p.position.set(x, y, z);
+            p.userData = {
+                v: new THREE.Vector3((Math.random()-0.5)*0.3, Math.random()*0.3, (Math.random()-0.5)*0.3),
+                life: 1.0
+            };
+            scene.add(p);
+            particles.push(p);
+        }
+    }
+
+    function showPerfectFeedback() {
+        perfectDisplay.style.opacity = "1";
+        perfectDisplay.style.transform = "translateY(0)";
+        setTimeout(() => {
+            perfectDisplay.style.opacity = "0";
+            perfectDisplay.style.transform = "translateY(-20px)";
+        }, 600);
+    }
+
+    function generateBox(x, y, z, width, depth, index) {
+        const color = new THREE.Color(`hsl(${200 + index * 3}, 80%, 55%)`);
+        const geometry = new THREE.BoxGeometry(width, boxHeight, depth);
+        const material = new THREE.MeshLambertMaterial({ color });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(x, y, z);
+        scene.add(mesh);
+        return { threejs: mesh, width, depth, color };
+    }
+
+    function handleAction() {
+        if (gameOver) return;
+        if (!gameStarted) { gameStarted = true; return; }
+
+        const topLayer = stack[stack.length - 1];
+        const prevLayer = stack[stack.length - 2];
+        const direction = topLayer.direction;
+        let delta, size, overlap;
+
+        if (direction === 'x') {
+            delta = topLayer.threejs.position.x - prevLayer.threejs.position.x;
+            size = topLayer.width;
+            overlap = size - Math.abs(delta);
+        } else {
+            delta = topLayer.threejs.position.z - prevLayer.threejs.position.z;
+            size = topLayer.depth;
+            overlap = size - Math.abs(delta);
+        }
+
+        if (overlap <= 0) return finishGame();
+
+        // Lógica de PERFECTO (menos de 0.2 de error)
+        if (Math.abs(delta) < 0.2) {
+            overlap = size; // Snap al tamaño original para facilitar el juego un poco
+            if (direction === 'x') topLayer.threejs.position.x = prevLayer.threejs.position.x;
+            else topLayer.threejs.position.z = prevLayer.threejs.position.z;
+            
+            showPerfectFeedback();
+            createParticles(topLayer.threejs.position.x, topLayer.threejs.position.y, topLayer.threejs.position.z, 0xfbbf24, 25);
+            shakeAmount = 0.4; // Más impacto al ser perfecto
+        } else {
+            shakeAmount = 0.2;
+            createParticles(topLayer.threejs.position.x, topLayer.threejs.position.y, topLayer.threejs.position.z, topLayer.color);
+            
+            // Recortar bloque si no es perfecto
+            if (direction === 'x') {
+                topLayer.width = overlap;
+                topLayer.threejs.scale.x = overlap / size;
+                topLayer.threejs.position.x = prevLayer.threejs.position.x + delta / 2;
+            } else {
+                topLayer.depth = overlap;
+                topLayer.threejs.scale.z = overlap / size;
+                topLayer.threejs.position.z = prevLayer.threejs.position.z + delta / 2;
+            }
+        }
+
+        scoreDisplay.innerText = stack.length - 1;
+        checkHighscore(stack.length - 1);
+
+        const darkFactor = Math.min(stack.length * 0.015, 0.9);
+        const newBg = new THREE.Color(0x0f172a).lerp(new THREE.Color(0x020617), darkFactor);
+        scene.background = newBg;
+
+        const nextDirection = direction === 'x' ? 'z' : 'x';
+        addLayer(nextDirection === 'x' ? -10 : topLayer.threejs.position.x, 
+                 nextDirection === 'z' ? -10 : topLayer.threejs.position.z, 
+                 topLayer.width, topLayer.depth, nextDirection);
+    }
+
+    function checkHighscore(current) {
+        let high = localStorage.getItem('alprostack_high') || 0;
+        if(current > high) {
+            localStorage.setItem('alprostack_high', current);
+            updateHighscoreUI();
+        }
+    }
+
+    function updateHighscoreUI() {
+        let high = localStorage.getItem('alprostack_high') || 0;
+        highscoreDisplay.innerText = "Record: " + high;
+    }
+
+    function addLayer(x, z, width, depth, direction) {
+        const layer = generateBox(x, boxHeight * stack.length, z, width, depth, stack.length);
+        layer.direction = direction;
+        stack.push(layer);
+    }
+
+    function finishGame() {
+        gameOver = true;
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('final-score').innerText = "Pisos logrados: " + (stack.length - 1);
+    }
+
+    function restart() {
+        gameOver = false; gameStarted = false;
+        stack.forEach(l => scene.remove(l.threejs));
+        particles.forEach(p => scene.remove(p));
+        stack = []; particles = [];
+        scoreDisplay.innerText = "0";
+        scene.background = new THREE.Color(0x0f172a);
+        document.getElementById('overlay').style.display = 'none';
+        addLayer(0, 0, worldWidth, worldDepth, null);
+        addLayer(-10, 0, worldWidth, worldDepth, 'x');
+        camera.position.set(10, 10, 10);
+        updateHighscoreUI();
+    }
+
+    function onWindowResize() {
+        const aspect = window.innerWidth / window.innerHeight;
+        const d = 10;
+        camera.left = -d * aspect; camera.right = d * aspect;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        if (gameStarted && !gameOver) {
+            const topLayer = stack[stack.length - 1];
+            const speed = 0.15 + (stack.length * 0.006); 
+            if (topLayer.direction === 'x') {
+                topLayer.threejs.position.x += speed;
+                if (topLayer.threejs.position.x > 10) topLayer.threejs.position.x = -10;
+            } else {
+                topLayer.threejs.position.z += speed;
+                if (topLayer.threejs.position.z > 10) topLayer.threejs.position.z = -10;
+            }
+        }
+
+        for(let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.position.add(p.userData.v);
+            p.userData.life -= 0.02;
+            p.scale.setScalar(p.userData.life);
+            if(p.userData.life <= 0) {
+                scene.remove(p);
+                particles.splice(i, 1);
+            }
+        }
+
+        const targetY = (stack.length - 1) * boxHeight + 10;
+        camera.position.y += (targetY - camera.position.y) * 0.1;
+        
+        if(shakeAmount > 0) {
+            camera.position.x = 10 + (Math.random() - 0.5) * shakeAmount;
+            camera.position.z = 10 + (Math.random() - 0.5) * shakeAmount;
+            shakeAmount *= 0.9;
+        } else {
+            camera.position.x = 10;
+            camera.position.z = 10;
+        }
+
+        renderer.render(scene, camera);
+    }
+</script>
+</body>
+</html>
