@@ -113,9 +113,10 @@
         #tablero { display: grid; gap: 3px; margin: 0 auto; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 15px; width: max-content; position: relative; }
         
         .celda { 
-            width: 32px; height: 32px; min-width: 32px; min-height: 32px;
+            width: 60px; height: 60px; min-width:602px; min-height: 60px;
             background: var(--cell-bg); display: flex; align-items: center; justify-content: center; 
-            border-radius: 6px; cursor: pointer; font-weight: 800; transition: 0.15s; font-size: 0.8rem; user-select: none;
+            border-radius: 12px; cursor: pointer; transition: all 0.2s ease; user-select: none;
+}
         }
         .celda:hover { background: var(--cell-hover); transform: scale(1.05); }
         .celda.revelada { background: var(--cell-revealed); cursor: default; transform: none; }
@@ -186,7 +187,7 @@
         <div class="menu-dificultad">
             <button class="btn-nivel active" id="btn-facil" onclick="prepararNivel('facil', this)">Buscaminas</button>
             <button class="btn-nivel" id="btn-medio" onclick="prepararNivel('medio', this)">Tesoro</button>
-            <button class="btn-nivel" id="btn-dificil" onclick="prepararNivel('dificil', this)">2048</button>
+        <button class="btn-nivel" id="btn-dificil" onclick="prepararNivel('dificil', this)">Luces Fuera</button>
         </div>
 
         <div class="tablero-scroll-area">
@@ -235,7 +236,7 @@
     const instruccion = {
         facil: { t: "BUSCAMINAS", d: "Despeja el campo sin tocar minas. ¡Usa la tienda para sobrevivir!", icon: "💣" },
         medio: { t: "TESORO OCULTO", d: "Encuentra el diamante en menos de 15 movimientos. Los números indican distancia.", icon: "💎" },
-        dificil: { t: "ALPRO 2048", d: "Fusiona bloques del mismo valor para llegar al 2048. ¡Usa las flechas!", icon: "🧩" }
+dificil: { t: "LUCES FUERA", d: "¡Apaga todas las luces! Al tocar una celda, cambias el estado de esa y sus vecinas.", icon: "💡" }
     };
 
     /* ==========================================
@@ -258,6 +259,11 @@ function prepararNivel(modo, elemento) {
             'medio': '#10b981',   // Verde (Tesoro)
             'dificil': '#fbbf24'  // Amarillo (2048)
         };
+         const coloresTituloModal = {
+        'facil': '#00d2ff',   // Celeste vivo (Buscaminas)
+        'medio': '#99ff00',   // Verde Lima (Tesoro)
+        'dificil': '#ff9900'  // Amarillo Anaranjado (Luces Fuera)
+    };
 
         // 3. Aplicamos el color al botón seleccionado
         elemento.classList.add('active');
@@ -265,11 +271,15 @@ function prepararNivel(modo, elemento) {
         elemento.style.boxShadow = `0 0 15px ${colores[modo]}`;
         elemento.style.color = (modo === 'dificil') ? '#0f172a' : 'white';
 
-        // El resto del código del modal se queda igual
-    document.getElementById('modal-titulo').innerText = instruccion[modo].t;
+// 4. CAMBIAMOS EL COLOR DEL TÍTULO EN EL MODAL AQUÍ:
+    const tituloModal = document.getElementById('modal-titulo');
+    tituloModal.innerText = instruccion[modo].t;
+    tituloModal.style.color = coloresTituloModal[modo]; // <--- La magia
+    tituloModal.style.textShadow = `0 0 10px ${coloresTituloModal[modo]}88`; // Un poco de brillo neón
+
     document.getElementById('modal-desc').innerText = instruccion[modo].d;
     document.getElementById('modal-instrucciones').style.display = 'flex';
-    }
+}
 
     function cerrarModal() {
         document.getElementById('modal-instrucciones').style.display = 'none';
@@ -294,7 +304,7 @@ function prepararNivel(modo, elemento) {
                 iniciarMedio();
             } else {
                 pointsDisp.classList.remove('energy-mode');
-                document.getElementById('coin-icon').innerText = "🧩";
+                document.getElementById('coin-icon').innerText = "💡";
                 iniciarDificil();
             }
         }
@@ -427,22 +437,73 @@ function prepararNivel(modo, elemento) {
         }
     }
 
-    /* ==========================================
-       LÓGICA DEL JUEGO: 2048 (DIFÍCIL)
-       ========================================== */
-    function iniciarDificil() {
-        filasGlobal = 4; columnasGlobal = 4;
-        resetComun();
-        document.getElementById('header-icon').innerText = "🧩";
-        document.getElementById('main-title').innerText = "ALPRO-2048";
-        document.getElementById('puntos-val').innerText = "---";
-        crearTableroDOM(filasGlobal, columnasGlobal);
-        for(let i=0; i<2; i++) {
-            let rf = Math.floor(Math.random()*4), rc = Math.floor(Math.random()*4);
-            const el = document.getElementById(`c-${rf}-${rc}`);
-            if(el) { el.innerText = "2"; el.style.background = "#475569"; }
+/* ==========================================
+   LÓGICA DEL JUEGO: LUCES FUERA (DIFÍCIL)
+   ========================================== */
+function iniciarDificil() {
+    filasGlobal = 4; columnasGlobal = 4;
+    resetComun();
+    document.getElementById('header-icon').innerText = "💡";
+    document.getElementById('main-title').innerText = "LUCES FUERA";
+    document.getElementById('puntos-val').innerText = "OFF"; // Meta: apagar todo
+    
+    crearTableroDOM(filasGlobal, columnasGlobal);
+
+    // Encendemos algunas luces al azar para empezar el reto
+    for (let i = 0; i < 6; i++) {
+        let rf = Math.floor(Math.random() * 4);
+        let rc = Math.floor(Math.random() * 4);
+        invertirLuz(rf, rc); 
+    }
+}
+
+function clickLucesFuera(f, c) {
+    if (juegoTerminado) return;
+
+    // Invertimos la celda tocada y sus vecinas (Cruz)
+    invertirLuz(f, c);       // Centro
+    invertirLuz(f - 1, c);   // Arriba
+    invertirLuz(f + 1, c);   // Abajo
+    invertirLuz(f, c - 1);   // Izquierda
+    invertirLuz(f, c + 1);   // Derecha
+
+    verificarVictoriaLuces();
+}
+
+function invertirLuz(f, c) {
+    if (f >= 0 && f < 4 && c >= 0 && c < 4) {
+        const celda = tableroLogico[f][c];
+        const el = document.getElementById(`c-${f}-${c}`);
+        
+        celda.revelada = !celda.revelada; 
+        
+        if (celda.revelada) {
+            // Efecto Luz Encendida: Celda completamente amarilla con brillo
+            el.style.background = "#fbbf24"; 
+            el.style.boxShadow = "0 0 20px #fbbf24, inset 0 0 10px rgba(255,255,255,0.5)";
+            el.style.border = "1px solid #fff";
+            el.innerText = ""; // Quitamos el puntito raro
+        } else {
+            // Efecto Luz Apagada: Volvemos al estilo oscuro original
+            el.style.background = "var(--cell-bg)";
+            el.style.boxShadow = "none";
+            el.style.border = "none";
+            el.innerText = "";
         }
     }
+}
+
+function verificarVictoriaLuces() {
+    let todasApagadas = true;
+    for (let f = 0; f < 4; f++) {
+        for (let c = 0; c < 4; c++) {
+            if (tableroLogico[f][c].revelada) todasApagadas = false;
+        }
+    }
+    if (todasApagadas) {
+        finalizarJuego(true);
+    }
+}
 
     /* ==========================================
        SISTEMA DE TIENDA Y ITEMS
@@ -501,6 +562,11 @@ function prepararNivel(modo, elemento) {
         const divTablero = document.getElementById('tablero');
         divTablero.style.gridTemplateColumns = `repeat(${c}, auto)`;
         divTablero.innerHTML = '';
+
+// Si es Luces Fuera, usamos celdas grandes; si no, el tamaño estándar
+    const tamaño = (modoActual === 'dificil') ? '60px' : '32px';
+    const radio = (modoActual === 'dificil') ? '12px' : '6px';
+
         for (let row = 0; row < f; row++) {
             tableroLogico[row] = [];
             for (let col = 0; col < c; col++) {
@@ -508,6 +574,13 @@ function prepararNivel(modo, elemento) {
                 const btn = document.createElement('div');
                 btn.className = 'celda';
                 btn.id = `c-${row}-${col}`;
+// Aplicamos el tamaño dinámicamente
+            btn.style.width = tamaño;
+            btn.style.height = tamaño;
+            btn.style.minWidth = tamaño;
+            btn.style.minHeight = tamaño;
+            btn.style.borderRadius = radio;
+            btn.style.fontWeight = "800";
                 btn.onclick = () => clickAccion(row, col);
                 btn.oncontextmenu = (e) => { e.preventDefault(); manejarBandera(row, col, btn); };
                 divTablero.appendChild(btn);
@@ -515,11 +588,12 @@ function prepararNivel(modo, elemento) {
         }
     }
 
-    function clickAccion(f, c) {
-        if (juegoTerminado) return;
-        if (modoActual === 'facil') revelarBuscaminas(f, c);
-        else if (modoActual === 'medio') revelarTesoro(f, c);
-    }
+function clickAccion(f, c) {
+    if (juegoTerminado) return;
+    if (modoActual === 'facil') revelarBuscaminas(f, c);
+    else if (modoActual === 'medio') revelarTesoro(f, c);
+    else if (modoActual === 'dificil') clickLucesFuera(f, c); // <--- Cambia esto
+}
 
     function actualizarPuntos(n) { 
         if (modoActual === 'facil') {
