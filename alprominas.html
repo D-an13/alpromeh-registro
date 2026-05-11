@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPROGAMES HUB</title>
+    <title>MINIJUEGOS</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
     <style>
         :root {
@@ -79,7 +79,8 @@
             max-height: 98vh; margin-left: 110px; 
         }
 
-        #points-display { font-size: 1.1rem; font-weight: 800; color: #fbbf24; margin-bottom: 2px; }
+        #points-display { font-size: 1.3rem; font-weight: 800; color: #fbbf24; margin-bottom: 2px; }
+        #points-display.energy-mode { color: #00d2ff; text-shadow: 0 0 10px rgba(0, 210, 255, 0.5); }
         
         .multiplicador-wrapper { margin-bottom: 8px; width: 100%; transition: opacity 0.5s ease; }
         #multi-text { font-size: 0.65rem; font-weight: 900; color: #fbbf24; text-transform: uppercase; }
@@ -213,16 +214,17 @@
 </div>
 
 <script>
+    /* ==========================================
+       VARIABLES GLOBALES Y ESTADO
+       ========================================== */
     let modoActual = 'facil';
     let tableroLogico = [];
     let filasGlobal, columnasGlobal, minasGlobal;
     let juegoTerminado = false;
     
-    // SISTEMA DE PUNTOS SEPARADO
     let puntosBuscaminas = 0;
-    let puntosTesoros = 0;
     
-    let movimientosRestantes = 20;
+    let movimientosRestantes = 15;
     let tieneEscudo = false;
     let itemsUsados = { revelar: false, escudo: false, auditoria: false };
     let itemsRegalados = { revelar: false, escudo: false, auditoria: false };
@@ -232,17 +234,41 @@
 
     const instruccion = {
         facil: { t: "BUSCAMINAS", d: "Despeja el campo sin tocar minas. ¡Usa la tienda para sobrevivir!", icon: "💣" },
-        medio: { t: "TESORO OCULTO", d: "Encuentra el diamante en menos de 20 movimientos. Los números indican distancia.", icon: "💎" },
+        medio: { t: "TESORO OCULTO", d: "Encuentra el diamante en menos de 15 movimientos. Los números indican distancia.", icon: "💎" },
         dificil: { t: "ALPRO 2048", d: "Fusiona bloques del mismo valor para llegar al 2048. ¡Usa las flechas!", icon: "🧩" }
     };
 
-    function prepararNivel(modo, elemento) {
+    /* ==========================================
+       CONFIGURACIÓN DE NIVELES Y MODAL
+       ========================================== */
+function prepararNivel(modo, elemento) {
         modoActual = modo;
-        document.querySelectorAll('.btn-nivel').forEach(btn => btn.classList.remove('active'));
+        
+        // 1. Quitamos la clase 'active' de todos los botones
+        document.querySelectorAll('.btn-nivel').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = "transparent"; 
+        btn.style.boxShadow = "none";
+        btn.style.color = "rgba(255,255,255,0.5)"; // Volvemos al texto clarito de siempre
+    });
+
+        // 2. Definimos los colores por modo
+        const colores = {
+            'facil': '#3b82f6',   // Azul (Buscaminas)
+            'medio': '#10b981',   // Verde (Tesoro)
+            'dificil': '#fbbf24'  // Amarillo (2048)
+        };
+
+        // 3. Aplicamos el color al botón seleccionado
         elemento.classList.add('active');
-        document.getElementById('modal-titulo').innerText = instruccion[modo].t;
-        document.getElementById('modal-desc').innerText = instruccion[modo].d;
-        document.getElementById('modal-instrucciones').style.display = 'flex';
+        elemento.style.background = colores[modo];
+        elemento.style.boxShadow = `0 0 15px ${colores[modo]}`;
+        elemento.style.color = (modo === 'dificil') ? '#0f172a' : 'white';
+
+        // El resto del código del modal se queda igual
+    document.getElementById('modal-titulo').innerText = instruccion[modo].t;
+    document.getElementById('modal-desc').innerText = instruccion[modo].d;
+    document.getElementById('modal-instrucciones').style.display = 'flex';
     }
 
     function cerrarModal() {
@@ -250,21 +276,41 @@
         const shop = document.getElementById('shop-container');
         const multi = document.getElementById('multi-wrapper');
         const regalos = document.getElementById('regalos-seccion');
+        const pointsDisp = document.getElementById('points-display');
         
         if (modoActual === 'facil') {
             shop.style.opacity = "1"; shop.style.pointerEvents = "auto";
             multi.style.display = "block"; regalos.style.display = "block";
+            pointsDisp.classList.remove('energy-mode');
             document.getElementById('coin-icon').innerText = "⭐";
             iniciarFacil();
         } else {
             shop.style.opacity = "0"; shop.style.pointerEvents = "none";
             multi.style.display = "none"; regalos.style.display = "none";
-            document.getElementById('coin-icon').innerText = "🪙";
-            if (modoActual === 'medio') iniciarMedio();
-            else iniciarDificil();
+            
+            if (modoActual === 'medio') {
+                pointsDisp.classList.add('energy-mode');
+                document.getElementById('coin-icon').innerText = "⚡";
+                iniciarMedio();
+            } else {
+                pointsDisp.classList.remove('energy-mode');
+                document.getElementById('coin-icon').innerText = "🧩";
+                iniciarDificil();
+            }
         }
     }
 
+    function resetComun() {
+        juegoTerminado = false;
+        tableroLogico = [];
+        document.getElementById('pantalla-boom').style.display = 'none';
+        document.getElementById('pantalla-victoria').style.display = 'none';
+        actualizarTiendaUI();
+    }
+
+    /* ==========================================
+       LÓGICA DEL JUEGO: BUSCAMINAS (FÁCIL)
+       ========================================== */
     function iniciarFacil() {
         filasGlobal = 8; columnasGlobal = 8; minasGlobal = 10;
         resetComun();
@@ -286,64 +332,6 @@
 
         crearTableroDOM(filasGlobal, columnasGlobal);
         colocarMinas();
-    }
-
-    function iniciarMedio() {
-        filasGlobal = 10; columnasGlobal = 10;
-        movimientosRestantes = 20;
-        resetComun();
-        document.getElementById('header-icon').innerText = "💎";
-        document.getElementById('main-title').innerText = `BUSCATESORO (${movimientosRestantes} MOV)`;
-        document.getElementById('puntos-val').innerText = puntosTesoros;
-        
-        tesoroF = Math.floor(Math.random() * filasGlobal);
-        tesoroC = Math.floor(Math.random() * columnasGlobal);
-        crearTableroDOM(filasGlobal, columnasGlobal);
-    }
-
-    function iniciarDificil() {
-        filasGlobal = 4; columnasGlobal = 4;
-        resetComun();
-        document.getElementById('header-icon').innerText = "🧩";
-        document.getElementById('main-title').innerText = "ALPRO-2048";
-        crearTableroDOM(filasGlobal, columnasGlobal);
-        for(let i=0; i<2; i++) {
-            let rf = Math.floor(Math.random()*4), rc = Math.floor(Math.random()*4);
-            const el = document.getElementById(`c-${rf}-${rc}`);
-            if(el) { el.innerText = "2"; el.style.background = "#475569"; }
-        }
-    }
-
-    function resetComun() {
-        juegoTerminado = false;
-        tableroLogico = [];
-        document.getElementById('pantalla-boom').style.display = 'none';
-        document.getElementById('pantalla-victoria').style.display = 'none';
-        actualizarTiendaUI();
-    }
-
-    function crearTableroDOM(f, c) {
-        const divTablero = document.getElementById('tablero');
-        divTablero.style.gridTemplateColumns = `repeat(${c}, auto)`;
-        divTablero.innerHTML = '';
-        for (let row = 0; row < f; row++) {
-            tableroLogico[row] = [];
-            for (let col = 0; col < c; col++) {
-                tableroLogico[row][col] = { esMina: false, revelada: false, vecinas: 0, bandera: false };
-                const btn = document.createElement('div');
-                btn.className = 'celda';
-                btn.id = `c-${row}-${col}`;
-                btn.onclick = () => clickAccion(row, col);
-                btn.oncontextmenu = (e) => { e.preventDefault(); manejarBandera(row, col, btn); };
-                divTablero.appendChild(btn);
-            }
-        }
-    }
-
-    function clickAccion(f, c) {
-        if (juegoTerminado) return;
-        if (modoActual === 'facil') revelarBuscaminas(f, c);
-        else if (modoActual === 'medio') revelarTesoro(f, c);
     }
 
     function revelarBuscaminas(f, c) {
@@ -371,18 +359,52 @@
         }
     }
 
+    function colocarMinas() {
+        let minasPuestas = 0;
+        while (minasPuestas < minasGlobal) {
+            let rF = Math.floor(Math.random() * filasGlobal);
+            let rC = Math.floor(Math.random() * columnasGlobal);
+            if (!tableroLogico[rF][rC].esMina) { tableroLogico[rF][rC].esMina = true; minasPuestas++; }
+        }
+        for (let f = 0; f < filasGlobal; f++) {
+            for (let c = 0; c < columnasGlobal; c++) {
+                if (!tableroLogico[f][c].esMina) {
+                    let cont = 0;
+                    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) 
+                        if (tableroLogico[f + i]?.[c + j]?.esMina) cont++;
+                    tableroLogico[f][c].vecinas = cont;
+                }
+            }
+        }
+    }
+
+    /* ==========================================
+       LÓGICA DEL JUEGO: BUSCATESORO (MEDIO)
+       ========================================== */
+    function iniciarMedio() {
+        filasGlobal = 10; columnasGlobal = 10;
+        movimientosRestantes = 15;
+        resetComun();
+        document.getElementById('header-icon').innerText = "💎";
+        document.getElementById('main-title').innerText = `BUSCATESORO`;
+        document.getElementById('puntos-val').innerText = movimientosRestantes;
+        
+        tesoroF = Math.floor(Math.random() * filasGlobal);
+        tesoroC = Math.floor(Math.random() * columnasGlobal);
+        crearTableroDOM(filasGlobal, columnasGlobal);
+    }
+
     function revelarTesoro(f, c) {
         if (tableroLogico[f][c].revelada || juegoTerminado) return;
         const el = document.getElementById(`c-${f}-${c}`);
         tableroLogico[f][c].revelada = true;
         
         movimientosRestantes--;
-        document.getElementById('main-title').innerText = `MOVIMIENTOS: ${movimientosRestantes}`;
+        document.getElementById('puntos-val').innerText = movimientosRestantes;
         
         if(f === tesoroF && c === tesoroC) {
             el.classList.add('tesoro'); 
             el.innerText = "💎";
-            actualizarPuntos(2000);
             finalizarJuego(true);
         } else {
             let dist = Math.abs(f - tesoroF) + Math.abs(c - tesoroC);
@@ -405,44 +427,26 @@
         }
     }
 
-    function colocarMinas() {
-        let minasPuestas = 0;
-        while (minasPuestas < minasGlobal) {
-            let rF = Math.floor(Math.random() * filasGlobal);
-            let rC = Math.floor(Math.random() * columnasGlobal);
-            if (!tableroLogico[rF][rC].esMina) { tableroLogico[rF][rC].esMina = true; minasPuestas++; }
-        }
-        for (let f = 0; f < filasGlobal; f++) {
-            for (let c = 0; c < columnasGlobal; c++) {
-                if (!tableroLogico[f][c].esMina) {
-                    let cont = 0;
-                    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) 
-                        if (tableroLogico[f + i]?.[c + j]?.esMina) cont++;
-                    tableroLogico[f][c].vecinas = cont;
-                }
-            }
+    /* ==========================================
+       LÓGICA DEL JUEGO: 2048 (DIFÍCIL)
+       ========================================== */
+    function iniciarDificil() {
+        filasGlobal = 4; columnasGlobal = 4;
+        resetComun();
+        document.getElementById('header-icon').innerText = "🧩";
+        document.getElementById('main-title').innerText = "ALPRO-2048";
+        document.getElementById('puntos-val').innerText = "---";
+        crearTableroDOM(filasGlobal, columnasGlobal);
+        for(let i=0; i<2; i++) {
+            let rf = Math.floor(Math.random()*4), rc = Math.floor(Math.random()*4);
+            const el = document.getElementById(`c-${rf}-${rc}`);
+            if(el) { el.innerText = "2"; el.style.background = "#475569"; }
         }
     }
 
-    function actualizarPuntos(n) { 
-        if (modoActual === 'facil') {
-            puntosBuscaminas += n;
-            if (puntosBuscaminas < 0) puntosBuscaminas = 0;
-            document.getElementById('puntos-val').innerText = puntosBuscaminas;
-        } else if (modoActual === 'medio') {
-            puntosTesoros += n;
-            document.getElementById('puntos-val').innerText = puntosTesoros;
-        }
-    }
-    
-    function manejarBandera(f, c, btn) {
-        if (modoActual === 'facil' && !tableroLogico[f][c].revelada && !juegoTerminado) {
-            tableroLogico[f][c].bandera = !tableroLogico[f][c].bandera;
-            btn.innerText = tableroLogico[f][c].bandera ? '🚩' : '';
-            verificarVictoria();
-        }
-    }
-
+    /* ==========================================
+       SISTEMA DE TIENDA Y ITEMS
+       ========================================== */
     function comprarItem(tipo) {
         if (juegoTerminado || itemsUsados[tipo] || modoActual !== 'facil') return;
         let costos = { revelar: 1500, escudo: 3000, auditoria: 1000 };
@@ -477,6 +481,65 @@
         verificarVictoria();
     }
 
+    function actualizarTiendaUI() {
+        ['revelar', 'escudo', 'auditoria'].forEach(t => {
+            let id = t === 'revelar' ? 'flash' : t === 'auditoria' ? 'auditoria' : 'escudo';
+            let el = document.getElementById(`item-${id}`);
+            if(el) el.className = 'shop-item' + (itemsUsados[t] ? ' disabled' : '') + (itemsRegalados[t] ? ' owned' : '');
+        });
+    }
+
+    function reclamarRegalo(tipo) {
+        itemsRegalados = { revelar: false, escudo: false, auditoria: false };
+        itemsRegalados[tipo] = true; alert("¡Item Guardado para la próxima partida!");
+    }
+
+    /* ==========================================
+       GESTIÓN DEL TABLERO Y PUNTOS
+       ========================================== */
+    function crearTableroDOM(f, c) {
+        const divTablero = document.getElementById('tablero');
+        divTablero.style.gridTemplateColumns = `repeat(${c}, auto)`;
+        divTablero.innerHTML = '';
+        for (let row = 0; row < f; row++) {
+            tableroLogico[row] = [];
+            for (let col = 0; col < c; col++) {
+                tableroLogico[row][col] = { esMina: false, revelada: false, vecinas: 0, bandera: false };
+                const btn = document.createElement('div');
+                btn.className = 'celda';
+                btn.id = `c-${row}-${col}`;
+                btn.onclick = () => clickAccion(row, col);
+                btn.oncontextmenu = (e) => { e.preventDefault(); manejarBandera(row, col, btn); };
+                divTablero.appendChild(btn);
+            }
+        }
+    }
+
+    function clickAccion(f, c) {
+        if (juegoTerminado) return;
+        if (modoActual === 'facil') revelarBuscaminas(f, c);
+        else if (modoActual === 'medio') revelarTesoro(f, c);
+    }
+
+    function actualizarPuntos(n) { 
+        if (modoActual === 'facil') {
+            puntosBuscaminas += n;
+            if (puntosBuscaminas < 0) puntosBuscaminas = 0;
+            document.getElementById('puntos-val').innerText = puntosBuscaminas;
+        }
+    }
+    
+    function manejarBandera(f, c, btn) {
+        if (modoActual === 'facil' && !tableroLogico[f][c].revelada && !juegoTerminado) {
+            tableroLogico[f][c].bandera = !tableroLogico[f][c].bandera;
+            btn.innerText = tableroLogico[f][c].bandera ? '🚩' : '';
+            verificarVictoria();
+        }
+    }
+
+    /* ==========================================
+       FINALIZACIÓN Y REINICIO
+       ========================================== */
     function verificarVictoria() {
         if (modoActual !== 'facil') return;
         let ganaste = true;
@@ -497,6 +560,8 @@
                     if (tableroLogico[f][c].esMina) { el.innerText = '💣'; el.classList.add('mina'); }
                 });
                 document.getElementById('boom-text').innerText = "¡BOOM!";
+            } else {
+                document.getElementById('boom-text').innerText = "¡SIN ENERGÍA!";
             }
             setTimeout(() => { document.getElementById('pantalla-boom').style.display = 'flex'; }, 400);
         } else {
@@ -504,22 +569,9 @@
         }
     }
 
-    function reclamarRegalo(tipo) {
-        itemsRegalados = { revelar: false, escudo: false, auditoria: false };
-        itemsRegalados[tipo] = true; alert("¡Item Guardado para la próxima partida!");
-    }
-
-    function actualizarTiendaUI() {
-        ['revelar', 'escudo', 'auditoria'].forEach(t => {
-            let id = t === 'revelar' ? 'flash' : t === 'auditoria' ? 'auditoria' : 'escudo';
-            let el = document.getElementById(`item-${id}`);
-            if(el) el.className = 'shop-item' + (itemsUsados[t] ? ' disabled' : '') + (itemsRegalados[t] ? ' owned' : '');
-        });
-    }
-
     function reiniciarJuego() { cerrarModal(); }
 
-    prepararNivel('facil', document.getElementById('btn-facil'));
+prepararNivel('facil', document.getElementById('btn-facil'));
 </script>
 </body>
 </html>
