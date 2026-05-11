@@ -275,7 +275,65 @@ input::-webkit-outer-spin-button,
     from { transform: translateY(-100%); }
     to { transform: translateY(0); }
 }    
-</style>
+
+/* --- OPTIMIZACIÓN PARA MÓVIL (SISTEMA HÍBRIDO) --- */
+
+/* Escondemos el botón de "Nueva Orden" en la PC */
+.btn-celular-only { 
+    display: none; 
+}
+
+@media (max-width: 600px) {
+    /* Escondemos el formulario por defecto */
+    #contenedorForm { 
+        display: none; 
+        margin-bottom: 20px;
+        /* Quitamos la animación vieja de aquí porque ahora la controla JS */
+    }
+    
+    /* Botón optimizado: Color verde como 'Guardar' */
+    .btn-celular-only { 
+        display: block; 
+        width: 100%; 
+        padding: 14px; 
+        background: #10b981; /* Verde esmeralda profesional */
+        color: white; 
+        border: none; 
+        border-radius: 12px; 
+        margin-bottom: 15px; 
+        font-weight: 800;
+        font-family: inherit;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease; /* Para que el cambio de color sea suave */
+    }
+
+    .contenedor { padding: 10px; }
+    table { font-size: 0.8rem; }
+}
+
+/* --- ANIMACIONES DE APERTURA Y CIERRE (Gama Alta) --- */
+.mostrar-con-animacion {
+    display: block !important;
+    animation: liquidOpen 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 1;
+}
+
+.ocultar-con-animacion {
+    animation: liquidClose 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 0;
+}
+
+@keyframes liquidOpen {
+    from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes liquidClose {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-20px) scale(0.98); }
+}</style>
 </head>
 <body>
 <div id="update-banner">
@@ -320,6 +378,7 @@ input::-webkit-outer-spin-button,
         </div>
     </div>
 
+<button id="btnExpandirForm" class="btn-celular-only" onclick="toggleForm()">+ NUEVA ORDEN</button>
     <div class="contenedor" id="contenedorForm">
         <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">
             <span id="triggerHuevo" style="cursor: pointer;">📦</span> REGISTRO ÓRDENES
@@ -1011,6 +1070,38 @@ setInterval(chequearActualizacionAutomatica, 120000);
 
 // Primera ejecución al cargar para tener la huella inicial
 chequearActualizacionAutomatica();
+
+// --- FUNCIÓN PARA MOSTRAR/OCULTAR FORMULARIO CON EFECTOS ---
+function toggleForm() {
+    const f = document.getElementById('contenedorForm');
+    const btn = document.getElementById('btnExpandirForm');
+    
+    // Verificamos el estado real del formulario
+    if (f.classList.contains('mostrar-con-animacion')) {
+        // --- CERRANDO FORMULARIO ---
+        f.classList.remove('mostrar-con-animacion');
+        f.classList.add('ocultar-con-animacion');
+        
+        // Esperamos a que termine la animación (0.4s) antes de ocultarlo del todo
+        setTimeout(() => {
+            f.style.display = 'none';
+            f.classList.remove('ocultar-con-animacion');
+        }, 400);
+
+        btn.innerText = "+ NUEVA ORDEN";
+        // Color Verde Principal (como tu botón de Guardar)
+        btn.style.background = "#10b981"; 
+    } else {
+        // --- ABRIENDO FORMULARIO ---
+        f.style.display = 'block';
+        f.classList.add('mostrar-con-animacion');
+        
+        btn.innerText = "x CERRAR FORMULARIO";
+        // Color Anaranjado Rojizo Sutil (Tono similar al verde pero en naranja)
+        // Usé un naranja quemado (#ea580c) que combina con tu app.
+        btn.style.background = "#ea580c"; 
+    }
+}
     </script>
 
 <div id="modalAlproGames" class="alpro-modal" onclick="cerrarAlproGames()">
