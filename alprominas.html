@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPROMINAS</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💣</text></svg>">
+    <title>ALPROGAMES HUB</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
     <style>
         :root {
             --primary: #1e293b; --accent: #3b82f6; --bg: #0f172a; 
@@ -14,28 +14,50 @@
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
+            font-family: 'Segoe UI', sans-serif; background-color: var(--bg);
             display: flex; justify-content: center; align-items: center;
             height: 100vh; width: 100vw; margin: 0; color: white;
-            overflow-y: hidden; 
-            overflow-x: auto;   
+            overflow-y: hidden; overflow-x: auto; 
+        }
+
+        #modal-instrucciones {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%; height: 80%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 100; display: none; justify-content: center; align-items: center;
+            border-radius: 25px; border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .modal-content { text-align: center; padding: 20px; }
+
+        .btn-jugar {
+            background: var(--celeste-vivo); color: white; border: none;
+            padding: 12px 40px; font-size: 1rem; font-weight: 900;
+            border-radius: 50px; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        }
+        .btn-jugar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
+            background: #33e1ff;
         }
 
         #main-layout { 
-            display: flex; flex-direction: row;
-            width: 100%; height: 100%;
-            padding: 10px; box-sizing: border-box;
-            align-items: center; justify-content: center; gap: 15px;
+            display: flex; flex-direction: row; width: 100%; height: 100%;
+            padding: 10px; box-sizing: border-box; align-items: center; justify-content: center; gap: 15px;
         }
 
-        /* --- TIENDA FIJA LATERAL (PC) --- */
         #shop-container {
             display: flex; flex-direction: column; gap: 10px;
             background: rgba(30, 41, 59, 0.6); padding: 10px;
             border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
             backdrop-filter: blur(5px); z-index: 5;
             position: fixed; left: 15px; top: 50%; transform: translateY(-50%);
+            transition: opacity 0.3s;
         }
 
         .shop-item {
@@ -54,28 +76,18 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: center; 
             position: relative; border: 1px solid rgba(255,255,255,0.05);
             display: flex; flex-direction: column; justify-content: center;
-            max-height: 98vh;
-            margin-left: 110px; 
+            max-height: 98vh; margin-left: 110px; 
         }
 
         #points-display { font-size: 1.1rem; font-weight: 800; color: #fbbf24; margin-bottom: 2px; }
         
-        /* --- ESTILO ACTUALIZADO DEL MULTIPLICADOR --- */
-        .multiplicador-wrapper { 
-            margin-bottom: 8px; 
-            width: 100%; 
-            transition: opacity 0.5s ease; /* Transición suave al hacerse transparente */
-        }
-        
+        .multiplicador-wrapper { margin-bottom: 8px; width: 100%; transition: opacity 0.5s ease; }
         #multi-text { font-size: 0.65rem; font-weight: 900; color: #fbbf24; text-transform: uppercase; }
         .multiplicador-container {
             width: 100%; height: 5px; background: rgba(255,255,255,0.1);
             border-radius: 10px; margin-top: 2px; overflow: hidden;
         }
-        #barra-progreso {
-            width: 100%; height: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            transition: width 0.1s linear;
-        }
+        #barra-progreso { width: 100%; height: 100%; background: linear-gradient(90deg, #f59e0b, #fbbf24); transition: width 0.1s linear; }
 
         .bomba-icon { font-size: 1.5rem; margin-bottom: 0; }
         h2 { margin: 0 0 8px 0; font-size: 0.9rem; letter-spacing: 2px; font-weight: 900; }
@@ -90,72 +102,43 @@
             color: rgba(255,255,255,0.5); font-weight: bold; cursor: pointer;
             background: transparent; transition: 0.2s; font-size: 0.7rem;
         }
-        .btn-nivel.active { 
-            background: var(--accent); 
-            color: white; 
-            box-shadow: 0 0 15px var(--accent); 
-        }
+        .btn-nivel.active { background: var(--accent); color: white; box-shadow: 0 0 15px var(--accent); }
 
         .tablero-scroll-area {
-            width: 100%; 
-            max-width: 90vw;
-            overflow-x: auto; 
-            overflow-y: hidden;
-            margin: 5px 0;
-            display: flex;
-            justify-content: center;
-            -webkit-overflow-scrolling: touch; 
+            width: 100%; max-width: 90vw; overflow-x: auto; overflow-y: hidden;
+            margin: 5px 0; display: flex; justify-content: center; -webkit-overflow-scrolling: touch; 
         }
 
-        #tablero { 
-            display: grid; gap: 3px; margin: 0 auto; padding: 10px; 
-            background: rgba(0,0,0,0.3); border-radius: 15px; width: max-content;
-        }
+        #tablero { display: grid; gap: 3px; margin: 0 auto; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 15px; width: max-content; position: relative; }
+        
         .celda { 
-            width: 32px; height: 32px; 
-            min-width: 32px; min-height: 32px;
-            background: var(--cell-bg); 
-            display: flex; align-items: center; justify-content: center; 
-            border-radius: 6px; cursor: pointer; font-weight: 800; 
-            transition: 0.15s; font-size: 0.8rem; user-select: none;
+            width: 32px; height: 32px; min-width: 32px; min-height: 32px;
+            background: var(--cell-bg); display: flex; align-items: center; justify-content: center; 
+            border-radius: 6px; cursor: pointer; font-weight: 800; transition: 0.15s; font-size: 0.8rem; user-select: none;
         }
         .celda:hover { background: var(--cell-hover); transform: scale(1.05); }
         .celda.revelada { background: var(--cell-revealed); cursor: default; transform: none; }
         .celda.mina { background: var(--rojo-brillante) !important; box-shadow: 0 0 10px var(--rojo-brillante); }
         .celda.flash-red { background: var(--rojo-brillante) !important; }
+        .celda.tesoro { background: var(--verde-brillante) !important; box-shadow: 0 0 15px var(--verde-brillante); animation: blink 0.5s infinite alternate; }
 
-        @media (max-width: 800px) {
-            #main-layout { flex-direction: column; padding: 5px; height: auto; }
-            #shop-container { 
-                position: relative; left: 0; top: 0; transform: none; 
-                flex-direction: row; order: 2; width: auto; justify-content: center;
-                margin-top: 10px; padding: 8px;
-            }
-            #game-container { order: 1; width: 98%; margin-left: 0; padding: 10px; max-height: none; }
-            .celda { width: 35px; height: 35px; min-width: 35px; min-height: 35px; }
-            body { overflow-y: auto; height: auto; } 
-            .tablero-scroll-area { justify-content: flex-start; } 
-        }
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.7; } }
 
         .overlay {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            border-radius: 30px; flex-direction: column; justify-content: center; 
-            align-items: center; z-index: 10; backdrop-filter: blur(10px);
+            border-radius: 30px; flex-direction: column; justify-content: center; align-items: center; z-index: 10; backdrop-filter: blur(10px);
         }
 
         #pantalla-boom h1 { font-size: 3rem; margin: 0; color: var(--rojo-brillante); text-shadow: 0 0 20px var(--rojo-brillante); }
-        #pantalla-victoria h1 { font-size: 1.5rem; margin: 0; color: var(--verde-brillante); }
+        .btn-retry-celeste, .btn-next { background: var(--celeste-vivo); color: white; border: none; padding: 10px 25px; font-size: 0.9rem; font-weight: 900; border-radius: 50px; cursor: pointer; margin-top: 15px; }
+        .btn-next { background: var(--verde-brillante); }
 
-        .btn-retry-celeste {
-            background: var(--celeste-vivo); color: white; border: none; padding: 10px 25px;
-            font-size: 0.9rem; font-weight: 900; border-radius: 50px; cursor: pointer; margin-top: 15px;
+        @media (max-width: 800px) {
+            #main-layout { flex-direction: column; padding: 5px; height: auto; }
+            #shop-container { position: relative; left: 0; top: 0; transform: none; flex-direction: row; order: 2; width: auto; justify-content: center; margin-top: 10px; padding: 8px; }
+            #game-container { order: 1; width: 98%; margin-left: 0; padding: 10px; max-height: none; }
+            body { overflow-y: auto; height: auto; } 
         }
-
-        .regalo-container { margin-top: 10px; background: rgba(255,255,255,0.08); padding: 10px; border-radius: 20px; }
-        .regalo-opciones { display: flex; gap: 10px; margin-top: 5px; }
-        .btn-regalo { background: rgba(255,255,255,0.1); border: 2px solid var(--accent); color: white; padding: 8px; border-radius: 12px; cursor: pointer; font-size: 1.2rem; }
-
-        .btn-next { background: var(--verde-brillante); color: white; border: none; padding: 10px 25px; font-size: 0.9rem; font-weight: 900; border-radius: 50px; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -180,7 +163,15 @@
     </div>
 
     <div id="game-container">
-        <div id="points-display">⭐ <span id="puntos-val">0</span></div>
+        <div id="modal-instrucciones">
+            <div class="modal-content">
+                <h2 id="modal-titulo" style="letter-spacing: 3px; color: var(--celeste-vivo); margin-bottom: 10px;"></h2>
+                <p id="modal-desc" style="font-size: 0.85rem; opacity: 0.9; margin: 15px 0; max-width: 250px; line-height: 1.4;"></p>
+                <button class="btn-jugar" onclick="cerrarModal()">JUGAR</button>
+            </div>
+        </div>
+
+        <div id="points-display"><span id="coin-icon">⭐</span> <span id="puntos-val">0</span></div>
         
         <div class="multiplicador-wrapper" id="multi-wrapper">
             <span id="multi-text">BONO DE TIEMPO: ⭐ x2</span>
@@ -189,12 +180,12 @@
             </div>
         </div>
 
-        <div class="bomba-icon">💣</div>
-        <h2>ALPROMINAS</h2>
+        <div class="bomba-icon" id="header-icon">💣</div>
+        <h2 id="main-title">ALPROMINAS</h2>
         <div class="menu-dificultad">
-            <button class="btn-nivel active" onclick="seleccionarNivel(8, 8, 10, this)">Fácil</button>
-            <button class="btn-nivel" onclick="seleccionarNivel(8, 12, 18, this)">Normal</button>
-            <button class="btn-nivel" onclick="seleccionarNivel(10, 16, 30, this)">Difícil</button>
+            <button class="btn-nivel active" id="btn-facil" onclick="prepararNivel('facil', this)">Buscaminas</button>
+            <button class="btn-nivel" id="btn-medio" onclick="prepararNivel('medio', this)">Tesoro</button>
+            <button class="btn-nivel" id="btn-dificil" onclick="prepararNivel('dificil', this)">2048</button>
         </div>
 
         <div class="tablero-scroll-area">
@@ -202,140 +193,168 @@
         </div>
 
         <div id="pantalla-boom" class="overlay">
-            <h1>¡BOOM!</h1>
-            <button class="btn-retry-celeste" onclick="cerrarPantallas()">Reintentar</button>
+            <h1 id="boom-text">¡BOOM!</h1>
+            <button class="btn-retry-celeste" onclick="reiniciarJuego()">Reintentar</button>
         </div>
 
         <div id="pantalla-victoria" class="overlay">
-            <h1>¡ENTREGADA! 🎉</h1>
-            <div class="regalo-container">
+            <h1 id="win-text">¡GANASTE! 🎉</h1>
+            <div id="regalos-seccion" class="regalo-container" style="margin-top:10px; background: rgba(255,255,255,0.08); padding:10px; border-radius:20px;">
                 <p style="font-size: 0.7rem; margin: 0; color: #fbbf24;">ELIGE UN BONO</p>
-                <div class="regalo-opciones">
-                    <button class="btn-regalo" onclick="reclamarRegalo('revelar')">👁️</button>
-                    <button class="btn-regalo" onclick="reclamarRegalo('escudo')">🛡️</button>
-                    <button class="btn-regalo" onclick="reclamarRegalo('auditoria')">🚩</button>
+                <div class="regalo-opciones" style="display:flex; gap:10px; justify-content:center; margin-top:5px;">
+                    <button class="btn-retry-celeste" style="padding:8px; margin:0; font-size:1.2rem;" onclick="reclamarRegalo('revelar')">👁️</button>
+                    <button class="btn-retry-celeste" style="padding:8px; margin:0; font-size:1.2rem;" onclick="reclamarRegalo('escudo')">🛡️</button>
+                    <button class="btn-retry-celeste" style="padding:8px; margin:0; font-size:1.2rem;" onclick="reclamarRegalo('auditoria')">🚩</button>
                 </div>
             </div>
-            <button class="btn-next" onclick="cerrarPantallas()">SIGUIENTE</button>
+            <button class="btn-next" onclick="reiniciarJuego()">SIGUIENTE</button>
         </div>
     </div>
 </div>
 
 <script>
+    let modoActual = 'facil';
     let tableroLogico = [];
     let filasGlobal, columnasGlobal, minasGlobal;
     let juegoTerminado = false;
-    let puntos = 0;
+    
+    // SISTEMA DE PUNTOS SEPARADO
+    let puntosBuscaminas = 0;
+    let puntosTesoros = 0;
+    
+    let movimientosRestantes = 20;
     let tieneEscudo = false;
     let itemsUsados = { revelar: false, escudo: false, auditoria: false };
     let itemsRegalados = { revelar: false, escudo: false, auditoria: false };
     let multiplicadorActivo = true;
     let tiempoMultiplicador;
+    let tesoroF, tesoroC;
 
-    function actualizarPuntos(n) {
-        puntos += n; if (puntos < 0) puntos = 0;
-        document.getElementById('puntos-val').innerText = puntos;
-    }
+    const instruccion = {
+        facil: { t: "BUSCAMINAS", d: "Despeja el campo sin tocar minas. ¡Usa la tienda para sobrevivir!", icon: "💣" },
+        medio: { t: "TESORO OCULTO", d: "Encuentra el diamante en menos de 20 movimientos. Los números indican distancia.", icon: "💎" },
+        dificil: { t: "ALPRO 2048", d: "Fusiona bloques del mismo valor para llegar al 2048. ¡Usa las flechas!", icon: "🧩" }
+    };
 
-    function seleccionarNivel(f, c, m, elemento) {
+    function prepararNivel(modo, elemento) {
+        modoActual = modo;
         document.querySelectorAll('.btn-nivel').forEach(btn => btn.classList.remove('active'));
         elemento.classList.add('active');
-        puntos = 0; document.getElementById('puntos-val').innerText = '0';
-        iniciarJuego(f, c, m);
+        document.getElementById('modal-titulo').innerText = instruccion[modo].t;
+        document.getElementById('modal-desc').innerText = instruccion[modo].d;
+        document.getElementById('modal-instrucciones').style.display = 'flex';
     }
 
-    function iniciarJuego(f, c, m) {
-        filasGlobal = f; columnasGlobal = c; minasGlobal = m;
-        tableroLogico = []; juegoTerminado = false; 
-        itemsUsados = { ...itemsRegalados };
-        tieneEscudo = itemsRegalados.escudo;
+    function cerrarModal() {
+        document.getElementById('modal-instrucciones').style.display = 'none';
+        const shop = document.getElementById('shop-container');
+        const multi = document.getElementById('multi-wrapper');
+        const regalos = document.getElementById('regalos-seccion');
         
-        multiplicadorActivo = true;
-        const barra = document.getElementById('barra-progreso');
-        const wrapper = document.getElementById('multi-wrapper');
-        
-        // Reiniciar visuales del multiplicador
-        barra.style.width = '100%';
-        wrapper.style.opacity = '1';
+        if (modoActual === 'facil') {
+            shop.style.opacity = "1"; shop.style.pointerEvents = "auto";
+            multi.style.display = "block"; regalos.style.display = "block";
+            document.getElementById('coin-icon').innerText = "⭐";
+            iniciarFacil();
+        } else {
+            shop.style.opacity = "0"; shop.style.pointerEvents = "none";
+            multi.style.display = "none"; regalos.style.display = "none";
+            document.getElementById('coin-icon').innerText = "🪙";
+            if (modoActual === 'medio') iniciarMedio();
+            else iniciarDificil();
+        }
+    }
+
+    function iniciarFacil() {
+        filasGlobal = 8; columnasGlobal = 8; minasGlobal = 10;
+        resetComun();
+        document.getElementById('header-icon').innerText = "💣";
+        document.getElementById('main-title').innerText = "ALPROMINAS";
+        document.getElementById('puntos-val').innerText = puntosBuscaminas;
         
         clearInterval(tiempoMultiplicador);
         let ancho = 100;
+        const barra = document.getElementById('barra-progreso');
+        multiplicadorActivo = true;
+        barra.style.width = '100%';
+        document.getElementById('multi-wrapper').style.opacity = '1';
         tiempoMultiplicador = setInterval(() => {
-            ancho -= 1.5; 
+            ancho -= 1.5;
             barra.style.width = ancho + '%';
-            if (ancho <= 0) { 
-                clearInterval(tiempoMultiplicador); 
-                multiplicadorActivo = false; 
-                wrapper.style.opacity = '0.3'; // Se vuelve transparente al terminar
-            }
+            if (ancho <= 0) { clearInterval(tiempoMultiplicador); multiplicadorActivo = false; document.getElementById('multi-wrapper').style.opacity = '0.3'; }
         }, 100);
 
-        actualizarTiendaUI();
+        crearTableroDOM(filasGlobal, columnasGlobal);
+        colocarMinas();
+    }
+
+    function iniciarMedio() {
+        filasGlobal = 10; columnasGlobal = 10;
+        movimientosRestantes = 20;
+        resetComun();
+        document.getElementById('header-icon').innerText = "💎";
+        document.getElementById('main-title').innerText = `BUSCATESORO (${movimientosRestantes} MOV)`;
+        document.getElementById('puntos-val').innerText = puntosTesoros;
+        
+        tesoroF = Math.floor(Math.random() * filasGlobal);
+        tesoroC = Math.floor(Math.random() * columnasGlobal);
+        crearTableroDOM(filasGlobal, columnasGlobal);
+    }
+
+    function iniciarDificil() {
+        filasGlobal = 4; columnasGlobal = 4;
+        resetComun();
+        document.getElementById('header-icon').innerText = "🧩";
+        document.getElementById('main-title').innerText = "ALPRO-2048";
+        crearTableroDOM(filasGlobal, columnasGlobal);
+        for(let i=0; i<2; i++) {
+            let rf = Math.floor(Math.random()*4), rc = Math.floor(Math.random()*4);
+            const el = document.getElementById(`c-${rf}-${rc}`);
+            if(el) { el.innerText = "2"; el.style.background = "#475569"; }
+        }
+    }
+
+    function resetComun() {
+        juegoTerminado = false;
+        tableroLogico = [];
         document.getElementById('pantalla-boom').style.display = 'none';
         document.getElementById('pantalla-victoria').style.display = 'none';
-        
-        const divTablero = document.getElementById('tablero');
-        divTablero.style.gridTemplateColumns = `repeat(${columnasGlobal}, auto)`;
-        divTablero.innerHTML = '';
+        actualizarTiendaUI();
+    }
 
-        for (let row = 0; row < filasGlobal; row++) {
+    function crearTableroDOM(f, c) {
+        const divTablero = document.getElementById('tablero');
+        divTablero.style.gridTemplateColumns = `repeat(${c}, auto)`;
+        divTablero.innerHTML = '';
+        for (let row = 0; row < f; row++) {
             tableroLogico[row] = [];
-            for (let col = 0; col < columnasGlobal; col++) {
+            for (let col = 0; col < c; col++) {
                 tableroLogico[row][col] = { esMina: false, revelada: false, vecinas: 0, bandera: false };
                 const btn = document.createElement('div');
                 btn.className = 'celda';
                 btn.id = `c-${row}-${col}`;
-                btn.onclick = () => revelarCelda(row, col);
-                btn.oncontextmenu = (e) => {
-                    e.preventDefault();
-                    if (!tableroLogico[row][col].revelada && !juegoTerminado) {
-                        tableroLogico[row][col].bandera = !tableroLogico[row][col].bandera;
-                        btn.innerText = tableroLogico[row][col].bandera ? '🚩' : '';
-                        verificarVictoria();
-                    }
-                };
+                btn.onclick = () => clickAccion(row, col);
+                btn.oncontextmenu = (e) => { e.preventDefault(); manejarBandera(row, col, btn); };
                 divTablero.appendChild(btn);
             }
         }
-
-        let minasPuestas = 0;
-        while (minasPuestas < minasGlobal) {
-            let rF = Math.floor(Math.random() * filasGlobal);
-            let rC = Math.floor(Math.random() * columnasGlobal);
-            if (!tableroLogico[rF][rC].esMina) {
-                tableroLogico[rF][rC].esMina = true; minasPuestas++;
-            }
-        }
-        calcularNumeros();
     }
 
-    function calcularNumeros() {
-        for (let f = 0; f < filasGlobal; f++) {
-            for (let c = 0; c < columnasGlobal; c++) {
-                if (!tableroLogico[f][c].esMina) {
-                    let contador = 0;
-                    for (let i = -1; i <= 1; i++) {
-                        for (let j = -1; j <= 1; j++) {
-                            if (tableroLogico[f + i]?.[c + j]?.esMina) contador++;
-                        }
-                    }
-                    tableroLogico[f][c].vecinas = contador;
-                }
-            }
-        }
+    function clickAccion(f, c) {
+        if (juegoTerminado) return;
+        if (modoActual === 'facil') revelarBuscaminas(f, c);
+        else if (modoActual === 'medio') revelarTesoro(f, c);
     }
 
-    function revelarCelda(f, c) {
-        if (juegoTerminado || tableroLogico[f][c].revelada || tableroLogico[f][c].bandera) return;
+    function revelarBuscaminas(f, c) {
+        if (tableroLogico[f][c].revelada || tableroLogico[f][c].bandera) return;
         const celda = tableroLogico[f][c];
         const el = document.getElementById(`c-${f}-${c}`);
-        
         if (celda.esMina) {
             if (tieneEscudo) {
                 tieneEscudo = false; itemsRegalados.escudo = false;
                 celda.revelada = true; el.classList.add('revelada');
-                el.innerText = '🛡️'; actualizarTiendaUI();
-                return;
+                el.innerText = '🛡️'; actualizarTiendaUI(); return;
             }
             finalizarJuego(false);
         } else {
@@ -345,20 +364,93 @@
                 el.innerText = celda.vecinas;
                 el.style.color = ['#60a5fa','#34d399','#f87171','#a78bfa','#fbbf24','#22d3ee','#f472b6','#ffffff'][celda.vecinas-1];
             } else {
-                for (let i = -1; i <= 1; i++) {
-                    for (let j = -1; j <= 1; j++) {
-                        if (tableroLogico[f + i]?.[c + j]) revelarCelda(f + i, c + j);
-                    }
-                }
+                for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) 
+                    if (tableroLogico[f + i]?.[c + j]) revelarBuscaminas(f + i, c + j);
             }
             verificarVictoria();
         }
     }
 
+    function revelarTesoro(f, c) {
+        if (tableroLogico[f][c].revelada || juegoTerminado) return;
+        const el = document.getElementById(`c-${f}-${c}`);
+        tableroLogico[f][c].revelada = true;
+        
+        movimientosRestantes--;
+        document.getElementById('main-title').innerText = `MOVIMIENTOS: ${movimientosRestantes}`;
+        
+        if(f === tesoroF && c === tesoroC) {
+            el.classList.add('tesoro'); 
+            el.innerText = "💎";
+            actualizarPuntos(2000);
+            finalizarJuego(true);
+        } else {
+            let dist = Math.abs(f - tesoroF) + Math.abs(c - tesoroC);
+            el.classList.add('revelada');
+            el.innerText = dist;
+            
+            if (dist <= 2) { 
+                el.style.color = "var(--rojo-brillante)"; 
+                el.style.textShadow = "0 0 8px rgba(239, 68, 68, 0.8)";
+            } else if (dist <= 5) { 
+                el.style.color = "#fbbf24"; 
+            } else { 
+                el.style.color = "var(--celeste-vivo)"; 
+            }
+
+            if (movimientosRestantes <= 0) {
+                document.getElementById('boom-text').innerText = "¡SIN TURNOS!";
+                finalizarJuego(false);
+            }
+        }
+    }
+
+    function colocarMinas() {
+        let minasPuestas = 0;
+        while (minasPuestas < minasGlobal) {
+            let rF = Math.floor(Math.random() * filasGlobal);
+            let rC = Math.floor(Math.random() * columnasGlobal);
+            if (!tableroLogico[rF][rC].esMina) { tableroLogico[rF][rC].esMina = true; minasPuestas++; }
+        }
+        for (let f = 0; f < filasGlobal; f++) {
+            for (let c = 0; c < columnasGlobal; c++) {
+                if (!tableroLogico[f][c].esMina) {
+                    let cont = 0;
+                    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) 
+                        if (tableroLogico[f + i]?.[c + j]?.esMina) cont++;
+                    tableroLogico[f][c].vecinas = cont;
+                }
+            }
+        }
+    }
+
+    function actualizarPuntos(n) { 
+        if (modoActual === 'facil') {
+            puntosBuscaminas += n;
+            if (puntosBuscaminas < 0) puntosBuscaminas = 0;
+            document.getElementById('puntos-val').innerText = puntosBuscaminas;
+        } else if (modoActual === 'medio') {
+            puntosTesoros += n;
+            document.getElementById('puntos-val').innerText = puntosTesoros;
+        }
+    }
+    
+    function manejarBandera(f, c, btn) {
+        if (modoActual === 'facil' && !tableroLogico[f][c].revelada && !juegoTerminado) {
+            tableroLogico[f][c].bandera = !tableroLogico[f][c].bandera;
+            btn.innerText = tableroLogico[f][c].bandera ? '🚩' : '';
+            verificarVictoria();
+        }
+    }
+
     function comprarItem(tipo) {
-        if (juegoTerminado || itemsUsados[tipo]) return;
+        if (juegoTerminado || itemsUsados[tipo] || modoActual !== 'facil') return;
         let costos = { revelar: 1500, escudo: 3000, auditoria: 1000 };
-        if (puntos >= costos[tipo]) { actualizarPuntos(-costos[tipo]); ejecutarItem(tipo); }
+        if (puntosBuscaminas >= costos[tipo]) { 
+            puntosBuscaminas -= costos[tipo]; 
+            document.getElementById('puntos-val').innerText = puntosBuscaminas;
+            ejecutarItem(tipo); 
+        }
     }
 
     function ejecutarItem(tipo) {
@@ -368,78 +460,66 @@
         if (tipo === 'auditoria') marcarAuditoria();
     }
 
-    function reclamarRegalo(tipo) {
-        itemsRegalados = { revelar: false, escudo: false, auditoria: false };
-        itemsRegalados[tipo] = true;
-        alert("¡Item Guardado!");
+    function flashMinas() {
+        for (let f = 0; f < filasGlobal; f++) for (let c = 0; c < columnasGlobal; c++) 
+            if (tableroLogico[f][c].esMina) document.getElementById(`c-${f}-${c}`).classList.add('flash-red');
+        setTimeout(() => { document.querySelectorAll('.flash-red').forEach(el => el.classList.remove('flash-red')); }, 1200);
     }
 
     function marcarAuditoria() {
-        let celdasConMina = [];
-        for (let f = 0; f < filasGlobal; f++) {
-            for (let c = 0; c < columnasGlobal; c++) {
-                if (tableroLogico[f][c].esMina && !tableroLogico[f][c].bandera) celdasConMina.push({f,c});
-            }
+        let m = []; for (let f = 0; f < filasGlobal; f++) for (let c = 0; c < columnasGlobal; c++) 
+            if (tableroLogico[f][c].esMina && !tableroLogico[f][c].bandera) m.push({f,c});
+        m.sort(() => Math.random() - 0.5);
+        for (let i = 0; i < Math.min(3, m.length); i++) {
+            tableroLogico[m[i].f][m[i].c].bandera = true;
+            document.getElementById(`c-${m[i].f}-${m[i].c}`).innerText = '🚩';
         }
-        celdasConMina.sort(() => Math.random() - 0.5);
-        for (let i = 0; i < Math.min(3, celdasConMina.length); i++) {
-            let p = celdasConMina[i];
-            tableroLogico[p.f][p.c].bandera = true;
-            document.getElementById(`c-${p.f}-${p.c}`).innerText = '🚩';
-        }
-        itemsRegalados.auditoria = false;
         verificarVictoria();
     }
 
-    function flashMinas() {
-        for (let f = 0; f < filasGlobal; f++) {
-            for (let c = 0; c < columnasGlobal; c++) {
-                if (tableroLogico[f][c].esMina && !tableroLogico[f][c].revelada) document.getElementById(`c-${f}-${c}`).classList.add('flash-red');
-            }
-        }
-        setTimeout(() => {
-            document.querySelectorAll('.flash-red').forEach(el => el.classList.remove('flash-red'));
-            itemsRegalados.revelar = false;
-        }, 1200);
+    function verificarVictoria() {
+        if (modoActual !== 'facil') return;
+        let ganaste = true;
+        for (let f = 0; f < filasGlobal; f++) for (let c = 0; c < columnasGlobal; c++) 
+            if (!tableroLogico[f][c].esMina && !tableroLogico[f][c].revelada) ganaste = false;
+        if (ganaste) finalizarJuego(true);
     }
 
     function finalizarJuego(victoria) {
         juegoTerminado = true;
         clearInterval(tiempoMultiplicador);
         if (!victoria) {
-            puntos = 0; document.getElementById('puntos-val').innerText = '0';
-            itemsRegalados = { revelar: false, escudo: false, auditoria: false };
-            document.querySelectorAll('.celda').forEach(el => {
-                let parts = el.id.split('-');
-                let f = parseInt(parts[1]), c = parseInt(parts[2]);
-                if (tableroLogico[f][c].esMina) { el.innerText = '💣'; el.classList.add('mina'); }
-            });
+            if(modoActual === 'facil') {
+                puntosBuscaminas = 0; document.getElementById('puntos-val').innerText = '0';
+                itemsRegalados = { revelar: false, escudo: false, auditoria: false };
+                document.querySelectorAll('.celda').forEach(el => {
+                    let p = el.id.split('-'); let f = parseInt(p[1]), c = parseInt(p[2]);
+                    if (tableroLogico[f][c].esMina) { el.innerText = '💣'; el.classList.add('mina'); }
+                });
+                document.getElementById('boom-text').innerText = "¡BOOM!";
+            }
             setTimeout(() => { document.getElementById('pantalla-boom').style.display = 'flex'; }, 400);
         } else {
             setTimeout(() => { document.getElementById('pantalla-victoria').style.display = 'flex'; }, 300);
         }
     }
 
-    function verificarVictoria() {
-        let ganaste = true;
-        for (let f = 0; f < filasGlobal; f++) {
-            for (let c = 0; c < columnasGlobal; c++) {
-                if (!tableroLogico[f][c].esMina && !tableroLogico[f][c].revelada) ganaste = false;
-            }
-        }
-        if (ganaste) finalizarJuego(true);
+    function reclamarRegalo(tipo) {
+        itemsRegalados = { revelar: false, escudo: false, auditoria: false };
+        itemsRegalados[tipo] = true; alert("¡Item Guardado para la próxima partida!");
     }
 
     function actualizarTiendaUI() {
         ['revelar', 'escudo', 'auditoria'].forEach(t => {
             let id = t === 'revelar' ? 'flash' : t === 'auditoria' ? 'auditoria' : 'escudo';
             let el = document.getElementById(`item-${id}`);
-            el.className = 'shop-item' + (itemsUsados[t] ? ' disabled' : '') + (itemsRegalados[t] ? ' owned' : '');
+            if(el) el.className = 'shop-item' + (itemsUsados[t] ? ' disabled' : '') + (itemsRegalados[t] ? ' owned' : '');
         });
     }
 
-    function cerrarPantallas() { iniciarJuego(filasGlobal, columnasGlobal, minasGlobal); }
-    iniciarJuego(8, 8, 10);
+    function reiniciarJuego() { cerrarModal(); }
+
+    prepararNivel('facil', document.getElementById('btn-facil'));
 </script>
 </body>
 </html>
