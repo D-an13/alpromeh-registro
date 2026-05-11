@@ -239,11 +239,49 @@ input::-webkit-outer-spin-button,
     padding: 12px 30px; border-radius: 12px; font-weight: bold;
     cursor: pointer; transition: 0.3s; width: 100%;
 }
+#update-banner {
+    display: none; 
+    /* Blanco casi invisible (10%) para que brille como vidrio */
+    background: rgba(255, 255, 255, 0.1); 
+    
+    /* Desenfoque fuerte para el efecto Liquid Glass */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    
+    /* Texto en color oscuro para que sea legible sobre el vidrio */
+    color: #333333; 
+    text-align: center; 
+    padding: 16px; 
+    font-weight: 800; 
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    z-index: 9999; 
+    cursor: pointer; 
+    font-family: 'Segoe UI', Roboto, sans-serif; 
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 
-    </style>
+    /* El "brillo" del borde del vidrio */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    
+    animation: slideDown 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}    
+</style>
 </head>
 <body>
-    <button class="theme-switch" onclick="toggleTheme()">🌓</button>
+<div id="update-banner">
+    ¡NUEVA VERSIÓN DISPONIBLE! HAZ CLIC AQUÍ PARA ACTUALIZAR
+</div>    
+<button class="theme-switch" onclick="toggleTheme()">🌓</button>
     <div id="toast"></div>
 
     <div id="modalConfirm" class="modal-overlay">
@@ -943,6 +981,36 @@ function actualizarContadores() {
     document.getElementById('count-hoy').innerText = hoyTotal;
     document.getElementById('count-listos').innerText = listasHoy;
 }
+let huellaActual = null;
+
+async function chequearActualizacionAutomatica() {
+    try {
+        // Consultamos solo el encabezado del archivo index.html (o el archivo de tu juego)
+        const respuesta = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
+        
+        // Obtenemos el ETag o la fecha de última modificación
+        const nuevaHuella = respuesta.headers.get('ETag') || respuesta.headers.get('Last-Modified');
+
+        if (huellaActual && nuevaHuella && huellaActual !== nuevaHuella) {
+            // ¡Algo cambió en el servidor! Mostramos el banner
+            const banner = document.getElementById('update-banner');
+            banner.style.display = 'block';
+            banner.onclick = () => window.location.reload(true);
+        }
+
+        // Guardamos la huella para la siguiente comparación
+        huellaActual = nuevaHuella;
+        
+    } catch (e) {
+        console.log("Error al verificar actualización");
+    }
+}
+
+// Ejecutar cada 2 minutos
+setInterval(chequearActualizacionAutomatica, 120000);
+
+// Primera ejecución al cargar para tener la huella inicial
+chequearActualizacionAutomatica();
     </script>
 
 <div id="modalAlproGames" class="alpro-modal" onclick="cerrarAlproGames()">
