@@ -8,14 +8,22 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 
     <style>
-        :root { 
+:root { 
             --bg-body: #f0f2f5; --bg-card: #ffffff; --text-main: #1e293b; 
             --primary: #1e3a8a; --secondary: #10b981; --border: #cbd5e1; 
             --input-bg: #ffffff; --placeholder: #94a3b8;
+            /* Nuevas variables para pastillas en modo claro */
+            --bg-p-urgente: #fee2e2; --text-p-urgente: #991b1b;
+            --bg-p-hoy: #dbeafe; --text-p-hoy: #1e40af;
+            --bg-p-listas: #dcfce7; --text-p-listas: #166534;
         }
         [data-theme="dark"] { 
             --bg-body: #0f172a; --bg-card: #1e293b; --text-main: #f1f5f9; 
             --primary: #3b82f6; --border: #475569; --input-bg: #1e293b; --placeholder: #64748b;
+            /* Nuevas variables para pastillas en modo oscuro */
+            --bg-p-urgente: rgba(239, 68, 68, 0.2); --text-p-urgente: #fca5a5;
+            --bg-p-hoy: rgba(59, 130, 246, 0.2); --text-p-hoy: #93c5fd;
+            --bg-p-listas: rgba(16, 185, 129, 0.2); --text-p-listas: #86efac;
         }
 
         /* --- AJUSTE GLOBAL PARA EVITAR DESFASES --- */
@@ -333,7 +341,109 @@ input::-webkit-outer-spin-button,
 @keyframes liquidClose {
     from { opacity: 1; transform: translateY(0) scale(1); }
     to { opacity: 0; transform: translateY(-20px) scale(0.98); }
-}</style>
+}
+
+/* --- ESTILOS DE PASTILLAS DE CONTADORES --- */
+        .contenedor-pastillas {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .pastilla {
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: bold;
+            font-family: sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+/* Colores de las pastillas (Fondo y Texto según tus temas) */
+.p-urgente { background-color: var(--bg-p-urgente); color: var(--text-p-urgente); }
+.p-hoy { background-color: var(--bg-p-hoy); color: var(--text-p-hoy); }
+.p-listos { background-color: var(--bg-p-listas); color: var(--text-p-listas); }
+
+/* Ajuste fino para que los puntitos queden perfectos */
+.punto-color {
+    font-size: 1.5rem; 
+    line-height: 0;
+    margin-top: -1px;
+}
+.pt-urgente { color: #dc2626; } /* Rojo */
+.pt-hoy { color: #2563eb; }     /* Azul */
+
+/* Animaciones de Zoom para el Modal */
+.modal-animacion-zoom {
+    animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.modal-animacion-zoom.salida {
+    animation: zoomOut 0.2s ease-in forwards;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes zoomOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.7); opacity: 0; }
+}
+
+/* --- RESPLANDOR (GLOW) AL PASAR EL MOUSE POR EL BOTÓN LISTO --- */
+.btn-confirmar {
+    transition: all 0.3s ease !important; /* Para que el brillo entre suave */
+}
+
+.btn-confirmar:hover {
+    transform: translateY(-2px); /* El botón sube un poquito flotando */
+    box-shadow: 0 0 15px var(--primary); /* Crea el brillo usando tu color azul principal */
+}
+.btn-cerrar-x {
+    position: absolute; 
+    top: 12px;          
+    right: 15px;        
+    background: none;   
+    border: none;       
+    color: var(--text-main); 
+    opacity: 0.5;       
+    font-size: 1.2rem;  
+    font-weight: bold;
+    cursor: pointer;    
+    transition: all 0.2s ease; 
+    padding: 4px;
+    line-height: 1;
+}
+
+.btn-cerrar-x:hover {
+    opacity: 1;         
+    color: #dc2626;     
+    transform: scale(1.15); 
+}
+/* --- EFECTO DE FLOTADO Y RESPLANDOR PARA GUARDAR REGISTRO --- */
+.btn-guardar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; /* Animación súper suave */
+}
+
+/* El brillo solo se activa si pasas el mouse Y el botón NO está deshabilitado */
+.btn-guardar:not(:disabled):hover {
+    transform: translateY(-2px); /* El botón flota un poquito hacia arriba */
+    /* Crea un resplandor verde esmeralda pro usando sombras */
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); 
+}
+
+/* Si hace clic, baja un milímetro para dar sensación de pulsación real */
+.btn-guardar:not(:disabled):active {
+    transform: translateY(-1px);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+</style>
 </head>
 <body>
 <div id="update-banner">
@@ -353,9 +463,13 @@ input::-webkit-outer-spin-button,
         </div>
     </div>
 
-    <div id="modalProducto" class="modal-overlay">
-        <div class="modal-content" style="border-top-color: var(--primary);">
+<div id="modalProducto" class="modal-overlay">
+        <div class="modal-content modal-animacion-zoom" style="border-top-color: var(--primary); position: relative;">
+            
+            <button type="button" class="btn-cerrar-x" onclick="cerrarModalProducto()">✕</button>
+            
             <h3 style="margin-top:0; width: 100%;">Detalle del Producto</h3>
+            
             <textarea id="inputProducto" maxlength="120" placeholder="Ej: cateter intravenoso, bajalenguas, jeringa..." 
                       style="width:100%; height:80px; border-radius:8px; padding:10px; border:2px solid var(--border); background:var(--input-bg); color:var(--text-main); font-family:inherit; resize: none;"></textarea>
             <div class="modal-btns">
@@ -366,18 +480,23 @@ input::-webkit-outer-spin-button,
     
     <div class="contenedor">
         <div class="mood-container">
-            <div id="moodFace" class="mood-face">😟</div>
+            <div id="moodFace" class="mood-face">🙂</div>
             <div class="barra-fondo">
                 <div id="barraProgreso" class="barra-llenado"></div>
             </div>
         </div>
-<div style="text-align: center; font-size: 0.8rem; margin-top: 8px; font-weight: bold; font-family: sans-serif; opacity: 0.6;">
-            <span style="color: #b91c1c;">Urgentes: <span id="count-atrasadas">0</span></span> | 
-            <span style="color: var(--primary);">Hoy: <span id="count-hoy">0</span></span> | 
-            <span style="color: #10b981;">Listas: <span id="count-listos">0</span></span>
+<div class="contenedor-pastillas">
+            <span class="pastilla p-urgente">
+                <span class="punto-color pt-urgente">•</span> Urgentes: <span id="count-atrasadas">0</span>
+            </span>
+            <span class="pastilla p-hoy">
+                <span class="punto-color pt-hoy">•</span> Hoy: <span id="count-hoy">0</span>
+            </span>
+            <span class="pastilla p-listos">
+                <span class="punto-color pt-listos">•</span> Listas: <span id="count-listos">0</span>
+            </span>
         </div>
     </div>
-
 <button id="btnExpandirForm" class="btn-celular-only" onclick="toggleForm()">+ NUEVA ORDEN</button>
     <div class="contenedor" id="contenedorForm">
         <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">
@@ -460,10 +579,14 @@ let guardandoAhora = false;
             return map[nombre] || "";
         }
 
-        function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
+function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
 
         function abrirModalProducto() {
-            document.getElementById('modalProducto').style.display = 'flex';
+            const modal = document.getElementById('modalProducto');
+            const contenido = modal.querySelector('.modal-content');
+            
+            modal.style.display = 'flex';
+            contenido.classList.remove('salida'); // Quitamos la animación de cierre anterior
             document.getElementById('inputProducto').focus();
         }
 
@@ -477,7 +600,15 @@ let guardandoAhora = false;
                 btn.classList.remove('lleno');
                 btn.innerText = "📝";
             }
-            document.getElementById('modalProducto').style.display = 'none';
+
+            const modal = document.getElementById('modalProducto');
+            const contenido = modal.querySelector('.modal-content');
+            
+            contenido.classList.add('salida');
+
+setTimeout(() => {
+                modal.style.display = 'none';
+            }, 200);
         }
 
         function toggleFiltroHoy() {
@@ -743,11 +874,11 @@ if (esAxel && !item.despachado) {
             const pct = hoyAxel.length ? (despachadas / hoyAxel.length) * 100 : 0;
             document.getElementById('barraProgreso').style.width = pct + "%";
             if(clicsRapidos <= 5) {
-                document.getElementById('moodFace').innerText = pct === 100 ? "😃" : pct >= 66 ? "😁" : pct >= 33 ? "🙂" : "😟";
+                document.getElementById('moodFace').innerText = pct === 100 ? "🥳" : pct >= 66 ? "😀" : pct >= 33 ? "😊" : "🙂";
             }
         }
 
-    document.getElementById('formOrdenes').onsubmit = function(e) {
+document.getElementById('formOrdenes').onsubmit = async function(e) {
     e.preventDefault();
     
     const btnGuardar = document.querySelector('.btn-guardar');
@@ -756,19 +887,54 @@ if (esAxel && !item.despachado) {
     // --- ESCUDO ANTI-DUPLICADOS ---
     if (btnGuardar.disabled) return; 
 
-// --- EL FRENO DE MANO AQUÍ ---
+// --- EL FRENO DE MANO AQUÍ ---    
+const num = document.getElementById('orden').value;
+const ordenPrevia = datosLocales.find(d => d.orden.toString() === num.toString());
+const yaExiste = !!ordenPrevia;
+
+if (yaExiste) {
+        const quienLaTiene = ordenPrevia.responsable;
+        const estadoActual = ordenPrevia.despachado ? "LISTA ✅" : "PENDIENTE ⏳";
+        
+        // Metemos el texto en tu nuevo modal
+        document.getElementById('textoAlertaDuplicado').innerHTML = `
+            La OC. <b>${num}</b> ya fue ingresada previamente.<br><br>
+            <div style="text-align: left; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px;">
+                • <b>Asignada a:</b> ${quienLaTiene}<br>
+                • <b>Estado actual:</b> ${estadoActual}
+            </div><br>
+            ¿De verdad quieres sobreescribirla o actualizarla?
+        `;
+
+        // Activamos el modal con Flex y quitamos la clase de salida
+        const modal = document.getElementById('modalConfirmDuplicado');
+        const contenido = modal.querySelector('.alpro-content');
+        modal.style.display = 'flex';
+        contenido.classList.remove('salida');
+
+        // La promesa se queda esperando a que den clic a "CANCELAR" o "SOBREESCRIBIR"
+        const respuestaUsuario = await new Promise((resolve) => {
+            document.getElementById('btnAceptarDuplicado').onclick = () => resolve(true);
+            document.getElementById('btnCancelarDuplicado').onclick = () => resolve(false);
+        });
+
+        // Metemos animación de salida (Zoom Out) y ocultamos a los 200ms
+        contenido.classList.add('salida');
+        setTimeout(() => { modal.style.display = 'none'; }, 200);
+
+        // Si eligieron "CANCELAR", el código se frena por completo aquí
+        if (!respuestaUsuario) return;
+    }
+
+    // 2. Si es una orden nueva o confirmaron la actualización, el código sigue su curso:
     guardandoAhora = true;
-    
-    const num = document.getElementById('orden').value;
-    const ordenPrevia = datosLocales.find(d => d.orden.toString() === num.toString());
-    const yaExiste = !!ordenPrevia;
 
     if(yaExiste) {
         showToast("⚙️ La OC. " + num + " se está actualizando...", "warning");
         formCard.classList.add('resaltar-actualizacion');
     }
 
-    // Bloqueo visual y lógico inmediato
+    // Bloqueo de botón para evitar doble envío
     btnGuardar.disabled = true;
     btnGuardar.innerText = "REGISTRANDO...";
     btnGuardar.style.opacity = "0.5";
@@ -904,6 +1070,7 @@ if(Array.isArray(d)) {
 }
 // --- SINCRONIZACION SILENCIOSA INTELIGENTE ---
 async function sincronizarSilencioso() {
+if (guardandoAhora) return;
     // Quitamos el bloqueo global para que los cambios de Danna sigan entrando
     try {
         const r = await fetch(URL_SCRIPT);
@@ -938,15 +1105,16 @@ async function sincronizarSilencioso() {
         function showToast(msj, tipo) {
             const toast = document.getElementById('toast');
             toast.innerText = msj;
-            toast.className = ''; // Limpiamos clases previas
-            
-            if (tipo === true) {
-                toast.style.background = "#dc2626"; // Rojo error
-                toast.style.display = "block";
-            } else if (tipo === "warning") {
-                toast.id = "toast";
-                toast.className = "warning"; // Usará el amarillo #ffc400 del CSS
-            } else {
+toast.style.background = ""; // Resetea el color inline anterior
+    toast.className = '';        // Limpia las clases previas
+    
+    if (tipo === true) {
+        toast.style.background = "#dc2626"; // Rojo error
+        toast.style.display = "block";
+    } else if (tipo === "warning") {
+        toast.className = "warning"; // Aplica el amarillo del CSS
+        toast.style.display = "block"; // Asegura que se vea
+    } else {
                 toast.style.background = "#10b981"; // Verde éxito
                 toast.style.display = "block";
             }
@@ -1103,6 +1271,18 @@ function toggleForm() {
     }
 }
     </script>
+
+<div id="modalConfirmDuplicado" class="alpro-modal" style="display:none; align-items:center; justify-content:center; z-index: 10000;">
+        <div class="alpro-content modal-animacion-zoom" onclick="event.stopPropagation()" style="max-width: 400px; text-align: center; border: 2px solid #ea580c;">
+            <span class="alpro-title" style="color: #ea580c; font-size: 1.6rem;">⚠️ ¡CUIDADO!</span>
+            <span class="alpro-subtitle" id="textoAlertaDuplicado" style="margin-bottom: 20px; font-size: 1rem; line-height: 1.5;"></span>
+            
+            <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+                <button id="btnCancelarDuplicado" style="background: #64748b; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; flex: 1;">CANCELAR</button>
+                <button id="btnAceptarDuplicado" style="background: #ea580c; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; flex: 1;">SOBREESCRIBIR</button>
+            </div>
+        </div>
+    </div>
 
 <div id="modalAlproGames" class="alpro-modal" onclick="cerrarAlproGames()">
     <div class="alpro-content" onclick="event.stopPropagation()">
