@@ -443,6 +443,23 @@ input::-webkit-outer-spin-button,
     transform: translateY(-1px);
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
 }
+/* --- NUEVO EFECTO ZOOM ELÁSTICO PARA EL LOGO (EASTER EGG) --- */
+#triggerHuevo {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
+    cursor: pointer;      /* Convierte la flecha en manita de botón */
+    display: inline-block; /* Obligatorio para que el zoom se aplique bien */
+}
+
+/* Cuando el mouse entra a la caja del logo */
+#triggerHuevo:hover {
+    transform: scale(1.08);    /* Se agranda un 8% con rebote fino */
+    filter: brightness(1.15); /* Enciende los colores originales del logo */
+}
+
+/* Cuando le dan clic (efecto de hundido) */
+#triggerHuevo:active {
+    transform: scale(0.95);
+}
 </style>
 </head>
 <body>
@@ -772,7 +789,6 @@ actualizarContadores()
                 if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
                 if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
                 return coincideBusqueda;
-actualizarContadores()
             });
 
 filtrados.sort((a, b) => {
@@ -866,6 +882,7 @@ if (esAxel && !item.despachado) {
                 tbody.appendChild(tr);
             });
             actualizarBarra(hoyStr);
+            actualizarContadores()
         }
 
         function actualizarBarra(hoyStr) {
