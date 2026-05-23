@@ -482,6 +482,36 @@ input::-webkit-outer-spin-button,
     50% { opacity: 1; }
     100% { opacity: 0.3; }
 }
+/* Efecto de escala suave para las opciones al pasar el mouse */
+.opcion-btn {
+    transition: all 0.25s ease-out !important; /* Suaviza el cambio */
+}
+
+.opcion-btn:hover {
+    transform: scale(1.02) translateX(4px); /* Escala mínima y ligero desplazamiento */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Transición de desvanecimiento suave para el Modal (Efecto Fade) */
+#triviaModal {
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    display: none; /* JS lo cambiará a flex pero manejaremos la opacidad */
+}
+
+#triviaModal.show {
+    opacity: 1;
+}
+
+/* El contenido del libro con un zoom sutil combinado */
+.modal-content-libro {
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#triviaModal.show .modal-content-libro {
+    transform: scale(1);
+}
 </style>
 </head>
 <body>
@@ -1369,8 +1399,6 @@ function toggleForm() {
     </div>
 </div>
 <style>
-/* Animación de Sacudida (Shake) */
-/* Animación de Sacudida (Shake para errores) */
 @keyframes triviaShake {
     0%, 100% { transform: scale(1) translateX(0); }
     20%, 60% { transform: scale(1) translateX(-8px); }
@@ -1405,7 +1433,6 @@ function toggleForm() {
 .zoom-in-effect { animation: triviaZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 .zoom-out-effect { animation: triviaZoomOut 0.2s ease-in forwards; }
 
-
 /* --- DISEÑO INTERFAZ DE TRIVIA --- */
 
 /* El Modal siempre arranca compacto (Perfecto para cel y compu al inicio) */
@@ -1420,7 +1447,9 @@ function toggleForm() {
     border: 1px solid #334155;
     text-align: center;
     box-sizing: border-box;
-    transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease; /* Transición ultra suave para el estiramiento */
+    /* Control de escala inicial para el efecto de apertura del libro */
+    transform: scale(0.9);
+    transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .trivia-flex-container {
@@ -1478,15 +1507,30 @@ function toggleForm() {
     }
 }
 
-/* Animación de Sacudida (Shake para errores) */
-@keyframes triviaShake {
-    0%, 100% { transform: scale(1) translateX(0); }
-    20%, 60% { transform: scale(1) translateX(-8px); }
-    40%, 80% { transform: scale(1) translateX(8px); }
+/* Efecto de escala suave para las opciones al pasar el mouse (Aplica a los botones que creas por JS) */
+.opcion-btn {
+    transition: all 0.25s ease-out !important;
 }
 
-.shake-effect {
-    animation: triviaShake 0.4s ease-in-out !important;
+.opcion-btn:hover {
+    transform: scale(1.02) translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Transición de desvanecimiento suave para el contenedor del fondo del Modal */
+#triviaModal {
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    display: none; 
+}
+
+#triviaModal.show {
+    opacity: 1;
+}
+
+/* Cuando el modal tiene la clase .show, el libro hace el zoom-in premium */
+#triviaModal.show .trivia-modal-layout {
+    transform: scale(1);
 }
 </style>
 
@@ -1565,10 +1609,15 @@ function abrirTrivia() {
     preguntaTxt.innerText = preguntaActual.p;
     
     modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10); 
+    
     modalContent.classList.add('zoom-in-effect');
 
     preguntaActual.o.forEach((opcionTexto, index) => {
         const btn = document.createElement('button');
+        btn.classList.add('opcion-btn');
         btn.innerText = opcionTexto;
         btn.style = "background:#273549; color:#cbd5e1; border:1px solid #475569; padding:12px 15px; border-radius:8px; cursor:pointer; text-align:left; font-size:14.5px; transition:all 0.2s; width:100%; font-weight:500;";
         
