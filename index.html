@@ -1369,30 +1369,65 @@ function toggleForm() {
 </div>
 
 <style>
+/* Animación de Sacudida (Shake) */
 @keyframes triviaShake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-8px); }
-    40%, 80% { transform: translateX(8px); }
+    0%, 100% { transform: scale(1) translateX(0); }
+    20%, 60% { transform: scale(1) translateX(-8px); }
+    40%, 80% { transform: scale(1) translateX(8px); }
 }
+
+/* Animación de Entrada (Zoom Bonito) */
+@keyframes triviaZoomIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Animación de Salida (Zoom Suave) */
+@keyframes triviaZoomOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.85); }
+}
+
 .shake-effect {
-    animation: triviaShake 0.4s ease-in-out;
+    animation: triviaShake 0.4s ease-in-out !important;
+}
+
+.zoom-in-effect {
+    animation: triviaZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.zoom-out-effect {
+    animation: triviaZoomOut 0.2s ease-in forwards;
 }
 </style>
 
 <script src="trivia-data.js"></script>
 
 <script>
+// Al cargar la página, verificamos si ya respondió hoy O si es fin de semana para ocultar el librito
 document.addEventListener("DOMContentLoaded", () => {
-    const hoy = new Date().toLocaleDateString();
+    const hoy = new Date();
+    const fechaTexto = hoy.toLocaleDateString();
+    const diaSemana = hoy.getDay(); // 0 = Domingo, 6 = Sábado
     const trigger = document.getElementById('triggerTrivia');
-    if (localStorage.getItem('triviaRespondida') === hoy) {
-        if (trigger) trigger.style.display = 'none';
+    
+    if (diaSemana === 0 || diaSemana === 6 || localStorage.getItem('triviaRespondida') === fechaTexto) {
+        if (trigger) trigger.style.display = 'none'; 
     }
 });
 
 function abrirTrivia() {
     if (typeof bancoDePreguntas === 'undefined' || bancoDePreguntas.length === 0) {
         alert("Error: No se pudieron cargar las preguntas.");
+        return;
+    }
+
+    const hoy = new Date();
+    const diaSemana = hoy.getDay();
+    
+    // Doble seguridad para fines de semana
+    if (diaSemana === 0 || diaSemana === 6) {
+        alert("¡Es fin de semana, bro! A descansar, el bootcamp regresa el lunes.");
         return;
     }
 
@@ -1403,45 +1438,48 @@ function abrirTrivia() {
     const feedbackBox = document.getElementById('feedbackContainer');
     const catTxt = document.getElementById('triviaCategoria');
 
-    const fechaActual = new Date();
-    const inicioAño = new Date(fechaActual.getFullYear(), 0, 1);
-    const diaDelAño = Math.floor((fechaActual - inicioAño) / (1000 * 60 * 60 * 24));
+    const inicioAño = new Date(hoy.getFullYear(), 0, 1);
+    const diaDelAño = Math.floor((hoy - inicioAño) / (1000 * 60 * 60 * 24));
     const preguntaActual = bancoDePreguntas[diaDelAño % bancoDePreguntas.length];
 
-    // Limpiar clases previas de animación y resetear vista
-    modalContent.classList.remove('shake-effect');
+    // Resetear clases de animación y estados viejos
+    modalContent.classList.remove('shake-effect', 'zoom-out-effect');
     feedbackBox.style.display = 'none';
     feedbackBox.innerHTML = '';
     opcionesBox.innerHTML = '';
     
-    // Inyectar categoría dinámica
+    // Inyectar info
     catTxt.innerText = preguntaActual.cat || "General";
     preguntaTxt.innerText = preguntaActual.p;
+    
+    // Mostrar modal con el Zoom Bonito de entrada
     modal.style.display = 'flex';
+    modalContent.classList.add('zoom-in-effect');
 
     preguntaActual.o.forEach((opcionTexto, index) => {
         const btn = document.createElement('button');
         btn.innerText = opcionTexto;
         btn.style = "background:#273549; color:#cbd5e1; border:1px solid #475569; padding:12px 15px; border-radius:8px; cursor:pointer; text-align:left; font-size:14.5px; transition:all 0.2s; width:100%; font-weight:500;";
         
+        // Efectos Hover normales
         btn.onmouseover = () => { btn.style.background = "#334155"; btn.style.borderColor = "#64748b"; };
         btn.onmouseout = () => { btn.style.background = "#273549"; btn.style.borderColor = "#475569"; };
 
         btn.onclick = () => {
             if (index === preguntaActual.c) {
                 // --- RESPUESTA CORRECTA ---
-                localStorage.setItem('triviaRespondida', fechaActual.toLocaleDateString());
+                localStorage.setItem('triviaRespondida', hoy.toLocaleDateString());
                 
-                // El botón que clickearon se pinta con tu color celeste premium
-                btn.style.background = "#2596be";
-                btn.style.borderColor = "#2596be";
-                btn.style.color = "#ffffff";
-                btn.onmouseover = null; btn.onmouseout = null;
+                // El cuadro se pone verde neón con letras blancas al estilo premium
+                btn.style.background = "#02b84b";
+                btn.style.borderColor = "#02b84b";
+                btn.style.color = "#ffffff"; // Texto oscuro para que resalte en el botón verde
+                btn.onmouseover = null; btn.onmouseout = null; // Matamos el hover de una vez
 
                 const todosLosBtns = opcionesBox.querySelectorAll('button');
                 todosLosBtns.forEach(b => b.disabled = true);
 
-                // Cuadro de feedback corregido: Fondo verde oscuro, letras y borde verde neón
+                // Caja de feedback verde oscuro con letras verde neón
                 feedbackBox.style.display = 'block';
                 feedbackBox.style.background = "#14532d"; 
                 feedbackBox.style.color = "#4ade80"; 
@@ -1450,19 +1488,27 @@ function abrirTrivia() {
                     <strong style="font-size:16px; color:#4ade80;">🏆 ¡Correcto!</strong><br>
                     <p style="margin:5px 0 10px 0; color:#ffffff;">${preguntaActual.e}</p>
                     <hr style="border:0; border-top:1px solid #4ade80; margin:10px 0;">
-                    <span style="font-size:12px; font-weight:bold; color:#2596be; text-transform:uppercase;">Dato Curioso:</span>
+                    <span style="font-size:12px; font-weight:bold; color:#ffffff; text-transform:uppercase;">DATO CURIOSO:</span>
                     <p style="margin:3px 0 15px 0; color:#ffffff; font-style:italic;">${preguntaActual.curioso}</p>
-                    <button onclick="cerrarTriviaExito()" style="background:#2596be; color:#ffffff; border:none; padding:10px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px;">Entendido, nos vemos mañana</button>
+                    <button onclick="cerrarTriviaExito()" style="background:#1e293b; color:#4ade80; border:1px solid #4ade80; padding:11px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px; transition: all 0.2s;">Entendido, nos vemos mañana</button>
                 `;
+                
+                // Efecto hover sutil al botón final de cierre
+                const btnCierre = feedbackBox.querySelector('button');
+                btnCierre.onmouseover = () => { btnCierre.style.background = "#14532d"; btnCierre.style.color = "#ffffff"; };
+                btnCierre.onmouseout = () => { btnCierre.style.background = "#1e293b"; btnCierre.style.color = "#4ade80"; };
+
             } else {
                 // --- RESPUESTA INCORRECTA ---
+                // Forzamos el color rojo al instante eliminando el hover para la compu
+                btn.onmouseover = null; btn.onmouseout = null;
                 btn.style.background = "#7f1d1d";
                 btn.style.borderColor = "#ef4444";
                 btn.style.color = "#fca5a5";
                 
-                // Lanzar la sacudida (shake) quitando y poniendo la clase
-                modalContent.classList.remove('shake-effect');
-                void modalContent.offsetWidth; // Truco JS para resetear animación en el navegador
+                // Lanzar sacudida eliminando la clase de zoom previo para que no choque
+                modalContent.classList.remove('zoom-in-effect', 'shake-effect');
+                void modalContent.offsetWidth; // Forzar render
                 modalContent.classList.add('shake-effect');
 
                 feedbackBox.style.display = 'block';
@@ -1477,9 +1523,19 @@ function abrirTrivia() {
 }
 
 function cerrarTriviaExito() {
-    document.getElementById('triviaModal').style.display = 'none';
+    const modal = document.getElementById('triviaModal');
+    const modalContent = document.getElementById('modalContent');
     const trigger = document.getElementById('triggerTrivia');
-    if (trigger) trigger.style.display = 'none';
+    
+    // Ejecutar animación de salida con zoom
+    modalContent.classList.remove('zoom-in-effect', 'shake-effect');
+    modalContent.classList.add('zoom-out-effect');
+    
+    // Esperar a que termine la animación (200ms) para ocultar el modal completo
+    setTimeout(() => {
+        modal.style.display = 'none';
+        if (trigger) trigger.style.display = 'none'; // Oculta el librito permanentemente
+    }, 200);
 }
 </script>
 </body>
