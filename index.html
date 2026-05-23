@@ -460,6 +460,28 @@ input::-webkit-outer-spin-button,
 #triggerHuevo:active {
     transform: scale(0.95);
 }
+/* El botón del librito */
+#triggerTrivia {
+    position: absolute;   
+    bottom: 20px;         /* Alilineado al piso de la tarjeta */
+    right: 25px;          /* Pegado a la derecha */
+    font-size: 1.3rem;    /* Tamaño discreto y premium */
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease;
+    animation: parpadeoForzado 1.5s infinite ease-in-out;
+}
+
+#triggerTrivia:hover {
+    transform: scale(1.2);
+}
+
+/* Animación suave de parpadeo */
+@keyframes parpadeoForzado {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
 </style>
 </head>
 <body>
@@ -495,7 +517,7 @@ input::-webkit-outer-spin-button,
         </div>
     </div>
     
-    <div class="contenedor">
+<div class="contenedor" style="position: relative;">
         <div class="mood-container">
             <div id="moodFace" class="mood-face">🙂</div>
             <div class="barra-fondo">
@@ -513,6 +535,7 @@ input::-webkit-outer-spin-button,
                 <span class="punto-color pt-listos">•</span> Listas: <span id="count-listos">0</span>
             </span>
         </div>
+<div id="triggerTrivia" class="libro-parpadeante" onclick="abrirTrivia()">📖</div>
     </div>
 <button id="btnExpandirForm" class="btn-celular-only" onclick="toggleForm()">+ NUEVA ORDEN</button>
     <div class="contenedor" id="contenedorForm">
@@ -1328,5 +1351,136 @@ function toggleForm() {
         <button class="btn-close-games" onclick="cerrarAlproGames()">VOLVER AL REGISTRO</button>
     </div>
 </div>
+<div id="triviaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter: blur(4px); font-family: 'Segoe UI', sans-serif;">
+    <div id="modalContent" style="background:#1e293b; color:#f8fafc; padding:30px; border-radius:16px; width:90%; max-width:450px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.5); border:1px solid #334155; text-align:center; box-sizing: border-box; transition: transform 0.2s ease;">
+        
+        <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:20px;">
+            <span id="triviaCategoria" style="background:#2596be; color:#ffffff; padding:5px 14px; border-radius:14px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing: 0.5px;">Categoría</span>
+        </div>
+
+        <h3 id="preguntaTexto" style="font-size:18px; margin:10px 0 25px 0; line-height:1.5; color:#f8fafc; text-align:left; font-weight:600;">Cargando pregunta...</h3>
+        
+        <div id="opcionesContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:15px;">
+            </div>
+
+        <div id="feedbackContainer" style="display:none; margin-top:15px; padding:18px; border-radius:10px; text-align:left; line-height:1.5; font-size:14.5px;">
+            </div>
+    </div>
+</div>
+
+<style>
+@keyframes triviaShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}
+.shake-effect {
+    animation: triviaShake 0.4s ease-in-out;
+}
+</style>
+
+<script src="trivia-data.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const hoy = new Date().toLocaleDateString();
+    const trigger = document.getElementById('triggerTrivia');
+    if (localStorage.getItem('triviaRespondida') === hoy) {
+        if (trigger) trigger.style.display = 'none';
+    }
+});
+
+function abrirTrivia() {
+    if (typeof bancoDePreguntas === 'undefined' || bancoDePreguntas.length === 0) {
+        alert("Error: No se pudieron cargar las preguntas.");
+        return;
+    }
+
+    const modal = document.getElementById('triviaModal');
+    const modalContent = document.getElementById('modalContent');
+    const preguntaTxt = document.getElementById('preguntaTexto');
+    const opcionesBox = document.getElementById('opcionesContainer');
+    const feedbackBox = document.getElementById('feedbackContainer');
+    const catTxt = document.getElementById('triviaCategoria');
+
+    const fechaActual = new Date();
+    const inicioAño = new Date(fechaActual.getFullYear(), 0, 1);
+    const diaDelAño = Math.floor((fechaActual - inicioAño) / (1000 * 60 * 60 * 24));
+    const preguntaActual = bancoDePreguntas[diaDelAño % bancoDePreguntas.length];
+
+    // Limpiar clases previas de animación y resetear vista
+    modalContent.classList.remove('shake-effect');
+    feedbackBox.style.display = 'none';
+    feedbackBox.innerHTML = '';
+    opcionesBox.innerHTML = '';
+    
+    // Inyectar categoría dinámica
+    catTxt.innerText = preguntaActual.cat || "General";
+    preguntaTxt.innerText = preguntaActual.p;
+    modal.style.display = 'flex';
+
+    preguntaActual.o.forEach((opcionTexto, index) => {
+        const btn = document.createElement('button');
+        btn.innerText = opcionTexto;
+        btn.style = "background:#273549; color:#cbd5e1; border:1px solid #475569; padding:12px 15px; border-radius:8px; cursor:pointer; text-align:left; font-size:14.5px; transition:all 0.2s; width:100%; font-weight:500;";
+        
+        btn.onmouseover = () => { btn.style.background = "#334155"; btn.style.borderColor = "#64748b"; };
+        btn.onmouseout = () => { btn.style.background = "#273549"; btn.style.borderColor = "#475569"; };
+
+        btn.onclick = () => {
+            if (index === preguntaActual.c) {
+                // --- RESPUESTA CORRECTA ---
+                localStorage.setItem('triviaRespondida', fechaActual.toLocaleDateString());
+                
+                // El botón que clickearon se pinta con tu color celeste premium
+                btn.style.background = "#2596be";
+                btn.style.borderColor = "#2596be";
+                btn.style.color = "#ffffff";
+                btn.onmouseover = null; btn.onmouseout = null;
+
+                const todosLosBtns = opcionesBox.querySelectorAll('button');
+                todosLosBtns.forEach(b => b.disabled = true);
+
+                // Cuadro de feedback corregido: Fondo verde oscuro, letras y borde verde neón
+                feedbackBox.style.display = 'block';
+                feedbackBox.style.background = "#14532d"; 
+                feedbackBox.style.color = "#4ade80"; 
+                feedbackBox.style.border = "1px solid #4ade80"; 
+                feedbackBox.innerHTML = `
+                    <strong style="font-size:16px; color:#4ade80;">🏆 ¡Correcto!</strong><br>
+                    <p style="margin:5px 0 10px 0; color:#ffffff;">${preguntaActual.e}</p>
+                    <hr style="border:0; border-top:1px solid #4ade80; margin:10px 0;">
+                    <span style="font-size:12px; font-weight:bold; color:#2596be; text-transform:uppercase;">Dato Curioso:</span>
+                    <p style="margin:3px 0 15px 0; color:#ffffff; font-style:italic;">${preguntaActual.curioso}</p>
+                    <button onclick="cerrarTriviaExito()" style="background:#2596be; color:#ffffff; border:none; padding:10px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px;">Entendido, nos vemos mañana</button>
+                `;
+            } else {
+                // --- RESPUESTA INCORRECTA ---
+                btn.style.background = "#7f1d1d";
+                btn.style.borderColor = "#ef4444";
+                btn.style.color = "#fca5a5";
+                
+                // Lanzar la sacudida (shake) quitando y poniendo la clase
+                modalContent.classList.remove('shake-effect');
+                void modalContent.offsetWidth; // Truco JS para resetear animación en el navegador
+                modalContent.classList.add('shake-effect');
+
+                feedbackBox.style.display = 'block';
+                feedbackBox.style.background = "#450a0a";
+                feedbackBox.style.color = "#fca5a5";
+                feedbackBox.style.border = "1px solid #7f1d1d";
+                feedbackBox.innerHTML = `<strong>❌ Incorrecto.</strong> ¡Analízalo bien e intenta con otra opción!`;
+            }
+        };
+        opcionesBox.appendChild(btn);
+    });
+}
+
+function cerrarTriviaExito() {
+    document.getElementById('triviaModal').style.display = 'none';
+    const trigger = document.getElementById('triggerTrivia');
+    if (trigger) trigger.style.display = 'none';
+}
+</script>
 </body>
 </html>
