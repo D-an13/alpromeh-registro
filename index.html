@@ -1600,6 +1600,7 @@ function abrirTrivia() {
     opcionesBox.innerHTML = '';
     
     // Formateamos la categoría en mayúsculas e inyectamos el color dinámico
+    // Formateamos la categoría en mayúsculas e inyectamos el color dinámico
     const categoriaTexto = (preguntaActual.cat || "General").toUpperCase();
     catTxt.innerText = categoriaTexto;
     
@@ -1654,6 +1655,7 @@ function abrirTrivia() {
                     <hr style="border:0; border-top:1px solid #065f46; margin:14px 0;">
                     <span style="font-size:12px; font-weight:bold; color:#ebfbff; text-transform:uppercase; letter-spacing:0.7px; display:block; margin-bottom:4px;">DATO CURIOSO:</span>
                     <p style="margin:0 0 20px 0; color:#cbd5e1; font-style:italic; line-height:1.5; font-size:14.5px;">${preguntaActual.curioso}</p>
+                    
                     <button onclick="cerrarTriviaExito()" style="background:#1e293b; color:#10b981; border:1px solid #10b981; padding:13px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px; transition: all 0.2s; font-size:14px;">DATO APRENDIDO</button>
                 `;
 
@@ -1683,17 +1685,23 @@ function abrirTrivia() {
     }); 
 }
 
+// 🎬 NUEVA VERSIÓN BLINDADA DE TU FUNCIÓN DE CIERRE
 function cerrarTriviaExito() {
     const modal = document.getElementById('triviaModal');
     const modalContent = document.getElementById('modalContent');
     const trigger = document.getElementById('triggerTrivia');
     
-    modalContent.classList.remove('zoom-in-effect', 'shake-effect');
-    modalContent.classList.add('zoom-out-effect');
+    // 1. Iniciamos el desvanecimiento del fondo negro y el encogimiento del libro
+    if (modal) modal.classList.remove('show');
+    if (modalContent) {
+        modalContent.classList.remove('zoom-in-effect', 'shake-effect');
+        modalContent.classList.add('zoom-out-effect');
+    }
     
+    // 2. Esperamos los 200ms exactos de la transición antes de apagar el bloque por completo
     setTimeout(() => {
-        modal.style.display = 'none';
-        modalContent.classList.remove('modal-expanded'); // Limpiamos la expansión para la próxima vez
+        if (modal) modal.style.display = 'none';
+        if (modalContent) modalContent.classList.remove('zoom-out-effect', 'modal-expanded'); 
         if (trigger) trigger.style.display = 'none'; 
     }, 200);
 }
