@@ -1,0 +1,122 @@
+[
+  {
+    "p": "Un cliente te pide un tubo para 'la sangre completa' (hematología), ¿cuál le das?",
+    "o": ["El tubo rojo", "El tubo morado (con EDTA)", "El tubo amarillo (con gel)"],
+    "c": 1,
+    "e": "¡Exacto! El morado lleva EDTA, que es el químico que mantiene la sangre líquida para que la máquina pueda contar bien las células."
+  },
+  {
+    "p": "Llega un doctor apurado buscando una aguja verde para una emergencia, ¿qué número de catéter es?",
+    "o": ["Número 18", "Número 24", "Número 14"],
+    "c": 0,
+    "e": "El catéter 18 es el verde. En medicina, entre más pequeño es el número, más gruesa es la aguja. ¡Es el ideal para que pasen líquidos rápido!"
+  },
+  {
+    "p": "¿Para qué sirve el recipiente recolector de orina de 24 horas?",
+    "o": ["Para guardar orina de un bebé", "Para juntar toda la orina del paciente durante un día entero", "Para una muestra rápida de 5 minutos"],
+    "c": 1,
+    "e": "Exacto, es para recolectar la orina durante todo un día y así el laboratorio puede hacer un análisis completo."
+  },
+  {
+    "p": "¿Qué le explicas a alguien que busca un 'Tubo con activador' (Tubo rojo)?",
+    "o": ["Que sirve para que la sangre no se coagule", "Que sirve para que la sangre se coagule rápido y separar el suero", "Que es para ponerle agua a la muestra"],
+    "c": 1,
+    "e": "El activador rojo hace que la sangre se coagule rápido, así separamos el suero para hacer pruebas de química sanguínea."
+  },
+  {
+    "p": "Te piden guantes de nitrilo, ¿por qué son diferentes a los de látex?",
+    "o": ["Los de nitrilo son azules y resistentes, ideales para alérgicos al látex", "Son lo mismo, solo cambia el nombre", "Los de nitrilo son de tela"],
+    "c": 0,
+    "e": "¡Así es! Los de nitrilo son sintéticos, no causan alergia al látex y aguantan más químicos."
+  },
+  {
+    "p": "Un enfermero necesita una sonda para alguien que no puede orinar por sí mismo, ¿cuál es la mejor opción?",
+    "o": ["Una jeringa de 3ml", "Una sonda Foley de dos vías", "Un cubrezapatos"],
+    "c": 1,
+    "e": "La sonda Foley es la que se queda puesta en la vejiga; la de dos vías permite vaciar la orina y también inflar el baloncito para que no se salga."
+  },
+  {
+    "p": "¿Qué haces si te piden una 'Sonda nasogástrica' para un adulto?",
+    "o": ["Le das una sonda para orinar", "Le das una sonda que va de la nariz al estómago", "Le das un tubo para respirar"],
+    "c": 1,
+    "e": "Correcto. Estas sondas llevan alimento o medicamentos directo al estómago de pacientes que no pueden tragar."
+  },
+  {
+    "p": "Te preguntan: ¿La jeringa de 1ml con aguja 30x1/2 es para inyectar un músculo grande?",
+    "o": ["Sí, es la más grande que tenemos", "No, esa aguja es súper fina y corta, es para algo superficial", "Sirve para lo que sea"],
+    "c": 1,
+    "e": "¡Correcto! Esa aguja es muy fina (tipo insulina). No sirve para músculos profundos, es para inyecciones pequeñas en la piel."
+  },
+  {
+    "p": "¿Para qué sirven las famosas 'Puntas de pipeta' amarillas?",
+    "o": ["Para decorar el laboratorio", "Para que la pipeta automática succione cantidades exactas sin tocar la muestra", "Para limpiar microscopios"],
+    "c": 1,
+    "e": "Se usan en el laboratorio para medir gotas diminutas con precisión y sin contaminar el equipo."
+  },
+  {
+    "p": "Un cliente busca un tubo 'Eppendorf' de 1.5 ml, ¿qué es?",
+    "o": ["Un tubo largo para sacar sangre", "Un tubito pequeño con tapa a presión para muestras pequeñitas", "Un recipiente de 1 litro"],
+    "c": 1,
+    "e": "Son esos tubitos chiquitos que se usan mucho en biología o pruebas genéticas para guardar pequeñas cantidades de líquido."
+  },
+  {
+    "p": "Si te piden una 'Tijera Iris', ¿qué tipo de herramienta es?",
+    "o": ["Una tijera grande para cortar vendas", "Una tijera muy pequeña y fina para trabajos de precisión o cirugía", "Es una herramienta para arreglar tuberías"],
+    "c": 1,
+    "e": "Exacto, las tijeras Iris son finas, de precisión, muy usadas en salas de curación o cirugías menores."
+  },
+  {
+    "p": "¿Qué es el 'Equipo de venoclisis'?",
+    "o": ["Es el tubito que conecta la bolsa de suero con la vena del paciente", "Es un aparato para tomar la presión", "Es una jeringa de 60ml"],
+    "c": 0,
+    "e": "¡Muy bien! Es la manguerita que lleva el suero o medicina desde la bolsa hacia el catéter del paciente."
+  },
+  {
+    "p": "¿Por qué vendemos 'Cubreobjetos' junto a los 'Portaobjetos'?",
+    "o": ["Porque son del mismo tamaño", "El portaobjetos sostiene la muestra y el cubreobjetos la protege para verla al microscopio", "Solo para ganar más dinero"],
+    "c": 1,
+    "e": "El porta es la lámina de vidrio donde va la muestra; el cubre es el cristalito fino que va encima para que no se ensucie el lente del microscopio."
+  },
+  {
+    "p": "¿Qué le ofreces a un hospital para tirar agujas usadas?",
+    "o": ["Una bolsa de basura negra", "Un recipiente de punzocortantes (biotrasher)", "Un recipiente de vidrio"],
+    "c": 1,
+    "e": "¡Seguridad primero! Los punzocortantes son rígidos para que las agujas no pinchen a nadie al tirar la basura."
+  },
+  {
+    "p": "Un cliente necesita medir la temperatura de varias personas sin contacto, ¿qué le das?",
+    "o": ["Un termómetro infrarrojo digital", "Un termómetro de mercurio", "Un estetoscopio"],
+    "c": 0,
+    "e": "El infrarrojo mide la temperatura a distancia con un láser, súper útil y rápido."
+  },
+  {
+    "p": "¿Qué es la 'Venda de guata'?",
+    "o": ["Es una venda elástica que aprieta mucho", "Es un algodón acolchado que va debajo del yeso para proteger la piel", "Es una venda para heridas con sangre"],
+    "c": 1,
+    "e": "Correcto. Evita que el yeso raspe o irrite la piel del paciente."
+  },
+  {
+    "p": "Te piden una 'llave de tres vías', ¿para qué es?",
+    "o": ["Para cerrar puertas", "Para controlar el flujo de líquidos en una vena (abrir o cerrar el paso)", "Para medir la orina"],
+    "c": 1,
+    "e": "Es como un interruptor de luz, pero para líquidos médicos. Permite cambiar de dónde viene el suero sin pinchar al paciente otra vez."
+  },
+  {
+    "p": "Un doctor pide 'Cinta de castilla' para una curación, ¿qué es?",
+    "o": ["Una cinta adhesiva de tela muy resistente", "Un tipo de papel de regalo", "Es una venda elástica"],
+    "c": 0,
+    "e": "Es la cinta clásica de tela (esparadrapo); pega muy bien y es ideal para sujetar gasas que se mueven mucho."
+  },
+  {
+    "p": "¿Cuál es la función del gel conductor?",
+    "o": ["Es para lubricar la piel y que el ultrasonido o ECG se vea bien en la pantalla", "Es un gel para curar heridas", "Es para que los guantes no se peguen"],
+    "c": 0,
+    "e": "El gel ayuda a que las ondas de sonido del ultrasonido entren al cuerpo; sin gel, no se ve nada en la pantalla."
+  },
+  {
+    "p": "Por último, ¿qué es un estetoscopio?",
+    "o": ["Un aparato para ver el interior del cuerpo", "Un equipo para escuchar los sonidos del corazón y pulmones", "Una lámpara para ver gargantas"],
+    "c": 1,
+    "e": "¡Exacto, bro! Es la herramienta básica de todo médico para escuchar qué está pasando adentro del pecho."
+  }
+]
