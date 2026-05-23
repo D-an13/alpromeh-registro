@@ -1352,52 +1352,141 @@ function toggleForm() {
     </div>
 </div>
 <div id="triviaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter: blur(4px); font-family: 'Segoe UI', sans-serif;">
-    <div id="modalContent" style="background:#1e293b; color:#f8fafc; padding:30px; border-radius:16px; width:90%; max-width:450px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.5); border:1px solid #334155; text-align:center; box-sizing: border-box; transition: transform 0.2s ease;">
-        
-        <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:20px;">
-            <span id="triviaCategoria" style="background:#2596be; color:#ffffff; padding:5px 14px; border-radius:14px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing: 0.5px;">Categoría</span>
+    <div id="modalContent" class="trivia-modal-layout">
+        <div style="text-align:center; margin-bottom:22px; margin-top:-5px;">
+            <span style="font-size:20px; font-weight:800; color:#07b9eb; letter-spacing:1.5px; text-transform:uppercase; display:block; font-family:sans-serif; text-shadow: 0 0 10px rgba(7,185,235,0.2);">¡APRENDAMOS JUNTOS!</span>
         </div>
-
-        <h3 id="preguntaTexto" style="font-size:18px; margin:10px 0 25px 0; line-height:1.5; color:#f8fafc; text-align:left; font-weight:600;">Cargando pregunta...</h3>
-        
-        <div id="opcionesContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:15px;">
+        <div class="trivia-flex-container">
+            <div class="trivia-main-column">
+                <div style="display:flex; justify-content:flex-start; align-items:center; margin-bottom:18px;">
+                    <span id="triviaCategoria" style="background:#2596be; color:#ffffff; padding:5px 14px; border-radius:14px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing: 0.5px;">Categoría</span>
+                </div>
+                <h3 id="preguntaTexto" style="font-size:18px; margin:10px 0 20px 0; line-height:1.5; color:#f8fafc; text-align:left; font-weight:600;">Cargando pregunta...</h3>
+                <div id="opcionesContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:5px;"></div>
             </div>
-
-        <div id="feedbackContainer" style="display:none; margin-top:15px; padding:18px; border-radius:10px; text-align:left; line-height:1.5; font-size:14.5px;">
-            </div>
+            <div id="feedbackContainer" class="trivia-feedback-column"></div>
+        </div>
     </div>
 </div>
-
 <style>
 /* Animación de Sacudida (Shake) */
+/* Animación de Sacudida (Shake para errores) */
 @keyframes triviaShake {
     0%, 100% { transform: scale(1) translateX(0); }
     20%, 60% { transform: scale(1) translateX(-8px); }
     40%, 80% { transform: scale(1) translateX(8px); }
 }
 
-/* Animación de Entrada (Zoom Bonito) */
+/* Animación de Entrada General (Zoom Bonito) */
 @keyframes triviaZoomIn {
     from { opacity: 0; transform: scale(0.85); }
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Animación de Salida (Zoom Suave) */
+/* Animación de Salida General (Zoom Suave) */
 @keyframes triviaZoomOut {
     from { opacity: 1; transform: scale(1); }
     to { opacity: 0; transform: scale(0.85); }
 }
 
+/* Barrido suave para el feedback verde (Aparece de izquierda a derecha) */
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.shake-effect { animation: triviaShake 0.4s ease-in-out !important; }
+.zoom-in-effect { animation: triviaZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.zoom-out-effect { animation: triviaZoomOut 0.2s ease-in forwards; }
+
+
+/* --- DISEÑO INTERFAZ DE TRIVIA --- */
+
+/* El Modal siempre arranca compacto (Perfecto para cel y compu al inicio) */
+.trivia-modal-layout {
+    background: #1e293b;
+    color: #f8fafc;
+    padding: 25px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 450px; /* Tamaño original que te encanta */
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+    border: 1px solid #334155;
+    text-align: center;
+    box-sizing: border-box;
+    transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease; /* Transición ultra suave para el estiramiento */
+}
+
+.trivia-flex-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.trivia-main-column {
+    width: 100%;
+    transition: width 0.4s ease;
+}
+
+/* Estilo base del Feedback (Oculto al inicio) */
+.trivia-feedback-column {
+    display: none;
+    width: 100%;
+    padding: 18px;
+    border-radius: 10px;
+    text-align: left;
+    line-height: 1.5;
+    font-size: 14.5px;
+    box-sizing: border-box;
+}
+
+/* COMPUTADORAS Y PANTALLAS GRANDES (Efecto Seda Sin Saltos) */
+@media (min-width: 850px) {
+    /* El modal se estira de forma fluida y natural */
+    .modal-expanded {
+        max-width: 860px !important;
+        padding: 30px;
+    }
+    
+    /* Forzamos que la estructura de fila esté lista de manera armónica */
+    .modal-expanded .trivia-flex-container {
+        flex-direction: row !important;
+        align-items: stretch;
+        gap: 25px;
+    }
+    
+    /* Evitamos que la columna de preguntas se encoga bruscamente al cambiar a fila */
+    .modal-expanded .trivia-main-column {
+        width: 48% !important;
+        flex-shrink: 0; 
+    }
+    
+    /* El feedback aparece suavemente cuando el modal ya se estiró */
+    .modal-expanded .trivia-feedback-column {
+        width: 52% !important;
+        display: block !important;
+        opacity: 0;
+        /* Animación limpia de barrido con delay estratégico */
+        animation: fadeInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    }
+}
+
+/* Animación de Sacudida (Shake para errores) */
+@keyframes triviaShake {
+    0%, 100% { transform: scale(1) translateX(0); }
+    20%, 60% { transform: scale(1) translateX(-8px); }
+    40%, 80% { transform: scale(1) translateX(8px); }
+}
+
 .shake-effect {
     animation: triviaShake 0.4s ease-in-out !important;
-}
-
-.zoom-in-effect {
-    animation: triviaZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.zoom-out-effect {
-    animation: triviaZoomOut 0.2s ease-in forwards;
 }
 </style>
 
@@ -1425,7 +1514,6 @@ function abrirTrivia() {
     const hoy = new Date();
     const diaSemana = hoy.getDay();
     
-    // Doble seguridad para fines de semana
     if (diaSemana === 0 || diaSemana === 6) {
         alert("¡Es fin de semana, bro! A descansar, el bootcamp regresa el lunes.");
         return;
@@ -1438,21 +1526,38 @@ function abrirTrivia() {
     const feedbackBox = document.getElementById('feedbackContainer');
     const catTxt = document.getElementById('triviaCategoria');
 
+    // --- DICCIONARIO DE COLORES CLÍNICO-MÉDICO ---
+    const coloresCategorias = {
+        "LABORATORIO": "#2596be",
+        "URGENCIAS": "#b91c1c",
+        "PROTECCIÓN": "#0ea5e9",
+        "CIRUGÍA": "#0d9488",
+        "INYECTABLES": "#d97706",
+        "SOLUCIONES": "#2563eb",
+        "DESECHOS": "#ea580c",
+        "DIAGNÓSTICO": "#7c3aed",
+        "CURACIÓN": "#16a34a"
+    };
+
     const inicioAño = new Date(hoy.getFullYear(), 0, 1);
     const diaDelAño = Math.floor((hoy - inicioAño) / (1000 * 60 * 60 * 24));
     const preguntaActual = bancoDePreguntas[diaDelAño % bancoDePreguntas.length];
 
-    // Resetear clases de animación y estados viejos
-    modalContent.classList.remove('shake-effect', 'zoom-out-effect');
+    // IMPORTANTE: Reseteamos la expansión para que abra compacto siempre
+    modalContent.classList.remove('shake-effect', 'zoom-out-effect', 'modal-expanded');
     feedbackBox.style.display = 'none';
     feedbackBox.innerHTML = '';
     opcionesBox.innerHTML = '';
     
-    // Inyectar info
-    catTxt.innerText = preguntaActual.cat || "General";
+    // Formateamos la categoría en mayúsculas e inyectamos el color dinámico
+    const categoriaTexto = (preguntaActual.cat || "General").toUpperCase();
+    catTxt.innerText = categoriaTexto;
+    
+    const colorAsignado = coloresCategorias[categoriaTexto] || "#2596be";
+    catTxt.style.background = colorAsignado;
+
     preguntaTxt.innerText = preguntaActual.p;
     
-    // Mostrar modal con el Zoom Bonito de entrada
     modal.style.display = 'flex';
     modalContent.classList.add('zoom-in-effect');
 
@@ -1461,7 +1566,6 @@ function abrirTrivia() {
         btn.innerText = opcionTexto;
         btn.style = "background:#273549; color:#cbd5e1; border:1px solid #475569; padding:12px 15px; border-radius:8px; cursor:pointer; text-align:left; font-size:14.5px; transition:all 0.2s; width:100%; font-weight:500;";
         
-        // Efectos Hover normales
         btn.onmouseover = () => { btn.style.background = "#334155"; btn.style.borderColor = "#64748b"; };
         btn.onmouseout = () => { btn.style.background = "#273549"; btn.style.borderColor = "#475569"; };
 
@@ -1470,45 +1574,47 @@ function abrirTrivia() {
                 // --- RESPUESTA CORRECTA ---
                 localStorage.setItem('triviaRespondida', hoy.toLocaleDateString());
                 
-                // El cuadro se pone verde neón con letras blancas al estilo premium
-                btn.style.background = "#02b84b";
-                btn.style.borderColor = "#02b84b";
-                btn.style.color = "#ffffff"; // Texto oscuro para que resalte en el botón verde
-                btn.onmouseover = null; btn.onmouseout = null; // Matamos el hover de una vez
+                btn.style.background = "#059669";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "#ffffff"; 
+                btn.onmouseover = null; btn.onmouseout = null;
 
                 const todosLosBtns = opcionesBox.querySelectorAll('button');
                 todosLosBtns.forEach(b => b.disabled = true);
 
-                // Caja de feedback verde oscuro con letras verde neón
+                // ACTIVAMOS LA EXPANSIÓN (Manda el comando al CSS para estirarse en compu)
+                modalContent.classList.add('modal-expanded');
+
+                // Mostramos y armamos la caja verde de feedback
                 feedbackBox.style.display = 'block';
                 feedbackBox.style.background = "#14532d"; 
-                feedbackBox.style.color = "#4ade80"; 
-                feedbackBox.style.border = "1px solid #4ade80"; 
+                feedbackBox.style.color = "#ffffff"; // Texto blanco para máxima lectura
+                feedbackBox.style.border = "1px solid #10b981"; // Borde más vivo
                 feedbackBox.innerHTML = `
-                    <strong style="font-size:16px; color:#4ade80;">🏆 ¡Correcto!</strong><br>
-                    <p style="margin:5px 0 10px 0; color:#ffffff;">${preguntaActual.e}</p>
-                    <hr style="border:0; border-top:1px solid #4ade80; margin:10px 0;">
-                    <span style="font-size:12px; font-weight:bold; color:#ffffff; text-transform:uppercase;">DATO CURIOSO:</span>
-                    <p style="margin:3px 0 15px 0; color:#ffffff; font-style:italic;">${preguntaActual.curioso}</p>
-                    <button onclick="cerrarTriviaExito()" style="background:#1e293b; color:#4ade80; border:1px solid #4ade80; padding:11px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px; transition: all 0.2s;">Entendido, nos vemos mañana</button>
+                    <div style="text-align:center; margin-top:2px;">
+                        <span style="font-size:26px; display:block; margin-bottom:5px;">🏆</span>
+                        <strong style="font-size:22px; color:#a7f3d0; display:block; letter-spacing:0.5px;">¡Correcto!</strong>
+                    </div>
+                    <p style="margin:12px 0 14px 0; color:#f8fafc; line-height:1.5; font-size:15px; font-weight:500;">${preguntaActual.e}</p>
+                    <hr style="border:0; border-top:1px solid #065f46; margin:14px 0;">
+                    <span style="font-size:12px; font-weight:bold; color:#ebfbff; text-transform:uppercase; letter-spacing:0.7px; display:block; margin-bottom:4px;">DATO CURIOSO:</span>
+                    <p style="margin:0 0 20px 0; color:#cbd5e1; font-style:italic; line-height:1.5; font-size:14.5px;">${preguntaActual.curioso}</p>
+                    <button onclick="cerrarTriviaExito()" style="background:#1e293b; color:#10b981; border:1px solid #10b981; padding:13px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px; transition: all 0.2s; font-size:14px;">DATO APRENDIDO</button>
                 `;
-                
-                // Efecto hover sutil al botón final de cierre
+
                 const btnCierre = feedbackBox.querySelector('button');
-                btnCierre.onmouseover = () => { btnCierre.style.background = "#14532d"; btnCierre.style.color = "#ffffff"; };
-                btnCierre.onmouseout = () => { btnCierre.style.background = "#1e293b"; btnCierre.style.color = "#4ade80"; };
+                btnCierre.onmouseover = () => { btnCierre.style.background = "#10b981"; btnCierre.style.color = "#0f172a"; };
+                btnCierre.onmouseout = () => { btnCierre.style.background = "#1e293b"; btnCierre.style.color = "#10b981"; };
 
             } else {
                 // --- RESPUESTA INCORRECTA ---
-                // Forzamos el color rojo al instante eliminando el hover para la compu
                 btn.onmouseover = null; btn.onmouseout = null;
                 btn.style.background = "#7f1d1d";
                 btn.style.borderColor = "#ef4444";
                 btn.style.color = "#fca5a5";
                 
-                // Lanzar sacudida eliminando la clase de zoom previo para que no choque
                 modalContent.classList.remove('zoom-in-effect', 'shake-effect');
-                void modalContent.offsetWidth; // Forzar render
+                void modalContent.offsetWidth; 
                 modalContent.classList.add('shake-effect');
 
                 feedbackBox.style.display = 'block';
@@ -1517,9 +1623,9 @@ function abrirTrivia() {
                 feedbackBox.style.border = "1px solid #7f1d1d";
                 feedbackBox.innerHTML = `<strong>❌ Incorrecto.</strong> ¡Analízalo bien e intenta con otra opción!`;
             }
-        };
+        }; 
         opcionesBox.appendChild(btn);
-    });
+    }); 
 }
 
 function cerrarTriviaExito() {
@@ -1527,14 +1633,13 @@ function cerrarTriviaExito() {
     const modalContent = document.getElementById('modalContent');
     const trigger = document.getElementById('triggerTrivia');
     
-    // Ejecutar animación de salida con zoom
     modalContent.classList.remove('zoom-in-effect', 'shake-effect');
     modalContent.classList.add('zoom-out-effect');
     
-    // Esperar a que termine la animación (200ms) para ocultar el modal completo
     setTimeout(() => {
         modal.style.display = 'none';
-        if (trigger) trigger.style.display = 'none'; // Oculta el librito permanentemente
+        modalContent.classList.remove('modal-expanded'); // Limpiamos la expansión para la próxima vez
+        if (trigger) trigger.style.display = 'none'; 
     }, 200);
 }
 </script>
