@@ -3,72 +3,72 @@ const bancoDePreguntas = [
   {
     "cat": "Laboratorio",
     "p": "Un cliente te pide un tubo para 'la sangre completa' (hematología), ¿cuál le das?",
-    "o": ["El tubo rojo", "El tubo morado (con EDTA)", "El tubo amarillo (con gel)"],
-    "c": 1,
+    "o": ["El tubo rojo", "El tubo amarillo (con gel)", "El tubo morado (con EDTA)"],
+    "c": 2,
     "e": "¡Exacto! El morado lleva EDTA, que es el químico que mantiene la sangre líquida para que la máquina pueda contar bien las células.",
     "curioso": "El EDTA es tan efectivo que se usa desde 1950 para análisis sanguíneos sin alterar la forma de las células."
   },
   {
     "cat": "Urgencias",
     "p": "Llega un doctor apurado buscando una aguja verde para una emergencia, ¿qué número de catéter es?",
-    "o": ["Número 18", "Número 24", "Número 14"],
-    "c": 0,
+    "o": ["Número 24", "Número 18", "Número 14"],
+    "c": 1,
     "e": "El catéter 18 es el verde. En medicina, entre más pequeño es el número, más gruesa es la aguja. ¡Es el ideal para que pasen líquidos rápido!",
     "curioso": "El calibre 18 (verde) es el 'rey' de las urgencias porque permite pasar volúmenes grandes de suero en muy poco tiempo."
   },
   {
     "cat": "Laboratorio",
     "p": "¿Para qué sirve el recipiente recolector de orina de 24 horas?",
-    "o": ["Para guardar orina de un bebé", "Para juntar toda la orina del paciente durante un día entero", "Para una muestra rápida de 5 minutos"],
-    "c": 1,
+    "o": ["Para juntar toda la orina del paciente durante un día entero", "Para guardar orina de un bebé", "Para una muestra rápida de 5 minutos"],
+    "c": 0,
     "e": "Exacto, es para recolectar la orina durante todo un día y así el laboratorio puede hacer un análisis completo.",
     "curioso": "Se usa para medir sustancias como proteínas o creatinina que cambian mucho a lo largo del día."
   },
   {
     "cat": "Laboratorio",
     "p": "¿Qué le explicas a alguien que busca un 'Tubo con activador' (Tubo rojo)?",
-    "o": ["Que sirve para que la sangre no se coagule", "Que sirve para que la sangre se coagule rápido y separar el suero", "Que es para ponerle agua a la muestra"],
-    "c": 1,
+    "o": ["Que sirve para que la sangre no se coagule", "Que es para ponerle agua a la muestra", "Que sirve para que la sangre se coagule rápido y separar el suero"],
+    "c": 2,
     "e": "El activador rojo hace que la sangre se coagule rápido, así separamos el suero para hacer pruebas de química sanguínea.",
-    "curioso": "Dentro del tubo hay partículas de sílice que aceleran la coagulación en menos de 30 minutos."
+    "curioso": "Dentro del tubo hay partículas de sílice que aceleran la anticoagulación en menos de 30 minutos."
   },
   {
     "cat": "Protección",
     "p": "Te piden guantes de nitrilo, ¿por qué son diferentes a los de látex?",
-    "o": ["Los de nitrilo son azules y resistentes, ideales para alérgicos al látex", "Son lo mismo, solo cambia el nombre", "Los de nitrilo son de tela"],
-    "c": 0,
+    "o": ["Son lo mismo, solo cambia el nombre", "Los de nitrilo son azules y resistentes, ideales para alérgicos al látex", "Los de nitrilo son de tela"],
+    "c": 1,
     "e": "¡Así es! Los de nitrilo son sintéticos, no causan alergia al látex y aguantan más químicos.",
     "curioso": "El nitrilo es un caucho sintético que ofrece tres veces más resistencia a pinchazos que el látex."
   },
   {
     "cat": "Cirugía",
     "p": "Un enfermero necesita una sonda para alguien que no puede orinar por sí mismo, ¿cuál es la mejor opción?",
-    "o": ["Una jeringa de 3ml", "Una sonda Foley de dos vías", "Un cubrezapatos"],
-    "c": 1,
+    "o": ["Una sonda Foley de dos vías", "Una jeringa de 3ml", "Un cubrezapatos"],
+    "c": 0,
     "e": "La sonda Foley es la que se queda puesta en la vejiga; la de dos vías permite vaciar la orina y también inflar el baloncito para que no se salga.",
     "curioso": "Se llama Foley en honor a Frederic Foley, el cirujano que la inventó en 1929."
   },
   {
     "cat": "Cirugía",
     "p": "¿Qué haces si te piden una 'Sonda nasogástrica' para un adulto?",
-    "o": ["Le das una sonda para orinar", "Le das una sonda que va de la nariz al estómago", "Le das un tubo para respirar"],
-    "c": 1,
-    "e": "Correcto. Estas sondas llevan alimento o medicamentos directo al estómago de pacientes que no pueden tragar.",
+    "o": ["Le das una sonda para orinar", "Le das un tubo para respirar", "Le das una sonda que va de la nariz al estómago"],
+    "c": 2,
+    "e": "Correcto. These sondas llevan alimento o medicamentos directo al estómago de pacientes que no pueden tragar.",
     "curioso": "El material es de PVC grado médico diseñado para ser suave y no lastimar la nariz del paciente al pasar."
   },
   {
     "cat": "Inyectables",
     "p": "Te preguntan: ¿La jeringa de 1ml con aguja 30x1/2 es para inyectar un músculo grande?",
-    "o": ["Sí, es la más grande que tenemos", "No, esa aguja es súper fina y corta, es para algo superficial", "Sirve para lo que sea"],
-    "c": 1,
+    "o": ["No, esa aguja es súper fina y corta, es para algo superficial", "Sí, es la más grande que tenemos", "Sirve para lo que sea"],
+    "c": 0,
     "e": "¡Correcto! Esa aguja es muy fina (tipo insulina). No sirve para músculos profundos, es para inyecciones pequeñas en la piel.",
     "curioso": "El calibre 30 es tan fino que a veces el paciente casi ni siente el pinchazo."
   },
   {
     "cat": "Laboratorio",
     "p": "¿Para qué sirven las famosas 'Puntas de pipeta' amarillas?",
-    "o": ["Para decorar el laboratorio", "Para que la pipeta automática succione cantidades exactas sin tocar la muestra", "Para limpiar microscopios"],
-    "c": 1,
+    "o": ["Para decorar el laboratorio", "Para limpiar microscopios", "Para que la pipeta automática succione cantidades exactas sin tocar la muestra"],
+    "c": 2,
     "e": "Se usan en el laboratorio para medir gotas diminutas con precisión y sin contaminar el equipo.",
     "curioso": "El color amarillo estandariza que son para volúmenes pequeños, usualmente de 1 a 200 microlitros."
   },
@@ -83,56 +83,56 @@ const bancoDePreguntas = [
   {
     "cat": "Cirugía",
     "p": "Si te piden una 'Tijera Iris', ¿qué tipo de herramienta es?",
-    "o": ["Una tijera grande para cortar vendas", "Una tijera muy pequeña y fina para trabajos de precisión o cirugía", "Es una herramienta para arreglar tuberías"],
-    "c": 1,
+    "o": ["Una tijera muy pequeña y fina para trabajos de precisión o cirugía", "Una tijera grande para cortar vendas", "Es una herramienta para arreglar tuberías"],
+    "c": 0,
     "e": "Exacto, las tijeras Iris son finas, de precisión, muy usadas en salas de curación o cirugías menores.",
-    "curioso": "Originalmente fueron设计的 para cirugía ocular (oftalmología), por eso son tan precisas."
+    "curioso": "Originalmente fueron diseñadas para cirugía ocular (oftalmología), por eso son tan precisas."
   },
   {
     "cat": "Soluciones",
     "p": "¿Qué es el 'Equipo de venoclisis'?",
-    "o": ["Es el tubito que conecta la bolsa de suero con la vena del paciente", "Es un aparato para tomar la presión", "Es una jeringa de 60ml"],
-    "c": 0,
+    "o": ["Es un aparato para tomar la presión", "Es el tubito que conecta la bolsa de suero con la vena del paciente", "Es una jeringa de 60ml"],
+    "c": 1,
     "e": "¡Muy bien! Es la manguerita que lleva el suero o medicina desde la bolsa hacia el catéter del paciente.",
     "curioso": "Incluyen una cámara de goteo donde puedes conocer cuántas gotas por minuto están entrando al paciente."
   },
   {
     "cat": "Laboratorio",
     "p": "¿Por qué vendemos 'Cubreobjetos' junto a los 'Portaobjetos'?",
-    "o": ["Porque son del mismo tamaño", "El portaobjetos sostiene la muestra y el cubreobjetos la protege para verla al microscopio", "Solo para ganar más dinero"],
-    "c": 1,
+    "o": ["El portaobjetos sostiene la muestra y el cubreobjetos la protege para verla al microscopio", "Porque son del mismo tamaño", "Solo para ganar más dinero"],
+    "c": 0,
     "e": "El porta es la lámina de vidrio donde va la muestra; el cubre es el cristalito fino que va encima para que no se ensucie el lente del microscopio.",
     "curioso": "El cubreobjetos es extremadamente delgado (aprox. 0.17 mm) para no distorsionar la imagen del microscopio."
   },
   {
     "cat": "Desechos",
     "p": "¿Qué le ofreces a un hospital para tirar agujas usadas?",
-    "o": ["Una bolsa de basura negra", "Un recipiente de punzocortantes (biotrasher)", "Un recipiente de vidrio"],
-    "c": 1,
+    "o": ["Una bolsa de basura negra", "Un recipiente de vidrio", "Un recipiente de punzocortantes (biotrasher)"],
+    "c": 2,
     "e": "¡Seguridad primero! Los punzocortantes son rígidos para que las agujas no pinchen a nadie al tirar la basura.",
     "curioso": "Se llaman 'guardianes' o 'biotrasher' y son obligatorios para prevenir accidentes laborales con fluidos infecciosos."
   },
   {
     "cat": "Diagnóstico",
     "p": "Un cliente necesita medir la temperatura de varias personas sin contacto, ¿qué le das?",
-    "o": ["Un termómetro infrarrojo digital", "Un termómetro de mercurio", "Un estetoscopio"],
-    "c": 0,
+    "o": ["Un termómetro de mercurio", "Un termómetro infrarrojo digital", "Un estetoscopio"],
+    "c": 1,
     "e": "El infrarrojo mide la temperatura a distancia con un láser, súper útil y rápido.",
     "curioso": "El sensor detecta la radiación infrarroja que emite el cuerpo, no necesita tocar la piel para medir."
   },
   {
     "cat": "Curación",
     "p": "¿Qué es la 'Venda de guata'?",
-    "o": ["Es una venda elástica que aprieta mucho", "Es un algodón acolchado que va debajo del yeso para proteger la piel", "Es una venda para heridas con sangre"],
-    "c": 1,
+    "o": ["Es un algodón acolchado que va debajo del yeso para proteger la piel", "Es una venda elástica que aprieta mucho", "Es una venda para heridas con sangre"],
+    "c": 0,
     "e": "Correcto. Evita que el yeso raspe o irrite la piel del paciente.",
     "curioso": "Aunque parece algodón simple, está diseñada para no absorber humedad y mantener la piel seca bajo el yeso."
   },
   {
     "cat": "Soluciones",
     "p": "Te piden una 'llave de tres vías', ¿para qué es?",
-    "o": ["Para cerrar puertas", "Para conocer el flujo de líquidos en una vena (abrir o cerrar el paso)", "Para medir la orina"],
-    "c": 1,
+    "o": ["Para cerrar puertas", "Para medir la orina", "Para conocer el flujo de líquidos en una vena (abrir o cerrar el paso)"],
+    "c": 2,
     "e": "Es como un interruptor de luz, pero para líquidos médicos. Permite cambiar de dónde viene el suero sin pinchar al paciente otra vez.",
     "curioso": "Permite pasar dos medicamentos distintos al mismo tiempo por la misma vía si se ajusta correctamente."
   },
@@ -147,72 +147,72 @@ const bancoDePreguntas = [
   {
     "cat": "Diagnóstico",
     "p": "Cuál es la función del gel conductor?",
-    "o": ["Es para lubricar la piel y que el ultrasonido o ECG se vea bien en la pantalla", "Es un gel para curar heridas", "Es para que los guantes no se peguen"],
-    "c": 0,
+    "o": ["Es un gel para curar heridas", "Es para lubricar la piel y que el ultrasonido o ECG se vea bien en la pantalla", "Es para que los guantes no se peguen"],
+    "c": 1,
     "e": "El gel ayuda a que las ondas de sonido del ultrasonido entren al cuerpo; sin gel, no se ve nada en la pantalla.",
     "curioso": "El gel tiene una impedancia acústica muy similar a la de la piel, por eso 'puentea' el aire que estorba."
   },
   {
     "cat": "Diagnóstico",
     "p": "¿Qué es un estetoscopio?",
-    "o": ["Un aparato para ver el interior del cuerpo", "Un equipo para escuchar los sonidos del corazón y pulmones", "Una lámpara para ver gargantas"],
-    "c": 1,
+    "o": ["Un aparato para ver el interior del cuerpo", "Una lámpara para ver gargantas", "Un equipo para escuchar los sonidos del corazón y pulmones"],
+    "c": 2,
     "e": "¡Exacto, bro! Es la herramienta básica de todo médico para escuchar qué está pasando adentro del pecho.",
     "curioso": "Fue inventado en 1816. Al principio era solo un cilindro de madera, ¡antes usaban una trompetilla!"
   },
   {
     "cat": "Protección",
     "p": "Un cliente te pide batas para una cirugía mayor, ¿cuál de nuestras opciones le ofreces?",
-    "o": ["La bata no estéril de examen", "La bata estéril quirúrgica empaquetada individualmente", "Un cubrezapatos grande"],
-    "c": 1,
+    "o": ["La bata estéril quirúrgica empaquetada individualmente", "La bata no estéril de examen", "Un cubrezapatos grande"],
+    "c": 0,
     "e": "¡Exacto! Para cirugías y quirófano se exige estrictamente la bata estéril para mantener el ambiente libre de bacterias. Las no estériles son solo para aislamiento o revisiones físicas.",
     "curioso": "Nuestras batas estériles están diseñadas con materiales que repelen fluidos para proteger tanto al médico como al paciente durante horas."
   },
   {
     "cat": "Protección",
     "p": "Llega un pedido para el área de maternidad de un hospital, buscan identificar a los recién nacidos junto a sus madres, ¿qué producto de la lista les das?",
-    "o": ["Pulseras de identificación madre y niño/a", "Cinta de testigo", "Curitas de colores"],
-    "c": 0,
+    "o": ["Cinta de testigo", "Pulseras de identificación madre y niño/a", "Curitas de colores"],
+    "c": 1,
     "e": "¡Correcto! Estas pulseras vienen en juego con la misma numeración o código correlativo para asegurar que el bebé correcto esté con la madre correcta desde el primer segundo.",
     "curioso": "El sistema de pulseras gemelas es una norma internacional de seguridad para evitar errores de identidad en los hospitales."
   },
   {
     "cat": "Cirugía",
     "p": "Un anestesiólogo nos pide tubos endotraqueales para adultos promedio, ¿qué calibres de nuestra lista deberías tener listos?",
-    "o": ["Calibres pequeños como 3 y 4", "Calibres estándar de 6.5, 7 y 7.5", "Sondas Foley de dos vías"],
-    "c": 1,
+    "o": ["Calibres pequeños como 3 y 4", "Sondas Foley de dos vías", "Calibres estándar de 6.5, 7 y 7.5"],
+    "c": 2,
     "e": "¡Exacto! Los números 6.5, 7 y 7.5 son los diámetros estándar más utilizados para asegurar la vía aérea en pacientes adultos durante una anestesia general.",
     "curioso": "El número del tubo representa el diámetro interno en milímetros. Un tubo 7 significa que mide exactamente 7 mm por dentro."
   },
   {
     "cat": "Urgencias",
     "p": "Si un doctor busca un catéter intravenoso para un paciente pediátrico (un niño) o venas muy difíciles, ¿qué número le recomiendas?",
-    "o": ["El catéter No. 18 (Verde)", "El catéter No. 22 (Azul)", "Una aguja dental"],
-    "c": 1,
+    "o": ["El catéter No. 22 (Azul)", "El catéter No. 18 (Verde)", "Una aguja dental"],
+    "c": 0,
     "e": "¡Así es! Recuerda la regla médica: a mayor número, más fina es la aguja. El calibre 22 es delgado y corto, ideal para venas pequeñas o niños.",
     "curioso": "El catéter 22 suele ser azul texturizado en la mayoría de hospitales del mundo para que la enfermera lo identifique al instante sin leer la caja."
   },
   {
     "cat": "Diagnóstico",
     "p": "Un cliente quiere equipar una bodega de medicamentos y el ministerio le exige medir la temperatura y la humedad del ambiente, ¿qué equipo le vendes?",
-    "o": ["Un termómetro infrarrojo", "Un termohigrómetro", "Un esfigmomanómetro digital"],
-    "c": 1,
+    "o": ["Un termómetro infrarrojo", "Un esfigmomanómetro digital", "Un termohigrómetro"],
+    "c": 2,
     "e": "¡Correcto, bro! El termohigrómetro mide ambas variables a la vez. Es obligatorio para demostrar que los medicamentos están bien guardados y no se van a arruinar.",
     "curioso": "La mayoría de medicamentos deben mantenerse a menos de 25°C y con una humedad controlada para no perder su efectividad."
   },
   {
     "cat": "Diagnóstico",
     "p": "Un cliente busca un aparato clásico para tomar la presión arterial que use brazalete y manómetro de aguja (manual), ¿cómo se llama técnicamente?",
-    "o": ["Oxímetro de pulso", "Esfigmomanómetro aneroide", "Estetoscopio de madera"],
-    "c": 1,
+    "o": ["Esfigmomanómetro aneroide", "Oxímetro de pulso", "Estetoscopio de madera"],
+    "c": 0,
     "e": "¡Exacto! El esfigmomanómetro aneroide es el famoso aparato manual de presión. Se complementa con el estetoscopio para escuchar los latidos del corazón.",
     "curioso": "La palabra viene del griego 'sphygmos' (pulso) y 'manometros' (medidor de presión). ¡Un buen trabalenguas médico!"
   },
   {
     "cat": "Laboratorio",
     "p": "Nos piden tubos al vacío para pruebas de coagulación (como tiempos de protrombina), ¿cuál de nuestros colores de tubo es el correcto?",
-    "o": ["El tubo rojo (con activador)", "El tubo celeste (con citrato de sodio)", "El tubo gris"],
-    "c": 1,
+    "o": ["El tubo rojo (con activador)", "El tubo gris", "El tubo celeste (con citrato de sodio)"],
+    "c": 2,
     "e": "¡Perfecto! El tubo celeste contiene citrato de sodio, el anticoagulante exacto que se necesita para analizar cómo está coagulando la sangre del paciente.",
     "curioso": "Es súper importante llenarlo exactamente hasta la marca que trae el tubo, porque la proporción entre sangre y químico debe ser exacta."
   },
@@ -227,8 +227,8 @@ const bancoDePreguntas = [
   {
     "cat": "Cirugía",
     "p": "Para empaquetar instrumental médico y meterlo al autoclave (esterilizador a vapor), ¿qué insumo de nuestra lista se usa para envolver piezas grandes?",
-    "o": ["El rollo de papel Kraft grado médico", "La cinta de Castilla", "Bolsas de orina de pierna"],
-    "c": 0,
+    "o": ["La cinta de Castilla", "El rollo de papel Kraft grado médico", "Bolsas de orina de pierna"],
+    "c": 1,
     "e": "¡Exacto! El rollo de papel Kraft de uso médico está diseñado para dejar pasar el vapor caliente que mata las bacterias, pero bloquea la entrada de aire contaminado al salir.",
     "curioso": "El papel Kraft médico no tiene impurezas ni resinas químicas que dejen residuos tóxicos en el instrumental quirúrgico."
   },
@@ -259,10 +259,10 @@ const bancoDePreguntas = [
   {
     "cat": "Curación",
     "p": "Un doctor te pide guantes quirúrgicos estériles, pero te dice que su mano es estándar, ni muy grande ni muy pequeña, ¿qué tallas de nuestra lista le muestras?",
-    "o": ["Tallas XS o L", "Tallas intermedias como 7 o 7 1/2", "Talla 6"],
-    "c": 1,
+    "o": ["Tallas XS o L", "Talla 6", "Tallas intermedias como 7 o 7 1/2"],
+    "c": 2,
     "e": "¡Perfecto! A diferencia de los guantes de examen (que van por letras S, M, L), los quirúrgicos van por números exactos para un ajuste perfecto a los dedos del cirujano. El 7 y 7.5 son los más comunes para manos medianas.",
-    "curioso": "Vienen empacados por pares (izquierdo y derecho por separado) con un doble envoltorio estéril para que el médico no contamine al ponérselos."
+    "curioso": "Vimen empacados por pares (izquierdo y derecho por separado) con un doble envoltorio estéril para que el médico no contamine al ponérselos."
   },
   {
     "cat": "Laboratorio",
@@ -275,16 +275,16 @@ const bancoDePreguntas = [
   {
     "cat": "Curación",
     "p": "Un enfermero necesita inmovilizar un esguince y va a colocar una venda elástica, pero antes necesita proteger la piel del paciente para que la elasticidad no le cause alergia o roce, ¿qué le pone abajo?",
-    "o": ["Cinta de testigo", "Una venda de guata (algodón acolchado)", "Papel kraft"],
-    "c": 1,
+    "o": ["Cinta de testigo", "Papel kraft", "Una venda de guata (algodón acolchado)"],
+    "c": 2,
     "e": "¡Correcto! La guata actúa como un colchón protector para la piel, absorbe el sudor y evita que las vendas rígidas o elásticas lastimen por fricción.",
     "curioso": "También es el paso obligatorio número uno antes de colocar cualquier yeso de París o de fibra de vidrio."
   },
   {
     "cat": "Soluciones",
     "p": "Un paciente que puede caminar necesita una bolsa para recolectar orina, pero quiere que sea discreta debajo del pantalón, ¿cuál de nuestras opciones le das?",
-    "o": ["La bolsa de orina para cama (estándar)", "La bolsa de orina para pierna con tiras de sujeción", "Un recipiente de heces de 30ml"],
-    "c": 1,
+    "o": ["La bolsa de orina para pierna con tiras de sujeción", "La bolsa de orina para cama (estándar)", "Un recipiente de heces de 30ml"],
+    "c": 0,
     "e": "¡Exacto, bro! La bolsa de pierna es más pequeña y se sujeta al muslo de forma súper discreta para que el paciente mantenga su movilidad. La de cama es de gran volumen (normalmente 2 litros) y no sirve para andar caminando.",
     "curioso": "Nuestras bolsas de pierna incluyen una válvula antirretorno para evitar que la orina regrese a la vejiga cuando el paciente se mueve, previniendo infecciones graves."
   },
@@ -307,14 +307,14 @@ const bancoDePreguntas = [
   {
     "cat": "Protección",
     "p": "En un hospital piden mascarillas para el área de urgencias o partos, donde hay alto riesgo de que salpiquen fluidos o sangre directo a la cara, ¿cuál es la mejor opción?",
-    "o": ["La mascarilla normal de tres pliegues", "La mascarilla con visor o pantalla protectora integrada", "Un gorro de cirujano"],
-    "c": 1,
+    "o": ["La mascarilla normal de tres pliegues", "Un gorro de cirujano", "La mascarilla con visor o pantalla protectora integrada"],
+    "c": 2,
     "e": "¡Correcto! La mascarilla con visor protege dos zonas críticas a la vez: las vías respiratorias y los ojos del médico contra salpicaduras accidentales de fluidos.",
     "curioso": "El visor de estas mascarillas tiene un tratamiento antirreflejante y antiempañante para que el médico no pierda visibilidad en plena acción."
   },
   {
     "cat": "Curación",
-    "p": "Un cliente de una clínica estética busca guantes de examen que le queden totalmente ajustados a una mano sumamente pequeña y delgada, ¿qué talla le recomiendas?",
+    "p": "Un cliente de una clínica estética busca guantes de examen que le queten totalmente ajustados a una mano sumamente pequeña y delgada, ¿qué talla le recomiendas?",
     "o": ["Talla M o L", "Talla XS", "Talla 8 de cirugía"],
     "c": 1,
     "e": "¡Exacto! La talla XS (Extra Small) es la ideal para manos muy delgadas, asegurando que el guante no quede flojo y el profesional no pierda el sentido del tacto en procedimientos finos.",
@@ -323,24 +323,24 @@ const bancoDePreguntas = [
   {
     "cat": "Diagnóstico",
     "p": "Un doctor nota que su oxímetro de pulso marca lecturas extrañas y quiere confirmar si el paciente tiene buena temperatura en los dedos para que el sensor lea bien, ¿qué herramienta básica usa?",
-    "o": ["Un termómetro digital flexible o infrarrojo", "Un termohigrómetro", "Un tubo endotraqueal"],
-    "c": 0,
+    "o": ["Un termohigrómetro", "Un tubo endotraqueal", "Un termómetro digital flexible o infrarrojo"],
+    "c": 2,
     "e": "¡Muy bien! El termómetro digital flexible es ideal para lecturas rápidas y seguras. Si el paciente tiene las manos sumamente frías (hipotermia), el oxímetro no puede medir bien la saturación.",
     "curioso": "Los termómetros digitales emiten un pitido automático cuando la temperatura se estabiliza, eliminando las adivinanzas del viejo termómetro de mercurio."
   },
   {
     "cat": "Inyectables",
     "p": "Un cliente nos pide jeringas para aplicar insulina y enfatiza que quiere la aguja más delgada y corta posible, ¿cuál de nuestra lista es la que busca?",
-    "o": ["La jeringa de 10ml con aguja verde No. 18", "La jeringa de 1ml con aguja fina 30x1/2", "Una jeringa de 60ml"],
-    "c": 1,
+    "o": ["La jeringa de 1ml con aguja fina 30x1/2", "La jeringa de 10ml con aguja verde No. 18", "Una jeringa de 60ml"],
+    "c": 0,
     "e": "¡Esa es! La jeringa de 1ml (tipo insulina) con aguja calibre 30 es sumamente fina y corta, diseñada para inyecciones subcutáneas (en la grasita bajo la piel) sin causar dolor.",
     "curioso": "El volumen de 1ml está graduado en unidades internacionales, lo que facilita a los pacientes diabéticos medir su dosis exacta sin cometer errores."
   },
   {
     "cat": "Curación",
     "p": "Para un consultorio dental nos piden agujas específicas para aplicar anestesia local en las encías, ¿qué producto les preparamos?",
-    "o": ["Agujas dentales cortas/largas", "Catéter No. 14", "Tijeras Iris"],
-    "c": 0,
+    "o": ["Catéter No. 14", "Agujas dentales cortas/largas", "Tijeras Iris"],
+    "c": 1,
     "e": "¡Correcto! Las agujas dentales tienen una rosca especial tipo 'Carpule' para adaptarse directo a la jeringa metálica que usan los odontólogos, permitiendo una infiltración suave en la boca.",
     "curioso": "Nuestras agujas dentales son ultra siliconadas para que penetren el tejido de la encía con el menor roce y molestia posible para el paciente."
   },
@@ -355,16 +355,16 @@ const bancoDePreguntas = [
   {
     "cat": "Curación",
     "p": "Nos piden un tipo de venda de gasa común, ¿cuál es su función principal a diferencia de una venda elástica o de guata?",
-    "o": ["Sirve para apretar un esguince con fuerza", "Sirve para sostener apósitos o gasas sobre una herida abierta sin ejercer presión excesiva", "Es para poner debajo del yeso"],
-    "c": 1,
+    "o": ["Sirve para apretar un esguince con fuerza", "Es para poner debajo del yeso", "Sirve para sostener apósitos o gasas sobre una herida abierta sin ejercer presión excesiva"],
+    "c": 2,
     "e": "¡Exacto! La venda de gasa es ligera y ventilada; su única misión es fijar curaciones en su lugar permitiendo que la piel respire, no inmovilizar ni apretar.",
     "curioso": "Al ser tejida de forma abierta, no se pega con fuerza a los fluidos de las heridas, facilitando su retiro en las curaciones."
   },
   {
     "cat": "Cirugía",
     "p": "Llega un instrumentista buscando bolsas y rollos especiales para meter instrumental al esterilizador, ¿qué elemento clave traen estos empaques impreso en el papel?",
-    "o": ["Un indicador químico impreso (testigo) que cambia de color al completarse la esterilización", "Una regla para medir las jeringas", "El nombre de los cirujanos de la región"],
-    "c": 0,
+    "o": ["Una regla para medir las jeringas", "Un indicador químico impreso (testigo) que cambia de color al completarse la esterilización", "El nombre de los cirujanos de la región"],
+    "c": 1,
     "e": "¡Perfecto, bro! Tanto los rollos como las bolsas listas para esterilizar traen marcas indicadoras que cambian de color (por ejemplo, de rosa a marrón) para asegurar que el vapor hizo su trabajo.",
     "curioso": "Están hechos con una cara de papel grado médico (que filtra bacterias) y una cara de plástico transparente que permite ver qué instrumental está guardado adentro."
   },
@@ -379,10 +379,10 @@ const bancoDePreguntas = [
   {
     "cat": "Curación",
     "p": "Un pediatra nos compra bajalenguas de madera tradicionales, ¿cuál es el uso correcto de este insumo en su consulta diaria?",
-    "o": ["Para mezclar reactivos de laboratorio", "Para deprimir la lengua del niño y tener una visión limpia de la garganta y amígdalas", "Para entablillar dedos rotos únicamente"],
-    "c": 1,
+    "o": ["Para mezclar reactivos de laboratorio", "Para entablillar dedos rotos únicamente", "Para deprimir la lengua del niño y tener una visión limpia de la garganta y amígdalas"],
+    "c": 2,
     "e": "¡Exacto! Es la herramienta de madera pulida por excelencia para revisar gargantas sin lastimar la boca. Al terminar el chequeo, se descarta de una vez.",
-    "curioso": "Nuestros bajalenguas pasan por un proceso de pulido estricto para garantizar bordes perfectamente redondeados y libres de astillas peligrosas."
+    "curioso": "Nuestras bajalenguas pasan por un proceso de pulido estricto para garantizar bordes perfectamente redondeados y libres de astillas peligrosas."
   },
   {
     "cat": "Protección",
@@ -400,27 +400,27 @@ const bancoDePreguntas = [
     "e": "¡Exacto! El portaobjetos es la base de vidrio grueso donde se coloca la gota de sangre, orina o tejido. Luego encima se le deja caer el cubreobjetos que es mucho más fino.",
     "curioso": "Nuestros portaobjetos vienen con bordes pulidos a 90° o 45° para evitar que el laboratorista se corte los dedos al manipularlos rápido."
   },
-{
+  {
     "cat": "Laboratorio",
     "p": "Un cliente busca un tubo al vacío diseñado específicamente para pruebas de glucosa (azúcar en sangre), ¿cuál de nuestros colores de tapa le das?",
-    "o": ["El tubo gris", "El tubo morado", "El tubo rojo"],
-    "c": 0,
+    "o": ["El tubo morado", "El tubo gris", "El tubo rojo"],
+    "c": 1,
     "e": "¡Exacto! El tubo gris contiene fluoruro de sodio y oxalato de potasio, químicos que detienen la descomposición de la glucosa para que la muestra sea exacta.",
     "curioso": "El fluoruro actúa como un 'congelador' químico que evita que las células se sigan comiendo el azúcar dentro del tubo antes de analizarla."
   },
   {
     "cat": "Protección",
     "p": "Para ingresar al área de cuidado crítico, neonatología o quirófano, ¿qué insumo se coloca en los pies para no contaminar el suelo?",
-    "o": ["Venda de guata", "Bolsas de papel para esterilizar", "Zapatones descartables"],
-    "c": 2,
+    "o": ["Venda de guata", "Zapatones descartables", "Bolsas de papel para esterilizar"],
+    "c": 1,
     "e": "¡Cabal! Los zapatones o cubrecalzados evitan que la suciedad de la calle o de los pasillos comunes entre a las zonas de máxima pureza del hospital.",
     "curioso": "Están fabricados con tela no tejida y elásticos ajustables para asegurar que no se desprendan ni deslicen mientras el médico camina."
   },
   {
     "cat": "Laboratorio",
     "p": "Te piden un frasco pequeño para examen de parásitos o coprológico, ¿cuál es el volumen de nuestro recipiente de heces?",
-    "o": ["Un frasco de 120ml", "Un recipiente de heces de 30ml", "Un tubo de centrífuga cónico"],
-    "c": 1,
+    "o": ["Un frasco de 120ml", "Un tubo de centrífuga cónico", "Un recipiente de heces de 30ml"],
+    "c": 2,
     "e": "¡Así es! Para muestras de heces basta con un frasco pequeño de 30ml. Traen una paleta o cuchara integrada en la tapa para facilitar la toma de la muestra.",
     "curioso": "El tamaño de 30ml está estandarizado para evitar el exceso de gases dentro del frasco y mantener la muestra segura hacia el laboratorio."
   },
