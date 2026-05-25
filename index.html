@@ -2128,6 +2128,19 @@ function cerrarCertificado() {
         box.classList.remove('efecto-diploma');
     }, 400);
 }
+
+// ⚡ 🛡️ ¡EL BLINDAJE DE ARRANQUE VA JUSTO AQUÍ!
+window.addEventListener('DOMContentLoaded', async () => {
+    console.log("🚀 ALPROMEH Iniciando blindaje de arranque...");
+    
+    // Sincroniza silenciosamente en el milisegundo que se abre la app
+    await sincronizarSilencioso(); 
+    
+    // Inicializa tus contadores del día
+    if (typeof actualizarContadores === 'function') {
+        actualizarContadores();
+    }
+});
 </script>
 </body>
 </html>
