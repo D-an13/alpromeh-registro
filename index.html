@@ -1210,7 +1210,7 @@ if(Array.isArray(d)) {
             const datosMezclados = d.map(ordenGoogle => {
                 const local = datosLocales.find(l => l.orden === ordenGoogle.orden);
                 // Si lo editaste hace menos de 15 segundos, protegemos tu versión local
-                if (local && (Date.now() - (local.miCambioReciente || 0) < 15000)) {
+                if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
                     return local; 
                 }
                 return ordenGoogle;
@@ -1250,7 +1250,7 @@ if (guardandoAhora) return;
                 
                 // Si yo toqué esta orden hace menos de 15 segundos (15000 ms), 
                 // mi cel manda y se queda con la versión local.
-                if (local && (Date.now() - (local.miCambioReciente || 0) < 15000)) {
+                if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
                     return local; 
                 }
                 // Si no la he tocado, acepto lo que diga Google (cambios de Danna o Axel)
