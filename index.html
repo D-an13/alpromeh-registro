@@ -1411,10 +1411,10 @@ function toggleForm() {
         <span style="font-size: 45px; display: block; margin-bottom: 10px;">🏆</span>
         <h2 style="color: #f8fafc; margin: 0 0 10px 0; font-size: 22px; font-weight: 800;">¡Reconocemos tu esfuerzo!</h2>
         <p style="color: #94a3b8; font-size: 14px; line-height: 1.5; margin: 0 0 20px 0;">
-            Tu constancia e impecable gestión en la bodega te han hecho acreedor a una nueva insignia. Por favor, escribe tu nombre para generar tu certificado oficial:
+            Tu constancia y ganas de aprender te han hecho ganar una nueva insignia. Por favor, escribe tu nombre para generar tu certificado oficial:
         </p>
         <input type="text" id="certInputNombre" placeholder="Escribe tu nombre completo" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #f8fafc; font-size: 15px; font-weight: bold; text-align: center; margin-bottom: 20px; box-sizing: border-box; text-transform: uppercase;">
-        <button onclick="procesarNombreCertificado()" style="background: #fbbf24; color: #0f172a; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; width: 100%; letter-spacing: 0.5px;">Generar Diploma Premium</button>
+        <button onclick="procesarNombreCertificado()" class="btn-glow-print" style="background: #fbb71d; color: #0f172a; border: none; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; width: 100%; transition: all 0.3s ease;">Generar Reconocimiento</button>
     </div>
 
     <div id="boxCertificado" class="seccion-imprimible" style="display: none; background: #1e293b; border: 4px solid #fbbf24; border-radius: 16px; max-width: 750px; width: 100%; aspect-ratio: 16 / 10; padding: 40px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; flex-direction: column; justify-content: center;">
@@ -1423,35 +1423,122 @@ function toggleForm() {
 
         <div style="border-bottom: 2px dashed #334155; padding-bottom: 15px; margin-bottom: 25px;">
             <span id="certEmoji" style="font-size: 45px; display: block; margin-bottom: 5px;">👑</span>
-            <h3 style="color: #94a3b8; font-size: 11px; letter-spacing: 3px; margin: 0; text-transform: uppercase; font-weight: 700;">ALPROMEH LOGISTICS ACADEMY</h3>
-            <h2 id="certTitulo" style="color: #f8fafc; font-size: 22px; margin: 5px 0 0 0; font-weight: 800; letter-spacing: 0.5px;">MAESTRÍA SUPREMA (LEYENDA)</h2>
+            <h3 style="color: #94a3b8; font-size: 11px; letter-spacing: 3px; margin: 0; text-transform: uppercase; font-weight: 700;">ALPROMEH LEARNING SYSTEM</h3>
+            <h2 id="certTitulo" style="color: #f8fafc; font-size: 22px; margin: 5px 0 0 0; font-weight: 800; letter-spacing: 0.5px;">RANGO SUPREMO</h2>
         </div>
 
         <p style="color: #94a3b8; font-size: 14px; font-style: italic; margin: 0 0 10px 0;">Otorgado con honor a la constancia de:</p>
-        <h1 style="color: #fbbf24; font-size: 32px; margin: 0 0 20px 0; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;" id="certNombreUsuario">DAN</h1>
+        <h1 style="color: #fbbf24; font-size: 32px; margin: 0 0 20px 0; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;" id="certNombreUsuario">EQUIPO ALPROMEH</h1>
         
         <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6; max-width: 580px; margin: 0 auto 25px auto;">
-            Por demostrar un dominio impecable en la gestión, control e identificación de insumos médicos de bodega de forma ininterrumpida durante:
+            Por demostrar dedicación, compromiso y una destacada participación en el aprendizaje continuo de conocimientos del área de salud durante:
         </p>
 
         <div style="background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 10px 25px; display: inline-block; margin: 0 auto 25px auto;">
-            <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Racha Demostrada</span>
+            <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Racha Alcanzada</span>
             <strong style="font-size: 26px; color: #f8fafc;" id="certDias">11 DÍAS</strong>
         </div>
 
         <div style="text-align: center; margin-bottom: 25px;">
-            <div style="font-family: 'Courier New', monospace; font-size: 12px; color: #a7f3d0; font-style: italic;">Alpromeh System v2.0</div>
+            <div style="font-family: 'Courier New', monospace; font-size: 12px; color: #a7f3d0; font-style: italic;">Alpromeh System v2.6</div>
             <div style="border-top: 1px solid #475569; width: 140px; margin: 5px auto 0 auto; padding-top: 3px; font-size: 9px; color: #64748b; font-weight: bold; letter-spacing: 1px;">VERIFICACIÓN DIGITAL</div>
         </div>
 
-        <div class="ocultar-al-imprimir" style="display: flex; gap: 10px; width: 100%; margin-top: auto;">
-            <button onclick="ejecutarImpresionLimpia()" style="background: #fbbf24; color: #0f172a; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; flex: 1;">🖨️ Imprimir / Guardar PDF</button>
-            <button onclick="cerrarCertificado()" style="background: transparent; color: #64748b; border: 1px solid #334155; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; text-transform: uppercase; flex: 1;">Cerrar Ventana</button>
+        <div class="ocultar-al-imprimir" style="display: flex; gap: 15px; width: 100%; margin-top: auto;">
+            <button onclick="ejecutarImpresionLimpia()" class="btn-glow-print" style="background: #fbbf24; color: #0f172a; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; flex: 1; transition: all 0.3s ease;">🖨️ Imprimir / Guardar PDF</button>
+            <button onclick="cerrarCertificado()" class="btn-glow-close" style="background: transparent; color: #94a3b8; border: 1px solid #334155; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; text-transform: uppercase; flex: 1; transition: all 0.3s ease;">Cerrar Ventana</button>
         </div>
     </div>
 </div>
 
 <style>
+@keyframes neonPulseGold {
+    0% {
+        box-shadow: 0 0 5px rgba(251, 183, 29, 0.4), 0 0 10px rgba(251, 183, 29, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(251, 183, 29, 0.8), 0 0 25px rgba(251, 183, 29, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(251, 183, 29, 0.4), 0 0 10px rgba(251, 183, 29, 0.2);
+    }
+}
+
+@keyframes neonPulseClose {
+    0% { box-shadow: 0 0 5px rgba(51, 65, 85, 0.3); }
+    50% { box-shadow: 0 0 12px rgba(148, 163, 184, 0.5); }
+    100% { box-shadow: 0 0 5px rgba(51, 65, 85, 0.3); }
+}
+
+/* Aplicamos la animación infinita al botón de imprimir */
+.btn-glow-print {
+    animation: neonPulseGold 2s infinite ease-in-out;
+}
+
+/* Efecto cuando pasan el mouse encima (Hover) para que brille más duro */
+.btn-glow-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(251, 183, 29, 1), 0 0 35px rgba(251, 183, 29, 0.6) !important;
+    background: #fcc23f !important; /* El tono oro encendido de tu interfaz */
+}
+
+/* Aplicamos animación al botón de cerrar */
+.btn-glow-close {
+    animation: neonPulseClose 2.5s infinite ease-in-out;
+}
+
+.btn-glow-close:hover {
+    transform: translateY(-2px);
+    border-color: #475569 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 0 15px rgba(148, 163, 184, 0.4) !important;
+    background: rgba(51, 65, 85, 0.2) !important;
+}
+
+#certificadoModal {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95) !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Cuando el modal tenga esta clase, se va a desvanecer hacia adentro suavemente */
+#certificadoModal.mostrar-suave {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+}
+
+/* ✨ Animación de entrada premium para el diploma interno */
+@keyframes revelarDiploma {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(15px);
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Solo se ejecuta en pantallas dinámicas, protegiendo la impresión */
+@media screen {
+    .efecto-diploma {
+        animation: revelarDiploma 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+}
+
 @media print {
     html, body {
         background: #1e293b !important;
@@ -1493,11 +1580,14 @@ function toggleForm() {
         width: 90% !important;
         max-width: 100% !important;
         margin: 0 auto !important;
-        border: 4px solid #fbbf24 !important; /* El color dinámico lo sobreescribe el JS, no hay clavo */
+        border: 4px solid #fbbf24 !important; 
         box-shadow: none !important;
         background: #1e293b !important;
         padding: 40px !important;
         box-sizing: border-box !important;
+        /* Forzamos que en la hoja física no tenga transformaciones ni desenfoques */
+        transform: none !important;
+        filter: none !important;
     }
 
     .ocultar-al-imprimir {
@@ -1510,6 +1600,7 @@ function toggleForm() {
     }
 }
 </style>
+
 <div id="triviaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter: blur(4px); font-family: 'Segoe UI', sans-serif;">
     <div id="modalContent" class="trivia-modal-layout">
         <div style="text-align:center; margin-bottom:22px; margin-top:-5px;">
@@ -1517,16 +1608,13 @@ function toggleForm() {
         </div>
         <div class="trivia-flex-container">
             <div class="trivia-main-column">
-                
                 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:18px; width: 100%;">
                     <span id="triviaCategoria" style="background:#2596be; color:#ffffff; padding:5px 14px; border-radius:14px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing: 0.5px;">Categoría</span>
-                    
                     <div id="rachaTriviaContador" style="display: flex; gap: 10px; font-family: sans-serif; font-size: 14px; font-weight: bold;">
                         <span id="miniWidgetRacha" style="color: #f97316;">🔥 0</span>
                         <span id="miniWidgetMaximo" style="color: #eab308; display: none;">🏆 0</span>
                     </div>
                 </div>
-
                 <h3 id="preguntaTexto" style="font-size:18px; margin:10px 0 20px 0; line-height:1.5; color:#f8fafc; text-align:left; font-weight:600;">Cargando pregunta...</h3>
                 <div id="opcionesContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:5px;"></div>
             </div>
@@ -1534,6 +1622,7 @@ function toggleForm() {
         </div>
     </div>
 </div>
+
 <style>
 @keyframes triviaShake {
     0%, 100% { transform: scale(1) translateX(0); }
@@ -1541,49 +1630,36 @@ function toggleForm() {
     40%, 80% { transform: scale(1) translateX(8px); }
 }
 
-/* Animación de Entrada General (Zoom Bonito) */
 @keyframes triviaZoomIn {
     from { opacity: 0; transform: scale(0.85); }
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Animación de Salida General (Zoom Suave) */
 @keyframes triviaZoomOut {
     from { opacity: 1; transform: scale(1); }
     to { opacity: 0; transform: scale(0.85); }
 }
 
-/* Barrido suave para el feedback verde (Aparece de izquierda a derecha) */
 @keyframes fadeInRight {
-    from {
-        opacity: 0;
-        transform: translateX(-15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-15px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 .shake-effect { animation: triviaShake 0.4s ease-in-out !important; }
 .zoom-in-effect { animation: triviaZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 .zoom-out-effect { animation: triviaZoomOut 0.2s ease-in forwards; }
 
-/* --- DISEÑO INTERFAZ DE TRIVIA --- */
-
-/* El Modal siempre arranca compacto (Perfecto para cel y compu al inicio) */
 .trivia-modal-layout {
     background: #1e293b;
     color: #f8fafc;
     padding: 25px;
     border-radius: 16px;
     width: 90%;
-    max-width: 450px; /* Tamaño original que te encanta */
+    max-width: 450px;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
     border: 1px solid #334155;
     text-align: center;
     box-sizing: border-box;
-    /* Control de escala inicial para el efecto de apertura del libro */
     transform: scale(0.9);
     transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -1600,7 +1676,6 @@ function toggleForm() {
     transition: width 0.4s ease;
 }
 
-/* Estilo base del Feedback (Oculto al inicio) */
 .trivia-feedback-column {
     display: none;
     width: 100%;
@@ -1612,38 +1687,28 @@ function toggleForm() {
     box-sizing: border-box;
 }
 
-/* COMPUTADORAS Y PANTALLAS GRANDES (Efecto Seda Sin Saltos) */
 @media (min-width: 850px) {
-    /* El modal se estira de forma fluida y natural */
     .modal-expanded {
         max-width: 860px !important;
         padding: 30px;
     }
-    
-    /* Forzamos que la estructura de fila esté lista de manera armónica */
     .modal-expanded .trivia-flex-container {
         flex-direction: row !important;
         align-items: stretch;
         gap: 25px;
     }
-    
-    /* Evitamos que la columna de preguntas se encoga bruscamente al cambiar a fila */
     .modal-expanded .trivia-main-column {
         width: 48% !important;
         flex-shrink: 0; 
     }
-    
-    /* El feedback aparece suavemente cuando el modal ya se estiró */
     .modal-expanded .trivia-feedback-column {
         width: 52% !important;
         display: block !important;
         opacity: 0;
-        /* Animación limpia de barrido con delay estratégico */
         animation: fadeInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
     }
 }
 
-/* Efecto de escala suave para las opciones al pasar el mouse (Aplica a los botones que creas por JS) */
 .opcion-btn {
     transition: all 0.25s ease-out !important;
 }
@@ -1653,7 +1718,6 @@ function toggleForm() {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Transición de desvanecimiento suave para el contenedor del fondo del Modal */
 #triviaModal {
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
@@ -1661,10 +1725,10 @@ function toggleForm() {
 }
 
 #triviaModal.show {
+    display: flex;
     opacity: 1;
 }
 
-/* Cuando el modal tiene la clase .show, el libro hace el zoom-in premium */
 #triviaModal.show .trivia-modal-layout {
     transform: scale(1);
 }
@@ -1673,11 +1737,10 @@ function toggleForm() {
 <script src="trivia-data.js"></script>
 
 <script>
-// Al cargar la página, verificamos si ya respondió hoy O si es fin de semana para ocultar el librito
 document.addEventListener("DOMContentLoaded", () => {
     const hoy = new Date();
     const fechaTexto = hoy.toLocaleDateString();
-    const diaSemana = hoy.getDay(); // 0 = Domingo, 6 = Sábado
+    const diaSemana = hoy.getDay(); 
     const trigger = document.getElementById('triggerTrivia');
     
     if (diaSemana === 0 || diaSemana === 6 || localStorage.getItem('triviaRespondida') === fechaTexto) {
@@ -1699,8 +1762,8 @@ function abrirTrivia() {
         return;
     }
 
-validarRachaPorInactividad();
-pintarWidgetRacha();
+    validarRachaPorInactividad();
+    pintarWidgetRacha();
 
     const modal = document.getElementById('triviaModal');
     const modalContent = document.getElementById('modalContent');
@@ -1709,7 +1772,6 @@ pintarWidgetRacha();
     const feedbackBox = document.getElementById('feedbackContainer');
     const catTxt = document.getElementById('triviaCategoria');
 
-    // --- DICCIONARIO DE COLORES CLÍNICO-MÉDICO ---
     const coloresCategorias = {
         "LABORATORIO": "#2596be",
         "URGENCIAS": "#b91c1c",
@@ -1732,14 +1794,11 @@ pintarWidgetRacha();
     const diaDelAño = Math.floor((hoy - inicioAño) / (1000 * 60 * 60 * 24));
     const preguntaActual = bancoDePreguntas[diaDelAño % bancoDePreguntas.length];
 
-    // IMPORTANTE: Reseteamos la expansión para que abra compacto siempre
     modalContent.classList.remove('shake-effect', 'zoom-out-effect', 'modal-expanded');
     feedbackBox.style.display = 'none';
     feedbackBox.innerHTML = '';
     opcionesBox.innerHTML = '';
     
-    // Formateamos la categoría en mayúsculas e inyectamos el color dinámico
-    // Formateamos la categoría en mayúsculas e inyectamos el color dinámico
     const categoriaTexto = (preguntaActual.cat || "General").toUpperCase();
     catTxt.innerText = categoriaTexto;
     
@@ -1766,9 +1825,7 @@ pintarWidgetRacha();
 
         btn.onclick = () => {
             if (index === preguntaActual.c) {
-                // --- RESPUESTA CORRECTA ---
                 localStorage.setItem('triviaRespondida', hoy.toLocaleDateString());
-
                 actualizarRachaYProgreso();
                 
                 btn.style.background = "#059669";
@@ -1779,14 +1836,12 @@ pintarWidgetRacha();
                 const todosLosBtns = opcionesBox.querySelectorAll('button');
                 todosLosBtns.forEach(b => b.disabled = true);
 
-                // ACTIVAMOS LA EXPANSIÓN (Manda el comando al CSS para estirarse en compu)
                 modalContent.classList.add('modal-expanded');
 
-                // Mostramos y armamos la caja verde de feedback
                 feedbackBox.style.display = 'block';
                 feedbackBox.style.background = "#14532d"; 
-                feedbackBox.style.color = "#ffffff"; // Texto blanco para máxima lectura
-                feedbackBox.style.border = "1px solid #10b981"; // Borde más vivo
+                feedbackBox.style.color = "#ffffff"; 
+                feedbackBox.style.border = "1px solid #10b981"; 
                 feedbackBox.innerHTML = `
                     <div style="text-align:center; margin-top:2px;">
                         <span style="font-size:26px; display:block; margin-bottom:5px;">🏆</span>
@@ -1796,7 +1851,6 @@ pintarWidgetRacha();
                     <hr style="border:0; border-top:1px solid #065f46; margin:14px 0;">
                     <span style="font-size:12px; font-weight:bold; color:#ebfbff; text-transform:uppercase; letter-spacing:0.7px; display:block; margin-bottom:4px;">DATO CURIOSO:</span>
                     <p style="margin:0 0 20px 0; color:#cbd5e1; font-style:italic; line-height:1.5; font-size:14.5px;">${preguntaActual.curioso}</p>
-                    
                     <button onclick="cerrarTriviaExito()" style="background:#1e293b; color:#10b981; border:1px solid #10b981; padding:13px 15px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; text-transform:uppercase; letter-spacing:0.5px; transition: all 0.2s; font-size:14px;">DATO APRENDIDO</button>
                 `;
 
@@ -1805,7 +1859,6 @@ pintarWidgetRacha();
                 btnCierre.onmouseout = () => { btnCierre.style.background = "#1e293b"; btnCierre.style.color = "#10b981"; };
 
             } else {
-                // --- RESPUESTA INCORRECTA ---
                 btn.onmouseover = null; btn.onmouseout = null;
                 btn.style.background = "#7f1d1d";
                 btn.style.borderColor = "#ef4444";
@@ -1826,20 +1879,17 @@ pintarWidgetRacha();
     }); 
 }
 
-// 🎬 NUEVA VERSIÓN BLINDADA DE TU FUNCIÓN DE CIERRE
 function cerrarTriviaExito() {
     const modal = document.getElementById('triviaModal');
     const modalContent = document.getElementById('modalContent');
     const trigger = document.getElementById('triggerTrivia');
     
-    // 1. Iniciamos el desvanecimiento del fondo negro y el encogimiento del libro
     if (modal) modal.classList.remove('show');
     if (modalContent) {
         modalContent.classList.remove('zoom-in-effect', 'shake-effect');
         modalContent.classList.add('zoom-out-effect');
     }
     
-    // 2. Esperamos los 200ms exactos de la transición antes de apagar el bloque por completo
     setTimeout(() => {
         if (modal) modal.style.display = 'none';
         if (modalContent) modalContent.classList.remove('zoom-out-effect', 'modal-expanded'); 
@@ -1847,69 +1897,57 @@ function cerrarTriviaExito() {
     }, 200);
 }
 
-// 🔥 SISTEMA DE RACHAS INTELIGENTE (FINES DE SEMANA PROTEGIDOS)
 function actualizarRachaYProgreso() {
     let rachaActual = parseInt(localStorage.getItem('rachaActual')) || 0;
     let rangoMaximo = parseInt(localStorage.getItem('rangoMaximo')) || 0;
     const hoy = new Date().toISOString().split('T')[0];
 
-    // 1. Subimos la racha porque contestó bien
     rachaActual++;
     localStorage.setItem('rachaActual', rachaActual);
     localStorage.setItem('ultimaFechaRespuesta', hoy);
 
-    // 2. ¿Rompieron su récord histórico?
     if (rachaActual > rangoMaximo) {
         localStorage.setItem('rangoMaximo', rachaActual);
         rangoMaximo = rachaActual;
     }
 
     console.log(`🔥 Racha: ${rachaActual} días. Récord: ${rangoMaximo} días.`);
+    pintarWidgetRacha();
 
-pintarWidgetRacha();
-
-    // 3. Revisar si ganaron medalla nueva (Hitos: 10, 25, 50, 75, 120, 180, 250)
     const hitos = [10, 25, 50, 75, 120, 180, 250];
     if (hitos.includes(rachaActual) && rachaActual === rangoMaximo) {
         let medallaDatos = { emoji: '🥼', titulo: 'POSTULANTE', borde: '#475569' };
         
-        if (rachaActual >= 250) medallaDatos = { emoji: '👑', titulo: 'MAESTRÍA SUPREMA (LEYENDA)', borde: '#fbbf24' };
-        else if (rachaActual >= 180) medallaDatos = { emoji: '💎', titulo: 'MAESTRO DE LOGÍSTICA', borde: '#38bdf8' };
-        else if (rachaActual >= 120) medallaDatos = { emoji: '🎖️', titulo: 'ESTRATEGA CLÍNICO', borde: '#e2e8f0' };
-        else if (rachaActual >= 75)  medallaDatos = { emoji: '🛡️', titulo: 'GUARDIA DE ÉLITE', borde: '#a3e635' };
-        else if (rachaActual >= 50)  medallaDatos = { emoji: '🥇', titulo: 'EXPERTO EN INVENTARIOS', borde: '#fbbf24' };
-        else if (rachaActual >= 25)  medallaDatos = { emoji: '🥈', titulo: 'ESPECIALISTA DE BODEGA', borde: '#cbd5e1' };
+        if (rachaActual >= 250) medallaDatos = { emoji: '👑', titulo: 'RANGO SUPREMO', borde: '#fbbf24' };
+        else if (rachaActual >= 180) medallaDatos = { emoji: '💎', titulo: 'MAESTRÍA OPERATIVA', borde: '#38bdf8' };
+        else if (rachaActual >= 120) medallaDatos = { emoji: '🎖️', titulo: 'RANGO ÉLITE', borde: '#e2e8f0' };
+        else if (rachaActual >= 75)  medallaDatos = { emoji: '🛡️', titulo: 'NIVEL ESTRATÉGICO', borde: '#a3e635' };
+        else if (rachaActual >= 50)  medallaDatos = { emoji: '🥇', titulo: 'PROGRESO AVANZADO', borde: '#fbbf24' };
+        else if (rachaActual >= 25)  medallaDatos = { emoji: '🥈', titulo: 'COLABORADOR ACTIVO', borde: '#cbd5e1' };
         else if (rachaActual >= 10)  medallaDatos = { emoji: '🥉', titulo: 'APRENDIZ CONSTANTE', borde: '#fdba74' };
 
-        // Lanzamos el diploma en pantalla con el nombre de la patoja
         dispararModalCertificado(medallaDatos, rachaActual);
     }
 }
 
 function validarRachaPorInactividad() {
     const ultimaFechaStr = localStorage.getItem('ultimaFechaRespuesta');
-    if (!ultimaFechaStr) return; // Primera vez que juegan, no hacemos nada
+    if (!ultimaFechaStr) return;
 
     const hoy = new Date();
-    // Ponemos las fechas a mediodía para evitar problemas de zonas horarias
     hoy.setHours(12, 0, 0, 0);
     
     const ultimaFecha = new Date(ultimaFechaStr + "T12:00:00");
     
-    // Restamos los días exactos que pasaron
     const diferenciaTiempo = hoy.getTime() - ultimaFecha.getTime();
     const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
+    const diaSemanaHoy = hoy.getDay();
 
-    const diaSemanaHoy = hoy.getDay(); // 1 = Lunes, 5 = Viernes...
-
-    // 💡 LÓGICA DE PROTECCIÓN FIN DE SEMANA
-    // Si hoy es Lunes (1) y la última vez fue Viernes (diferencia de 3 días) -> SE PERDONA
     if (diaSemanaHoy === 1 && diferenciaDias === 3) {
         console.log("🛡️ Fin de semana detectado y protegido. ¡Tu racha se mantiene viva!");
         return;
     }
 
-    // Si pasó más de 1 día regular en la semana sin contestar, se resetea a 0
     if (diferenciaDias > 1) {
         localStorage.setItem('rachaActual', 0);
         console.log("❌ Racha reiniciada a 0 por inactividad.");
@@ -1927,7 +1965,7 @@ function pintarWidgetRacha() {
 
     txtRacha.innerText = `🔥 ${rachaActual}`;
 
-    if (rachaActual > 0 && rachaActual >= rangoMaximo) {
+    if (rangoMaximo > 0 && rachaActual < rangoMaximo) {
         txtMaximo.innerText = `🏆 ${rangoMaximo}`;
         txtMaximo.style.display = 'inline';
     } else {
@@ -1935,7 +1973,6 @@ function pintarWidgetRacha() {
     }
 }
 
-// Variables globales para retener los datos del premio activo mientras escribe su nombre
 let premioPendienteDatos = null;
 let premioPendienteDias = 0;
 
@@ -1943,25 +1980,21 @@ function dispararModalCertificado(datosPremio, dias) {
     const modal = document.getElementById('certificadoModal');
     if (!modal) return;
 
-    // Guardamos los datos del rango alcanzado para usarlos en el siguiente paso
     premioPendienteDatos = datosPremio;
     premioPendienteDias = dias;
 
-    // Reset de pasos: Mostramos el mensaje de felicitación y ocultamos el diploma ancho
+    // Activamos la visualización limpia con display: block / none para alternar los layouts internos
     document.getElementById('certPasoIntroduccion').style.display = 'block';
     document.getElementById('boxCertificado').style.display = 'none';
-    document.getElementById('certInputNombre').value = ''; // Limpiamos el input por si acaso
+    document.getElementById('certInputNombre').value = ''; 
 
-    modal.style.display = 'flex';
+    modal.classList.add('mostrar-suave');
 }
 
 function procesarNombreCertificado() {
     const nombreIngresado = document.getElementById('certInputNombre').value.trim();
-    
-    // Si no escribe nada, por defecto agarra el responsable del select o el equipo
     const nombreFinal = nombreIngresado !== "" ? nombreIngresado : (document.getElementById('responsableSelect')?.value || "EQUIPO ALPROMEH");
 
-    // Inyectamos dinámicamente los datos al diploma horizontal
     document.getElementById('certNombreUsuario').innerText = nombreFinal;
     document.getElementById('certEmoji').innerText = premioPendienteDatos.emoji;
     document.getElementById('certSelloBg').innerText = premioPendienteDatos.emoji;
@@ -1972,19 +2005,37 @@ function procesarNombreCertificado() {
     box.style.borderColor = premioPendienteDatos.borde;
     document.getElementById('certTitulo').style.color = premioPendienteDatos.borde;
 
-    // Transición visual: Escondemos el mensaje de entrada y abrimos el certificado a lo ancho
+    // Ocultamos la introducción de golpe para darle paso al show
     document.getElementById('certPasoIntroduccion').style.display = 'none';
-    box.style.display = 'flex';
+    
+    // Reseteamos la clase, forzamos reflow y aplicamos el efecto premium
+    box.classList.remove('efecto-diploma');
+    box.style.display = 'flex'; 
+    void box.offsetWidth; // Forzamos el reflow mágico para reiniciar la animación de entrada
+    box.classList.add('efecto-diploma');
+
+    document.getElementById('certificadoModal').classList.add('mostrar-suave');
 }
 
 function ejecutarImpresionLimpia() {
-    // Llama al disparo de impresión nativo controlado por el @media print del CSS
     window.print();
 }
 
 function cerrarCertificado() {
     const modal = document.getElementById('certificadoModal');
-    if (modal) modal.style.display = 'none';
+    if (!modal) return;
+    
+    // 1. Apaga la opacidad y visibilidad usando CSS controlado
+    modal.classList.remove('mostrar-suave');
+    
+    // 2. Espera los 400ms de animación del CSS antes de resetear las tripas por dentro
+    setTimeout(() => {
+        document.getElementById('certPasoIntroduccion').style.display = 'block';
+        
+        const box = document.getElementById('boxCertificado');
+        box.style.display = 'none';
+        box.classList.remove('efecto-diploma');
+    }, 400);
 }
 </script>
 </body>
