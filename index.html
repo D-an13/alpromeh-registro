@@ -512,6 +512,79 @@ input::-webkit-outer-spin-button,
 #triviaModal.show .modal-content-libro {
     transform: scale(1);
 }
+
+/* =======================================================
+   ✨ EL GLOBITO DE TEXTO ESTILO GLASSMORPHISM (IZQUIERDA)
+======================================================= */
+
+/* 1. Mantenemos la posición absolute original de tu librito */
+#triggerTrivia {
+    position: absolute !important;
+}
+
+/* 2. El globo de diálogo estilo Vidrio (Glassmorphism) */
+#triggerTrivia::before {
+    content: attr(data-frase);
+    position: absolute;
+    top: 50%;
+    right: 140%; /* Lo avienta limpio hacia el lado izquierdo del libro */
+    transform: translateY(-50%); /* Lo centra verticalmente respecto al libro */
+    
+    /* 🧪 EFECTO GLASSMORPHISM */
+    background: rgba(255, 255, 255, 0.06); /* Blanco ultra transparente */
+    backdrop-filter: blur(8px) saturate(120%); /* El desenfoque que da el efecto vidrio */
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.15); /* El borde brillante del vidrio */
+    color: #94a3b8; /* Texto para que contraste */
+    
+    padding: 5px 12px;
+    border-radius: 12px; /* Un poquito más cuadrado para que parezca vidrio premium */
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    
+    /* Sombra sutil para darle profundidad al vidrio */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    z-index: 999;
+    opacity: 1 !important;
+    
+    /* Nueva animación adaptada para flotar horizontalmente */
+    animation: flotarGloboIzquierda 2s infinite ease-in-out;
+}
+
+/* 3. La mini flechita del globo apuntando hacia la derecha (hacia el libro 📖) */
+#triggerTrivia::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 118%; /* Ajustado en la entrada izquierda del libro */
+    transform: translateY(-50%);
+    
+    /* Flechita transparente que simula vidrio */
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.15); 
+    z-index: 999;
+    opacity: 1 !important;
+    
+    animation: flotarGloboIzquierda 2s infinite ease-in-out;
+}
+
+/* 4. Animación sutil de lado a lado (Izquierda - Derecha) */
+@keyframes flotarGloboIzquierda {
+    0% {
+        transform: translateY(-50%) translateX(0);
+    }
+    50% {
+        transform: translateY(-50%) translateX(-5px); /* Se desplaza 5px a la izquierda con suavidad */
+        background: rgba(255, 255, 255, 0.1); /* Brilla un pelín más al moverse */
+    }
+    100% {
+        transform: translateY(-50%) translateX(0);
+    }
+}
 </style>
 </head>
 <body>
@@ -1742,6 +1815,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const fechaTexto = hoy.toLocaleDateString();
     const diaSemana = hoy.getDay(); 
     const trigger = document.getElementById('triggerTrivia');
+
+// 1. Si el libro existe en pantalla, le sembramos la frase del día
+    if (trigger) {
+        // Tu lista de frases sutiles y profesionales por día
+        const frasesPorDia = {
+            1: "Pst...", // Lunes
+            2: "¡Ey!", // Martes
+            3: "Buenas...",    // Miércoles
+            4: "¡Oye!",       // Jueves
+            5: "Un repaso rápido" // Viernes
+        };
+
+        // Obtenemos la frase de hoy (si es fin de semana, usa "Pst...")
+        const fraseDeHoy = frasesPorDia[diaSemana] || "Pst...";
+        
+        // Se la inyectamos al HTML para que el CSS la lea
+        trigger.setAttribute('data-frase', fraseDeHoy);
+    }
     
     if (diaSemana === 0 || diaSemana === 6 || localStorage.getItem('triviaRespondida') === fechaTexto) {
         if (trigger) trigger.style.display = 'none'; 
