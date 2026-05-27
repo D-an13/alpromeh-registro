@@ -585,6 +585,75 @@ input::-webkit-outer-spin-button,
         transform: translateY(-50%) translateX(0);
     }
 }
+
+/* --- EFECTO GOTA DE VIDRIO CRISTALINO (TRIVIA) --- */
+.burbuja-oculta {
+    position: fixed;
+    bottom: -150px; /* Escondida abajo para el despliegue */
+    left: 20px;
+    width: 290px;
+    padding: 15px;
+    border-radius: 16px; /* Bordes redondeados tipo gota */
+    z-index: 9999;
+    cursor: pointer;
+    
+    /* Vidrio premium translúcido claro */
+    background: rgba(255, 255, 255, 0.45); 
+    backdrop-filter: blur(16px) saturate(140%); 
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Reflejo brillante en el borde */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    
+    transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Activador de subida normal */
+.burbuja-oculta.mostrar {
+    bottom: 20px; 
+}
+
+/* 🛑 BLINDAJE DE SEGURIDAD: Si el mouse está encima, ¡NO SE RECOGE! */
+.burbuja-oculta.mostrar:hover {
+    bottom: 20px !important; /* Le gana al JS y la congela en la pantalla */
+    background: rgba(255, 255, 255, 0.6); /* Se aclara un pelín más para dar feedback visual */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12), inset 0 1px 3px rgba(255, 255, 255, 0.6);
+}
+
+.burbuja-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+#titulo-gancho {
+    font-weight: 800; /* Texto fuerte */
+    color: #0f0f0f;   /* Tu gris oscuro/negro pro */
+    font-size: 14px;
+    font-family: sans-serif;
+}
+
+.texto-invitacion {
+    margin: 0;
+    color: #2d3748;   /* Gris oscuro de alto contraste */
+    font-size: 12px;
+    font-family: sans-serif;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+#cerrar-chisme {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    color: #4a5568;   /* X visible sobre claro */
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+#cerrar-chisme:hover {
+    color: #991b1b;
+}
 </style>
 </head>
 <body>
@@ -709,7 +778,7 @@ input::-webkit-outer-spin-button,
             </div>
         </div>
 
-        <div class="busqueda-container">
+   <div class="busqueda-container">
             <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden o Institución..." onkeyup="renderTable()">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
             <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
@@ -724,10 +793,18 @@ input::-webkit-outer-spin-button,
                 <tbody id="tablaBody"></tbody>
             </table>
         </div>
+    </div> <div id="burbuja-chisme" class="burbuja-oculta">
+        <span id="cerrar-chisme" onclick="cerrarChisme(event)">×</span>
+        <div class="contenido-chisme" onclick="irATrivia()">
+            <div class="burbuja-header">
+                <span id="titulo-gancho">¡Reto del Día! 💡</span>
+            </div>
+            <p class="texto-invitacion">Pon a prueba tu conocimiento en 1 minuto.</p>
+        </div>
     </div>
 
     <script>
-let guardandoAhora = false;
+        let guardandoAhora = false;
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzFmaW8FCIHpKUOk6jdbce6qBJQ2vUFd_VepPJXhlVi4Sc0dFaKLIosvrLD2WiFGSh5/exec";
         let datosLocales = JSON.parse(localStorage.getItem('alpromeh_vFinal_v10')) || [];
         let modoFiltro = "todo"; 
@@ -745,6 +822,29 @@ let guardandoAhora = false;
             };
             return map[nombre] || "";
         }
+
+// Funciones para controlar la burbuja flotante de la trivia
+function removerBurbuja() {
+    const burbuja = document.getElementById('burbuja-chisme');
+    if (burbuja) {
+        burbuja.classList.remove('mostrar'); // La desliza hacia abajo para esconderla
+    }
+}
+
+function cerrarChisme(event) {
+    event.stopPropagation(); // Evita que al darle a la '×' se abra la trivia por accidente
+    removerBurbuja();
+}
+
+function irATrivia() {
+    // 1. Esconde la burbuja de forma limpia hacia abajo
+    removerBurbuja(); 
+    
+    // 2. Levanta el modal original de la trivia con tus preguntas y la racha
+    if (typeof abrirTrivia === 'function') {
+        abrirTrivia(); 
+    }
+}
 
 function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
 
@@ -2110,8 +2210,8 @@ function procesarNombreCertificado() {
 
 function ejecutarImpresionLimpia() {
     window.print();
-}
 
+}
 function cerrarCertificado() {
     const modal = document.getElementById('certificadoModal');
     if (!modal) return;
@@ -2129,7 +2229,7 @@ function cerrarCertificado() {
     }, 400);
 }
 
-// ⚡ 🛡️ ¡EL BLINDAJE DE ARRANQUE VA JUSTO AQUÍ!
+// ⚡ 🛡️ ¡EL BLINDAJE DE ARRANQUE CON LA LÓGICA DE LA BURBUJA REEMPLAZADO AQUÍ!
 window.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 ALPROMEH Iniciando blindaje de arranque...");
     
@@ -2139,6 +2239,56 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Inicializa tus contadores del día
     if (typeof actualizarContadores === 'function') {
         actualizarContadores();
+    }
+
+    // ========================================================
+    // 🔥 LÓGICA DE CONTROL DE 3 DÍAS PARA LA BURBUJA PREMIUM
+    // ========================================================
+    let ultimaTrivia = localStorage.getItem('ultima_trivia_fecha');
+    let hoy = new Date();
+
+    if (!ultimaTrivia) {
+        // Opción A: Si es primera vez, seteamos hoy como base para darle 3 días de colchón al equipo
+        localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
+    } else {
+        let fechaPasada = new Date(ultimaTrivia);
+        let diferenciaDias = (hoy - fechaPasada) / (1000 * 60 * 60 * 24);
+
+        // Si ya pasaron 3 días o más, se activa el chisme
+        if (diferenciaDias >= 3) {
+            
+            let ganchoDeHoy = "¡Reto del Día! 💡"; 
+            document.getElementById('titulo-gancho').innerText = ganchoDeHoy;
+
+            let burbuja = document.getElementById('burbuja-chisme');
+            if (burbuja) {
+                burbuja.classList.add('mostrar'); 
+
+                // 🕵️‍♂️ SENSOR DE MOUSE (Detecta si estás encima)
+                let mouseEncima = false;
+                
+                burbuja.onmouseenter = function() {
+                    mouseEncima = true; // El mouse entró, congelamos
+                };
+                
+                burbuja.onmouseleave = function() {
+                    mouseEncima = false; // El mouse salió
+                };
+
+                // TEMPORIZADOR INTELIGENTE A LOS 7 SEGUNDOS
+                setTimeout(function() {
+                    // Si el mouse está encima, esperamos a que salga para quitarla
+                    if (mouseEncima) {
+                        burbuja.onmouseleave = function() {
+                            removerBurbuja(); // Se va en cuanto quités el mouse
+                        };
+                    } else {
+                        // Si el mouse NO está encima, se va normal a los 6 segundos
+                        removerBurbuja();
+                    }
+                }, 7000);
+            }
+        }
     }
 });
 </script>
