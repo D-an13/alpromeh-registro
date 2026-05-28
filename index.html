@@ -779,7 +779,7 @@ input::-webkit-outer-spin-button,
         </div>
 
    <div class="busqueda-container">
-            <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden o Institución..." onkeyup="renderTable()">
+            <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden, Institución o Producto..." onkeyup="renderTable()">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
             <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
             <button id="filtroAtraso" class="btn-filtro" style="background: #b91c1c;" onclick="toggleFiltroAtraso()">⚠️ En Atraso (+2d)</button>
@@ -1031,7 +1031,11 @@ actualizarContadores()
             const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
 
             let filtrados = datosLocales.filter(item => {
-                const coincideBusqueda = item.orden.toString().includes(busqueda) || item.inst.toLowerCase().includes(busqueda);
+                // 🔥 MODIFICADO: Agregamos la búsqueda por la propiedad producto (item.producto) de forma segura
+                const coincideBusqueda = item.orden.toString().includes(busqueda) || 
+                                         item.inst.toLowerCase().includes(busqueda) ||
+                                         (item.producto && item.producto.toLowerCase().includes(busqueda));
+                                         
                 const fechaOrden = new Date(item.fecha + "T00:00:00");
                 const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
                 const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
