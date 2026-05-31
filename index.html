@@ -472,6 +472,23 @@ input::-webkit-outer-spin-button,
     animation: parpadeoForzado 1.5s infinite ease-in-out;
 }
 
+/* El nuevo div estático para motivar al equipo */
+#widgetFuegoRacha {
+    position: absolute;   
+    bottom: 20px;         /* Misma alineación que el librito */
+    right: 25px;          /* Pegado a la derecha en el mismo lugar */
+    font-size: 0.95rem;   /* Un tamaño más sutil, premium y discreto */
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #f97316;       /* Color naranja fuego */
+    display: none;        /* Inicia oculto */
+    align-items: center;
+    gap: 2px;             /* ¡Reducido al mínimo para que el número quede a la par! */
+    line-height: 1;       /* Evita espacios fantasmas arriba o abajo del texto */
+    z-index: 10;
+    cursor: pointer;
+}
+
 #triggerTrivia:hover {
     transform: scale(1.2);
 }
@@ -696,7 +713,8 @@ input::-webkit-outer-spin-button,
                 <div id="barraProgreso" class="barra-llenado"></div>
             </div>
         </div>
-<div class="contenedor-pastillas">
+        
+        <div class="contenedor-pastillas">
             <span class="pastilla p-urgente">
                 <span class="punto-color pt-urgente">•</span> Urgentes: <span id="count-atrasadas">0</span>
             </span>
@@ -732,8 +750,9 @@ input::-webkit-outer-spin-button,
         </div>
 
         <div id="triggerTrivia" class="libro-parpadeante" onclick="abrirTrivia()">📖</div>
-    </div>
-<button id="btnExpandirForm" class="btn-celular-only" onclick="toggleForm()">+ NUEVA ORDEN</button>
+
+<div id="widgetFuegoRacha" title="¡Vas bien! ¡Sigue así! 🔥">🔥 <span id="rachaTextoBoton">0</span></div>
+</div> <button id="btnExpandirForm" class="btn-celular-only" onclick="toggleForm()">+ NUEVA ORDEN</button>
     <div class="contenedor" id="contenedorForm">
         <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">
             <span id="triggerHuevo" style="cursor: pointer;">📦</span> REGISTRO ÓRDENES
@@ -773,8 +792,8 @@ input::-webkit-outer-spin-button,
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span style="font-weight: bold; color: var(--primary);">HISTORIAL (2 SEMANAS)</span>
             <div style="display: flex; gap: 8px;">
-                <a href="https://docs.google.com/spreadsheets/d/1IHm9PobTkGtNdZCIJ8Up7CRRkykwaMdV4NJGdPogEB8/edit" target="_blank" class="btn-excel">📊 Ver Excel</a>
-                <button onclick="sincronizar()" id="btnSync" class="btn-sync">🔄 Sincronizar</button>
+                <a href="https://docs.google.com/spreadsheets/d/1IHm9PobTkGtNdZCIJ8Up7CRRkykwaMdV4NJGdPogEB8/edit" target="_blank" class="btn-excel">Ver Excel</a>
+                <button onclick="sincronizar()" id="btnSync" class="btn-sync"> Sincronizar</button>
             </div>
         </div>
 
@@ -1329,13 +1348,13 @@ if(Array.isArray(d)) {
             // Esperamos un segundo para que se vea el efecto antes de volver al original
             setTimeout(() => {
                 btn.classList.remove('animar-pulso');
-                btn.innerText = "🔄 Sincronizar";
+                btn.innerText = "Sincronizar";
                 btn.disabled = false;
             }, 1000);
         }
     } catch(e) { 
         showToast("Error de conexión", true); 
-        btn.innerText = "🔄 Sincronizar";
+        btn.innerText = "Sincronizar";
         btn.disabled = false;
     }
 }
@@ -1931,16 +1950,13 @@ document.addEventListener("DOMContentLoaded", () => {
             5: "Un repaso rápido" // Viernes
         };
 
-        // Obtenemos la frase de hoy (si es fin de semana, usa "Pst...")
         const fraseDeHoy = frasesPorDia[diaSemana] || "Pst...";
         
-        // Se la inyectamos al HTML para que el CSS la lea
         trigger.setAttribute('data-frase', fraseDeHoy);
     }
     
-    if (diaSemana === 0 || diaSemana === 6 || localStorage.getItem('triviaRespondida') === fechaTexto) {
-        if (trigger) trigger.style.display = 'none'; 
-    }
+    controlarEstadoDisparador(); 
+
 });
 
 function abrirTrivia() {
@@ -2088,7 +2104,9 @@ function cerrarTriviaExito() {
     setTimeout(() => {
         if (modal) modal.style.display = 'none';
         if (modalContent) modalContent.classList.remove('zoom-out-effect', 'modal-expanded'); 
-        if (trigger) trigger.style.display = 'none'; 
+        
+        // Ejecutamos el cambio para que aparezca el fuego al instante al ganar
+        controlarEstadoDisparador(); 
     }, 200);
 }
 
@@ -2294,7 +2312,41 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
         }
     }
+
+    controlarEstadoDisparador();
 });
+
+function controlarEstadoDisparador() {
+    const trigger = document.getElementById('triggerTrivia');
+    const widgetFuego = document.getElementById('widgetFuegoRacha');
+    const txtRacha = document.getElementById('rachaTextoBoton');
+
+    if (!widgetFuego) return;
+
+    const hoy = new Date();
+    const fechaTexto = hoy.toLocaleDateString();
+    const diaSemana = hoy.getDay(); 
+    const yaRespondio = localStorage.getItem('triviaRespondida') === fechaTexto;
+    const rachaActual = parseInt(localStorage.getItem('rachaActual')) || 0;
+
+    // 1. Si es fin de semana (Sábado=6 o Domingo=0), ocultamos todo por completo
+    if (diaSemana === 0 || diaSemana === 6) {
+        if (trigger) trigger.style.display = 'none';
+        widgetFuego.style.display = 'none';
+        return;
+    }
+
+    // 2. Si ya respondió hoy lunes a viernes
+    if (yaRespondio) {
+        if (trigger) trigger.style.display = 'none'; // Asegura que el libro no esté
+        if (txtRacha) txtRacha.innerText = rachaActual; // Le mete el número dinámico
+        widgetFuego.style.display = 'flex'; // Enciende el fueguito
+    } else {
+        // Si no ha respondido, el libro manda
+        if (trigger) trigger.style.display = 'flex';
+        widgetFuego.style.display = 'none';
+    }
+}
 </script>
 </body>
 </html>
