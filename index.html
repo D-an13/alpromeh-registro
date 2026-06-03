@@ -1861,7 +1861,9 @@ function ejecutarImpresionReporte() {
                 color: #0f172a;
                 margin: 0;
                 padding: 0;
-                font-size: 11px; /* Bajó un cachito para compactar más */
+                padding-right: 6px; 
+                box-sizing: border-box;
+                font-size: 11px; 
                 line-height: 1.2;
             }
             .header-reporte {
@@ -1899,7 +1901,8 @@ function ejecutarImpresionReporte() {
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 20px;
-                table-layout: fixed; /* Asegura que se respeten los anchos asignados */
+                table-layout: fixed; 
+                box-sizing: border-box;
                 page-break-inside: auto;
             }
             tr {
@@ -2017,7 +2020,7 @@ function ejecutarImpresionReporte() {
             <thead>
                 <tr>
                     <th class="col-orden">No. de Orden</th>
-                    <th class="col-fecha">Fecha de Impresión</th>
+                    <th class="col-fecha">Fecha de Registro</th>
                     <th class="col-institucion">Institución</th>
                     <th class="col-recibio">Persona que Recibió</th>
                     <th class="col-despachado">Despachado</th>
@@ -2031,12 +2034,27 @@ function ejecutarImpresionReporte() {
         const institucion = item.inst || 'SIN INSTITUCIÓN';
         const personaRecibio = item.solicitante || item.pers || 'SIN ESPECIFICAR';
         const producto = item.producto || item.descripcion || 'SIN ESPECIFICAR';
+        
+        // 📅 JALAMOS LA FECHA DE LA ORDEN
+        let fechaOrden = item.fecha || '';
+        
+        // 🔄 ¡EL TOQUE PREMIUM DE DIAGONALES! 
+        // Si la fecha trae guiones (ej: 03-06-2026 o formato ISO), los transmutamos a diagonales "/"
+        if (fechaOrden.includes('-')) {
+            // Caso 1: Si viene en formato ISO Año-Mes-Día (2026-06-03), lo ordenamos a Día/Mes/Año
+            if (fechaOrden.indexOf('-') === 4) {
+                const partes = fechaOrden.split('-');
+                fechaOrden = `${partes[2]}/${partes[1]}/${partes[0]}`;
+            } else {
+                // Caso 2: Si viene como Día-Mes-Año (03-06-2026), solo reemplazamos los guiones por diagonales
+                fechaOrden = fechaOrden.replace(/-/g, '/');
+            }
+        }
 
         cuerpoHtml += `
             <tr>
                 <td class="col-orden">${item.orden || ''}</td>
-                <td class="col-fecha">${fechaImpresion}</td>
-                <td class="col-institucion">${institucion}</td>
+                <td class="col-fecha">${fechaOrden}</td> <td class="col-institucion">${institucion}</td>
                 <td class="col-recibio">${personaRecibio}</td>
                 <td class="col-despachado" style="text-align: center;"><div class="box-despachado"></div></td>
                 <td class="col-producto">${producto}</td>
