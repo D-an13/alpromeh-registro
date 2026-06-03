@@ -1840,6 +1840,9 @@ function ejecutarImpresionReporte() {
     const fechaImpresion = ahora.toLocaleDateString('es-GT');
     const horaImpresion = ahora.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit', hour12: true });
     
+    // 📊 CONTADOR AUTOMÁTICO DE ÓRDENES EN TIEMPO REAL
+    const totalOrdenes = datosParaImprimir.length;
+    
     // 3. Compilamos el HTML estructurado en formato HORIZONTAL (Landscape)
     let cuerpoHtml = `
     <!DOCTYPE html>
@@ -1862,28 +1865,40 @@ function ejecutarImpresionReporte() {
                 line-height: 1.2;
             }
             .header-reporte {
-                text-align: center;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
                 margin-bottom: 15px; /* Reducido para ahorrar espacio */
                 border-bottom: 3px double #cbd5e1;
                 padding-bottom: 8px;
             }
-            .header-reporte h1 {
+            .header-izq h1 {
                 margin: 0 0 5px 0;
                 font-size: 22px;
                 color: #1e3a8a;
                 text-transform: uppercase;
                 letter-spacing: 1px;
             }
-            .header-reporte p {
+            .header-izq p {
                 margin: 0;
                 color: #64748b;
                 font-size: 12px;
                 font-weight: 500;
             }
+            .header-der-contador {
+                text-align: right;
+                background: #f1f5f9;
+                border: 1.5px solid #cbd5e1;
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-weight: bold;
+                font-size: 12px;
+                color: #1e3a8a;
+            }
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 table-layout: fixed; /* Asegura que se respeten los anchos asignados */
                 page-break-inside: auto;
             }
@@ -1930,10 +1945,30 @@ function ejecutarImpresionReporte() {
                 background-color: #ffffff;
                 vertical-align: middle;
             }
+
+            /* 📝 BLOQUE DE OBSERVACIONES PREMIUM (ANTES DE LAS FIRMAS) */
+            .seccion-observaciones {
+                margin-top: 20px;
+                page-break-inside: avoid;
+            }
+            .titulo-observaciones {
+                font-weight: bold;
+                font-size: 11px;
+                color: #475569;
+                text-transform: uppercase;
+                margin-bottom: 6px;
+                letter-spacing: 0.5px;
+            }
+            .lineas-observaciones {
+                border: 1.5px solid #94a3b8;
+                border-radius: 6px;
+                height: 50px;
+                background-color: #e8e8e8 !important;
+            }
             
             /* Bloque estructural inferior para firmas fijas distribuidas */
             .contenedor-firmas {
-                margin-top: 90px; /* Reducido para evitar saltos de página innecesarios */
+                margin-top: 90px; /* Ajuste suave para dar espacio a las notas arriba */
                 display: flex;
                 justify-content: space-around;
                 page-break-inside: avoid;
@@ -1969,8 +2004,13 @@ function ejecutarImpresionReporte() {
     <body>
 
         <div class="header-reporte">
-            <h1>Hoja de Despacho</h1>
-            <p>Generado el: ${fechaImpresion} a las ${horaImpresion}</p>
+            <div class="header-izq">
+                <h1>Hoja de Despacho</h1>
+                <p>Generado el: ${fechaImpresion} a las ${horaImpresion}</p>
+            </div>
+            <div class="header-der-contador">
+                Total Órdenes: ${totalOrdenes}
+            </div>
         </div>
 
         <table>
@@ -1986,15 +2026,10 @@ function ejecutarImpresionReporte() {
             </thead>
             <tbody>`;
 
-    // 4. Inyectamos las filas dinámicas con el orden de columnas idéntico a tu foto 1
+    // 4. Inyectamos las filas dinámicas respetando tus mapeos de variables reales
     datosParaImprimir.forEach(item => {
-        // Capturamos la institución real ('inst')
         const institucion = item.inst || 'SIN INSTITUCIÓN';
-        
-        // 🔥 CAMBIO CLAVE: Jalar 'solicitante' en vez del encargado actual
         const personaRecibio = item.solicitante || item.pers || 'SIN ESPECIFICAR';
-        
-        // Mapeo del producto (por si viene como producto o descripción)
         const producto = item.producto || item.descripcion || 'SIN ESPECIFICAR';
 
         cuerpoHtml += `
@@ -2012,16 +2047,19 @@ function ejecutarImpresionReporte() {
             </tbody>
         </table>
 
+        <div class="seccion-observaciones">
+            <div class="titulo-observaciones">Observaciones de Despacho:</div>
+            <div class="lineas-observaciones"></div>
+        </div>
+
         <div class="contenedor-firmas">
             <div class="bloque-firma">
                 <div class="linea-firma"></div>
-                <strong style="font-size: 13px; color: #0f172a;">Axel</strong><br>
-                <span class="cargo-firma">Preparación y Conteo</span>
+                <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Axel</strong><br>Preparación y Conteo</div>
             </div>
             <div class="bloque-firma">
                 <div class="linea-firma"></div>
-                <strong style="font-size: 13px; color: #0f172a;">Yanet</strong><br>
-                <span class="cargo-firma">Revisión y Autorización</span>
+                <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Yanet</strong><br>Revisión y Autorización</div>
             </div>
         </div>
 
