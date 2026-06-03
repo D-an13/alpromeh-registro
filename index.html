@@ -872,6 +872,23 @@ input::-webkit-outer-spin-button,
         </div>
     </div>
 
+<div id="modalConfirmarCancelar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: opacity 0.3s ease;">
+        <div style="background: white; padding: 24px; border-radius: 16px; max-width: 360px; width: 90%; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); text-align: center; transform: scale(0.9); transition: transform 0.3s ease;" id="cuerpoConfirmar">
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">⚠️</div>
+            <h3 style="margin: 0 0 10px 0; color: #0f172a; font-family: sans-serif; font-weight: 700;">¿Estás segura?</h3>
+            <p style="margin: 0 0 20px 0; color: #475569; font-size: 0.95rem; line-height: 1.5;">Tienes órdenes seleccionadas en la lista. Si cancelas ahora, se perderá tu selección para el reporte.</p>
+            
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="cerrarModalSeguridad(false)" style="background: #e2e8f0; color: #475569; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
+                    Volver
+                </button>
+                <button onclick="cerrarModalSeguridad(true)" style="background: #dc2626; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;">
+                    Sí, cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let guardandoAhora = false;
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzFmaW8FCIHpKUOk6jdbce6qBJQ2vUFd_VepPJXhlVi4Sc0dFaKLIosvrLD2WiFGSh5/exec";
@@ -886,15 +903,28 @@ input::-webkit-outer-spin-button,
 let modoReporteActivo = false;
 let ordenesSeleccionadas = [];
 
-// === INTERRUPTOR MAESTRO CON TRANSICIÓN SUAVE PREMIUM ===
+// === INTERRUPTOR MAESTRO CON TRANSICIÓN SUAVE Y ESCUDO DE SEGURIDAD ===
 function toggleModoReporte() {
-// 🔒 Escudo protector: Si detecta que es celular por el ancho, no hace nada
+    // 🔒 Escudo protector: Si detecta que es celular por el ancho, no hace nada
     if (window.innerWidth < 768) {
         alert("⚠️ El módulo de reportes e impresión solo está disponible en computadora, mi rey.");
         return;
     }
+
+    // 🚨 EL ESCUDO: Si el modo está activo e intentan cancelar teniendo órdenes en el saco...
+    if (modoReporteActivo && ordenesSeleccionadas.length > 0) {
+        abrirModalSeguridad(); // Frenamos y abrimos tu modal premium
+        return; // Detiene la ejecución para que no se cierre la pantalla
+    }
+
+    // Si el saco está vacío o apenas están encendiendo el modo, pasa directo aquí:
+    procesarToggleModoReporte();
+}
+
+// === LÓGICA INTERNA QUE CAMBIA EL ESTADO DE LA INTERFAZ ===
+function procesarToggleModoReporte() {
     modoReporteActivo = !modoReporteActivo;
-    ordenesSeleccionadas = []; // Reiniciamos el saco siempre al cambiar de modo
+    ordenesSeleccionadas = []; // Ahora sí, reiniciamos el saco de forma segura
     document.getElementById('numContador').innerText = "0"; // Reseteamos contador visual
 
     const btnHoy = document.getElementById('filtroHoy');
@@ -917,7 +947,7 @@ function toggleModoReporte() {
         // 3. Mostrar arsenal de impresión con retraso para que entren suavemente
         if (txtContador) {
             txtContador.style.display = 'inline-block';
-            txtContador.classList.add('control-oculto'); // Asegura que inicie invisible
+            txtContador.classList.add('control-oculto'); 
             setTimeout(() => txtContador.classList.remove('control-oculto'), 50);
         }
         if (btnImprimir) {
@@ -925,13 +955,13 @@ function toggleModoReporte() {
             btnImprimir.disabled = true;
             btnImprimir.style.background = '#94a3b8';
             btnImprimir.style.cursor = 'not-allowed';
-            btnImprimir.classList.add('control-oculto'); // Asegura que inicie invisible
+            btnImprimir.classList.add('control-oculto'); 
             setTimeout(() => btnImprimir.classList.remove('control-oculto'), 50);
         }
 
         // Esperamos a que termine la animación de desvanecimiento para ocultar del flujo real
         setTimeout(() => {
-            if(!modoReporteActivo) return; // Por seguridad si el usuario da clics ultra rápidos
+            if(!modoReporteActivo) return; 
             if(btnHoy) btnHoy.style.display = 'none';
             if(btnPrep) btnPrep.style.display = 'none';
             if(btnAtr) btnAtr.style.display = 'none';
@@ -951,7 +981,7 @@ function toggleModoReporte() {
         [btnHoy, btnPrep, btnAtr].forEach(btn => {
             if (btn) {
                 btn.style.display = 'inline-block';
-                btn.classList.add('control-oculto'); // Asegura estado invisible inicial
+                btn.classList.add('control-oculto'); 
                 setTimeout(() => btn.classList.remove('control-oculto'), 50);
             }
         });
@@ -966,6 +996,34 @@ function toggleModoReporte() {
 
     if (typeof renderTable === "function") {
         renderTable();
+    }
+}
+
+// === FUNCIONES AUXILIARES PARA EL MODAL INTEGRADO DE SEGURIDAD ===
+function abrirModalSeguridad() {
+    const modal = document.getElementById('modalConfirmarCancelar');
+    const cuerpo = document.getElementById('cuerpoConfirmar');
+    if (modal && cuerpo) {
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            cuerpo.style.transform = 'scale(1)';
+        }, 10);
+    }
+}
+
+function cerrarModalSeguridad(confirmado) {
+    const modal = document.getElementById('modalConfirmarCancelar');
+    const cuerpo = document.getElementById('cuerpoConfirmar');
+    if (modal && cuerpo) {
+        modal.style.opacity = '0';
+        cuerpo.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            if (confirmado) {
+                procesarToggleModoReporte();
+            }
+        }, 300);
     }
 }
 
