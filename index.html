@@ -846,7 +846,7 @@ input::-webkit-outer-spin-button,
     📋 Imprimir
 </button>
 
-            <button id="btnModoReporte" class="btn-filtro" onclick="toggleModoReporte()" style="background: #475569; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px;">
+            <button id="btnModoReporte" class="btn-filtro" onclick="toggleModoReporte()" style="background: #c79f00; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px;">
                 📊 Reporte
             </button>
         </div>
@@ -975,7 +975,7 @@ function procesarToggleModoReporte() {
 
         // 2. El botón principal regresa a su estado base estético
         btnModo.innerText = "📊 Reporte";
-        btnModo.style.background = "#475569"; 
+        btnModo.style.background = "#c79f00"; 
 
         // 3. Regresar los filtros tradicionales a la vida suavemente
         [btnHoy, btnPrep, btnAtr].forEach(btn => {
