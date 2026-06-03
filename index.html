@@ -106,6 +106,11 @@
         .color-especial-dan-susan { background-color: #e0f2fe !important; color: #0369a1 !important; }
         .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
 
+.fila-seleccionada-reporte td {
+            background-color: #b1e2e6 !important;
+            color: #0f172a !important;
+        }
+
         .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
         
@@ -797,12 +802,36 @@ input::-webkit-outer-spin-button,
             </div>
         </div>
 
-   <div class="busqueda-container">
-            <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden, Institución o Producto..." onkeyup="renderTable()">
+   <div class="busqueda-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;">
+    
+    <div style="width: 100%;">
+        <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden, Institución o Producto..." onkeyup="renderTable()" style="width: 100%; box-sizing: border-box;">
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; width: 100%;">
+        
+        <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: wrap; gap: 8px;">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
             <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
             <button id="filtroAtraso" class="btn-filtro" style="background: #b91c1c;" onclick="toggleFiltroAtraso()">⚠️ En Atraso (+2d)</button>
         </div>
+
+        <div id="bloqueReporteDerecha" style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
+            <span id="txtContadorReporte" style="display: none; font-weight: bold; color: #1e293b; font-size: 0.85rem; background: #e2e8f0; padding: 6px 12px; border-radius: 20px; transition: all 0.3s ease;">
+                Órdenes seleccionadas: <span id="numContador" style="color: #1e40af;">0</span>
+            </span>
+            
+            <button id="btnImprimirReporte" onclick="ejecutarImpresionReporte()" class="btn-filtro" disabled style="display: none; background: #94a3b8; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: not-allowed; transition: all 0.3s ease;">
+    📋 Imprimir
+</button>
+
+            <button id="btnModoReporte" class="btn-filtro" onclick="toggleModoReporte()" style="background: #475569; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px;">
+                📊 Reporte
+            </button>
+        </div>
+
+    </div>
+</div>
 
         <div style="overflow-x: auto;">
             <table>
@@ -831,6 +860,95 @@ input::-webkit-outer-spin-button,
 
         let clicsRapidos = 0;
         let timerClics;
+
+// === VARIABLES DE CONTROL PARA EL MÓDULO DE REPORTES ===
+let modoReporteActivo = false;
+let ordenesSeleccionadas = [];
+
+// === INTERRUPTOR MAESTRO DEL MODO REPORTE (VERSIÓN ALINEACIÓN PERFECTA) ===
+function toggleModoReporte() {
+    modoReporteActivo = !modoReporteActivo;
+    ordenesSeleccionadas = []; // Reiniciamos el saco siempre al cambiar de modo
+    document.getElementById('numContador').innerText = "0"; // Reseteamos contador visual
+
+    const btnHoy = document.getElementById('filtroHoy');
+    const btnPrep = document.getElementById('filtroPreparando');
+    const btnAtr = document.getElementById('filtroAtraso');
+    const btnModo = document.getElementById('btnModoReporte');
+    const btnImprimir = document.getElementById('btnImprimirReporte');
+    const txtContador = document.getElementById('txtContadorReporte');
+
+    if (modoReporteActivo) {
+        if(btnHoy) btnHoy.style.display = 'none';
+        if(btnPrep) btnPrep.style.display = 'none';
+        if(btnAtr) btnAtr.style.display = 'none';
+
+        btnModo.innerText = "❌ Cancelar";
+        btnModo.style.background = "#dc2626"; 
+
+        if(txtContador) txtContador.style.display = 'inline-block';
+        if(btnImprimir) {
+            btnImprimir.style.display = 'inline-block';
+            // Fuerza el estado bloqueado gris al iniciar el modo
+            btnImprimir.disabled = true;
+            btnImprimir.style.background = '#94a3b8';
+            btnImprimir.style.cursor = 'not-allowed';
+        }
+    } else {
+        if(btnHoy) btnHoy.style.display = 'inline-block';
+        if(btnPrep) btnPrep.style.display = 'inline-block';
+        if(btnAtr) btnAtr.style.display = 'inline-block';
+
+        btnModo.innerText = "📊 Reporte";
+        btnModo.style.background = "#475569"; 
+
+        if(txtContador) txtContador.style.display = 'none';
+        if(btnImprimir) btnImprimir.style.display = 'none';
+    }
+
+    if (typeof renderTable === "function") {
+        renderTable();
+    }
+}
+
+// === FUNCIÓN QUE GESTIONA EL SACO DE SELECCIÓN Y PINTA LA FILA ===
+function gestionarSeleccion(orden, filaId) {
+    const fila = document.getElementById(filaId);
+    const index = ordenesSeleccionadas.indexOf(orden);
+
+    if (index > -1) {
+        ordenesSeleccionadas.splice(index, 1);
+        // QUITAR CLASE PREMIUM
+        if (fila) fila.classList.remove('fila-seleccionada-reporte');
+    } else {
+        ordenesSeleccionadas.push(orden);
+        // PONER CLASE PREMIUM
+        if (fila) fila.classList.add('fila-seleccionada-reporte');
+    }
+
+    const numContador = document.getElementById('numContador');
+    if (numContador) {
+        numContador.innerText = ordenesSeleccionadas.length;
+    }
+
+    // 🌟 REGLA INTELIGENTE: CONTROL DE ESTADO DINÁMICO DEL BOTÓN IMPRIMIR
+    const btnImprimir = document.getElementById('btnImprimirReporte');
+    if (btnImprimir) {
+        if (ordenesSeleccionadas.length > 0) {
+            // Si hay al menos una orden seleccionada: Se activa y se pone azul premium
+            btnImprimir.disabled = false;
+            btnImprimir.style.background = '#1e40af';
+            btnImprimir.style.cursor = 'pointer';
+            btnImprimir.style.boxShadow = '0 2px 4px rgba(0,0,0,0.15)';
+        } else {
+            // Si se desmarcan todas y queda en 0: Se vuelve a bloquear en gris apagado
+            btnImprimir.disabled = true;
+            btnImprimir.style.background = '#94a3b8';
+            btnImprimir.style.cursor = 'not-allowed';
+            btnImprimir.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        }
+    }
+}
 
         function getStyleClass(nombre) {
             const map = { 
@@ -1064,18 +1182,18 @@ actualizarContadores()
                 return coincideBusqueda;
             });
 
-filtrados.sort((a, b) => {
-    const fechaA = new Date(a.fecha + "T00:00:00");
-    const fechaB = new Date(b.fecha + "T00:00:00");
-    
-    if (fechaB - fechaA !== 0) {
-        return fechaB - fechaA;
-    }
-    
-        return datosLocales.indexOf(b) - datosLocales.indexOf(a);
-});
+            filtrados.sort((a, b) => {
+                const fechaA = new Date(a.fecha + "T00:00:00");
+                const fechaB = new Date(b.fecha + "T00:00:00");
+                
+                if (fechaB - fechaA !== 0) {
+                    return fechaB - fechaA;
+                }
+                
+                return datosLocales.indexOf(b) - datosLocales.indexOf(a);
+            });
 
-            filtrados.forEach(item => {
+            filtrados.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 const esAxel = item.responsable === "Axel";
                 const esAnulada = item.responsable === "ANULADA";
@@ -1084,17 +1202,26 @@ filtrados.sort((a, b) => {
                 const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
                 const esAntigua = !item.despachado && !esAxel && !esAnulada && diasTranscurridos >= 2;
 
-                if (item.despachado) {
-                    tr.className = 'fila-despachada';
-                } else if (esAnulada) {
-                    tr.className = 'color-anulada';
-                } else if (esDudaAxel) {
-                    tr.className = 'alerta-duda';
-                } else if (esAntigua) {
-                    tr.className = 'alerta-total'; 
-                } else {
-                    tr.className = getStyleClass(item.responsable);
-                }
+                // Generamos un ID único para la fila (lo necesitamos para pintarla de azul aqua)
+                const idFila = `fila-orden-${item.orden}`;
+                tr.id = idFila;
+
+                // Validamos si la fila ya estaba seleccionada previamente
+const estaSeleccionada = ordenesSeleccionadas.includes(item.orden);
+
+if (modoReporteActivo && estaSeleccionada) {
+    tr.className = 'fila-seleccionada-reporte'; // <-- Ahora usa la clase pro
+} else if (item.despachado) {
+    tr.className = 'fila-despachada';
+} else if (esAnulada) {
+    tr.className = 'color-anulada';
+} else if (esDudaAxel) {
+    tr.className = 'alerta-duda';
+} else if (esAntigua) {
+    tr.className = 'alerta-total'; 
+} else {
+    tr.className = getStyleClass(item.responsable);
+}
 
                 tr.addEventListener('contextmenu', function(e) { e.preventDefault(); abrirModalAnular(item.orden); });
 
@@ -1107,34 +1234,52 @@ filtrados.sort((a, b) => {
                 }
 
                 const selectBloqueado = esAnulada ? "disabled" : "";
-// --- LÓGICA DE DOBLE TOQUE PARA AXEL (SOLO MÓVIL) ---
-if (esAxel && !item.despachado) {
-    const esMovil = window.matchMedia("(pointer: coarse)").matches;
-    if (esMovil) {
-        tr.classList.add('fila-axel-movil');
-        let ultimoToque = 0;
-        tr.addEventListener('touchend', function(e) {
-            const tiempoActual = new Date().getTime();
-            const diferencia = tiempoActual - ultimoToque;
-            if (diferencia < 300 && diferencia > 0) {
-                // Doble toque detectado
-                tr.classList.add('animar-listo');
-                toggle(item.orden); // Marcamos como listo
-                showToast("📦 Orden " + item.orden + " lista");
-            }
-            ultimoToque = tiempoActual;
-        });
-    }
-}
+
+                // --- LÓGICA DE DOBLE TOQUE PARA AXEL (SOLO MÓVIL) ---
+                if (esAxel && !item.despachado) {
+                    const esMovil = window.matchMedia("(pointer: coarse)").matches;
+                    if (esMovil) {
+                        tr.classList.add('fila-axel-movil');
+                        let ultimoToque = 0;
+                        tr.addEventListener('touchend', function(e) {
+                            const tiempoActual = new Date().getTime();
+                            const diferencia = tiempoActual - ultimoToque;
+                            if (diferencia < 300 && diferencia > 0) {
+                                tr.classList.add('animar-listo');
+                                toggle(item.orden); 
+                                showToast("📦 Orden " + item.orden + " lista");
+                            }
+                            ultimoToque = tiempoActual;
+                        });
+                    }
+                }
+
+                // 🔥 CONDICIÓN EXCLUSIVA: Si el modo reporte está activo, inyectamos el Checkbox Grande a la par de la Orden
+                let celdaOrdenHtml = "";
+                if (typeof modoReporteActivo !== 'undefined' && modoReporteActivo) {
+                    const checkedAttr = estaSeleccionada ? 'checked' : '';
+                    celdaOrdenHtml = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" ${checkedAttr} 
+                                   onchange="gestionarSeleccion('${item.orden}', '${idFila}')" 
+                                   style="transform: scale(1.4); cursor: pointer; margin: 0 4px;">
+                            <span>${item.orden}</span>
+                        </div>
+                    `;
+                } else {
+                    celdaOrdenHtml = item.orden;
+                }
 
                 tr.innerHTML = `
-                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">${item.orden}</td>
+                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">
+                        ${celdaOrdenHtml}
+                    </td>
                     <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
                     <td style="font-weight:600; cursor:help;" 
-        title="Producto: ${item.producto || 'Sin descripción'}" 
-        ondblclick="editarInstitucion('${item.orden}', this)">
-        ${item.inst}
-</td>
+                        title="Producto: ${item.producto || 'Sin descripción'}" 
+                        ondblclick="editarInstitucion('${item.orden}', this)">
+                        ${item.inst}
+                    </td>
                     <td>
                         <select ${selectBloqueado} onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:${esAnulada ? 'not-allowed' : 'pointer'}; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
                             ${esAnulada ? '<option value="ANULADA" selected>🚫 ANULADA</option>' : ''}
@@ -1155,7 +1300,7 @@ if (esAxel && !item.despachado) {
                 tbody.appendChild(tr);
             });
             actualizarBarra(hoyStr);
-            actualizarContadores()
+            actualizarContadores();
         }
 
         function actualizarBarra(hoyStr) {
@@ -1559,6 +1704,222 @@ function toggleForm() {
         // Usé un naranja quemado (#ea580c) que combina con tu app.
         btn.style.background = "#ea580c"; 
     }
+}
+
+// === MOTOR DE COMPILACIÓN E IMPRESIÓN LIMPIA (VERSIÓN HORIZONTAL PREMIUM) ===
+function ejecutarImpresionReporte() {
+    if (ordenesSeleccionadas.length === 0) {
+        alert("⚠️ Por favor, selecciona al menos una orden para generar el reporte.");
+        return;
+    }
+
+    // 1. Filtramos los objetos completos basándonos en los números de orden seleccionados
+    const datosParaImprimir = datosLocales.filter(item => ordenesSeleccionadas.includes(item.orden));
+
+    // 2. Abrimos una nueva ventana/pestaña limpia para el flujo de impresión
+    const ventanaImpresion = window.open("", "_blank");
+    
+    // Conseguir la fecha y hora formateada de hoy en tiempo real
+    const ahora = new Date();
+    const fechaImpresion = ahora.toLocaleDateString('es-GT');
+    const horaImpresion = ahora.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit', hour12: true });
+    
+    // 3. Compilamos el HTML estructurado en formato HORIZONTAL (Landscape)
+    let cuerpoHtml = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Reporte de Despacho Físico - ALPROMEH</title>
+        <style>
+            /* 🔥 FUERZA EL FORMATO HORIZONTAL AUTOMÁTICO AL IMPRIMIR */
+            @page {
+                size: landscape;
+                margin: 12mm; /* Margen ideal para aprovechar el ancho */
+            }
+            body {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #0f172a;
+                margin: 0;
+                padding: 0;
+                font-size: 12px;
+                line-height: 1.4;
+            }
+            .header-reporte {
+                text-align: center;
+                margin-bottom: 20px;
+                border-bottom: 3px double #cbd5e1;
+                padding-bottom: 12px;
+            }
+            .header-reporte h1 {
+                margin: 0 0 5px 0;
+                font-size: 24px;
+                color: #1e3a8a;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .header-reporte p {
+                margin: 0;
+                color: #64748b;
+                font-size: 13px;
+                font-weight: 500;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 40px;
+                table-layout: fixed; /* Asegura que se respeten los anchos asignados */
+                page-break-inside: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+            th {
+                background-color: #1e3a8a !important; /* Azul premium corporativo */
+                color: white !important;
+                font-weight: 700;
+                text-transform: uppercase;
+                font-size: 11px;
+                border: 1px solid #cbd5e1;
+                padding: 0 8px;
+                height: 35px;
+                text-align: left;
+            }
+            td {
+                border: 1px solid #cbd5e1;
+                padding: 6px 8px;
+                height: 38px; /* Espacio cómodo para lectura física */
+                vertical-align: middle;
+                font-size: 12px;
+                word-wrap: break-word; /* Evita que textos largos rompan la tabla */
+            }
+            
+            /* Ajustes de ancho perfectos aprovechando el formato de lado (Landscape) */
+            .col-orden { width: 8%; font-weight: bold; }
+            .col-fecha { width: 11%; }
+            .col-institucion { width: 26%; text-transform: uppercase; }
+            .col-recibio { width: 13%; text-transform: uppercase; }
+            .col-despachado { width: 10%; text-align: center; }
+            .col-producto { width: 32%; text-transform: uppercase; font-size: 11px; }
+
+            /* El recuadro físico estilo casilla en blanco para marcar con lapicero */
+            .box-despachado {
+                display: inline-block;
+                width: 50px;
+                height: 22px;
+                border: 1.5px solid #475569;
+                border-radius: 6px;
+                vertical-align: middle;
+            }
+            
+            /* Bloque estructural inferior para firmas fijas distribuidas */
+            .contenedor-firmas {
+                margin-top: 60px;
+                display: flex;
+                justify-content: space-around;
+                page-break-inside: avoid;
+            }
+            .bloque-firma {
+                width: 35%;
+                text-align: center;
+            }
+            .linea-firma {
+                border-top: 1.5px solid #0f172a;
+                margin-bottom: 6px;
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .cargo-firma {
+                font-size: 11px;
+                color: #64748b;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            @media print {
+                th {
+                    background-color: #1e3a8a !important;
+                    color: white !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="header-reporte">
+            <h1>Hoja de Despacho</h1>
+            <p>Generado el: ${fechaImpresion} a las ${horaImpresion}</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-orden">No. de Orden</th>
+                    <th class="col-fecha">Fecha de Impresión</th>
+                    <th class="col-institucion">Institución</th>
+                    <th class="col-recibio">Persona que Recibió</th>
+                    <th class="col-despachado">Despachado</th>
+                    <th class="col-producto">Producto</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    // 4. Inyectamos las filas dinámicas con el orden de columnas idéntico a tu foto 1
+    datosParaImprimir.forEach(item => {
+        // Capturamos la institución real ('inst')
+        const institucion = item.inst || 'SIN INSTITUCIÓN';
+        
+        // 🔥 CAMBIO CLAVE: Jalar 'solicitante' en vez del encargado actual
+        const personaRecibio = item.solicitante || item.pers || 'SIN ESPECIFICAR';
+        
+        // Mapeo del producto (por si viene como producto o descripción)
+        const producto = item.producto || item.descripcion || 'SIN ESPECIFICAR';
+
+        cuerpoHtml += `
+            <tr>
+                <td class="col-orden">${item.orden || ''}</td>
+                <td class="col-fecha">${fechaImpresion}</td>
+                <td class="col-institucion">${institucion}</td>
+                <td class="col-recibio">${personaRecibio}</td>
+                <td class="col-despachado" style="text-align: center;"><div class="box-despachado"></div></td>
+                <td class="col-producto">${producto}</td>
+            </tr>`;
+    });
+
+    cuerpoHtml += `
+            </tbody>
+        </table>
+
+        <div class="contenedor-firmas">
+            <div class="bloque-firma">
+                <div class="linea-firma"></div>
+                <strong style="font-size: 13px; color: #0f172a;">Axel</strong><br>
+                <span class="cargo-firma">Preparación y Conteo</span>
+            </div>
+            <div class="bloque-firma">
+                <div class="linea-firma"></div>
+                <strong style="font-size: 13px; color: #0f172a;">Yanet</strong><br>
+                <span class="cargo-firma">Revisión y Autorización</span>
+            </div>
+        </div>
+
+        <script>
+            window.onload = function() {
+                window.print();
+                setTimeout(function() { window.close(); }, 500); 
+            };
+        <\/script>
+    </body>
+    </html>`;
+
+    // 5. Escribimos y cerramos el flujo del documento en la ventana emergente
+    ventanaImpresion.document.open();
+    ventanaImpresion.document.write(cuerpoHtml);
+    ventanaImpresion.document.close();
 }
     </script>
 
