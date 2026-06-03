@@ -676,6 +676,27 @@ input::-webkit-outer-spin-button,
 #cerrar-chisme:hover {
     color: #991b1b;
 }
+
+/* Clase base para los botones que se van a animar */
+.btn-filtro, #txtContadorReporte {
+    transition: opacity 0.4s ease, transform 0.4s ease, background 0.2s ease !important;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Estado oculto: suavemente invisible y se desplaza un cachito hacia abajo */
+.control-oculto {
+    opacity: 0 !important;
+    transform: translateY(4px) !important;
+    pointer-events: none; /* Evita que se les pueda dar clic mientras se desvanecen */
+}
+
+/*REGULARIZACIÓN CELULARES: Esconde el Módulo de Reportes en pantallas chicas */
+@media (max-width: 767px) {
+    #btnModoReporte {
+        display: none !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -865,8 +886,13 @@ input::-webkit-outer-spin-button,
 let modoReporteActivo = false;
 let ordenesSeleccionadas = [];
 
-// === INTERRUPTOR MAESTRO DEL MODO REPORTE (VERSIÓN ALINEACIÓN PERFECTA) ===
+// === INTERRUPTOR MAESTRO CON TRANSICIÓN SUAVE PREMIUM ===
 function toggleModoReporte() {
+// 🔒 Escudo protector: Si detecta que es celular por el ancho, no hace nada
+    if (window.innerWidth < 768) {
+        alert("⚠️ El módulo de reportes e impresión solo está disponible en computadora, mi rey.");
+        return;
+    }
     modoReporteActivo = !modoReporteActivo;
     ordenesSeleccionadas = []; // Reiniciamos el saco siempre al cambiar de modo
     document.getElementById('numContador').innerText = "0"; // Reseteamos contador visual
@@ -879,31 +905,63 @@ function toggleModoReporte() {
     const txtContador = document.getElementById('txtContadorReporte');
 
     if (modoReporteActivo) {
-        if(btnHoy) btnHoy.style.display = 'none';
-        if(btnPrep) btnPrep.style.display = 'none';
-        if(btnAtr) btnAtr.style.display = 'none';
+        // 1. Desvanecer filtros tradicionales
+        [btnHoy, btnPrep, btnAtr].forEach(btn => {
+            if (btn) btn.classList.add('control-oculto');
+        });
 
+        // 2. Transmutar el botón principal a modo cancelar
         btnModo.innerText = "❌ Cancelar";
         btnModo.style.background = "#dc2626"; 
 
-        if(txtContador) txtContador.style.display = 'inline-block';
-        if(btnImprimir) {
+        // 3. Mostrar arsenal de impresión con retraso para que entren suavemente
+        if (txtContador) {
+            txtContador.style.display = 'inline-block';
+            txtContador.classList.add('control-oculto'); // Asegura que inicie invisible
+            setTimeout(() => txtContador.classList.remove('control-oculto'), 50);
+        }
+        if (btnImprimir) {
             btnImprimir.style.display = 'inline-block';
-            // Fuerza el estado bloqueado gris al iniciar el modo
             btnImprimir.disabled = true;
             btnImprimir.style.background = '#94a3b8';
             btnImprimir.style.cursor = 'not-allowed';
+            btnImprimir.classList.add('control-oculto'); // Asegura que inicie invisible
+            setTimeout(() => btnImprimir.classList.remove('control-oculto'), 50);
         }
-    } else {
-        if(btnHoy) btnHoy.style.display = 'inline-block';
-        if(btnPrep) btnPrep.style.display = 'inline-block';
-        if(btnAtr) btnAtr.style.display = 'inline-block';
 
+        // Esperamos a que termine la animación de desvanecimiento para ocultar del flujo real
+        setTimeout(() => {
+            if(!modoReporteActivo) return; // Por seguridad si el usuario da clics ultra rápidos
+            if(btnHoy) btnHoy.style.display = 'none';
+            if(btnPrep) btnPrep.style.display = 'none';
+            if(btnAtr) btnAtr.style.display = 'none';
+        }, 400);
+
+    } else {
+        // 1. Desvanecer arsenal de impresión
+        [txtContador, btnImprimir].forEach(el => {
+            if (el) el.classList.add('control-oculto');
+        });
+
+        // 2. El botón principal regresa a su estado base estético
         btnModo.innerText = "📊 Reporte";
         btnModo.style.background = "#475569"; 
 
-        if(txtContador) txtContador.style.display = 'none';
-        if(btnImprimir) btnImprimir.style.display = 'none';
+        // 3. Regresar los filtros tradicionales a la vida suavemente
+        [btnHoy, btnPrep, btnAtr].forEach(btn => {
+            if (btn) {
+                btn.style.display = 'inline-block';
+                btn.classList.add('control-oculto'); // Asegura estado invisible inicial
+                setTimeout(() => btn.classList.remove('control-oculto'), 50);
+            }
+        });
+
+        // Limpieza del flujo de impresión tras terminar la animación
+        setTimeout(() => {
+            if(modoReporteActivo) return;
+            if(txtContador) txtContador.style.display = 'none';
+            if(btnImprimir) btnImprimir.style.display = 'none';
+        }, 400);
     }
 
     if (typeof renderTable === "function") {
