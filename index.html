@@ -1854,22 +1854,22 @@ function ejecutarImpresionReporte() {
                 margin: 12mm; /* Margen ideal para aprovechar el ancho */
             }
             body {
-                font-family: 'Segoe UI', Arial, sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
                 color: #0f172a;
                 margin: 0;
                 padding: 0;
-                font-size: 12px;
-                line-height: 1.4;
+                font-size: 11px; /* Bajó un cachito para compactar más */
+                line-height: 1.2;
             }
             .header-reporte {
                 text-align: center;
-                margin-bottom: 20px;
+                margin-bottom: 15px; /* Reducido para ahorrar espacio */
                 border-bottom: 3px double #cbd5e1;
-                padding-bottom: 12px;
+                padding-bottom: 8px;
             }
             .header-reporte h1 {
                 margin: 0 0 5px 0;
-                font-size: 24px;
+                font-size: 22px;
                 color: #1e3a8a;
                 text-transform: uppercase;
                 letter-spacing: 1px;
@@ -1877,13 +1877,13 @@ function ejecutarImpresionReporte() {
             .header-reporte p {
                 margin: 0;
                 color: #64748b;
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 500;
             }
             table {
                 width: 100%;
                 border-collapse: collapse;
-                margin-bottom: 40px;
+                margin-bottom: 30px;
                 table-layout: fixed; /* Asegura que se respeten los anchos asignados */
                 page-break-inside: auto;
             }
@@ -1897,41 +1897,43 @@ function ejecutarImpresionReporte() {
                 font-weight: 700;
                 text-transform: uppercase;
                 font-size: 11px;
-                border: 1px solid #cbd5e1;
+                border: 1.5px solid #94a3b8; 
                 padding: 0 8px;
-                height: 35px;
+                height: 28px; 
                 text-align: left;
             }
             td {
-                border: 1px solid #cbd5e1;
-                padding: 6px 8px;
-                height: 38px; /* Espacio cómodo para lectura física */
+                border: 1.5px solid #94a3b8; 
+                padding: 4px 8px; 
+                height: 24px; 
                 vertical-align: middle;
-                font-size: 12px;
-                word-wrap: break-word; /* Evita que textos largos rompan la tabla */
+                font-size: 11px;
+                font-weight: 500; 
+                word-wrap: break-word; 
             }
             
             /* Ajustes de ancho perfectos aprovechando el formato de lado (Landscape) */
             .col-orden { width: 8%; font-weight: bold; }
             .col-fecha { width: 11%; }
             .col-institucion { width: 26%; text-transform: uppercase; }
-            .col-recibio { width: 13%; text-transform: uppercase; }
+            .col-recibio { width: 10%; text-transform: uppercase; } 
             .col-despachado { width: 10%; text-align: center; }
-            .col-producto { width: 32%; text-transform: uppercase; font-size: 11px; }
+            .col-producto { width: 35%; text-transform: uppercase; font-size: 10px; }
 
-            /* El recuadro físico estilo casilla en blanco para marcar con lapicero */
+            /* 🔲 EL NUEVO CUADRITO ESTILO CASILLA TUNEARDO PREMIUM */
             .box-despachado {
                 display: inline-block;
-                width: 50px;
-                height: 22px;
-                border: 1.5px solid #475569;
-                border-radius: 6px;
+                width: 40px; 
+                height: 16px; 
+                border: 1.5px solid #0f172a; 
+                border-radius: 3px; 
+                background-color: #ffffff;
                 vertical-align: middle;
             }
             
             /* Bloque estructural inferior para firmas fijas distribuidas */
             .contenedor-firmas {
-                margin-top: 60px;
+                margin-top: 90px; /* Reducido para evitar saltos de página innecesarios */
                 display: flex;
                 justify-content: space-around;
                 page-break-inside: avoid;
