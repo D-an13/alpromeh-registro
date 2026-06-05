@@ -1111,25 +1111,28 @@ function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
         }
 
         function cerrarModalProducto() {
-            productoTemporal = document.getElementById('inputProducto').value;
-            const btn = document.getElementById('btnProducto');
-            if(productoTemporal.trim() !== "") {
-                btn.classList.add('lleno');
-                btn.innerText = "📝";
-            } else {
-                btn.classList.remove('lleno');
-                btn.innerText = "📝";
-            }
+    productoTemporal = document.getElementById('inputProducto').value;
+    const btn = document.getElementById('btnProducto');
+    
+    // Si escribieron algo, pintamos el botón. Si lo dejaron vacío, limpiamos todo.
+    if(productoTemporal.trim() !== "") {
+        btn.classList.add('lleno');
+        btn.innerText = "📝";
+    } else {
+        btn.classList.remove('lleno');
+        btn.innerText = "📝";
+        productoTemporal = ""; // Aseguramos que la variable quede en blanco
+    }
 
-            const modal = document.getElementById('modalProducto');
-            const contenido = modal.querySelector('.modal-content');
-            
-            contenido.classList.add('salida');
+    const modal = document.getElementById('modalProducto');
+    const contenido = modal.querySelector('.modal-content');
+    
+    contenido.classList.add('salida');
 
-setTimeout(() => {
-                modal.style.display = 'none';
-            }, 200);
-        }
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 200);
+}
 
         function toggleFiltroHoy() {
             modoFiltro = (modoFiltro === "hoy") ? "todo" : "hoy";
@@ -1513,6 +1516,22 @@ if (yaExiste) {
         producto: productoTemporal 
     };
 
+if (!productoTemporal || productoTemporal.trim() === "") {
+        // 🔓 Primero liberamos el botón para que no se quede trabado en "REGISTRANDO..."
+        btnGuardar.disabled = false;
+        btnGuardar.innerText = "GUARDAR REGISTRO";
+        btnGuardar.style.opacity = "1";
+        btnGuardar.style.cursor = "pointer";
+        guardandoAhora = false; // Apagamos el freno del sincronizador continuo
+        if (formCard) formCard.classList.remove('resaltar-actualizacion');
+
+        // ⚠️ Ahora sí, lanzamos el aviso y abrimos el modal
+        showToast("⚠️ El Producto es obligatorio. Por favor, ingréselo en el botón 📝", true);
+        abrirModalProducto(); 
+        
+        return; 
+    }
+
     datosLocales.unshift(payload);
     save(); 
 
@@ -1522,6 +1541,11 @@ if (yaExiste) {
         this.reset(); 
         setFechaHoy(); 
         productoTemporal = ""; 
+        const inputProd = document.getElementById('inputProducto');
+        if (inputProd) {
+            inputProd.value = ""; 
+        }
+
         document.getElementById('btnProducto').classList.remove('lleno');
         document.getElementById('btnProducto').innerText = "📝";
         aplicarColorUnico(document.getElementById('responsableSelect'));
