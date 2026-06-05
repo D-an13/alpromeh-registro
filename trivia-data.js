@@ -225,19 +225,19 @@ const bancoDePreguntas = [
     "curioso": "Nuestros frascos están hechos de polipropileno transparente de alta resistencia, lo que permite al laboratorista ver el aspecto físico de la muestra sin abrirla."
   },
   {
-    "cat": "Cirugía",
-    "p": "Para empaquetar instrumental médico y meterlo al autoclave (esterilizador a vapor), ¿qué insumo de nuestra lista se usa para envolver piezas grandes?",
-    "o": ["La cinta de Castilla", "El rollo de papel Kraft grado médico", "Bolsas de orina de pierna"],
-    "c": 1,
-    "e": "¡Exacto! El rollo de papel Kraft de uso médico está diseñado para dejar pasar el vapor caliente que mata las bacterias, pero bloquea la entrada de aire contaminado al salir.",
-    "curioso": "El papel Kraft médico no tiene impurezas ni resinas químicas que dejen residuos tóxicos en el instrumental quirúrgico."
+"cat": "Cirugía",
+"p": "Al revisar empaques de material quirúrgico, se lee la frase 'Libre de Pirógenos'. ¿Qué significa técnicamente?",
+"o": ["Que el plástico resiste altas temperaturas sin derretirse", "Que no contiene restos bacterianos que puedan causar fiebre alta al paciente", "Que el empaque es transparente para ver el instrumental"],
+"c": 1,
+"e": "¡Exacto! Aunque un insumo esté estéril, si tiene restos de bacterias muertas (pirógenos), causará fiebre. Por eso deben certificar que están libres de ellos.",
+"curioso": "Las jeringas y equipos de suero siempre traen este sello para garantizar seguridad total en procedimientos invasivos."
   },
   {
     "cat": "Cirugía",
     "p": "Están armando paquetes de gasas e instrumental para esterilizar y necesitan una forma visual de comprobar que el calor penetró el paquete, ¿qué les ofreces?",
     "o": ["Cinta de testigo (o cinta indicadora)", "Rollo de papel Kraft solo", "Guantes de examen"],
     "c": 0,
-    "e": "¡Correcto! La cinta de testigo cambia de color (le salen unas líneas oscuras) cuando alcanza la temperatura correcta dentro del esterilizador, sirviendo como prueba visual.",
+    "e": "¡Correcto! La cinta de testigo cambia de color (le salen unas líneas verdes) cuando alcanza la temperatura correcta dentro del esterilizador, sirviendo como prueba visual.",
     "curioso": "Aunque cambia de color y avisa que el paquete entró al autoclave, no sustituye a las pruebas biológicas semanales que exigen los hospitales."
   },
   {
@@ -1242,283 +1242,203 @@ const bancoDePreguntas = [
   },
   {
     "cat": "DIAGNÓSTICO",
-    "p": "Nos piden cotizar 'Electrodos de Monitoreo Cardíaco'. ¿Cuál es la función del gel conductor que traen estos parches redondos en el centro?",
-    "o": ["Pegar el parche a la ropa del paciente", "Enfriar la piel para que no sude", "Facilitar la conducción de las micro-señales eléctricas del corazón hacia los cables del monitor sin interferencias"],
-    "c": 2,
-    "e": "¡Perfecto! El corazón genera microvoltajes. El gel con cloruro de plata actúa como un puente perfecto para que esa electricidad salte limpia al metal del electrodo y el monitor dibuje el ritmo sin ruidos visuales.",
-    "curioso": "Si los parches se quedan destapados en la caja y el gel se seca, el monitor empezará a tirar alarmas falsas de paro cardíaco porque pierde la señal."
+    "p": "Si te piden 'Electrodos para Electrocardiograma', vas a ver que esos parches redondos traen un gel húmedo en el centro. ¿Para qué sirve realmente ese pegoste?",
+    "o": ["Para enfriar la piel del paciente y que no sude", "Es un puente para que la electricidad del corazón pase limpia al monitor", "Para pegar el parche con fuerza y que no se safe con los hilos"],
+    "c": 1,
+    "e": "¡Exacto, mi bro! El corazón genera micro-corrientes eléctricas. Como la piel es seca y resiste la electricidad, ese gel húmedo funciona como una autopista para que las señales salten sin ruidos al cable y el monitor dibuje el ritmo cardíaco real.",
+    "curioso": "Si dejas la caja de electrodos abierta y el gel se seca, el monitor se vuelve loco y empieza a tirar alarmas falsas de paro cardíaco porque pierde la señal por completo."
   },
   {
     "cat": "SUTURAS",
-    "p": "Al revisar las agujas que vienen pegadas a los hilos de sutura, vemos que unas tienen un triángulo (Aguja Cortante) y otras un círculo (Aguja Cilíndrica). ¿Cuándo se prefiere usar la Aguja Cilíndrica?",
-    "o": ["Para perforar tejidos duros como el hueso o los tendones", "Para tejidos blandos y delicados (como intestinos o vasos sanguíneos) porque pasa separando las fibras sin cortar el tejido, evitando desgarros", "Para coser la piel externa del paciente"],
-    "c": 1,
-    "e": "¡Exacto, bro! La aguja cilíndrica es redonda y termina en una punta fina cónica. No tiene filos laterales, por lo que hace un agujero limpio en el órgano delicado sin riesgo de rajarlo.",
-    "curioso": "Para la piel se usa la aguja cortante (triangular), ya que la piel humana es muy dura y se necesita el filo de los bordes de la aguja para poder atravesarla."
+    "p": "Alistar hilos para coser es un arte. Si la aguja trae un dibujo de un círculo (Cilíndrica) en el empaque, ¿en qué parte del cuerpo se usa?",
+    "o": ["En órganos blandos como el intestino para pasar separando fibras sin rajarlos", "En la piel externa porque es redonda y no deja cicatriz fea", "En tejidos duros como los tendones o huesos para poder perforarlos"],
+    "c": 0,
+    "e": "¡Cabal! La aguja cilíndrica es como un cono liso: hace el agujero empujando las fibras hacia los lados sin cortar. Si usaras una aguja con filo en un intestino, lo rajarías de lado a lado al jalar el hilo.",
+    "curioso": "Para la piel externa se usa la aguja cortante (la del triángulo), porque la piel humana es durísima y necesitas un filo tipo bisturí para poder atravesarla."
   },
   {
     "cat": "CIRUGÍA",
-    "p": "En las especificaciones de batas y campos quirúrgicos descartables, se menciona mucho la tecnología de tela no tejida 'SMS'. ¿Qué significan estas siglas técnicamente?",
-    "o": ["Sistema de Monitoreo de Seguridad", "Spunbond - Meltblown - Spunbond (Tres capas de polipropileno que crean una barrera bacteriana e impermeable)", "Sutura Médica de Seda"],
+    "p": "En las cajas de batas y campos descartables dice 'Tela SMS'. ¿Qué es ese sándwich de material en la vida real?",
+    "o": ["Un sistema de hilos cruzados para que la bata no se rompa si el doctor engorda", "Tres capas de plástico que bloquean fluidos y bacterias pero dejan pasar el aire", "Una tela especial con seda orgánica que no causa alergias en el quirófano"],
     "c": 1,
-    "e": "¡Cabal! El SMS es un sándwich de tres capas. Las capas externas dan resistencia mecánica y la capa del centro (Meltblown) actúa como un micro-filtro que bloquea los fluidos y bacterias.",
-    "curioso": "A pesar de bloquear los líquidos por completo, el SMS permite que el aire pase, evitando que los médicos se sofoquen por el calor del quirófano."
+    "e": "¡Pura tecnología, rey! El SMS son tres capas de polipropileno fundido. La capa del centro es un micro-filtro que atrapa las bacterias y frena los chorros de sangre, manteniendo al cirujano seco y protegido.",
+    "curioso": "Aunque frena los líquidos por completo, el SMS deja pasar el vapor del aire. Gracias a eso, los médicos no se asan del calor durante cirugías de tres horas."
   },
   {
     "cat": "SONDAS",
-    "p": "Un cliente nos pide 'Sondas de Aspiración Nelaton' con válvula de control digital. ¿Qué hace el usuario con esa pequeña válvula o agujero que trae la sonda cerca de la conexión?",
-    "o": ["Lo tapa con el dedo pulgar para activar la fuerza de succión solo cuando está retirando la sonda, evitando romper las mucosas por succión continua", "Ahí es donde se inyecta agua estéril", "Sirve para medir la temperatura de las secreciones"],
-    "c": 0,
-    "e": "¡Así es, rey! Si dejas la succión activa mientras metes la sonda por la nariz o tráquea, vas a raspar y sangrar los tejidos. Al tapar el agujero con el dedo solo al salir, controlas el vacío de forma segura.",
-    "curioso": "El código de colores para las sondas Nelaton es universal y es el mismo de los catéteres: por ejemplo, la talla 14 siempre es verde y la 16 es naranja."
+    "p": "Las sondas de aspiración Nelaton traen un agujero extra cerca del conector de color. ¿Qué se supone que debe hacer el enfermero con ese hoyito?",
+    "o": ["Conectar ahí una jeringa con agua para limpiar la manguera", "Dejarlo libre para que el aire de la sala regule la presión interna", "Taparlo con el dedo solo al salir para activar la succión de forma segura"],
+    "c": 2,
+    "e": "¡Al centavo! Si metes la sonda succionando desde el inicio, se va a pegar como ventosa a la garganta del paciente y lo vas a hacer sangrar. El hoyito es un freno: solo succiona cuando lo tapas con el pulgar mientras vas retirando la sonda.",
+    "curioso": "El conector de color no es por estética; es un código universal de medidas. El conector verde siempre es medida 14 y el naranja siempre es medida 16."
   },
   {
     "cat": "CURACIÓN",
-    "p": "Para fijar catéteres y vías centrales, los hospitales prefieren usar 'Apósitos Transparentes de Poliuretano' (tipo Tegaderm) en lugar de esparadrapo común. ¿Cuál es el motivo clínico?",
-    "o": ["Porque son más baratos que el esparadrapo", "Para vigilar el sitio de inserción todos los días y detectar infecciones (enrojecimiento o pus) sin tener que despegar el parche", "Porque hacen que la aguja entre sola a la vena"],
-    "c": 1,
-    "e": "¡Cabal! Al ser transparentes y semipermeables, aíslan la herida de bacterias externas y del agua, pero dejan que la piel respire y permiten al enfermero chequear la vena a simple vista.",
-    "curioso": "Estos apósitos son impermeables al agua; el paciente se puede bañar con el catéter puesto sin miedo a que se moje la fijación."
+    "p": "Los hospitales prefieren usar parches transparentes (tipo Tegaderm) para fijar los catéteres en las venas en vez de esparadrapo. ¿Por qué?",
+    "o": ["Para chequear la piel y ver si hay pus o enrojecimiento sin quitar el parche", "Porque el plástico transparente ayuda a que el suero baje más rápido", "Porque traen un pegamento especial que desinfecta la aguja por dentro"],
+    "c": 0,
+    "e": "¡Exacto, mi bro! Si usas esparadrapo de tela, tapas la vena. Para ver si se está infectando tendrías que arrancar el parche (lo cual duele un tazón). Con el plástico transparente, la enfermera solo pasa viendo y detecta cualquier peligro a simple vista.",
+    "curioso": "Estos apósitos son mágicos: aíslan la herida de bacterias y son impermeables, por lo que el paciente se puede bañar sin miedo a que se le despegue la vía."
   },
   {
     "cat": "INSUMOS",
-    "p": "Nos solicitan un sistema de drenaje cerrado post-quirúrgico tipo 'Jackson-Pratt' (o reservorio de pera). ¿Cómo genera la fuerza este dispositivo para sacar los líquidos de la herida?",
-    "o": ["Se conecta a un motor eléctrico ruidoso en la pared", "Usa la gravedad colgándolo a dos metros de altura", "Se aplasta la pera de silicona con la mano antes de cerrar el tapón, creando un vacío constante que succiona los fluidos de forma suave"],
-    "c": 2,
-    "e": "¡Exacto, bro! Al exprimir la bombita de silicona y taparla, esta intenta recuperar su forma redonda original por sí sola. Ese esfuerzo constante genera una presión negativa (vacío) que jala la sangre residual.",
-    "curioso": "Es vital mantener este sistema cerrado; si el tapón se abre, el vacío se pierde al instante y los líquidos se quedan estancados dentro del paciente."
+    "p": "El drenaje post-quirúrgico Jackson-Pratt trae una bombita que parece granada o pera de silicona. ¿Cómo hace este aparato para sacar la sangre de la cirugía?",
+    "o": ["Se conecta a un motor eléctrico escondido debajo de la cama del paciente", "Se exprime con la mano antes de taparlo para que el vacío jale los líquidos", "Usa la gravedad, por lo que se debe colgar a dos metros de altura"],
+    "c": 1,
+    "e": "¡Cabal! Al aplastar la pera de silicona y ponerle el tapón, la bombita quiere regresar a su forma redonda original. Al hacer ese esfuerzo, genera una fuerza de succión suave y constante que va jalando la sangre residual hacia afuera.",
+    "curioso": "Si a los muchachos se les olvida cerrar bien el taponcito de la pera, el vacío se pierde al instante y la sangre se queda estancada dentro del paciente."
   },
   {
     "cat": "INSUMOS",
-    "p": "Un hospital solicita 'Llaves de 3 vías' con tubos de extensión. ¿Cuál es la función principal de esta pequeña llave plástica con manecilla giratoria?",
-    "o": ["Controlar el paso de oxígeno en las mascarillas", "Permitir conectar dos soluciones de suero diferentes a un mismo catéter y alternar o mezclar el paso del medicamento girando la manecilla", "Servir para destapar las sondas urinarias"],
-    "c": 1,
-    "e": "¡Perfecto! La llave de 3 vías es el centro de control del suero. Girando la manecilla puedes bloquear una vía, abrir las dos al mismo tiempo o cerrar todo el paso hacia el paciente en un segundo.",
-    "curioso": "Las manecillas suelen tener flechas grabadas en el plástico que te indican qué camino está abierto y cuál está bloqueado para evitar confusiones."
+    "p": "Las llaves de 3 vías son un éxito en los hospitales. ¿Cuál es su jale principal en las salas de encamamiento?",
+    "o": ["Conectar dos sueros diferentes al mismo catéter y controlar el paso girando la manecilla", "Servir de tapón mecánico para que la sangre no se regrese cuando el suero se acaba", "Regular la presión del oxígeno en las mascarillas de la emergencia"],
+    "c": 0,
+    "e": "¡Perfecto! Es como un grifo de plomería pero para medicina. Girando la manecilla central, el enfermero puede pasar el medicamento A, cambiar al suero B, pasar ambos juntos o cerrar todo el paso en un segundo sin pinchar otra vez al paciente.",
+    "curioso": "La manecilla tiene unas flechas grabadas en el plástico que le indican al enfermero qué camino está abierto y cuál está cerrado para evitar que mezclen medicinas por error."
   },
   {
     "cat": "DESECHOS",
-    "p": "Para la limpieza de instrumental quirúrgico de acero inoxidable antes de meterlo al autoclave, se exige usar 'Detergente Enzimático'. ¿Qué tiene de especial este jabón frente a uno común?",
-    "o": ["Que tiene un aroma a pino muy fuerte", "Que contiene enzimas (como proteasas) que deshacen y devoran de forma química los restos de sangre, grasa y tejidos humanos pegados en las pinzas", "Que le saca brillo espejo al metal"],
+    "p": "Para lavar las pinzas de cirugía se exige usar 'Detergente Enzimático' en vez de jabón común de platos. ¿Cuál es el súper poder de este producto?",
+    "o": ["Tiene un químico que le saca brillo espejo al acero inoxidable", "Contiene enzimas que devoran y deshacen los restos de sangre y tejido humano", "Es un desinfectante ultra fuerte que mata el 100% de los virus en frío"],
     "c": 1,
-    "e": "¡Así es! La sangre seca se pega durísimo en las cremalleras de las pinzas. El detergente enzimático rompe esas proteínas biológicas en minutos sin necesidad de rayar o dañar el instrumental quirúrgico.",
-    "curioso": "Este detergente trabaja mejor con agua tibia (entre 30°C y 40°C); si el agua está hirviendo, las enzimas se cocinan y dejan de funcionar."
+    "e": "¡Así es! La sangre humana seca se pega en las bisagras de las pinzas como si fuera cemento. Las enzimas de este jabón actúan como micro-pirañas biológicas que rompen las proteínas de la sangre en minutos, dejando el metal impecable sin necesidad de rayarlo.",
+    "curioso": "Este detergente es delicado: trabaja con agua tibia. Si los muchachos lo preparan con agua hirviendo, las enzimas se 'cocinan' y el jabón pierde su poder por completo."
   },
   {
     "cat": "INYECTABLES",
-    "p": "En el catálogo de agujas hipodérmicas para inyecciones, manejamos códigos de colores. Si te piden la aguja estándar para una inyección intramuscular profunda en adultos, ¿cuál buscas?",
-    "o": ["La aguja de cono Verde (21G x 1 1/2)", "La aguja de cono Gris (27G x 1/2)", "La aguja de cono Amarillo (20G x 1)"],
-    "c": 0,
-    "e": "¡Cabal, rey! La aguja verde 21G es la reina de las intramusculares. Tiene el largo perfecto (pulgada y media) para atravesar la grasa del glúteo y depositar el medicamento directo en el músculo.",
-    "curioso": "La aguja gris de 27G es sumamente cortita y delgada, diseñada exclusivamente para aplicaciones intradérmicas o vacunas debajo de la piel."
+    "p": "Si un cliente te pide en el mostrador la aguja estándar para poner una inyección intramuscular profunda en un adulto, ¿de qué color buscas el cono?",
+    "o": ["Gris (27G x 1/2)", "Verde (21G x 1 1/2)", "Amarillo (20G x 1)"],
+    "c": 1,
+    "e": "¡La reina de las inyecciones! La aguja verde 21G tiene el largo perfecto (pulgada y media) para atravesar la capa de grasa del glúteo y depositar el medicamento directo en el músculo, que es donde se absorbe correctamente.",
+    "curioso": "La aguja gris (27G) es un pelito de corta y delgada. Si intentas poner una intramuscular con esa, el líquido se va a quedar atrapado en la grasa, le va a hacer un canchinflón al paciente y le va a doler por semanas."
   },
   {
     "cat": "EQUIPOS",
-    "p": "Un cliente nos pide 'Cánulas Binasales' (o Bigoteras de oxígeno). ¿Cuál es la limitación técnica principal de este insumo respecto a la cantidad de oxígeno que puede entregar?",
-    "o": ["Solo puede usarse con el paciente dormido", "No se debe pasar a más de 5 o 6 Litros por Minuto porque reseca la mucosa nasal y no aumenta la concentración de oxígeno en flujos más altos", "Que solo viene en una talla gigante"],
+    "p": "Las cánulas binasales (bigoteras de oxígeno) son cómodas, pero tienen un límite. ¿Qué pasa si le subes el flujo a más de 6 litros por minuto?",
+    "o": ["La manguera se revienta por la presión del tanque", "No oxigena más y solo le reseca y lastima la nariz al paciente", "El oxígeno se empieza a salir por los lados y se desperdicia"],
     "c": 1,
-    "e": "¡Exacto! Las bigoteras son sistemas de bajo flujo. Si le subes el flujómetro a 10 litros con una bigotera, solo vas a causarle dolor de nariz al paciente sin mejorar su respiración. Para flujos altos se usa mascarilla.",
-    "curioso": "Son las favoritas de los pacientes estables porque les permiten hablar, comer y tomar sus medicamentos sin necesidad de quitarse el oxígeno."
+    "e": "¡Cabal! Las bigoteras son para flujos bajos. Si el paciente necesita más de 5 o 6 litros, ponerle más presión con la bigotera es como meterle un compresor de aire en la nariz: le va a doler y sangrar. Para flujos altos se usa mascarilla.",
+    "curioso": "Son las favoritas en los hospitales porque al no tapar la boca, el paciente puede hablar con su familia, comer sus alimentos y tomar agua sin quitarse el oxígeno."
   },
   {
     "cat": "INSUMOS",
-    "p": "Nos ingresa una orden de 'Bolsas Recolectoras de Orina'. ¿Qué componente crítico debemos verificar en la ficha técnica que sirva para vaciar la bolsa de forma limpia y evitar que la orina regrese hacia la sonda?",
-    "o": ["Que tenga agarrador de metal", "Que cuente con una válvula de vaciado en 'T' en la parte inferior y una válvula antirretorno en la parte superior", "Que la bolsa sea de color negro opaco"],
-    "c": 1,
-    "e": "¡Le diste al clavo! La válvula antirretorno impide que la orina que ya cayó a la bolsa regrese por el tubo hacia la vejiga cuando el paciente se mueve, lo que causaría infecciones bacterianas severas.",
-    "curioso": "Estas bolsas tienen una capacidad estándar de 2,000 mL (2 litros) y vienen graduadas para que enfermería apunte el control de líquidos exacto en cada turno."
+    "p": "Al revisar las bolsas recolectoras de orina, hay un componente clave llamado 'Válvula Antirretorno'. ¿Qué evita este sistema?",
+    "o": ["Que la orina vieja de la bolsa regrese a la vejiga del paciente y le cause una infección", "Que el olor de la orina se salga de la bolsa y apeste la habitación", "Que la bolsa se rompa si se llena a su máxima capacidad"],
+    "c": 0,
+    "e": "¡Exacto! Es una compuerta que solo abre en un sentido (hacia abajo). Si el paciente se da la vuelta en la cama o levanta la bolsa, la orina estancada no puede regresar por la manguera. Si regresara, arrastraría bacterias directo a los riñones.",
+    "curioso": "Las bolsas estándar de adulto aguantan hasta 2,000 mL (2 litros) de líquido y traen los números marcados en el plástico para que la enfermera apunte cuánto está produciendo el cuerpo."
   },
   {
-    "cat": "Cirugía",
-    "p": "Al finalizar una cirugía de abdomen, las enfermeras colocan un drenaje tipo 'Dren Penrose'. ¿Cómo funciona este pequeño insumo dentro del cuerpo?",
-    "o": ["Es un tubo de plástico con un motor que succiona la sangre con fuerza", "Es una tira de látex suave y plana que sale por un lado de la herida para dejar que los líquidos salgan al exterior por capilaridad o gravedad, evitando que se acumulen por dentro", "Es una manguera para meter antibióticos líquidos"],
+    "cat": "CIRUGÍA",
+    "p": "El 'Dren Penrose' es literalmente una tira de látex plano y suave que se deja saliendo de las heridas de cirugía. ¿Cómo funciona este invento?",
+    "o": ["Usa un resorte interno que empuja los líquidos hacia afuera", "La sangre y el suero resbalan por fuera del látex hacia la gasa por pura gravedad", "Absorbe los líquidos como si fuera una esponja y luego se exprime"],
     "c": 1,
-    "e": "¡Perfecto! El Penrose funciona como un canal abierto. Si queda sangre o suero atrapado dentro del abdomen tras la operación, el líquido resbala por fuera del látex hacia la gasa exterior.",
-    "curioso": "Evitar que los fluidos se estanquen es clave, ya que el suero atrapado a temperatura del cuerpo es el caldo de cultivo perfecto para que crezcan bacterias."
+    "e": "¡Perfecto! El Penrose funciona por capilaridad y gravedad. Es como un canalito abierto: si queda sangre atrapada dentro del cuerpo después de operar, el líquido busca el camino fácil y resbala por fuera de la tirita de látex hacia los apósitos exteriores.",
+    "curioso": "Evitar que esos líquidos se queden atrapados es vital, porque la sangre estancada a temperatura del cuerpo (37°C) es el hotel de cinco estrellas perfecto para que crezcan bacterias."
   },
   {
-    "cat": "Desechos",
-    "p": "En los hospitales hay botes con bolsas rojas y botes con bolsas negras. ¿Qué tipo de basura va estrictamente dentro de la bolsa roja?",
-    "o": ["Papelería administrativa, cartones y botellas de plástico limpias", "Residuos biosanitarios contaminados con fluidos humanos, como gasas con sangre, guantes usados, tubos de sangre vacíos y apósitos", "Restos de comida y envolturas"],
-    "c": 1,
-    "e": "¡Exacto! La bolsa roja indica peligro biológico u hospitalario. Todo lo que toque sangre o fluidos de pacientes va ahí para recibir un tratamiento de incineración o autoclave industrial especial.",
-    "curioso": "Mezclar basura común en la bolsa roja le cuesta carísimo a los hospitales, ya que el desecho biológico se paga por peso a empresas recolectoras especiales."
+    "cat": "DESECHOS",
+    "p": "En las emergencias hay botes con bolsas rojas y botes con bolsas negras. ¿Qué es lo único que va dentro de la bolsa ROJA?",
+    "o": ["Todo lo que esté contaminado con fluidos humanos como gasas con sangre o guantes usados", "Los cartones de las medicinas, botellas plásticas vacías y jeringas sin aguja", "Los restos de comida de los pacientes y las envolturas de los insumos"],
+    "c": 0,
+    "e": "¡Cabal! La bolsa roja significa 'Peligro Biológico'. Todo lo que toque sangre, fluidos o tejidos va ahí porque requiere un camión especial que lo lleva a incineradores industriales. Si tiras basura común ahí, metes al hospital en un gran problema.",
+    "curioso": "Las empresas recolectoras le cobran a los hospitales por libra de bolsa roja. Mezclar cartones o botellas ahí es tirar el dinero de la empresa a la basura."
   },
   {
-    "cat": "Urgencias",
-    "p": "Un paciente ingresa inconsciente a la emergencia y el médico ordena colocar una 'Sonda Foley'. ¿Hacia dónde se dirige este tubo y cuál es su fin?",
-    "o": ["Va hacia el estómago para pasar licuados nutritivos", "Entra por la uretra directo a la vejiga para vaciar la orina de forma continua y medir cuántos mililitros está produciendo el cuerpo del paciente", "Se coloca en la tráquea para dar oxígeno"],
+    "cat": "URGENCIAS",
+    "p": "Cuando un paciente crítico está inconsciente, lo primero que hace el doctor es ordenarle una 'Sonda Foley'. ¿Cuál es el objetivo de este tubo?",
+    "o": ["Llegar al estómago para vaciar los ácidos y evitar que vomite", "Entrar a la vejiga por la uretra para medir exactamente cuánta orina produce por hora", "Meterse en la tráquea para asegurar que los pulmones reciban aire limpio"],
     "c": 1,
-    "e": "¡Cabal! La sonda Foley tiene un pequeño balón en la punta que se infla con agua estéril dentro de la vejiga para que no se salga sola cuando el paciente se mueva.",
-    "curioso": "Medir cuánto orina un paciente crítico por hora (gasto urinario) es la mejor forma que tienen los doctores para saber si los riñones están recibiendo suficiente suero."
+    "e": "¡Exacto! Monitorear los riñones es clave en un paciente grave. Si los riñones dejan de producir orina (gasto urinario), es la primera alarma de que el cuerpo está entrando en shock o se está quedando sin líquido en las venas.",
+    "curioso": "La sonda Foley tiene un truco en la punta: un canalito extra para inflar un globito con agua estéril dentro de la vejiga. Así, por más que el paciente se mueva, la sonda no se sale sola."
   },
   {
-    "cat": "Laboratorio",
-    "p": "Un pediatra le pide a la mamá de un bebé de 5 meses una muestra de orina para un examen. ¿Cómo logran las enfermeras recolectar esta muestra si el bebé usa pañal?",
-    "o": ["Colocando una sonda Foley quirúrgica de inmediato", "Utilizando una bolsa recolectora de orina pediátrica, que es una bolsa de plástico pequeña con un contorno adhesivo que se pega alrededor de la zona genital del bebé", "Esperando con el frasco abierto a que el bebé orine solo"],
+    "cat": "LABORATORIO",
+    "p": "Las bolsas recolectoras de orina pediátricas traen un pegamento en la orilla. ¿Cómo se usan estas bolsitas con los bebés de meses que usan pañal?",
+    "o": ["Se mete dentro del pañal suelta para que cache lo que caiga", "Se pega directo a la piel alrededor de sus partes genitales para sellar la zona", "Se conecta a una micro-sonda que entra a la vejiga del bebé"],
     "c": 1,
-    "e": "¡Así es! Las bolsas pediátricas son una salvación. Tienen un adhesivo hipoalergénico que se fija a la piel del bebé limpia. Una vez que el niño hace orina, se despega con cuidado y se pasa al laboratorio.",
-    "curioso": "Estas bolsas deben cambiarse cada 30 minutos si el bebé no ha orinado, ya que el calor del cuerpo y el pañal pueden contaminar la muestra con bacterias de la piel."
+    "e": "¡Así es! Sacarle una muestra de orina a un bebé es un reto. Estas bolsitas traen un adhesivo suave que se pega a la piel limpia del niño. Cuando el bebé orina, el líquido cae directo a la bolsa plástica sin contaminarse con el pañal.",
+    "curioso": "Hay que estar atentos en la bodega con la rotación de este insumo: el adhesivo es hipoalergénico y muy delicado; si la bolsa pasa años guardada en calor, el pegamento se vence y ya no se fija."
   },
   {
-    "cat": "Catéteres",
-    "p": "Al revisar los catéteres intravenosos periféricos en el inventario, notas que vienen por números Gauge (G) y colores. Si un médico te pide el catéter más delgado para una vena muy fina o un paciente pediátrico, ¿cuál eliges?",
-    "o": ["Catéter 14G (Color Naranja)", "Catéter 18G (Color Verde)", "Catéter 24G (Color Amarillo)"],
+    "cat": "CATÉTERES",
+    "p": "En la bodega manejamos catéteres (Abocaths) por números Gauge (G). Si un cliente te pide el catéter ideal para las venas de un bebé o un anciano, ¿cuál le despachas?",
+    "o": ["El número 14G (Color Naranja)", "El número 18G (Color Verde)", "El número 24G (Color Amarillo)"],
     "c": 2,
-    "e": "¡Exacto! En la escala Gauge la regla es al revés: a mayor número, más delgada es la aguja y el plástico. El 24G (amarillo) es un catéter diminuto, ideal para venas delicadas o bebés porque pasa muy poco flujo.",
-    "curioso": "Por el contrario, el catéter 14G (naranja) o el 16G (gris) son los más gruesos del hospital; se usan en emergencias graves para meter litros de suero o sangre en segundos."
+    "e": "¡Exacto! En medicina la escala Gauge funciona al revés: entre más grande es el número, más delgada es la aguja. El catéter 24G es diminuto y delgado como un pelo, perfecto para no romper las venas frágiles de un recién nacido.",
+    "curioso": "Por el contrario, el naranja 14G es un tubo enorme. Ese solo se usa en accidentes graves o balazos en la emergencia, donde necesitas meter litros de sangre en segundos para salvarle la vida al paciente."
   },
   {
-    "cat": "Insumos",
-    "p": "Un hospital solicita jeringas descartables con el sistema de seguridad llamado 'Luer Lock'. ¿Qué ventaja tiene este diseño sobre el cono 'Luer Slip' tradicional?",
-    "o": ["Que la aguja se introduce solo a presión y se desliza rápido", "Que cuenta con una rosca de seguridad donde la aguja se enrosca firmemente, evitando que salga disparada por la presión del líquido", "Que la jeringa está fabricada de un plástico flexible que no se puede romper"],
+    "cat": "INSUMOS",
+    "p": "Manejamos jeringas con sistema 'Luer Lock' (de rosca) y 'Luer Slip' (a presión). ¿Cuál es la ventaja real del sistema de rosca en un procedimiento?",
+    "o": ["Permite que la aguja se deslice más rápido para vacunar en masa", "Evita que la aguja salga disparada por la presión de líquidos espesos", "Hace que el plástico de la jeringa aguante más tiempo guardado sin rajarse"],
     "c": 1,
-    "e": "¡Perfecto! El sistema Luer Lock asegura la aguja con un giro de rosca. Esto evita accidentes graves en el quirófano, como que la aguja salga volando debido a la presión de un medicamento espeso y termine salpicando fluidos.",
-    "curioso": "Las jeringas Luer Slip (a presión) se usan para procedimientos rápidos como vacunas o inyecciones intramusculares simples, donde no se ejerce una resistencia fuerte al empujar el émbolo."
+    "e": "¡Impecable! Con el sistema Luer Lock, la aguja se enrosca firmemente al cono de la jeringa. Si estás inyectando un medicamento espeso (como penicilina o vitaminas pesadas), tienes que hacer mucha fuerza; si usaras una de presión, la aguja saldría volando y salpicaría fluidos a todos.",
+    "curioso": "Las jeringas Luer Slip (las comunes a presión) se dejan para cosas rápidas como vacunas líquidas o inyecciones simples donde no hay resistencia al empujar el émbolo."
   },
   {
-    "cat": "Sondas",
-    "p": "Nos piden despachar una 'Sonda Foley de 2 vías'. ¿Cuál es la función principal de este dispositivo médico descartable en las salas de encamamiento?",
-    "o": ["Introducir oxígeno directo a los pulmones por la boca", "El drenaje continuo de la orina desde la vejiga, quedando fija gracias a un pequeño balón interno que se infla con agua estéril", "Alimentar al paciente directo al estómago a través de la nariz"],
-    "c": 1,
-    "e": "¡Cabal! La sonda Foley se introduce por la uretra hasta la vejiga. Una vía sirve para evacuar la orina hacia una bolsa recolectora, y la otra vía se usa para inflar un globito en la punta que impide que la sonda se salga de su lugar.",
-    "curioso": "Existen sondas Foley de 3 vías; esa entrada extra se aprovecha para conectar un suero y hacer lavados continuos dentro de la vejiga, algo muy común tras cirugías de próstata."
-  },
-  {
-    "cat": "Curación",
-    "p": "Al revisar las especificaciones de las gasas quirúrgicas para una licitación, notas que algunas exigen 'Gasa con Filamento Radiopaco'. ¿Qué utilidad tiene este hilo especial en una operación?",
-    "o": ["Hace que la gasa absorba el doble de sangre que una normal", "Contiene un hilo detectable en las Radiografías (Rayos X), lo que permite al equipo médico asegurarse de que no quedó ninguna gasa olvidada dentro del paciente", "Permite que la gasa brille en la oscuridad si se corta la luz del quirófano"],
-    "c": 1,
-    "e": "¡Exacto! Ese filamento negro es radiopaco. Si al contar el instrumental antes de cerrar al paciente los números no cuadran, se toma una placa de Rayos X de control y la gasa perdida se verá claramente en la imagen.",
-    "curioso": "Olvidar un insumo textil en una cirugía es una complicación seria llamada textiloma; por eso, las enfermeras instrumentistas cuentan las gasas una por una antes y después de intervenir."
-  },
-  {
-    "cat": "Insumos",
-    "p": "Para conectar dos sueros o medicamentos distintos al mismo catéter de un paciente y controlar el paso de los líquidos de forma independiente, ¿qué accesorio descartable se utiliza?",
-    "o": ["Una Llave de 3 vías", "Un conector para tubo endotraqueal", "Un tapón heparinizado"],
+    "cat": "CURACIÓN",
+    "p": "Algunas gasas quirúrgicas grandes para licitaciones exigen 'Filamento Radiopaco'. ¿Qué es esa línea negra que traen cosida en el centro?",
+    "o": ["Un hilo detectable en Rayos X para encontrar la gasa si se queda olvidada dentro del paciente", "Una fibra ultra absorbente que dobla la capacidad de retención de sangre de la gasa", "Un componente químico que hace que la gasa brille bajo las luces del quirófano"],
     "c": 0,
-    "e": "¡Perfecto! La llave de 3 vías funciona como una pequeña combinación de grifos. Al girar su manecilla central, el enfermero decide si pasa el suero A, el suero B, ambos al mismo tiempo, o si bloquea el paso por completo.",
-    "curioso": "Las manecillas tienen flechas o marcas grabadas en el plástico que señalan visualmente qué vías están abiertas y cuál está cerrada para evitar errores de medicación."
+    "e": "¡Cabal, rey! En el corre-corre de una cirugía de abdomen se usan docenas de gasas. Si al contar el equipo antes de cerrar los números no cuadran, le toman una radiografía rápida al paciente en la camilla y ese hilo negro brillará en la placa si la gasa se quedó adentro.",
+    "curioso": "Olvidar un insumo dentro de un cuerpo se llama médicamente 'textiloma' y causa infecciones severas. Por eso, las enfermeras cuentan las gasas una por una antes de empezar y antes de cerrar."
   },
   {
-    "cat": "Equipos",
-    "p": "Un médico solicita una 'Cánula Binasal' (también conocida como bigotera) para un paciente estable. ¿Cuál es el límite técnico de flujo de oxígeno que se puede pasar con este insumo?",
-    "o": ["Se puede usar con flujos altísimos de hasta 15 o 20 litros por minuto", "No se debe pasar a más de 5 o 6 litros por minuto, ya que el gas directo reseca y lastima la mucosa de la nariz sin mejorar la oxigenación", "Solo funciona si se conecta a un tanque de aire comprimido en lugar de oxígeno"],
+    "cat": "LABORATORIO",
+    "p": "Para un examen general de orina, el médico siempre le dice al paciente que descarte el 'primer chorrito' y guarde el 'chorro medio'. ¿Cuál es el motivo?",
+    "o": ["Porque el primer chorro sale con mucha fuerza y puede romper el frasco de plástico", "Para que el primer chorro limpie las bacterias de la piel y el frasco lleve solo la orina pura", "Porque la primera orina viene muy concentrada y altera los reactivos químicos"],
     "c": 1,
-    "e": "¡Cabal! Las bigoteras son dispositivos de bajo flujo. Si el paciente necesita más de 5 o 6 litros por minuto, la nariz se le va a congelar e irritar; en esos casos, el protocolo exige cambiar a una mascarilla de oxígeno.",
-    "curioso": "Son los dispositivos favoritos en los hospitales porque son muy cómodos: le permiten al paciente hablar, comer y tomar sus medicamentos sin interrumpir su terapia de oxígeno."
+    "e": "¡Exacto! La punta de la uretra siempre tiene microbios normales de la piel y el ambiente. Si recoges ese primer chorro, el laboratorio va a reportar una infección falsa. El chorro medio garantiza que la muestra venga directo de la vejiga sin contaminación.",
+    "curioso": "Una vez recolectada, la muestra debe llegar al laboratorio en menos de dos horas. Si la dejas en la mesa todo el día, las bacterias del aire se meten al frasco y se duplican por el calor."
   },
   {
-    "cat": "Curación",
-    "p": "Para proteger el sitio donde se colocó un catéter venoso central y evitar infecciones, los hospitales usan un 'Apósito Transparente de Poliuretano' (tipo Tegaderm). ¿Por qué se prefiere esto en vez de cubrirlo con esparadrapo común?",
-    "o": ["Porque es completamente impermeable al aire y no deja respirar la piel", "Refleja el estado de la piel y el catéter a simple vista todos los días para detectar enrojecimiento o pus sin necesidad de despegar el parche", "Porque el plástico transparente ayuda a que el medicamento pase más rápido"],
-    "c": 1,
-    "e": "¡Exacto! Al ser transparente y estéril, el personal de salud puede revisar el estado de la piel y el catéter en cada turno. Si nota signos de infección, actúa rápido sin molestar al paciente retirando parches adhesivos.",
-    "curioso": "Este tipo de apósito actúa como una barrera impermeable contra el agua y las bacterias de afuera, por lo que el paciente puede asearse con tranquilidad sin mojar la zona de la vía."
-  },
-  {
-    "cat": "Sondas",
-    "p": "Al entregar 'Sondas de Aspiración Nelaton', notas que cuentan con una pequeña abertura cerca del conector llamada válvula digital. ¿Cómo se opera correctamente esta válvula al limpiar la vía aérea?",
-    "o": ["Se introduce agua por ahí para lavar los pulmones", "Se tapa con el dedo pulgar únicamente al retirar la sonda, activando el vacío de forma intermitente para no dañar ni raspar las mucosas internas con una succión continua", "Se deja abierta todo el tiempo para que el aire de la sala entre a la sonda"],
-    "c": 1,
-    "e": "¡Así es! Si metes la sonda succionando desde el inicio, se pegará a las paredes de la garganta o nariz, causando dolor y sangrado. Al controlar el vacío con el dedo pulgar solo en el trayecto de salida, la limpieza es segura y eficaz.",
-    "curioso": "Las sondas Nelaton también respetan un código de colores universal para identificar sus medidas; la medida número 14 siempre lleva el conector verde y la 16 el conector naranja."
-  },
-  {
-    "cat": "Insumos",
-    "p": "Nos solicitan cotizar 'Bolsas Recolectoras de Orina'. Al revisar la ficha técnica, ¿cuál es la función de la 'Válvula Antirretorno' que traen incorporada en la parte superior?",
-    "o": ["Permitir que la orina salga más rápido al vaciar la bolsa por debajo", "Evitar que la orina que ya cayó en la bolsa regrese por el tubo hacia la vejiga cuando el paciente se mueve, previniendo infecciones urinarias graves", "Medir de forma automática los mililitros recolectados por hora"],
-    "c": 1,
-    "e": "¡Perfecto! La válvula antirretorno es un sistema de seguridad biológica. Funciona como una compuerta que solo abre hacia abajo; si el paciente se levanta o se voltea en la cama, el líquido estancado no puede regresar al cuerpo.",
-    "curioso": "Estas bolsas hospitalarias estándar tienen una capacidad de 2,000 mL (2 litros) y vienen graduadas en el plástico para que la enfermera anote el control exacto de líquidos en sus reportes."
-  },
-  {
-    "cat": "Laboratorio",
-    "p": "Para un examen de orina común, el médico le pide al paciente que descarte el 'primer chorro' y recolecte el 'chorro medio'. ¿Cuál es la razón médica de esto?",
-    "o": ["Porque el primer chorro de orina sale con demasiada presión y rompe el frasco", "Para que el primer chorro limpie las bacterias normales que viven en la punta de la uretra, asegurando que el frasco solo lleve la orina pura de la vejiga", "Porque la primera orina tiene un color muy oscuro"],
-    "c": 1,
-    "e": "¡Exacto! La punta de la uretra siempre tiene microbios normales de la piel. Si los recolectas, el laboratorio reportará una infección falsa. El chorro medio garantiza pureza diagnóstica.",
-    "curioso": "Esta muestra debe llevarse al laboratorio en menos de dos horas; de lo contrario, las bacterias naturales de la habitación se empezarán a multiplicar dentro del frasco."
-  },
-  {
-    "cat": "Curación",
-    "p": "Un cirujano va a realizar una sutura en el cuero cabelludo de un paciente que se golpeó con una rama. ¿Qué tipo de hilo prefiere por su fuerza y porque no se pega al cabello?",
-    "o": ["Hilo de Nylon monofilamento grueso", "Sutura de seda orgánica negra fina", "Hilo Catgut que se deshace solo"],
+    "cat": "CURACIÓN",
+    "p": "Para agarrar puntos en el cuero cabelludo tras un golpe, los médicos siempre buscan sutura de Nylon Monofilamento. ¿Por qué prefieren este hilo ahí?",
+    "o": ["Porque es liso, plástico y no se enreda ni se pega con el cabello del paciente", "Porque se deshace solo con el sudor de la cabeza en un par de semanas", "Porque es el único hilo orgánico que ayuda a que el pelo vuelva a crecer rápido"],
     "c": 0,
-    "e": "¡Cabal! El Nylon monofilamento es liso, plástico y sumamente resistente. No jala bacterias hacia la herida y se desliza con suavidad al momento de retirarlo una semana después.",
-    "curioso": "Los médicos suelen usar Nylon teñido de color azul o negro para poder encontrar los puntos con facilidad en medio del cabello oscuro del paciente."
+    "e": "¡Perfecto! El Nylon es como un hilo de pescar: es una sola tira plástica ultra lisa. Al no tener trenzas ni poros, no arrastra bacterias hacia la herida y se desliza como seda cuando toca quitar los puntos a los 8 días sin jalarle los pelos al paciente.",
+    "curioso": "Los fabricantes tiñen este hilo de color azul brillante o negro intenso por una razón operativa: para que el doctor pueda ver los nudos fácilmente en medio del pelo oscuro del paciente."
   },
   {
-    "cat": "Diagnóstico",
-    "p": "Un enfermero toma la temperatura de un paciente y el termómetro digital marca 38.3°C. ¿Cómo anota técnicamente este signo vital en la hoja de enfermería?",
-    "o": ["Hipotermia clínica moderada", "Hipertermia maligna crítica", "Fiebre (o Pirexia)"],
+    "cat": "DIAGNÓSTICO",
+    "p": "Si un enfermero apunta en su reporte que un paciente tiene 38.4°C de temperatura, ¿cuál es el término clínico correcto para ese estado?",
+    "o": ["Hipertermia maligna crítica", "Hipotermia clínica moderada", "Fiebre (o Pirexia)"],
     "c": 2,
-    "e": "¡Perfecto! La fiebre se define clínicamente cuando la temperatura corporal sube de los 38.0°C. Si marca entre 37.5°C y 37.9°C, los doctores le llaman 'febrícula'.",
-    "curioso": "La fiebre no es una enfermedad en sí, sino la alarma del cuerpo. El cerebro sube el termostato interno para cocinar y matar a los virus o bacterias invasoras."
+    "e": "¡Así es! Clínicamente se considera Fiebre en cuanto el termómetro pasa los 38.0°C. Si el paciente marca entre 37.5°C y 37.9°C, el cuerpo está tibio pero no llega a fiebre; a eso los doctores le llaman 'febrícula'.",
+    "curioso": "La fiebre no es mala, es la defensa del cuerpo. El cerebro sube la temperatura del termostato interno para cocinar y matar a los virus o bacterias que invadieron el sistema."
   },
   {
-    "cat": "Urgencias",
-    "p": "Un paciente llega con un sangrado masivo por la nariz que no para tras apretarse las fosas. ¿Qué procedimiento de taponamiento realiza el médico de urgencia?",
-    "o": ["Colocar un collarín cervical ajustado", "Introducir tiras largas de gasa empapadas en medicamentos vasoconstrictores profundamente en la nariz (Taponamiento nasal anterior)", "Pasar una sonda de alimentación al estómago"],
-    "c": 1,
-    "e": "¡Exacto! El taponamiento nasal hace presión física directa sobre las arterias rotas dentro de la nariz para obligar a la sangre a formar un coágulo estable.",
-    "curioso": "Las gasas del taponamiento se dejan colocadas entre 48 y 72 horas y se retiran con mucho cuidado humedeciéndolas con suero para no arrancar la costra nueva."
-  },
-  {
-    "cat": "Cirugía",
-    "p": "Al terminar una operación de vesícula por laparoscopia (usando camaritas), el médico cierra las pequeñas incisiones de la piel. ¿Qué herramienta manual metálica sostiene la aguja curva de sutura?",
-    "o": ["Una pinza portaagujas", "Una tijera Iris de corte", "Un mango de bisturí No. 4"],
+    "cat": "LABORATORIO",
+    "p": "El examen de Hemoglobina Glicosilada (HbA1c) da un porcentaje (por ejemplo, 9%). ¿Por qué los médicos aman este examen para controlar a los diabéticos?",
+    "o": ["Muestra el promedio real del azúcar del paciente durante los últimos 3 meses", "Mide los miligramos de azúcar exactos que el paciente tiene en ese preciso segundo", "Indica la cantidad de glóbulos blancos que están defendiendo al páncreas"],
     "c": 0,
-    "e": "¡Cabal! El portaagujas tiene unas mandíbulas cortas y fuertes con ranuras cruzadas que agarran la aguja de metal con una fuerza increíble para que no se gire al traspasar la piel.",
-    "curioso": "La mayoría de portaagujas quirúrgicos profesionales (como el modelo Mayo-Hegar) incluyen un sistema de cremallera que bloquea los mangos para que el médico no tenga que hacer fuerza de agarre continua."
+    "e": "¡Esa es! El azúcar de la sangre se va quedando pegado a los glóbulos rojos. Como estas células viven unos 120 días en el cuerpo, medir este examen le da al doctor un reporte histórico infalible. Un valor de 9% significa que el paciente no se cuidó nada.",
+    "curioso": "Este examen es el terror de los pacientes tramposos. Muchos hacen una dieta estricta tres días antes de ir al laboratorio para salir bien en el examen común, pero la glicosilada saca a la luz la verdad de los últimos meses."
   },
   {
-    "cat": "Laboratorio",
-    "p": "Un laboratorio reporta que un paciente diabético tiene la 'Hemoglobina Glicosilada (HbA1c)' en 9%. ¿Qué le revela este examen específico al médico?",
-    "o": ["El nivel de azúcar exacto que el paciente tiene en ese preciso segundo de la mañana", "El promedio del control del azúcar en la sangre del paciente durante los últimos 3 meses, demostrando si se ha cuidado o no", "La cantidad de glóbulos blancos que defienden el páncreas"],
+    "cat": "INYECTABLES",
+    "p": "Cuando mandan un antibiótico fuerte por 'Infusión Intravenosa Intermitente', ¿cómo se opera esto físicamente en el encamamiento?",
+    "o": ["Se inyecta puro en la vena en dos segundos usando una aguja dental delgada", "Se diluye en una bolsa pequeña de suero (100ml) para que pase goteando en 30 minutos", "Se mezcla con una crema para aplicarlo directo en la piel de los brazos"],
     "c": 1,
-    "e": "¡Esa es! El azúcar de la sangre se pega a los glóbulos rojos. Como estas células viven unos 120 días, medir la HbA1c le da al médico un reporte histórico infalible. Un valor de 9% indica un control deficiente.",
-    "curioso": "Este examen destruye las trampas de los pacientes que hacen dieta estricta solo tres días antes de ir al laboratorio; el histórico de la glicosilada no miente."
+    "e": "¡Exacto! Hay antibióticos hospitalarios que son sumamente pesados. Si los inyectas puros en un bolo rápido, le quemas la vena al paciente (flebitis). Por eso se diluyen en un 'mini suero' de 100mL y se pasan lento cada 8 o 12 horas.",
+    "curioso": "Para controlar estos goteos pequeños sin riesgo de pasarse, las enfermeras utilizan mucho los equipos de microgotero, que dosifican el líquido gota por gota de forma milimétrica."
   },
   {
-    "cat": "Inyectables",
-    "p": "Cuando un médico indica pasar un medicamento por 'Infusión Intravenosa Intermitente', ¿cómo se prepara este goteo en la habitación?",
-    "o": ["Se diluye el fármaco en una bolsa pequeña de suero (de 50ml o 100ml) para que pase en un periodo corto de 20 a 60 minutos", "Se inyecta puro en dos segundos usando una aguja fina dental", "Se coloca directo en la piel de la frente"],
-    "c": 0,
-    "e": "¡Exacto! Esta vía se usa para antibióticos pesados. Pasarlos puros en bolo dañaría la vena (flebitis), por lo que se diluyen en bolsas pequeñas de suero y se pasan de forma lenta e intermitente cada 8 o 12 horas.",
-    "curioso": "Para estos sueros pequeños, los hospitales usan mucho los equipos de microgotero, los cuales dosifican el líquido de forma aún más controlada."
-  },
-  {
-    "cat": "Diagnóstico",
-    "p": "Un doctor nota que las pupilas de un paciente que ingresó por sobredosis de narcóticos están microscópicas, del tamaño de la punta de un alfiler. ¿Cómo se llama este estado?",
+    "cat": "DIAGNÓSTICO",
+    "p": "Si una persona ingresa a la emergencia y el médico nota que sus pupilas están diminutas, como la punta de un alfiler, ¿como se llama este signo?",
     "o": ["Midriasis pupilar severa", "Miosis profunda", "Anisocoria neurológica"],
     "c": 1,
-    "e": "¡Cabal! La miosis es la contracción extrema de la pupila. Es el signo clásico e inmediato que ven los médicos en intoxicaciones por opioides o sobredosis de drogas pesadas.",
-    "curioso": "Lo contrario (pupilas gigantescas y dilatadas como platos) se conoce como Midriasis y ocurre en paros cardíacos o traumas cerebrales mortales."
+    "e": "¡Cabal! La miosis es la contracción extrema de la pupila. Es el chivato inmediato que ven los médicos en los ojos de pacientes que ingresan por sobredosis de narcóticos, opioides o intoxicaciones por químicos pesados.",
+    "curioso": "Lo contrario (pupilas gigantescas y dilatadas como platos de comida) se conoce como Midriasis y ocurre en paros cardíacos, falta de oxígeno severa o traumas cerebrales mortales."
   },
   {
-    "cat": "Cirugía",
-    "p": "Antes de abrir los bultos de ropa y sábanas estériles en la mesa quirúrgica, la instrumentista revisa que el empaque exterior no esté húmedo ni roto. ¿Cuál es el riesgo si lo está?",
-    "o": ["Que la ropa esté muy fría para el paciente", "Que se haya roto la barrera estéril, permitiendo que las bacterias de la habitación viajen por la humedad hacia adentro, contaminando todo el bulto", "Que el cirujano se ensucie las manos con polvo"],
+    "cat": "URGENCIAS",
+    "p": "Un paciente llega con una quemadura por fuego en el brazo. La piel está roja, con ampollas grandes llenas de líquido y le duele al extremo. ¿De qué grado es?",
+    "o": ["Quemadura de Primer Grado", "Quemadura de Segundo Grado", "Quemadura de Tercer Grado"],
     "c": 1,
-    "e": "¡Exacto! La humedad funciona como un puente o autopista para los microbios. Un bulto húmedo, aunque haya salido del autoclave, se considera automáticamente CONTAMINADO y no se usa.",
-    "curioso": "Esta estricta regla salva al paciente de contraer infecciones profundas en el sitio quirúrgico durante la operación."
-  },
-  {
-    "cat": "Soluciones",
-    "p": "Un paciente cardíaco está reteniendo muchos líquidos e hinchándose de las piernas. El doctor ordena pasar un suero con un 'Diurético' como la Furosemida. ¿Qué efecto genera?",
-    "o": ["Hace que los riñones boten grandes cantidades de agua y sal a través de la orina, desinflamando el cuerpo y aliviando al corazón", "Aumenta la sed del paciente para que tome más agua", "Espesa la sangre para evitar sangrados"],
-    "c": 0,
-    "e": "¡Perfecto! Los diuréticos sacan el exceso de agua del cuerpo. Minutos después de inyectar Furosemida, la bolsa recolectora de orina del paciente empieza a llenarse rápidamente.",
-    "curioso": "Al vaciar el agua de las venas, la presión arterial también baja, dándole un descanso inmediato al corazón fatigado."
-  },
-  {
-    "cat": "Urgencias",
-    "p": "Llega un paciente con una quemadura por fuego en todo el brazo. La piel está roja, con ampollas grandes llenas de líquido transparente y causa un dolor extremo. ¿De qué grado es?",
-    "o": ["Quemadura de Primer Grado", "Quemadura de Segundo Grado (Espesor parcial)", "Quemadura de Tercer Grado (Espesor total)"],
-    "c": 1,
-    "e": "¡Cabal, rey! Las ampollas (o flictenas) son el sello indiscutible de las quemaduras de segundo grado. Duelen muchísimo porque las terminaciones nerviosas de la dermis quedaron vivas y expuestas.",
-    "curioso": "Las de tercer grado destruyen los nervios por completo; por eso, aunque parezcan horribles (piel negra o acartonada), el paciente casi no siente dolor directo en esa zona muerta."
+    "e": "¡El sello indiscutible! Las ampollas (o flictenas) aparecen únicamente en las quemaduras de segundo grado. Duelen a morir porque destruyen la capa externa de la piel, pero dejan las terminaciones nerviosas vivas y expuestas al aire.",
+    "curioso": "Las de tercer grado se ven horribles (la piel queda negra o acartonada como carbón), pero curiosamente el paciente casi no siente dolor en esa zona porque el fuego carbonizó los nervios por completo."
   },
   {
     "cat": "Laboratorio",
@@ -1600,7 +1520,7 @@ const bancoDePreguntas = [
     "e": "¡Perfecto, rey! El cabello humano está lleno de bacterias del ambiente. Un solo pelo que caiga en una mesa de operaciones puede arruinar una cirugía de millones de quetzales provocando una infección interna.",
     "curioso": "Por eso los gorros descartables de polipropileno son obligatorios tanto para los cirujanos calvos como para los de cabello largo."
   },
-{
+  {
     "cat": "Insumos",
     "p": "Si un cliente llega buscando una 'Jeringa de Insulina', ¿cuál es su característica principal en el empaque y su aguja?",
     "o": ["Viene graduada en 'Unidades' (U-100) en lugar de mililitros y trae una aguja ultra delgada y corta fija", "Es una jeringa gigante de 50ml para lavado", "Viene con una aguja gruesa de color verde"],
