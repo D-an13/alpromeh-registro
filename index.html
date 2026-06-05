@@ -708,6 +708,31 @@ input::-webkit-outer-spin-button,
 .efecto-shake {
     animation: shake 0.4s ease-in-out;
 }
+
+/* 1. Estado Base y Salida: Cuando dejas de escribir, el color se derrite LENTAMENTE (0.8 segundos) */
+#inputBuscar {
+    transition: border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 2. Al dar CLICK (Focus): Borde GRIS OSCURO firme y elevación limpia */
+#inputBuscar:focus {
+    outline: none !important;
+    border-color: #334155 !important; /* Tu gris oscuro con presencia */
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* 3. MIENTRAS ESCRIBES: Entrada suave (0.2s) con Brillo Azul Eléctrico Real de Mayor Opacidad */
+#inputBuscar.escribiendo-borde {
+    /* Tu color definitivo: Azul Eléctrico Real */
+    border-color: #006aff !important; 
+    
+    /* 🌟 EL BRILLO ADAPTADO: Usamos tu mismo azul (#006aff) con opacidades del 24% y 14% 
+       para que el aura tenga cuerpo, presencia y un alcance largo de 12px y 30px */
+    box-shadow: 0 0 12px rgba(0, 106, 255, 0.24), 0 6px 30px rgba(0, 106, 255, 0.14) !important;
+    
+    /* ⏱️ ENTRADA SUAVE: Se ilumina de forma fluida al presionar la primera tecla */
+    transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out !important;
+}
 </style>
 </head>
 <body>
@@ -834,10 +859,11 @@ input::-webkit-outer-spin-button,
             </div>
         </div>
 
-   <div class="busqueda-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;">
+  <div class="busqueda-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;">
     
     <div style="width: 100%;">
-        <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 Buscar por Orden, Institución o Producto..." onkeyup="renderTable()" style="width: 100%; box-sizing: border-box;">
+        <!-- 🔥 MODIFICADO: Dejamos solo la lupa en el placeholder, el script escribirá el resto de forma premium -->
+        <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 " onkeyup="renderTable()" style="width: 100%; box-sizing: border-box;">
     </div>
 
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; width: 100%;">
@@ -854,8 +880,8 @@ input::-webkit-outer-spin-button,
             </span>
             
             <button id="btnImprimirReporte" onclick="ejecutarImpresionReporte()" class="btn-filtro" disabled style="display: none; background: #94a3b8; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: not-allowed; transition: all 0.3s ease;">
-    📋 Imprimir
-</button>
+                📋 Imprimir
+            </button>
 
             <button id="btnModoReporte" class="btn-filtro" onclick="toggleModoReporte()" style="background: #c79f00; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px;">
                 📊 Reporte
@@ -1290,150 +1316,226 @@ actualizarContadores()
             showToast("✅ Orden " + numOrden + " recuperada.");
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('tablaBody');
-            const busqueda = document.getElementById('inputBuscar').value.toLowerCase();
-            tbody.innerHTML = '';
-            const hoyFull = new Date();
-            const hoyMedianoche = new Date(hoyFull.getFullYear(), hoyFull.getMonth(), hoyFull.getDate());
-            const offset = hoyFull.getTimezoneOffset() * 60000;
-            const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
+        // Variable global para controlar que el parpadeo del borde sea fluido
+window.bordeTimeout = null;
 
-            let filtrados = datosLocales.filter(item => {
-                // 🔥 MODIFICADO: Agregamos la búsqueda por la propiedad producto (item.producto) de forma segura
-                const coincideBusqueda = item.orden.toString().includes(busqueda) || 
-                                         item.inst.toLowerCase().includes(busqueda) ||
-                                         (item.producto && item.producto.toLowerCase().includes(busqueda));
-                                         
-                const fechaOrden = new Date(item.fecha + "T00:00:00");
-                const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
-                const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
-                if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
-                if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
-                if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
-                return coincideBusqueda;
-            });
+function renderTable() {
+    const inputBuscar = document.getElementById('inputBuscar');
+    
+    // 🟢 1. ¡ENCENDEMOS EL BORDE AZULITO AL 50%!
+    if (inputBuscar) {
+        inputBuscar.classList.add('escribiendo-borde');
+    }
 
-            filtrados.sort((a, b) => {
-                const fechaA = new Date(a.fecha + "T00:00:00");
-                const fechaB = new Date(b.fecha + "T00:00:00");
-                
-                if (fechaB - fechaA !== 0) {
-                    return fechaB - fechaA;
-                }
-                
-                return datosLocales.indexOf(b) - datosLocales.indexOf(a);
-            });
+    const tbody = document.getElementById('tablaBody');
+    const busqueda = inputBuscar ? inputBuscar.value.toLowerCase() : '';
+    tbody.innerHTML = '';
+    const hoyFull = new Date();
+    const hoyMedianoche = new Date(hoyFull.getFullYear(), hoyFull.getMonth(), hoyFull.getDate());
+    const offset = hoyFull.getTimezoneOffset() * 60000;
+    const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
 
-            filtrados.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                const esAxel = item.responsable === "Axel";
-                const esAnulada = item.responsable === "ANULADA";
-                const fechaOrden = new Date(item.fecha + "T00:00:00");
-                const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
-                const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
-                const esAntigua = !item.despachado && !esAxel && !esAnulada && diasTranscurridos >= 2;
+    let filtrados = datosLocales.filter(item => {
+        const coincideBusqueda = item.orden.toString().includes(busqueda) || 
+                                 item.inst.toLowerCase().includes(busqueda) ||
+                                 (item.producto && item.producto.toLowerCase().includes(busqueda));
+                                 
+        const fechaOrden = new Date(item.fecha + "T00:00:00");
+        const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
+        const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
+        if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
+        if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
+        if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
+        return coincideBusqueda;
+    });
 
-                // Generamos un ID único para la fila (lo necesitamos para pintarla de azul aqua)
-                const idFila = `fila-orden-${item.orden}`;
-                tr.id = idFila;
+    filtrados.sort((a, b) => {
+        const fechaA = new Date(a.fecha + "T00:00:00");
+        const fechaB = new Date(b.fecha + "T00:00:00");
+        if (fechaB - fechaA !== 0) return fechaB - fechaA;
+        return datosLocales.indexOf(b) - datosLocales.indexOf(a);
+    });
 
-                // Validamos si la fila ya estaba seleccionada previamente
-const estaSeleccionada = ordenesSeleccionadas.includes(item.orden);
+    filtrados.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        const esAxel = item.responsable === "Axel";
+        const esAnulada = item.responsable === "ANULADA";
+        const fechaOrden = new Date(item.fecha + "T00:00:00");
+        const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
+        const esDudaAxel = !item.despachado && esAxel && item.fecha !== hoyStr;
+        const esAntigua = !item.despachado && !esAxel && !esAnulada && diasTranscurridos >= 2;
 
-if (modoReporteActivo && estaSeleccionada) {
-    tr.className = 'fila-seleccionada-reporte'; // <-- Ahora usa la clase pro
-} else if (item.despachado) {
-    tr.className = 'fila-despachada';
-} else if (esAnulada) {
-    tr.className = 'color-anulada';
-} else if (esDudaAxel) {
-    tr.className = 'alerta-duda';
-} else if (esAntigua) {
-    tr.className = 'alerta-total'; 
-} else {
-    tr.className = getStyleClass(item.responsable);
+        const idFila = `fila-orden-${item.orden}`;
+        tr.id = idFila;
+
+        const estaSeleccionada = ordenesSeleccionadas.includes(item.orden);
+
+        if (modoReporteActivo && estaSeleccionada) {
+            tr.className = 'fila-seleccionada-reporte';
+        } else if (item.despachado) {
+            tr.className = 'fila-despachada';
+        } else if (esAnulada) {
+            tr.className = 'color-anulada';
+        } else if (esDudaAxel) {
+            tr.className = 'alerta-duda';
+        } else if (esAntigua) {
+            tr.className = 'alerta-total'; 
+        } else {
+            tr.className = getStyleClass(item.responsable);
+        }
+
+        tr.addEventListener('contextmenu', function(e) { e.preventDefault(); abrirModalAnular(item.orden); });
+
+        const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
+        let contenidoColumnaListo = "";
+        if (esAxel) {
+            contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"><span class="label-axel">Solo Axel</span></div>`;
+        } else if (esAntigua) {
+            contenidoColumnaListo = `<span style="font-size: 1.4rem;">⚠️</span>`;
+        }
+
+        const selectBloqueado = esAnulada ? "disabled" : "";
+
+        if (esAxel && !item.despachado) {
+            const esMovil = window.matchMedia("(pointer: coarse)").matches;
+            if (esMovil) {
+                tr.classList.add('fila-axel-movil');
+                let ultimoToque = 0;
+                tr.addEventListener('touchend', function(e) {
+                    const tiempoActual = new Date().getTime();
+                    const diferencia = tiempoActual - ultimoToque;
+                    if (diferencia < 300 && diferencia > 0) {
+                        tr.classList.add('animar-listo');
+                        toggle(item.orden); 
+                        showToast("📦 Orden " + item.orden + " lista");
+                    }
+                    ultimoToque = tiempoActual;
+                });
+            }
+        }
+
+        let celdaOrdenHtml = "";
+        if (typeof modoReporteActivo !== 'undefined' && modoReporteActivo) {
+            const checkedAttr = estaSeleccionada ? 'checked' : '';
+            celdaOrdenHtml = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" ${checkedAttr} 
+                           onchange="gestionarSeleccion('${item.orden}', '${idFila}')" 
+                           style="transform: scale(1.4); cursor: pointer; margin: 0 4px;">
+                    <span>${item.orden}</span>
+                </div>
+            `;
+        } else {
+            celdaOrdenHtml = item.orden;
+        }
+
+        tr.innerHTML = `
+            <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">
+                ${celdaOrdenHtml}
+            </td>
+            <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
+            <td style="font-weight:600; cursor:help;" 
+                title="Producto: ${item.producto || 'Sin descripción'}" 
+                ondblclick="editarInstitucion('${item.orden}', this)">
+                ${item.inst}
+            </td>
+            <td>
+                <select ${selectBloqueado} onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:${esAnulada ? 'not-allowed' : 'pointer'}; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
+                    ${esAnulada ? '<option value="ANULADA" selected>🚫 ANULADA</option>' : ''}
+                    <option value="Yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
+                    <option value="Danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
+                    <option value="Carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
+                    <option value="Daniela" ${item.responsable==='Daniela'?'selected':''}>Daniela</option>
+                    <option value="Nata" ${item.responsable==='Nata'?'selected':''}>Nata</option>
+                    <option value="Claudia" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
+                    <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
+                    <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
+                    <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
+                </select>
+                <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
+            </td>
+            <td style="text-align:center;">${esAnulada ? '' : contenidoColumnaListo}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+    actualizarBarra(hoyStr);
+    actualizarContadores();
+
+    // 🔮 RETRASO INTELIGENTE MIENTRAS PIENSA
+    // Limpiamos el proceso anterior para que la iluminación se quede fija si sigues tecleando
+    clearTimeout(window.bordeTimeout);
+    
+    // Mantiene el brillo morado encendido por 700ms y luego le da luz verde al CSS para desvanecerse
+    window.bordeTimeout = setTimeout(() => {
+        if (inputBuscar) {
+            inputBuscar.classList.remove('escribiendo-borde');
+        }
+    }, 700); 
 }
 
-                tr.addEventListener('contextmenu', function(e) { e.preventDefault(); abrirModalAnular(item.orden); });
+// ===================================================
+// ⌨️ EFECTO MÁQUINA DE ESCRIBIR ROTATIVO (ALPROMEH)
+// ===================================================
+window.iniciarMaquinaEscribir = function() {
+    const inputBuscar = document.getElementById('inputBuscar');
+    if (!inputBuscar) return;
 
-                const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
-                let contenidoColumnaListo = "";
-                if (esAxel) {
-                    contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"><span class="label-axel">Solo Axel</span></div>`;
-                } else if (esAntigua) {
-                    contenidoColumnaListo = `<span style="font-size: 1.4rem;">⚠️</span>`;
-                }
+    // Las frases que van a estar rotando en tu buscador
+    const frases = [
+        "Buscar por Orden...",
+        "Buscar por Institución...",
+        "Buscar por Producto..."
+    ];
+    
+    let fraseIndex = 0;
+    let charIndex = 0;
+    let estaBorrando = false;
 
-                const selectBloqueado = esAnulada ? "disabled" : "";
-
-                // --- LÓGICA DE DOBLE TOQUE PARA AXEL (SOLO MÓVIL) ---
-                if (esAxel && !item.despachado) {
-                    const esMovil = window.matchMedia("(pointer: coarse)").matches;
-                    if (esMovil) {
-                        tr.classList.add('fila-axel-movil');
-                        let ultimoToque = 0;
-                        tr.addEventListener('touchend', function(e) {
-                            const tiempoActual = new Date().getTime();
-                            const diferencia = tiempoActual - ultimoToque;
-                            if (diferencia < 300 && diferencia > 0) {
-                                tr.classList.add('animar-listo');
-                                toggle(item.orden); 
-                                showToast("📦 Orden " + item.orden + " lista");
-                            }
-                            ultimoToque = tiempoActual;
-                        });
-                    }
-                }
-
-                // 🔥 CONDICIÓN EXCLUSIVA: Si el modo reporte está activo, inyectamos el Checkbox Grande a la par de la Orden
-                let celdaOrdenHtml = "";
-                if (typeof modoReporteActivo !== 'undefined' && modoReporteActivo) {
-                    const checkedAttr = estaSeleccionada ? 'checked' : '';
-                    celdaOrdenHtml = `
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" ${checkedAttr} 
-                                   onchange="gestionarSeleccion('${item.orden}', '${idFila}')" 
-                                   style="transform: scale(1.4); cursor: pointer; margin: 0 4px;">
-                            <span>${item.orden}</span>
-                        </div>
-                    `;
-                } else {
-                    celdaOrdenHtml = item.orden;
-                }
-
-                tr.innerHTML = `
-                    <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">
-                        ${celdaOrdenHtml}
-                    </td>
-                    <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
-                    <td style="font-weight:600; cursor:help;" 
-                        title="Producto: ${item.producto || 'Sin descripción'}" 
-                        ondblclick="editarInstitucion('${item.orden}', this)">
-                        ${item.inst}
-                    </td>
-                    <td>
-                        <select ${selectBloqueado} onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:${esAnulada ? 'not-allowed' : 'pointer'}; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
-                            ${esAnulada ? '<option value="ANULADA" selected>🚫 ANULADA</option>' : ''}
-                            <option value="Yanet" ${item.responsable==='Yanet'?'selected':''}>Yanet</option>
-                            <option value="Danna" ${item.responsable==='Danna'?'selected':''}>Danna</option>
-                            <option value="Carmen" ${item.responsable==='Carmen'?'selected':''}>Carmen</option>
-                            <option value="Daniela" ${item.responsable==='Daniela'?'selected':''}>Daniela</option>
-                            <option value="Nata" ${item.responsable==='Nata'?'selected':''}>Nata</option>
-                            <option value="Claudia" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
-                            <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
-                            <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
-                            <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
-                        </select>
-                        <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
-                    </td>
-                    <td style="text-align:center;">${esAnulada ? '' : contenidoColumnaListo}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-            actualizarBarra(hoyStr);
-            actualizarContadores();
+    function animarPlaceholder() {
+        // Si el usuario ya dio click y escribió algo de verdad, detenemos la animación para no molestar
+        if (inputBuscar.value !== "") {
+            setTimeout(animarPlaceholder, 1000);
+            return;
         }
+
+        const fraseActual = frases[fraseIndex];
+        
+        if (!estaBorrando) {
+            // Escribiendo: va sumando letra por letra
+            inputBuscar.placeholder = "🔍 " + fraseActual.substring(0, charIndex + 1);
+            charIndex++;
+
+            if (charIndex === fraseActual.length) {
+                // Ya terminó de escribir la frase entera, espera 2 segundos antes de empezar a borrar
+                estaBorrando = true;
+                setTimeout(animarPlaceholder, 2000);
+                return;
+            }
+            // Velocidad al escribir (60ms por letra)
+            setTimeout(animarPlaceholder, 60);
+        } else {
+            // Borrando: va quitando letra por letra
+            inputBuscar.placeholder = "🔍 " + fraseActual.substring(0, charIndex - 1);
+            charIndex--;
+
+            if (charIndex === 0) {
+                // Ya se borró por completo, pasa a la siguiente frase del arreglo
+                estaBorrando = false;
+                fraseIndex = (fraseIndex + 1) % frases.length; // Ciclo infinito entre las 3 frases
+                setTimeout(animarPlaceholder, 300); // Pequeña pausa antes de escribir la nueva palabra
+                return;
+            }
+            // Velocidad al borrar (30ms por letra, se borra más rápido de lo que se escribe)
+            setTimeout(animarPlaceholder, 30);
+        }
+    }
+
+    // Arranca el bucle después de medio segundo de cargar la app
+    setTimeout(animarPlaceholder, 500);
+};
+
+// Se ejecuta automáticamente al cargar el HTML básico
+document.addEventListener('DOMContentLoaded', window.iniciarMaquinaEscribir);
 
         function actualizarBarra(hoyStr) {
             const hoyAxel = datosLocales.filter(d => d.fecha === hoyStr && d.responsable === "Axel");
