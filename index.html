@@ -697,6 +697,17 @@ input::-webkit-outer-spin-button,
         display: none !important;
     }
 }
+
+/*EFECTO SHAKE MODAL PRODUCTO */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+}
+
+.efecto-shake {
+    animation: shake 0.4s ease-in-out;
+}
 </style>
 </head>
 <body>
@@ -1102,31 +1113,33 @@ function irATrivia() {
 function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
 
         function abrirModalProducto() {
-            const modal = document.getElementById('modalProducto');
-            const contenido = modal.querySelector('.modal-content');
-            
-            modal.style.display = 'flex';
-            contenido.classList.remove('salida'); // Quitamos la animación de cierre anterior
-            document.getElementById('inputProducto').focus();
-        }
+    const modal = document.getElementById('modalProducto');
+    const contenido = modal.querySelector('.modal-content');
+    
+    modal.style.display = 'flex';
+    contenido.classList.remove('salida'); // Quita el efecto de cierre anterior
+    document.getElementById('inputProducto').focus();
+}
 
         function cerrarModalProducto() {
     productoTemporal = document.getElementById('inputProducto').value;
     const btn = document.getElementById('btnProducto');
     
-    // Si escribieron algo, pintamos el botón. Si lo dejaron vacío, limpiamos todo.
     if(productoTemporal.trim() !== "") {
         btn.classList.add('lleno');
         btn.innerText = "📝";
     } else {
         btn.classList.remove('lleno');
         btn.innerText = "📝";
-        productoTemporal = ""; // Aseguramos que la variable quede en blanco
+        productoTemporal = ""; 
     }
 
     const modal = document.getElementById('modalProducto');
     const contenido = modal.querySelector('.modal-content');
     
+    // 🧼 Limpiamos el shake por completo para que no estorbe en el futuro
+    if (contenido) contenido.classList.remove('efecto-shake');
+
     contenido.classList.add('salida');
 
     setTimeout(() => {
@@ -1517,19 +1530,36 @@ if (yaExiste) {
     };
 
 if (!productoTemporal || productoTemporal.trim() === "") {
-        // 🔓 Primero liberamos el botón para que no se quede trabado en "REGISTRANDO..."
+        // 1. 🔓 Liberamos el botón verde de inmediato para que no se trabe
         btnGuardar.disabled = false;
         btnGuardar.innerText = "GUARDAR REGISTRO";
         btnGuardar.style.opacity = "1";
         btnGuardar.style.cursor = "pointer";
-        guardandoAhora = false; // Apagamos el freno del sincronizador continuo
+        guardandoAhora = false;
         if (formCard) formCard.classList.remove('resaltar-actualizacion');
 
-        // ⚠️ Ahora sí, lanzamos el aviso y abrimos el modal
-        showToast("⚠️ El Producto es obligatorio. Por favor, ingréselo en el botón 📝", true);
+        // 2. 📝 Abrimos el modal NORMAL (va a entrar con su zoom pro max idéntico a siempre)
         abrirModalProducto(); 
+
+        // 3. ⏱️ ESPERAMOS A QUE TERMINE EL ZOOM: Le damos 250ms de paz
+        setTimeout(() => {
+            const modalContent = document.querySelector('#modalProducto .modal-content');
+            if (modalContent) {
+                // Le quitamos cualquier rastro de animación vieja y le clavamos el shake
+                modalContent.classList.remove('efecto-shake');
+                
+                // Forzamos al navegador a entender el cambio (reflow rápido)
+                void modalContent.offsetWidth; 
+                
+                // ¡PUM! Se sacude limpio cuando ya está estático en pantalla
+                modalContent.classList.add('efecto-shake');
+            }
+        }, 250); // 250 milisegundos es el tiempo perfecto para que el zoom termine
+
+        // 4. ⚠️ El aviso amigable en la esquina
+        showToast("⚠️ Por favor, ingresa el producto", true);
         
-        return; 
+        return; // 🛑 Frenamos el guardado en Google Sheets
     }
 
     datosLocales.unshift(payload);
