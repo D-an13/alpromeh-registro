@@ -1135,6 +1135,13 @@ input::-webkit-outer-spin-button,
         display: none !important;
     }
 }
+
+/* --- BORDE DE ERROR MINIMALISTA (AZUL BOTÓN) --- */
+.campo-vacio-azul {
+    border-color: #0066ff !important;
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.20) !important;
+    outline: none !important;
+}
 </style>
 </head>
 <body>
@@ -3499,24 +3506,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const diaSemana = hoy.getDay(); 
     const trigger = document.getElementById('triggerTrivia');
 
-// 1. Si el libro existe en pantalla, le sembramos la frase del día
+    // 1. Si el libro existe en pantalla, le sembramos la frase del día
     if (trigger) {
-        // Tu lista de frases sutiles y profesionales por día
         const frasesPorDia = {
-            1: "Pst...", // Lunes
-            2: "¡Ey!", // Martes
-            3: "Buenas...",    // Miércoles
-            4: "¡Oye!",       // Jueves
-            5: "Un repaso rápido" // Viernes
+            1: "Pst...",            // Lunes
+            2: "¡Ey!",              // Martes
+            3: "Buenas...",         // Miércoles
+            4: "¡Oye!",             // Jueves
+            5: "Un repaso rápido"   // Viernes
         };
 
         const fraseDeHoy = frasesPorDia[diaSemana] || "Pst...";
-        
         trigger.setAttribute('data-frase', fraseDeHoy);
     }
     
+    // 2. Controla si se muestra el libro o el panel
     controlarEstadoDisparador(); 
 
+    // 🔥 EL REMEDIO: Forzamos a evaluar y pintar el fueguito justo después
+    pintarWidgetRacha();
 });
 
 function abrirTrivia() {
@@ -3665,8 +3673,10 @@ function cerrarTriviaExito() {
         if (modal) modal.style.display = 'none';
         if (modalContent) modalContent.classList.remove('zoom-out-effect', 'modal-expanded'); 
         
-        // Ejecutamos el cambio para que aparezca el fuego al instante al ganar
         controlarEstadoDisparador(); 
+        
+        // 🔥 Lo llamamos aquí también para asegurar que no se oculte al ganar
+        pintarWidgetRacha(); 
     }, 200);
 }
 
@@ -3727,22 +3737,65 @@ function validarRachaPorInactividad() {
     }
 }
 
+let vigilanteFuegoInicializado = false;
+
 function pintarWidgetRacha() {
     let rachaActual = parseInt(localStorage.getItem('rachaActual')) || 0;
     let rangoMaximo = parseInt(localStorage.getItem('rangoMaximo')) || 0;
     
     const txtRacha = document.getElementById('miniWidgetRacha');
     const txtMaximo = document.getElementById('miniWidgetMaximo');
+    
+    const widgetsFuego = document.querySelectorAll('#widgetFuegoRacha');
+    const textosFuego = document.querySelectorAll('#rachaTextoBoton');
 
-    if (!txtRacha || !txtMaximo) return;
+    if (txtRacha) {
+        txtRacha.innerText = `🔥 ${rachaActual}`;
+    }
 
-    txtRacha.innerText = `🔥 ${rachaActual}`;
+    if (txtMaximo) {
+        if (rangoMaximo > 0 && rachaActual < rangoMaximo) {
+            txtMaximo.innerText = `🏆 ${rangoMaximo}`;
+            txtMaximo.style.display = 'inline';
+        } else {
+            txtMaximo.style.display = 'none';
+        }
+    }
 
-    if (rangoMaximo > 0 && rachaActual < rangoMaximo) {
-        txtMaximo.innerText = `🏆 ${rangoMaximo}`;
-        txtMaximo.style.display = 'inline';
-    } else {
-        txtMaximo.style.display = 'none';
+    // 1. Aplicamos los textos y estilos base
+    widgetsFuego.forEach((widget) => {
+        if (rachaActual > 0) {
+            widget.style.cssText = "display: inline-block !important;"; 
+        } else {
+            widget.style.cssText = "display: none !important;";
+        }
+    });
+
+    textosFuego.forEach((texto) => {
+        texto.innerText = rachaActual;
+    });
+
+    // 2. 👁️ ACTIVAMOS EL VIGILANTE (Solo la primera vez que corre)
+    if (!vigilanteFuegoInicializado && rachaActual > 0) {
+        vigilanteFuegoInicializado = true;
+
+        // Le decimos que vigile todo el cuerpo del documento por si reescriben el HTML
+        const observador = new MutationObserver(() => {
+            const fueguitosOcultos = document.querySelectorAll('#widgetFuegoRacha[style*="display: none"]');
+            
+            // Si el código de sincronización intentó apagar algún fueguito, lo encendemos a la fuerza
+            if (fueguitosOcultos.length > 0) {
+                fueguitosOcultos.forEach(w => w.style.cssText = "display: inline-block !important;");
+            }
+        });
+
+        // Configuración para que vigile cambios de estilos y de estructura
+        observador.observe(document.body, { 
+            attributes: true, 
+            childList: true, 
+            subtree: true, 
+            attributeFilter: ['style', 'class'] 
+        });
     }
 }
 
@@ -4056,10 +4109,41 @@ function alternarModoPedido() {
 function cambiarPaso(paso) {
     if (!modoPedidoActivo) return;
 
-    // Validación básica al avanzar del Paso 1 al 2
+// 🌌 EL NUEVO ESCUDO: Destello azul premium de 1.5 segundos
     if (paso === 2 && pasoActual === 1) {
-        if (!document.getElementById('orden').value || !document.getElementById('fecha').value || !document.getElementById('institucion').value || !document.getElementById('persona').value) {
-            alert("⚠️ Por favor, llena primero todos los campos de la orden del Paso 1.");
+        const ordenInput = document.getElementById('orden');
+        const fechaInput = document.getElementById('fecha');
+        const institucionInput = document.getElementById('institucion');
+        const personaInput = document.getElementById('persona');
+
+        // Función premium para marcar el campo de forma estática
+        const marcarCampoVacio = (input) => {
+            if (input) {
+                input.focus();
+                input.classList.add('campo-vacio-azul');
+                
+                // En cuanto el usuario empiece a interactuar, limpiamos el borde azul
+                input.oninput = function() {
+                    input.classList.remove('campo-vacio-azul');
+                    input.oninput = null; // Liberamos memoria
+                };
+            }
+        };
+
+        if (ordenInput && !ordenInput.value.trim()) {
+            marcarCampoVacio(ordenInput);
+            return; // 🛑 Frena el avance
+        }
+        if (fechaInput && !fechaInput.value.trim()) {
+            marcarCampoVacio(fechaInput);
+            return;
+        }
+        if (institucionInput && !institucionInput.value.trim()) {
+            marcarCampoVacio(institucionInput);
+            return;
+        }
+        if (personaInput && !personaInput.value.trim()) {
+            marcarCampoVacio(personaInput);
             return;
         }
     }
