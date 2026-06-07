@@ -1319,13 +1319,19 @@ input::-webkit-outer-spin-button,
 </div>
 
         <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr><th>ORDEN</th><th>FECHA</th><th>INSTITUCIÓN</th><th>RESPONSABLE</th><th style="text-align:center;">¿LISTO?</th></tr>
-                </thead>
-                <tbody id="tablaBody"></tbody>
-            </table>
-        </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ORDEN</th>
+                <th>FECHA</th>
+                <th>INSTITUCIÓN</th>
+                <th>RESPONSABLE</th>
+                <th style="text-align:center;">¿LISTO?</th>
+            </tr>
+        </thead>
+        <tbody id="tablaBody"></tbody>
+    </table>
+</div>
     </div> <div id="burbuja-chisme" class="burbuja-oculta">
         <span id="cerrar-chisme" onclick="cerrarChisme(event)">×</span>
         <div class="contenido-chisme" onclick="irATrivia()">
@@ -1856,16 +1862,18 @@ function renderTable() {
             celdaOrdenHtml = item.orden;
         }
 
-        tr.innerHTML = `
+       tr.innerHTML = `
             <td style="font-weight:bold;" class="${esAntigua ? 'alerta-atraso' : ''}" title="${esAxel ? 'Doble toque para finalizar' : ''}">
                 ${celdaOrdenHtml}
             </td>
             <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
+            
             <td style="font-weight:600; cursor:help;" 
-                title="Producto: ${item.producto || 'Sin descripción'}" 
+                title="Producto: ${item.detallesPedido ? obtenerVistaPreviaDescripcion(item.detallesPedido) : (item.producto || 'Sin descripción')}" 
                 ondblclick="editarInstitucion('${item.orden}', this)">
                 ${item.inst}
             </td>
+            
             <td>
                 <select ${selectBloqueado} onchange="cambiarResp('${item.orden}', this.value)" class="${getStyleClass(item.responsable)}" style="cursor:${esAnulada ? 'not-allowed' : 'pointer'}; border-radius:4px; padding:4px; font-weight:bold; border:1px solid rgba(0,0,0,0.1);">
                     ${esAnulada ? '<option value="ANULADA" selected>🚫 ANULADA</option>' : ''}
@@ -2044,10 +2052,7 @@ if (yaExiste) {
     // Limpiamos versión vieja si existe para evitar duplicados en la lista local
     datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
 
-    // ==========================================================================
     // 🛡️ MODIFICACIÓN INTERNA: PAYLOAD HÍBRIDO (Orden Normal / Hoja de Pedido)
-    // ==========================================================================
-    
     // Si está en Modo Pedido y la tabla está vacía, frenamos con advertencia premium
     if (modoPedidoActivo && articulosPedidoActual.length === 0) {
         showToast("⚠️ Agrega al menos un artículo en el Paso 3", true);
@@ -2649,34 +2654,36 @@ function ejecutarImpresionReporte() {
     datosParaImprimir.forEach(item => {
         const institucion = item.inst || 'SIN INSTITUCIÓN';
         const personaRecibio = item.solicitante || item.pers || 'SIN ESPECIFICAR';
-        const producto = item.producto || item.descripcion || 'SIN ESPECIFICAR';
+        
+        // 🔥 MODIFICACIÓN QUIRÚRGICA: Si tiene detalles de pedido, los desglosa. Si no, usa el producto normal.
+        const producto = item.detallesPedido ? obtenerVistaPreviaDescripcion(item.detallesPedido) : (item.producto || 'SIN ESPECIFICAR');
         
         // 📅 JALAMOS LA FECHA DE LA ORDEN
         let fechaOrden = item.fecha || '';
         
         // 🔄 ¡EL TOQUE PREMIUM DE DIAGONALES! 
-        // Si la fecha trae guiones (ej: 03-06-2026 o formato ISO), los transmutamos a diagonales "/"
         if (fechaOrden.includes('-')) {
-            // Caso 1: Si viene en formato ISO Año-Mes-Día (2026-06-03), lo ordenamos a Día/Mes/Año
             if (fechaOrden.indexOf('-') === 4) {
                 const partes = fechaOrden.split('-');
                 fechaOrden = `${partes[2]}/${partes[1]}/${partes[0]}`;
             } else {
-                // Caso 2: Si viene como Día-Mes-Año (03-06-2026), solo reemplazamos los guiones por diagonales
                 fechaOrden = fechaOrden.replace(/-/g, '/');
             }
         }
 
+        // 🎯 INYECTAMOS EL ESTILO PRE-LINE PARA HACER LOS SALTOS DE LÍNEA EN EL PAPEL
         cuerpoHtml += `
             <tr>
                 <td class="col-orden">${item.orden || ''}</td>
-                <td class="col-fecha">${fechaOrden}</td> <td class="col-institucion">${institucion}</td>
+                <td class="col-fecha">${fechaOrden}</td> 
+                <td class="col-institucion">${institucion}</td>
                 <td class="col-recibio">${personaRecibio}</td>
                 <td class="col-despachado" style="text-align: center;"><div class="box-despachado"></div></td>
-                <td class="col-producto">${producto}</td>
+                <td class="col-producto" style="white-space: pre-line; text-align: left;">${producto}</td>
             </tr>`;
-    });
+    }); // 👈 AQUÍ CIERRA EL BUCLE DE FORMA ÚNICA Y LIMPIA
 
+    // 5. Compilamos el cierre de la tabla, observaciones y firmas
     cuerpoHtml += `
             </tbody>
         </table>
@@ -2714,11 +2721,9 @@ function ejecutarImpresionReporte() {
 
 // 🖨️ PASO 2: MÓDULO DE IMPRESIÓN QUIRÚRGICA PARA HOJA DE PEDIDO (ALPROMEH)
 function ejecutarImpresionPedidoFisico(datos) {
-    // 1. Creamos un div temporal que solo existirá en memoria para la impresora
     const divImpresion = document.createElement('div');
     divImpresion.id = 'seccion-impresion-exclusiva';
     
-    // Parseamos los artículos de vuelta de JSON a objeto para armar las filas de la tabla
     let productos = [];
     try {
         productos = JSON.parse(datos.detallesPedido);
@@ -2727,117 +2732,192 @@ function ejecutarImpresionPedidoFisico(datos) {
         productos = [];
     }
 
+    // 🔄 Función interna para formatear la fecha a DD/MM/AAAA de forma estricta
+    let fechaFormateada = datos.fecha || '';
+    if (fechaFormateada && fechaFormateada.includes('-')) {
+        const partes = fechaFormateada.split('-');
+        if (partes.length === 3) {
+            if (partes[0].length === 4) {
+                fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+        }
+    }
+
+    // 🔤 Función definitiva para formatear texto a Tipo Oración con soporte N/A elegante
+    function formatearTipoOracion(texto) {
+        if (!texto) return '';
+        
+        let cadena = texto.trim().toLowerCase();
+        if (cadena.length === 0 || cadena === 'n/a' || cadena === 'na') return 'n/a';
+        
+        cadena = cadena.charAt(0).toUpperCase() + cadena.slice(1);
+        
+        const siglasPermitidas = ['ml', 'edta', 'igss', 'nog', 'oc', 'id', 'va-cio'];
+        
+        let palabras = cadena.split(/\s+/);
+        palabras = palabras.map((palabra) => {
+            let palabraLimpia = palabra.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+            if (siglasPermitidas.includes(palabraLimpia)) {
+                return palabra.toUpperCase();
+            }
+            return palabra;
+        });
+        
+        let resultadoFinal = palabras.join(' ');
+        return resultadoFinal.charAt(0).toUpperCase() + resultadoFinal.slice(1);
+    }
+
     let filasHtml = '';
     let totalAcumulado = 0;
 
-    // 🚀 REGLA 3 y 4: Mapeo exacto eliminando código, despachado y pendientes + espacio vertical generoso
+    // 🚀 MAPEO VISUAL - BORDES REFORZADOS A 0.9PX Y TRATAMIENTO PARA N/A
     productos.forEach(p => {
         totalAcumulado += p.total;
+        let descripcionFormateada = formatearTipoOracion(p.descripcion);
         
-        // Asumimos que tu objeto puede traer la unidad de venta en 'codigo' o pasamos 'Unidad' por defecto si viene vacío
-        let unidadVenta = p.codigo || "Unidad"; 
-
+        // Formateo condicional para la unidad de venta
+        let unidadRaw = p.codigo || 'n/a';
+        let unidadFormateada = formatearTipoOracion(unidadRaw);
+        let estiloUnidad = 'text-align: center; font-size: 11px; color: #000000;';
+        
+        if (unidadFormateada === 'n/a') {
+            unidadFormateada = 'N/A';
+            estiloUnidad = 'text-align: center; font-size: 10px; color: #718096; font-weight: bold; letter-spacing: 0.5px;';
+        }
+        
         filasHtml += `
-            <tr style="border-bottom: 1px solid #cbd5e1;">
-                <td style="padding: 11px 8px; text-align: center; font-weight: bold; font-size: 11px;">${Number(p.cantidad).toLocaleString('en-US')}</td>
-                <td style="padding: 11px 8px; text-align: center; color: #334155; font-size: 11px;">${unidadVenta}</td>
-                <td style="padding: 11px 8px; text-align: left; font-size: 11px; font-weight: 500;">${p.descripcion}</td>
-                <td style="padding: 11px 8px; text-align: right; font-size: 11px;">Q ${Number(p.precioU).toFixed(2)}</td>
-                <td style="padding: 11px 8px; text-align: right; font-weight: bold; font-size: 11px;">Q ${Number(p.total).toFixed(2)}</td>
+            <tr style="border-bottom: 0.9px solid #000000;">
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; text-align: center; font-weight: bold; font-size: 12px; width: 8%; color: #000000; background: #ffffff;">${Number(p.cantidad).toLocaleString('en-US')}</td>
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; width: 4.5%; background: #ffffff;"></td>
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; width: 4.5%; background: #ffffff;"></td>
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; width: 11%; background: #ffffff; ${estiloUnidad}">${unidadFormateada}</td>
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; text-align: center; font-size: 11px; width: 7%; color: #000000; background: #ffffff;"></td>
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 8px; text-align: left; font-size: 12px; font-weight: 500; width: 44%; color: #000000; background: #ffffff;">${descripcionFormateada}</td>
+                <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 6px; font-size: 12px; width: 11%; color: #000000; background: #ffffff;">
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <span>Q</span>
+                        <span>${Number(p.precioU).toFixed(2)}</span>
+                    </div>
+                </td>
+                <td style="border-bottom: 0.9px solid #000000; padding: 9px 6px; font-weight: bold; font-size: 12px; width: 10%; color: #000000; background: #ffffff;">
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <span>Q</span>
+                        <span>${Number(p.total).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </div>
+                </td>
             </tr>
         `;
     });
 
-    // Determinamos de forma dinámica los checkboxes de contratación de Guatecompras
     const esCompraDirecta = (datos.tipoCompra === "Compra Directa") ? "X" : "";
     const esBajaCuantica = (datos.tipoCompra === "Baja Cuantía" || datos.tipoCompra === "Compra de Baja Cuantía") ? "X" : "";
 
-    // 2. Estructuramos el diseño premium del documento oficial (Clon exacto de tu hoja física)
     divImpresion.innerHTML = `
         <style>
-            /* 📜 INYECCIÓN DE ESTILOS DE IMPRESIÓN FORZADOS EN MEMORIA */
             @media print {
-                @page {
-                    size: letter landscape !important; /* 🚀 REGLA 1: Forzado horizontal estricto */
-                    margin: 8mm 10mm !important;      /* Márgenes optimizados anti-hojas vacías */
+                body > *:not(#seccion-impresion-exclusiva) { display: none !important; }
+                html, body { background: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                @page { 
+                    size: letter landscape !important; 
+                    margin: 10mm 12mm !important; 
                 }
-                body {
-                    -webkit-print-color-adjust: exact !important;
-                    print-color-adjust: exact !important;
-                    background: white !important;
-                    color: #0f172a !important;
-                    font-family: 'Segoe UI', Arial, sans-serif !important;
-                }
-                #seccion-impresion-exclusiva {
-                    width: 100% !important;
-                    page-break-inside: avoid !important; /* 🚀 REGLA 2: Escudo para forzar 1 sola hoja si es posible */
+                #seccion-impresion-exclusiva { 
+                    width: 100% !important; 
+                    display: block !important; 
                 }
             }
-
-            /* Estilos de estructura base */
-            .fake-checkbox {
-                display: inline-block;
-                width: 11px;
-                height: 11px;
-                border: 1px solid #475569;
+            
+            /* Bordes de rejilla balanceados en 0.9px */
+            .tabla-pedido-fisica th {
+                border-right: 0.9px solid #000000;
+                border-bottom: 0.9px solid #000000;
+                padding: 6px 2px;
+                font-size: 9px;
+                font-weight: bold;
                 text-align: center;
-                line-height: 10px;
+                text-transform: uppercase;
+                color: #000000;
+                background: #ffffff !important;
+            }
+            .fake-box-print {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border: 0.9px solid #000000;
+                text-align: center;
+                line-height: 11px;
                 font-weight: bold;
                 font-size: 10px;
-                background: white;
-                margin-right: 4px;
+                background: #ffffff !important;
+                margin-left: 6px;
+                vertical-align: middle;
             }
         </style>
 
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; padding: 10px; line-height: 1.3;">
+        <div style="font-family: Arial, sans-serif; color: #000000; background: #ffffff; padding: 5px; line-height: 1.35;">
             
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
                 <tr>
-                    <td style="vertical-align: top;">
-                        <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1px; color: #0f172a;">ALPROMEH</h1>
+                    <td style="vertical-align: top; width: 30%;">
+                        <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 0.5px; color: #000000;">ALPROMEH</h1>
                     </td>
-                    <td style="text-align: right; vertical-align: top; font-size: 9px; color: #64748b; line-height: 1.2;">
+                    <td style="text-align: right; vertical-align: top; font-size: 10px; font-weight: bold; color: #000000; line-height: 1.3;">
                         23 Av. INTERCONEXIÓN NARANJO-MINERVAS 12-91 ZONA 4 DE MIXCO PARQUE INDUSTRIAL<br>
                         Tel: 2254-3188 - info@alpromeh.com
                     </td>
                 </tr>
             </table>
 
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
-                <tr>
-                    <td colspan="2" style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 65%;">
-                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Facturar A:</span>
-                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.inst || '---'}</div>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; border: 0.9px solid #000000; background: #ffffff;">
+                <tr style="border-bottom: 0.9px solid #000000;">
+                    <td colspan="5" style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 88%; color: #000000;">
+                        <span style="font-weight: bold;">FACTURAR A:</span> <span style="font-weight: bold; text-transform: uppercase; margin-left: 4px;">${datos.inst || ''}</span>
                     </td>
-                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 35%;">
-                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Fecha de Emisión:</span>
-                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.fecha}</div>
+                    <td colspan="2" style="border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 12%; color: #000000;">
+                        <span style="font-weight: bold;">NIT:</span>
                     </td>
                 </tr>
+                <tr style="border-bottom: 0.9px solid #000000;">
+                    <td colspan="5" style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 88%; color: #000000;">
+                        <span style="font-weight: bold;">LUGAR DE ENTREGA:</span>
+                    </td>
+                    <td colspan="2" style="border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 12%; color: #000000;">
+                        <span style="font-weight: bold;">TELEFONO:</span>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 0.9px solid #000000; background: #ffffff;">
+                    <td colspan="7" style="border-bottom: 0.9px solid #000000; padding: 5px 8px; font-size: 10.5px; font-weight: bold; color: #000000;">POR ESTE MEDIO AUTORIZO A:</td>
+                </tr>
                 <tr>
-                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 33%;">
-                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Pedido Recibido Por:</span>
-                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.pers}</div>
+                    <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 25%; color: #000000;">
+                        <span style="font-weight: bold;">PEDIDO RECIBIDO:</span> <span style="font-weight: bold; text-transform: uppercase; margin-left: 4px;">${datos.pers || ''}</span>
                     </td>
-                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 32%;">
-                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">No. de Orden:</span>
-                        <div style="font-size: 11px; font-weight: 700; color: #b91c1c;">${datos.orden}</div>
+                    <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 17%; color: #000000;">
+                        <span style="font-weight: bold;">FECHA DE:</span> <span style="font-weight: bold; margin-left: 4px;">${fechaFormateada}</span>
                     </td>
-                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 35%;">
-                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Responsable Actual:</span>
-                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.responsable || 'Dan Perez'}</div>
+                    <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 14%; color: #000000;">
+                        <span style="font-weight: bold;">NO DE CLIENTE:</span>
+                    </td>
+                    <td colspan="2" style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 16%; color: #000000;">
+                        <span style="font-weight: bold;">NO DE VENDEDOR:</span>
+                    </td>
+                    <td colspan="2" style="border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 28%; color: #000000;">
+                        <span style="font-weight: bold;">NO. DE FACTURA:</span>
                     </td>
                 </tr>
             </table>
 
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+            <table class="tabla-pedido-fisica" style="width: 100%; border-collapse: collapse; border: 0.9px solid #000000; background: #ffffff; margin-bottom: 12px;">
                 <thead>
-                    <tr style="background: #0f172a; color: white;">
-                        <th style="padding: 6px 8px; width: 12%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: center;">Ordenado</th>
-                        <th style="padding: 6px 8px; width: 18%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: center;">Unidad de Venta</th>
-                        <th style="padding: 6px 8px; width: 45%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: left;">Descripción del Producto</th>
-                        <th style="padding: 6px 8px; width: 12%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: right;">Precio de Venta</th>
-                        <th style="padding: 6px 8px; width: 13%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: right;">Importe</th>
+                    <tr style="border-bottom: 0.9px solid #000000;">
+                        <th style="width: 8%;">ORDENADO</th>
+                        <th style="width: 4.5%;">DESPACHADO</th>
+                        <th style="width: 4.5%;">PENDIENTES</th>
+                        <th style="width: 11%;">UNIDAD DE VENTA</th>
+                        <th style="width: 7%;">CODIGO</th>
+                        <th style="width: 44%; text-align: center;">DESCRIPCION DEL PRODUCTO</th>
+                        <th style="width: 11%; text-align: center;">PRECIO DE VENTA</th>
+                        <th style="width: 10%; text-align: center; border-right: none;">IMPORTE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2845,47 +2925,48 @@ function ejecutarImpresionPedidoFisico(datos) {
                 </tbody>
             </table>
 
-            <table style="width: 100%; border-collapse: collapse; margin-top: 5px;">
-                <tr>
-                    <td style="vertical-align: top; width: 65%;">
-                        <div style="border: 1px solid #cbd5e1; padding: 8px; background: #f8fafc; border-radius: 4px; display: inline-block; width: 95%;">
-                            <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 5px;">Régimen de Contratación:</span>
-                            <div style="display: flex; align-items: center; gap: 15px; font-size: 10px; font-weight: 600;">
-                                <div style="display: flex; align-items: center;">
-                                    <span class="fake-checkbox">${esBajaCuantica}</span> Baja Cuantía
-                                </div>
-                                <div style="display: flex; align-items: center;">
-                                    <span class="fake-checkbox">${esCompraDirecta}</span> Compra Directa
-                                </div>
-                                ${datos.nog ? `
-                                <div style="margin-left: 10px;">
-                                    <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase;">NOG:</span>
-                                    <span style="font-size: 11px; font-weight: 700; margin-left: 4px; color: #0f172a;">${datos.nog}</span>
-                                </div>` : ''}
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px; border: 0.9px solid #000000; background: #ffffff;">
+                <tr style="border-bottom: 0.9px solid #000000;">
+                    <td colspan="4" style="border-bottom: 0.9px solid #000000; padding: 7px 8px; font-weight: bold; width: 65%; color: #000000;">
+                        ORDEN DE COMPRA NO. <span style="font-weight: 900; margin-left: 4px;">${datos.orden || ''}</span>
+                    </td>
+                    <td colspan="2" rowspan="3" style="vertical-align: middle; padding: 0 12px; font-weight: bold; width: 35%; border-left: 0.9px solid #000000; border-bottom: 0.9px solid #000000; color: #000000;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span style="font-size: 14px;">TOTAL:</span>
+                            <div style="font-size: 17px; font-weight: 900; display: flex; gap: 15px; width: 60%; justify-content: space-between;">
+                                <span>Q</span>
+                                <span>${totalAcumulado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                         </div>
                     </td>
-                    <td style="vertical-align: middle; text-align: right; width: 35%;">
-                        <div style="font-size: 13px; font-weight: bold; color: #0f172a;">
-                            TOTAL ORDEN: <span style="font-size: 16px; font-weight: 800; color: #16a34a; border-bottom: 2px double #0f172a; padding-bottom: 2px; margin-left: 5px;">Q ${totalAcumulado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                        </div>
+                </tr>
+                <tr style="border-bottom: 0.9px solid #000000;">
+                    <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 24%; font-size: 11.5px; font-weight: bold; color: #000000;">
+                        COMPRA DE BAJA CUANTIA: <span class="fake-box-print">${esBajaCuantica}</span>
+                    </td>
+                    <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 19%; font-size: 11.5px; font-weight: bold; color: #000000;">
+                        COMPRA DIRECTA: <span class="fake-box-print">${esCompraDirecta}</span>
+                    </td>
+                    <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 15%; font-size: 11.5px; font-weight: bold; color: #000000;">
+                        NOG: <span style="font-weight: bold; margin-left: 2px;">${datos.nog || ''}</span>
+                    </td>
+                    <td style="border-bottom: 0.9px solid #000000; padding: 7px 8px; width: 7%; font-size: 11.5px; font-weight: bold; color: #000000; border-right: none;">
+                        OTROS:
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding: 7px 8px; min-height: 35px; vertical-align: top; border-bottom: 0.9px solid #000000; color: #000000;">
+                        <span style="font-size: 9.5px; font-weight: bold; display: block; text-transform: uppercase;">OBSERVACIONES:</span>
+                        <div style="font-size: 12px; font-style: italic; margin-top: 3px;">${datos.observaciones || ''}</div>
                     </td>
                 </tr>
             </table>
 
-            ${datos.observaciones ? `
-            <div style="margin-top: 12px; border: 1px solid #cbd5e1; padding: 6px 8px; background: #fff; min-height: 35px; border-radius: 4px;">
-                <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Observaciones:</span>
-                <div style="font-size: 11px; font-style: italic; color: #475569;">${datos.observaciones}</div>
-            </div>` : ''}
-
         </div>
     `;
 
-    // 3. Inyectamos el div temporal al body real de la aplicación
     document.body.appendChild(divImpresion);
 
-    // 4. Pausa de 100ms para asegurar el render, lanzamos ventana de impresión y removemos el clon
     setTimeout(() => {
         window.print();
         document.body.removeChild(divImpresion);
@@ -3857,6 +3938,54 @@ function ajustarValidacionesInputs() {
     });
 }
 
+// 📑 FUNCIÓN DE FORMATEO ESTÉTICO DE PRODUCTOS PARA LA LISTA (ALPROMEH)
+function obtenerVistaPreviaDescripcion(valorCelda) {
+    if (!valorCelda) return '';
+
+    let textoLimpio = valorCelda.trim();
+
+    function aplicarTipoOracion(texto) {
+        if (!texto) return '';
+        let cadena = texto.trim().toLowerCase();
+        if (cadena.length === 0 || cadena === 'n/a' || cadena === 'na') return 'N/A';
+        
+        cadena = cadena.charAt(0).toUpperCase() + cadena.slice(1);
+        const siglasPermitidas = ['ml', 'edta', 'igss', 'nog', 'oc', 'id', 'va-cio'];
+        
+        let palabras = cadena.split(/\s+/);
+        palabras = palabras.map((palabra) => {
+            let palabraLimpia = palabra.toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
+            if (siglasPermitidas.includes(palabraLimpia)) {
+                return palabra.toUpperCase();
+            }
+            return palabra;
+        });
+        return palabras.join(' ');
+    }
+
+    if (textoLimpio.startsWith('[') && textoLimpio.endsWith(']')) {
+        try {
+            const arregloProductos = JSON.parse(textoLimpio);
+            if (arregloProductos && arregloProductos.length > 0) {
+                const lineasFormateadas = arregloProductos.map(p => {
+                    const cant = p.cantidad || '0';
+                    let undRaw = p.codigo || 'N/A';
+                    let und = (undRaw.toLowerCase() === 'n/a' || undRaw.toLowerCase() === 'na') ? 'N/A' : aplicarTipoOracion(undRaw);
+                    const desc = aplicarTipoOracion(p.descripcion);
+                    
+                    return `• (${cant}) - (${und}) - ${desc}`;
+                });
+                return lineasFormateadas.join('\n');
+            }
+        } catch (error) {
+            console.error("Error al procesar el JSON en la vista previa:", error);
+            return `• ${aplicarTipoOracion(textoLimpio)}`;
+        }
+    }
+
+    return `• ${aplicarTipoOracion(textoLimpio)}`;
+}
+
 // 📊 LÓGICA INTERACTIVA PARA EL PASO 2 Y PASO 3 (ALPROMEH)
 // Arreglo global para almacenar los productos del pedido actual
 let articulosPedidoActual = [];
@@ -3955,6 +4084,7 @@ function renderizarTablaArticulos() {
         const totalConComas = art.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const cantidadConComas = art.cantidad.toLocaleString('en-US');
 
+        // Aquí usamos texto plano normal porque esta tabla es el desglose uno por uno
         cuerpo.innerHTML += `
             <tr style="border-bottom: 1px solid var(--border);">
                 <td style="padding:8px; text-align:center; font-weight:bold;">${cantidadConComas}</td>
