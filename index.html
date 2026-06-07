@@ -1039,7 +1039,26 @@ input::-webkit-outer-spin-button,
 .historial-pedido-container {
     position: relative;
     display: inline-block;
-    margin-left: 6px;
+    margin-left: 0px; 
+    
+    /* 🚀 ESTADO INICIAL: Colapsado y oculto al entrar */
+    width: 0px;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    pointer-events: none; /* Evita clics fantasma mientras está oculto */
+    
+    /* 🏎️ TRANSICIÓN PREMIUM: Mueve el switch y texto suave a la izquierda */
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.22s ease, margin-left 0.3s ease;
+}
+
+/* Se activa con JS cuando el switch es TRUE */
+.historial-pedido-container.mostrar-puntos {
+    width: 32px !important;       
+    margin-left: 8px !important;  
+    opacity: 1 !important;
+    overflow: visible !important; /* Permite que el menú desplegable flote hacia abajo sin cortarse */
+    pointer-events: auto !important; /* Habilita los clics de nuevo */
 }
 
 /* El botón de los puntitos */
@@ -1054,6 +1073,7 @@ input::-webkit-outer-spin-button,
     line-height: 20px;
     border-radius: 4px;
     transition: background 0.2s, color 0.2s;
+    display: inline-block;
 }
 .btn-historial-puntos:hover {
     background: #f1f5f9;
@@ -1239,7 +1259,7 @@ input::-webkit-outer-spin-button,
         <span class="slider-ios"></span>
     </label>
     
-    <div class="historial-pedido-container" id="menuHistorialPedidos" style="display: none;">
+    <div class="historial-pedido-container" id="menuHistorialPedidos">
         <button type="button" class="btn-historial-puntos" onclick="toggleMenuHistorial(event)">⋮</button>
         <div class="dropdown-historial-pedidos" id="dropdownHistorial">
             <div class="dropdown-header-alpro">Reimprimir últimas 3:</div>
@@ -3541,6 +3561,15 @@ function abrirTrivia() {
         return;
     }
 
+    // 🔒 CANDADO SUTIL: Si ya respondió hoy, frena en seco y no abre el modal
+    const yaRespondioHoy = localStorage.getItem('triviaRespondida');
+    const fechaHoyStr = hoy.toLocaleDateString();
+
+    if (yaRespondioHoy === fechaHoyStr) {
+        alert("¡Ya respondiste el reto de hoy, mi bro! Guarda energías para mañana. 🔥");
+        return; 
+    }
+
     validarRachaPorInactividad();
     pintarWidgetRacha();
 
@@ -4019,9 +4048,9 @@ function alternarModoPedido() {
         textoSwitch.style.color = "#34c759";
         textoSwitch.style.fontWeight = "700";
         
-        // 🔥 MUESTRA LOS 3 PUNTITOS DE INMEDIATO AL ACTIVAR EL SWITCH
+        // 🔥 MODIFICACIÓN OPTIMIZADA: Abre el ancho fluidamente inyectando la clase activa
         if (menuHistorial) {
-            menuHistorial.style.display = 'inline-block';
+            menuHistorial.classList.add('mostrar-puntos');
         }
         
         // 🚫 AL ACTIVAR: El botón se esconde de inmediato con Zoom Out elástico
@@ -4070,9 +4099,13 @@ function alternarModoPedido() {
             btnSig1.style.display = 'none';
             btnSig1.classList.remove('salida-paso');
             
-            // 🔥 OCULTA LOS 3 PUNTITOS SCON ANIMACIÓN LUEGO DE LOS 200ms
+            // Remueve la clase para que el ancho colapse a 0px suavemente
             if (menuHistorial) {
-                menuHistorial.style.display = 'none';
+                menuHistorial.classList.remove('mostrar-puntos');
+                
+                // Candado sutil para asegurar que el dropdown flotante se cierre si quedó abierto
+                const dropdown = document.getElementById('dropdownHistorial');
+                if (dropdown) dropdown.style.display = 'none';
             }
             
             // ✨ AL DESACTIVAR: Reaparece el lapicito con su Zoom In elástico
