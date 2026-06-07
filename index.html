@@ -733,6 +733,303 @@ input::-webkit-outer-spin-button,
     /* ⏱️ ENTRADA SUAVE: Se ilumina de forma fluida al presionar la primera tecla */
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out !important;
 }
+
+/* ==========================================================================
+   🚨 NUEVOS ESTILOS PREMIUM PARA EL MÓDULO HOJA DE PEDIDO 3-EN-1
+   ========================================================================== */
+
+/* Contenedor del Switch Alineado */
+.contenedor-switch-ios {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%); 
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px; 
+    z-index: 10;
+}
+
+/* Texto base: Gris minimalista por defecto */
+.label-switch-ios {
+    font-size: 0.82rem; 
+    font-weight: 700;
+    color: #64748b; 
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+/* ESTRUCTURA DEL SWITCH COMPACTO*/
+.switch-ios {
+    position: relative;
+    display: inline-block;
+    width: 36px;  
+    height: 20px; 
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+/* Ocultar el checkbox nativo */
+.switch-ios input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* El cuerpo del switch (Slider) */
+.slider-ios {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px;
+}
+
+/* El botón blanco interno (La bolita) */
+.slider-ios:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Estado Encendido: Color verde iOS */
+.switch-ios input:checked + .slider-ios {
+    background-color: #34c759;
+    animation: destelloActivo 0.5s ease-out;
+}
+
+/* Movimiento de la bolita al encender */
+.switch-ios input:checked + .slider-ios:before {
+    transform: translateX(16px);
+}
+
+/* ANIMACIÓN DEL DESTELLO */
+@keyframes destelloActivo {
+    0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(52, 199, 89, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
+}
+
+/* INDICADOR DE 3 PUNTOS (STEPPER COHESIVO) */
+.stepper-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0 25px 0;
+    gap: 8px;
+}
+
+.step-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--input-bg);
+    border: 2px solid var(--border);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.step-dot.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 106, 255, 0.2);
+}
+
+.step-line {
+    height: 2px;
+    width: 40px;
+    background: var(--border);
+    transition: all 0.3s ease;
+}
+
+.step-line.active {
+    background: var(--primary);
+}
+
+/* BOTONES DE NAVEGACIÓN SECUNDARIOS */
+.btn-navegacion-pasos {
+    background: #475569;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-navegacion-pasos:hover {
+    background: #334155;
+}
+
+/* 🔥 ANIMACIÓN PREMIUM PARA TRANSICIÓN DE PASOS */
+/* --- ENTRADAS --- */
+.animacion-paso {
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: entradaSeccion 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.step-dot {
+    opacity: 0;
+    transform: translateY(-15px);
+    will-change: transform, opacity;
+    animation: popDropDot 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+#dot1 { animation-delay: 0.05s; }
+#line1 { animation-delay: 0.12s; opacity: 0; animation: entradaSuave 0.3s ease forwards; }
+#dot2 { animation-delay: 0.2s; }
+#line2 { animation-delay: 0.27s; opacity: 0; animation: entradaSuave 0.3s ease forwards; }
+#dot3 { animation-delay: 0.35s; }
+
+.stepper-container-animado {
+    will-change: max-height, opacity;
+    animation: desplegarStepper 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* --- 🔥 NUEVAS SALIDAS (AL REVÉS) --- */
+.salida-paso {
+    will-change: transform, opacity;
+    animation: salidaSeccion 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.stepper-container-salida {
+    will-change: max-height, opacity;
+    animation: replegarStepper 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* --- KEYFRAMES --- */
+@keyframes entradaSeccion {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes salidaSeccion {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-8px); filter: blur(1px); }
+}
+
+@keyframes popDropDot {
+    0% { opacity: 0; transform: translateY(-15px) scale(0.6); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes entradaSuave {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes desplegarStepper {
+    0% { opacity: 0; max-height: 0; margin-bottom: 0; }
+    100% { opacity: 1; max-height: 80px; margin-bottom: 20px; }
+}
+
+@keyframes replegarStepper {
+    0% { opacity: 1; max-height: 80px; margin-bottom: 20px; }
+    100% { opacity: 0; max-height: 0; margin-bottom: 0; padding: 0; }
+}
+
+/*ANIMACIONES EXCLUSIVAS PARA EL CAMPO NOG*/
+.nog-visible {
+    display: flex !important; /* Lo enciende en el acto */
+    animation: entradaNog 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.nog-oculto {
+    /* Mantiene el display flex mientras corre la animación y luego el keyframe lo oculta */
+    display: flex !important; 
+    animation: salidaNog 0.22s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes entradaNog {
+    0% {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes salidaNog {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-12px);
+        display: none !important; 
+    }
+}
+
+/* ✨ EFECTO ZOOM PREMIUM PARA EL LAPICITO ALPROMEH */
+.btn-producto {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, background-color 0.2s ease !important;
+    transform-origin: center;
+}
+
+/* Estado oculto (Zoom Out completo) */
+.lapicito-zoom-out {
+    transform: scale(0) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0px !important; /* Para que no deje espacio en blanco en el flex */
+    padding: 0px !important;
+    margin: 0px !important;
+    border: none !important;
+}
+
+/* 🚨 ANIMACIÓN DE SACUDIDA Y PULSO ROJO PARA EL NOG */
+.input-error-nog {
+    border-color: #de0d0d !important; /* Rojo ALPROMEH de advertencia */
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.25) !important;
+    animation: shakeNog 0.4s ease-in-out;
+}
+
+@keyframes shakeNog {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
+}
+
+/*LE DA MÁS ALTURA (DE ARRIBA A ABAJO) A AMBOS BOTONES */
+.btn-navegacion-pasos {
+    padding-top: 14px !important;    /* ↕️ Más espacio arriba */
+    padding-bottom: 14px !important; /* ↕️ Más espacio abajo */
+    font-weight: 600 !important;     /* Letra más firme y limpia */
+    border-radius: 8px !important;   /* Bordes curvos premium */
+}
+
+/* 🔵 ESTILO DE NAVEGACIÓN AZUL PLANO PREMIUM */
+.btn-navegacion-pasos.btn-azul {
+    background: #006aff !important;
+    color: white !important;
+    border: none !important;
+    transition: background 0.2s ease;
+}
+
+/* 🕶️ EFECTO HOVER: Se oscurece elegantemente al pasar el mouse */
+.btn-navegacion-pasos.btn-azul:hover {
+    background: #0056d4 !important; /* Un azul más profundo y ejecutivo */
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -816,37 +1113,168 @@ input::-webkit-outer-spin-button,
 <div id="widgetFuegoRacha" title="¡Vas bien! ¡Sigue así! 🔥">🔥 <span id="rachaTextoBoton">0</span></div>
 </div> <button id="btnExpandirForm" class="btn-celular-only" onclick="toggleForm()">+ NUEVA ORDEN</button>
     <div class="contenedor" id="contenedorForm">
-        <h2 style="text-align: center; margin-top: 0; color: var(--primary); font-weight: 800;">
-            <span id="triggerHuevo" style="cursor: pointer;">📦</span> REGISTRO ÓRDENES
-        </h2>
+        
+        <div style="position: relative; width: 100%; margin-top: 5px; margin-bottom: 20px;">
+            
+            <h2 style="text-align: center; margin: 0; color: var(--primary); font-weight: 800;">
+                <span id="triggerHuevo" style="cursor: pointer;">📦</span> REGISTRO ÓRDENES
+            </h2>
+
+            <div class="contenedor-switch-ios">
+                <span class="label-switch-ios" id="textoSwitchPedido">HOJA DE PEDIDO</span>
+                <label class="switch-ios">
+                    <input type="checkbox" id="switchModoPedido" onchange="alternarModoPedido()">
+                    <span class="slider-ios"></span>
+                </label>
+            </div>
+
+        </div>
+
+        <div id="indicadorPasos" class="stepper-container" style="display: none;">
+            <div id="dot1" class="step-dot active">1</div>
+            <div id="line1" class="step-line"></div>
+            <div id="dot2" class="step-dot">2</div>
+            <div id="line2" class="step-line"></div>
+            <div id="dot3" class="step-dot">3</div>
+        </div>
+
         <form id="formOrdenes">
-            <div class="form-grid">
-                <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" min="0" required></div>
-                <div><label>FECHA DE IMPRESIÓN:</label><input type="date" id="fecha" required></div>
-                <div><label>INSTITUCIÓN:</label><input type="text" id="institucion" placeholder="Nombre de la entidad" required></div>
-                <div>
-                    <label>PERSONA QUE RECIBIÓ:</label>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="persona" placeholder="Tu nombre" required>
-                        <button type="button" id="btnProducto" class="btn-producto" onclick="abrirModalProducto()">📝</button>
+            
+            <div id="seccionPaso1">
+                <div class="form-grid">
+                    <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" min="0" required></div>
+                    <div><label>FECHA DE IMPRESIÓN:</label><input type="date" id="fecha" required></div>
+                    <div><label>INSTITUCIÓN:</label><input type="text" id="institucion" placeholder="Nombre de la entidad" required></div>
+                    <div>
+                        <label>PERSONA QUE RECIBIÓ:</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="persona" placeholder="Tu nombre" required>
+                            <button type="button" id="btnProducto" class="btn-producto" onclick="abrirModalProducto()">📝</button>
+                        </div>
                     </div>
                 </div>
+                <div style="margin-top: 15px; margin-bottom: 15px;">
+                    <label>RESPONSABLE ACTUAL:</label>
+                    <select id="responsableSelect" onchange="aplicarColorUnico(this)">
+                        <option value="Yanet" class="color-yanet">Yanet</option>
+                        <option value="Danna" class="color-danna">Danna</option>
+                        <option value="Carmen" class="color-carmen">Carmen</option>
+                        <option value="Daniela" class="color-gris">Daniela</option>
+                        <option value="Nata" class="color-nata-claudia">Nata</option>
+                        <option value="Claudia" class="color-nata-claudia">Claudia</option>
+                        <option value="Dan" class="color-especial-dan-susan" selected>Dan</option>
+                        <option value="Susan" class="color-especial-dan-susan">Susan</option>
+                        <option value="Axel" class="color-axel">Axel</option>
+                    </select>
+                </div>
+                
+                <button type="button" id="btnSiguiente1" class="btn-navegacion-pasos btn-azul" style="display: none; width: 100%; margin-top: 15px; font-size: 0.9rem;" onclick="cambiarPaso(2)">
+    SIGUIENTE ➡️
+</button>
+</div>
+
+           <div id="seccionPaso2" style="display: none;">
+                <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 10px; color: var(--primary);">TIPO DE CONTRATACIÓN:</label>
+                    
+                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 5px; flex-wrap: wrap;">
+                        
+                       <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main);">
+    <input type="radio" name="tipoContratacion" value="Baja Cuantía" checked onchange="evaluarMostrarNog()"> Baja Cuantía
+</label>
+                        
+<div style="display: flex; align-items: center; gap: 50px;">
+    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main);">
+        <input type="radio" name="tipoContratacion" value="Compra Directa" onchange="evaluarMostrarNog()"> Compra Directa
+    </label>
+
+    <div id="contenedorCampoNog" style="display: none; align-items: center; gap: 6px;">
+        <label for="nogInput" style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">NOG:</label>
+        <input type="text" id="nogInput" placeholder="Ej: 30811163" style="width: 110px; padding: 4px 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--border); margin: 0; box-sizing: border-box;">
+    </div>
+</div>
+
+</div>
+</div>
+
+                <div style="margin-bottom: 15px;">
+    <label>OBSERVACIONES:</label>
+    <textarea id="observacionesPedido" placeholder="Ej: Ya se pidió, ya se entregó la mitad..." style="width:100%; height:70px; border-radius:8px; padding:10px; border:2px solid var(--border); background:var(--input-bg); color:var(--text-main); font-family:inherit; resize: none; box-sizing: border-box;"></textarea>
+</div>
+                
+<div style="display: flex; gap: 10px; margin-top: 20px;">
+    <button type="button" class="btn-navegacion-pasos" style="flex: 1; font-size: 0.9rem;" onclick="cambiarPaso(1)">
+        ⬅️ ATRÁS
+    </button>
+    <button type="button" class="btn-navegacion-pasos btn-azul" style="flex: 1; font-size: 0.9rem;" onclick="cambiarPaso(3)">
+        SIGUIENTE ➡️
+    </button>
+</div>
+</div>
+
+          <div id="seccionPaso3" style="display: none;">
+                <label style="font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px;">INGRESAR ARTÍCULOS DEL PEDIDO:</label>
+                
+                <div style="display: grid; grid-template-columns: 1.2fr 2fr 3fr 2.2fr 0.5fr; gap: 6px; margin-bottom: 10px;">
+                    
+                    <input type="text" id="addCant" placeholder="Cantidad" 
+                           oninput="
+                               let val = this.value.replace(/,/g, '').replace(/\D/g, '');
+                               this.value = val ? Number(val).toLocaleString('en-US') : '';
+                           " 
+                           style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
+                    
+                    <input type="text" id="addCod" placeholder="Unidad de Venta" style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
+                    <input type="text" id="addDesc" placeholder="Descripción del Producto" style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
+                    
+                    <div style="display: flex; align-items: center; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 0 6px; box-sizing: border-box;">
+                        <span style="font-weight: bold; color: #64748b; font-size: 0.85rem; margin-right: 4px; user-select: none;">Q</span>
+                        <input type="text" id="addPrecio" placeholder="Precio Unitario" 
+                               oninput="
+                                   let val = this.value.replace(/[^0-9.]/g, '');
+                                   let parts = val.split('.');
+                                   if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+                                   parts = val.split('.');
+                                   if (parts[1] && parts[1].length > 2) parts[1] = parts[1].slice(0, 2);
+                                   if (parts[0]) parts[0] = Number(parts[0]).toLocaleString('en-US');
+                                   this.value = parts.join('.');
+                               " 
+                               style="flex: 1; border: none; padding: 6px 0; font-size: 0.85rem; outline: none; width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <button type="button" onclick="agregarArticuloATabla()" style="background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; height: 100%;">＋</button>
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="background: var(--primary); color: white;">
+                                <th style="padding:8px; text-align:center; font-size:0.85rem; width: 10%;">CANT</th>
+                                <th style="padding:8px; text-align:center; font-size:0.85rem; width: 20%;">UNIDAD DE VENTA</th>
+                                <th style="padding:8px; text-align:left; font-size:0.85rem; width: 40%;">DESCRIPCIÓN</th>
+                                <th style="padding:8px; text-align:right; font-size:0.85rem; width: 15%;">PRECIO U.</th>
+                                <th style="padding:8px; text-align:right; font-size:0.85rem; width: 15%;">TOTAL</th>
+                                <th style="padding:8px; text-align:center; width: 5%;">×</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTablaPedido">
+                            <tr id="filaVaciaPedido">
+                                <td colspan="6" style="text-align:center; color:#94a3b8; padding:15px; font-style:italic;">No hay productos agregados todavía.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: right; padding: 8px; font-size: 1.05rem; font-weight: bold; color: var(--text-main); margin-bottom: 15px;">
+                    TOTAL ORDEN: <span style="color: #34c759;">Q <span id="txtTotalPedido">0.00</span></span>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 15px;">
+                    <button type="button" class="btn-navegacion-pasos" style="width: 100%;" onclick="cambiarPaso(2)">⬅️ ATRÁS</button>
+                </div>
             </div>
-            <div style="margin-top: 15px;">
-                <label>RESPONSABLE ACTUAL:</label>
-                <select id="responsableSelect" onchange="aplicarColorUnico(this)">
-                    <option value="Yanet" class="color-yanet">Yanet</option>
-                    <option value="Danna" class="color-danna">Danna</option>
-                    <option value="Carmen" class="color-carmen">Carmen</option>
-                    <option value="Daniela" class="color-gris">Daniela</option>
-                    <option value="Nata" class="color-nata-claudia">Nata</option>
-                    <option value="Claudia" class="color-nata-claudia">Claudia</option>
-                    <option value="Dan" class="color-especial-dan-susan" selected>Dan</option>
-                    <option value="Susan" class="color-especial-dan-susan">Susan</option>
-                    <option value="Axel" class="color-axel">Axel</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-guardar">GUARDAR REGISTRO</button>
+
+            <button type="submit" id="btnGuardarRegistro" class="btn-guardar" style="transition: all 0.3s ease;">GUARDAR REGISTRO</button>
         </form>
     </div>
 
@@ -859,10 +1287,9 @@ input::-webkit-outer-spin-button,
             </div>
         </div>
 
-  <div class="busqueda-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;">
+    <div class="busqueda-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;">
     
     <div style="width: 100%;">
-        <!-- 🔥 MODIFICADO: Dejamos solo la lupa en el placeholder, el script escribirá el resto de forma premium -->
         <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 " onkeyup="renderTable()" style="width: 100%; box-sizing: border-box;">
     </div>
 
@@ -1617,6 +2044,24 @@ if (yaExiste) {
     // Limpiamos versión vieja si existe para evitar duplicados en la lista local
     datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
 
+    // ==========================================================================
+    // 🛡️ MODIFICACIÓN INTERNA: PAYLOAD HÍBRIDO (Orden Normal / Hoja de Pedido)
+    // ==========================================================================
+    
+    // Si está en Modo Pedido y la tabla está vacía, frenamos con advertencia premium
+    if (modoPedidoActivo && articulosPedidoActual.length === 0) {
+        showToast("⚠️ Agrega al menos un artículo en el Paso 3", true);
+        
+        // Liberamos el botón para que no se quede trabado en "REGISTRANDO..."
+        btnGuardar.disabled = false;
+        btnGuardar.innerText = "GUARDAR REGISTRO";
+        btnGuardar.style.opacity = "1";
+        btnGuardar.style.cursor = "pointer";
+        guardandoAhora = false;
+        if (formCard) formCard.classList.remove('resaltar-actualizacion');
+        return; 
+    }
+
     const payload = {
         orden: num, 
         fecha: fechaARegistrar, 
@@ -1628,11 +2073,19 @@ if (yaExiste) {
         ultimaHora: horaARegistrar, 
         movimiento: "Ingreso/Edición: " + document.getElementById('persona').value, 
         ultimoMov: "Ingreso/Edición: " + document.getElementById('persona').value,
-        producto: productoTemporal 
+        
+        // Guardamos el producto normal si no es pedido, o los detalles en JSON si es Modo Pedido
+        producto: modoPedidoActivo ? "📄 HOJA DE PEDIDO GENERADA" : productoTemporal,
+
+        // Campos nuevos exclusivos para la Hoja de Pedido en Google Sheets
+        tipoCompra: modoPedidoActivo ? document.querySelector('input[name="tipoContratacion"]:checked').value : "Normal",
+        nog: modoPedidoActivo ? document.getElementById('nogInput').value.trim() : "",
+        observaciones: modoPedidoActivo ? document.getElementById('observacionesPedido').value.trim() : "",
+        detallesPedido: modoPedidoActivo ? JSON.stringify(articulosPedidoActual) : ""
     };
 
-if (!productoTemporal || productoTemporal.trim() === "") {
-        // 1. 🔓 Liberamos el botón verde de inmediato para que no se trabe
+    // Si no es Modo Pedido, mantenemos tu freno original de obligar a ingresar producto por el modal
+    if (!modoPedidoActivo && (!productoTemporal || productoTemporal.trim() === "")) {
         btnGuardar.disabled = false;
         btnGuardar.innerText = "GUARDAR REGISTRO";
         btnGuardar.style.opacity = "1";
@@ -1640,36 +2093,33 @@ if (!productoTemporal || productoTemporal.trim() === "") {
         guardandoAhora = false;
         if (formCard) formCard.classList.remove('resaltar-actualizacion');
 
-        // 2. 📝 Abrimos el modal NORMAL (va a entrar con su zoom pro max idéntico a siempre)
         abrirModalProducto(); 
 
-        // 3. ⏱️ ESPERAMOS A QUE TERMINE EL ZOOM: Le damos 250ms de paz
         setTimeout(() => {
             const modalContent = document.querySelector('#modalProducto .modal-content');
             if (modalContent) {
-                // Le quitamos cualquier rastro de animación vieja y le clavamos el shake
                 modalContent.classList.remove('efecto-shake');
-                
-                // Forzamos al navegador a entender el cambio (reflow rápido)
                 void modalContent.offsetWidth; 
-                
-                // ¡PUM! Se sacude limpio cuando ya está estático en pantalla
                 modalContent.classList.add('efecto-shake');
             }
-        }, 250); // 250 milisegundos es el tiempo perfecto para que el zoom termine
+        }, 250);
 
-        // 4. ⚠️ El aviso amigable en la esquina
         showToast("⚠️ Por favor, ingresa el producto", true);
-        
-        return; // 🛑 Frenamos el guardado en Google Sheets
+        return; 
     }
 
     datosLocales.unshift(payload);
     save(); 
 
+    //Enviamos a tu Web App de siempre de Google Sheets
     fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
     .then(() => {
-        // Limpieza de interfaz
+        // 🚀 SI SE GUARDÓ CON ÉXITO Y ERA PEDIDO, DISPARAMOS LA IMPRESIÓN AL INSTANTE
+        if (modoPedidoActivo) {
+            ejecutarImpresionPedidoFisico(payload);
+        }
+
+        // Limpieza estándar de tu interfaz
         this.reset(); 
         setFechaHoy(); 
         productoTemporal = ""; 
@@ -1682,6 +2132,16 @@ if (!productoTemporal || productoTemporal.trim() === "") {
         document.getElementById('btnProducto').innerText = "📝";
         aplicarColorUnico(document.getElementById('responsableSelect'));
         
+        // Si estaba el switch encendido, lo apagamos y regresamos al Paso 1 de forma limpia
+        if (modoPedidoActivo) {
+            document.getElementById('switchModoPedido').checked = false;
+            alternarModoPedido();
+        }
+
+        // Limpiamos el saco de artículos global para el siguiente pedido
+        articulosPedidoActual = [];
+        renderizarTablaArticulos();
+
         if(!yaExiste) showToast("✅ OC. " + num + " guardada correctamente");
     })
     .catch(err => {
@@ -1690,7 +2150,7 @@ if (!productoTemporal || productoTemporal.trim() === "") {
     .finally(() => {
         // Le damos 2 segundos de "paz" al sistema para que Google asiente los datos
         setTimeout(() => {
-            formCard.classList.remove('resaltar-actualizacion');
+            if (formCard) formCard.classList.remove('resaltar-actualizacion');
             btnGuardar.disabled = false;
             btnGuardar.innerText = "GUARDAR REGISTRO";
             btnGuardar.style.opacity = "1";
@@ -2251,19 +2711,202 @@ function ejecutarImpresionReporte() {
     ventanaImpresion.document.write(cuerpoHtml);
     ventanaImpresion.document.close();
 }
-    </script>
+
+// 🖨️ PASO 2: MÓDULO DE IMPRESIÓN QUIRÚRGICA PARA HOJA DE PEDIDO (ALPROMEH)
+function ejecutarImpresionPedidoFisico(datos) {
+    // 1. Creamos un div temporal que solo existirá en memoria para la impresora
+    const divImpresion = document.createElement('div');
+    divImpresion.id = 'seccion-impresion-exclusiva';
+    
+    // Parseamos los artículos de vuelta de JSON a objeto para armar las filas de la tabla
+    let productos = [];
+    try {
+        productos = JSON.parse(datos.detallesPedido);
+    } catch(e) {
+        console.error("Error al parsear los artículos para la impresión", e);
+        productos = [];
+    }
+
+    let filasHtml = '';
+    let totalAcumulado = 0;
+
+    // 🚀 REGLA 3 y 4: Mapeo exacto eliminando código, despachado y pendientes + espacio vertical generoso
+    productos.forEach(p => {
+        totalAcumulado += p.total;
+        
+        // Asumimos que tu objeto puede traer la unidad de venta en 'codigo' o pasamos 'Unidad' por defecto si viene vacío
+        let unidadVenta = p.codigo || "Unidad"; 
+
+        filasHtml += `
+            <tr style="border-bottom: 1px solid #cbd5e1;">
+                <td style="padding: 11px 8px; text-align: center; font-weight: bold; font-size: 11px;">${Number(p.cantidad).toLocaleString('en-US')}</td>
+                <td style="padding: 11px 8px; text-align: center; color: #334155; font-size: 11px;">${unidadVenta}</td>
+                <td style="padding: 11px 8px; text-align: left; font-size: 11px; font-weight: 500;">${p.descripcion}</td>
+                <td style="padding: 11px 8px; text-align: right; font-size: 11px;">Q ${Number(p.precioU).toFixed(2)}</td>
+                <td style="padding: 11px 8px; text-align: right; font-weight: bold; font-size: 11px;">Q ${Number(p.total).toFixed(2)}</td>
+            </tr>
+        `;
+    });
+
+    // Determinamos de forma dinámica los checkboxes de contratación de Guatecompras
+    const esCompraDirecta = (datos.tipoCompra === "Compra Directa") ? "X" : "";
+    const esBajaCuantica = (datos.tipoCompra === "Baja Cuantía" || datos.tipoCompra === "Compra de Baja Cuantía") ? "X" : "";
+
+    // 2. Estructuramos el diseño premium del documento oficial (Clon exacto de tu hoja física)
+    divImpresion.innerHTML = `
+        <style>
+            /* 📜 INYECCIÓN DE ESTILOS DE IMPRESIÓN FORZADOS EN MEMORIA */
+            @media print {
+                @page {
+                    size: letter landscape !important; /* 🚀 REGLA 1: Forzado horizontal estricto */
+                    margin: 8mm 10mm !important;      /* Márgenes optimizados anti-hojas vacías */
+                }
+                body {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                    background: white !important;
+                    color: #0f172a !important;
+                    font-family: 'Segoe UI', Arial, sans-serif !important;
+                }
+                #seccion-impresion-exclusiva {
+                    width: 100% !important;
+                    page-break-inside: avoid !important; /* 🚀 REGLA 2: Escudo para forzar 1 sola hoja si es posible */
+                }
+            }
+
+            /* Estilos de estructura base */
+            .fake-checkbox {
+                display: inline-block;
+                width: 11px;
+                height: 11px;
+                border: 1px solid #475569;
+                text-align: center;
+                line-height: 10px;
+                font-weight: bold;
+                font-size: 10px;
+                background: white;
+                margin-right: 4px;
+            }
+        </style>
+
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; padding: 10px; line-height: 1.3;">
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+                <tr>
+                    <td style="vertical-align: top;">
+                        <h1 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1px; color: #0f172a;">ALPROMEH</h1>
+                    </td>
+                    <td style="text-align: right; vertical-align: top; font-size: 9px; color: #64748b; line-height: 1.2;">
+                        23 Av. INTERCONEXIÓN NARANJO-MINERVAS 12-91 ZONA 4 DE MIXCO PARQUE INDUSTRIAL<br>
+                        Tel: 2254-3188 - info@alpromeh.com
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                <tr>
+                    <td colspan="2" style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 65%;">
+                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Facturar A:</span>
+                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.inst || '---'}</div>
+                    </td>
+                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 35%;">
+                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Fecha de Emisión:</span>
+                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.fecha}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 33%;">
+                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Pedido Recibido Por:</span>
+                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.pers}</div>
+                    </td>
+                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 32%;">
+                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">No. de Orden:</span>
+                        <div style="font-size: 11px; font-weight: 700; color: #b91c1c;">${datos.orden}</div>
+                    </td>
+                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; background: #f8fafc; width: 35%;">
+                        <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Responsable Actual:</span>
+                        <div style="font-size: 11px; font-weight: 600; color: #0f172a;">${datos.responsable || 'Dan Perez'}</div>
+                    </td>
+                </tr>
+            </table>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                <thead>
+                    <tr style="background: #0f172a; color: white;">
+                        <th style="padding: 6px 8px; width: 12%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: center;">Ordenado</th>
+                        <th style="padding: 6px 8px; width: 18%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: center;">Unidad de Venta</th>
+                        <th style="padding: 6px 8px; width: 45%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: left;">Descripción del Producto</th>
+                        <th style="padding: 6px 8px; width: 12%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: right;">Precio de Venta</th>
+                        <th style="padding: 6px 8px; width: 13%; font-size: 9px; font-weight: bold; text-transform: uppercase; border: 1px solid #0f172a; text-align: right;">Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filasHtml}
+                </tbody>
+            </table>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 5px;">
+                <tr>
+                    <td style="vertical-align: top; width: 65%;">
+                        <div style="border: 1px solid #cbd5e1; padding: 8px; background: #f8fafc; border-radius: 4px; display: inline-block; width: 95%;">
+                            <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 5px;">Régimen de Contratación:</span>
+                            <div style="display: flex; align-items: center; gap: 15px; font-size: 10px; font-weight: 600;">
+                                <div style="display: flex; align-items: center;">
+                                    <span class="fake-checkbox">${esBajaCuantica}</span> Baja Cuantía
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="fake-checkbox">${esCompraDirecta}</span> Compra Directa
+                                </div>
+                                ${datos.nog ? `
+                                <div style="margin-left: 10px;">
+                                    <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase;">NOG:</span>
+                                    <span style="font-size: 11px; font-weight: 700; margin-left: 4px; color: #0f172a;">${datos.nog}</span>
+                                </div>` : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td style="vertical-align: middle; text-align: right; width: 35%;">
+                        <div style="font-size: 13px; font-weight: bold; color: #0f172a;">
+                            TOTAL ORDEN: <span style="font-size: 16px; font-weight: 800; color: #16a34a; border-bottom: 2px double #0f172a; padding-bottom: 2px; margin-left: 5px;">Q ${totalAcumulado.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            ${datos.observaciones ? `
+            <div style="margin-top: 12px; border: 1px solid #cbd5e1; padding: 6px 8px; background: #fff; min-height: 35px; border-radius: 4px;">
+                <span style="font-size: 9px; font-weight: bold; color: #475569; text-transform: uppercase; display: block; margin-bottom: 2px;">Observaciones:</span>
+                <div style="font-size: 11px; font-style: italic; color: #475569;">${datos.observaciones}</div>
+            </div>` : ''}
+
+        </div>
+    `;
+
+    // 3. Inyectamos el div temporal al body real de la aplicación
+    document.body.appendChild(divImpresion);
+
+    // 4. Pausa de 100ms para asegurar el render, lanzamos ventana de impresión y removemos el clon
+    setTimeout(() => {
+        window.print();
+        document.body.removeChild(divImpresion);
+    }, 100);
+}
+
+// AQUÍ TERMINA TU BLOQUE DE JAVASCRIPT PRINCIPAL. NO DEBEN HABER MÁS SCRIPTS CAÍDOS ABAJO.
+</script>
+
 
 <div id="modalConfirmDuplicado" class="alpro-modal" style="display:none; align-items:center; justify-content:center; z-index: 10000;">
-        <div class="alpro-content modal-animacion-zoom" onclick="event.stopPropagation()" style="max-width: 400px; text-align: center; border: 2px solid #ea580c;">
-            <span class="alpro-title" style="color: #ea580c; font-size: 1.6rem;">⚠️ ¡CUIDADO!</span>
-            <span class="alpro-subtitle" id="textoAlertaDuplicado" style="margin-bottom: 20px; font-size: 1rem; line-height: 1.5;"></span>
-            
-            <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
-                <button id="btnCancelarDuplicado" style="background: #64748b; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; flex: 1;">CANCELAR</button>
-                <button id="btnAceptarDuplicado" style="background: #ea580c; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; flex: 1;">SOBREESCRIBIR</button>
-            </div>
+    <div class="alpro-content modal-animacion-zoom" onclick="event.stopPropagation()" style="max-width: 400px; text-align: center; border: 2px solid #ea580c;">
+        <span class="alpro-title" style="color: #ea580c; font-size: 1.6rem;">⚠️ ¡CUIDADO!</span>
+        <span class="alpro-subtitle" id="textoAlertaDuplicado" style="margin-bottom: 20px; font-size: 1rem; line-height: 1.5;"></span>
+        
+        <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+            <button id="btnCancelarDuplicado" style="background: #64748b; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; flex: 1;">CANCELAR</button>
+            <button id="btnAceptarDuplicado" style="background: #ea580c; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 8px; cursor: pointer; flex: 1;">SOBREESCRIBIR</button>
         </div>
     </div>
+</div>
 
 <div id="modalAlproGames" class="alpro-modal" onclick="cerrarAlproGames()">
     <div class="alpro-content" onclick="event.stopPropagation()">
@@ -2292,8 +2935,8 @@ function ejecutarImpresionReporte() {
         <button class="btn-close-games" onclick="cerrarAlproGames()">VOLVER AL REGISTRO</button>
     </div>
 </div>
+
 <div id="certificadoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 100000; justify-content: center; align-items: center; padding: 20px; font-family: sans-serif; box-sizing: border-box;">
-    
     <div id="certPasoIntroduccion" style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; max-width: 450px; width: 100%; padding: 30px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);">
         <span style="font-size: 45px; display: block; margin-bottom: 10px;">🏆</span>
         <h2 style="color: #f8fafc; margin: 0 0 10px 0; font-size: 22px; font-weight: 800;">¡Reconocemos tu esfuerzo!</h2>
@@ -2305,7 +2948,6 @@ function ejecutarImpresionReporte() {
     </div>
 
     <div id="boxCertificado" class="seccion-imprimible" style="display: none; background: #1e293b; border: 4px solid #fbbf24; border-radius: 16px; max-width: 750px; width: 100%; aspect-ratio: 16 / 10; padding: 40px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; flex-direction: column; justify-content: center;">
-        
         <div id="certSelloBg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 180px; opacity: 0.02; pointer-events: none; user-select: none;">👑</div>
 
         <div style="border-bottom: 2px dashed #334155; padding-bottom: 15px; margin-bottom: 25px;">
@@ -2338,17 +2980,33 @@ function ejecutarImpresionReporte() {
     </div>
 </div>
 
+<div id="triviaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.85); z-index:99999; justify-content:center; align-items:center; backdrop-filter: blur(4px); font-family: 'Segoe UI', sans-serif;">
+    <div id="modalContent" class="trivia-modal-layout">
+        <div style="text-align:center; margin-bottom:22px; margin-top:-5px;">
+            <span style="font-size:20px; font-weight:800; color:#07b9eb; letter-spacing:1.5px; text-transform:uppercase; display:block; font-family:sans-serif; text-shadow: 0 0 10px rgba(7,185,235,0.2);">¡APRENDAMOS JUNTOS!</span>
+        </div>
+        <div class="trivia-flex-container">
+            <div class="trivia-main-column">
+                <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:18px; width: 100%;">
+                    <span id="triviaCategoria" style="background:#2596be; color:#ffffff; padding:5px 14px; border-radius:14px; font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing: 0.5px;">Categoría</span>
+                    <div id="rachaTriviaContador" style="display: flex; gap: 10px; font-family: sans-serif; font-size: 14px; font-weight: bold;">
+                        <span id="miniWidgetRacha" style="color: #f97316;">🔥 0</span>
+                        <span id="miniWidgetMaximo" style="color: #eab308; display: none;">🏆 0</span>
+                    </div>
+                </div>
+                <h3 id="preguntaTexto" style="font-size:18px; margin:10px 0 20px 0; line-height:1.5; color:#f8fafc; text-align:left; font-weight:600;">Cargando pregunta...</h3>
+                <div id="opcionesContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:5px;"></div>
+            </div>
+            <div id="feedbackContainer" class="trivia-feedback-column"></div>
+        </div>
+    </div>
+</div>
+
 <style>
 @keyframes neonPulseGold {
-    0% {
-        box-shadow: 0 0 5px rgba(251, 183, 29, 0.4), 0 0 10px rgba(251, 183, 29, 0.2);
-    }
-    50% {
-        box-shadow: 0 0 15px rgba(251, 183, 29, 0.8), 0 0 25px rgba(251, 183, 29, 0.4);
-    }
-    100% {
-        box-shadow: 0 0 5px rgba(251, 183, 29, 0.4), 0 0 10px rgba(251, 183, 29, 0.2);
-    }
+    0% { box-shadow: 0 0 5px rgba(251, 183, 29, 0.4), 0 0 10px rgba(251, 183, 29, 0.2); }
+    50% { box-shadow: 0 0 15px rgba(251, 183, 29, 0.8), 0 0 25px rgba(251, 183, 29, 0.4); }
+    100% { box-shadow: 0 0 5px rgba(251, 183, 29, 0.4), 0 0 10px rgba(251, 183, 29, 0.2); }
 }
 
 @keyframes neonPulseClose {
@@ -2357,23 +3015,14 @@ function ejecutarImpresionReporte() {
     100% { box-shadow: 0 0 5px rgba(51, 65, 85, 0.3); }
 }
 
-/* Aplicamos la animación infinita al botón de imprimir */
-.btn-glow-print {
-    animation: neonPulseGold 2s infinite ease-in-out;
-}
-
-/* Efecto cuando pasan el mouse encima (Hover) para que brille más duro */
+.btn-glow-print { animation: neonPulseGold 2s infinite ease-in-out; }
 .btn-glow-print:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 20px rgba(251, 183, 29, 1), 0 0 35px rgba(251, 183, 29, 0.6) !important;
-    background: #fcc23f !important; /* El tono oro encendido de tu interfaz */
+    background: #fcc23f !important;
 }
 
-/* Aplicamos animación al botón de cerrar */
-.btn-glow-close {
-    animation: neonPulseClose 2.5s infinite ease-in-out;
-}
-
+.btn-glow-close { animation: neonPulseClose 2.5s infinite ease-in-out; }
 .btn-glow-close:hover {
     transform: translateY(-2px);
     border-color: #475569 !important;
@@ -2384,107 +3033,58 @@ function ejecutarImpresionReporte() {
 
 #certificadoModal {
     position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(15, 23, 42, 0.95) !important;
     display: flex !important;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; align-items: center;
     z-index: 99999;
     transition: opacity 0.4s ease, visibility 0.4s ease;
-    opacity: 0;
-    visibility: hidden;
+    opacity: 0; visibility: hidden;
 }
 
-/* Cuando el modal tenga esta clase, se va a desvanecer hacia adentro suavemente */
-#certificadoModal.mostrar-suave {
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: flex !important;
-}
+#certificadoModal.mostrar-suave { opacity: 1 !important; visibility: visible !important; display: flex !important; }
 
-/* ✨ Animación de entrada premium para el diploma interno */
 @keyframes revelarDiploma {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(15px);
-        filter: blur(4px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-        filter: blur(0);
-    }
+    from { opacity: 0; transform: scale(0.95) translateY(15px); filter: blur(4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
 
-/* Solo se ejecuta en pantallas dinámicas, protegiendo la impresión */
-@media screen {
-    .efecto-diploma {
-        animation: revelarDiploma 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-}
+@media screen { .efecto-diploma { animation: revelarDiploma 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; } }
 
+/* 🖨️ EL ESCUDO DE IMPRESIÓN INTELIGENTE FIJADO */
 @media print {
     html, body {
-        background: #1e293b !important;
-        height: 100% !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        background: #ffffff !important; height: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     
-    body * {
-        visibility: hidden !important;
+    /* 1. Ocultamos por defecto el contenido de la pantalla normal */
+    body * { visibility: hidden !important; }
+    
+    /* 2. CASO A: Si lo que se está imprimiendo es el clon del PEDIDO FÍSICO */
+    #seccion-impresion-exclusiva, #seccion-impresion-exclusiva * { 
+        visibility: visible !important; 
+    }
+    #seccion-impresion-exclusiva { 
+        position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; 
     }
 
-    #certificadoModal, 
-    #certificadoModal *, 
-    #boxCertificado, 
-    #boxCertificado * {
-        visibility: visible !important;
+    /* 3. CASO B: Si lo que se está imprimiendo es el DIPLOMA */
+    #certificadoModal, #certificadoModal *, #boxCertificado, #boxCertificado * { 
+        visibility: visible !important; 
     }
-
     #certificadoModal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        background: #1e293b !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
+        position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important;
+        background: #1e293b !important; padding: 0 !important; margin: 0 !important; display: flex !important; justify-content: center !important; align-items: center !important;
     }
-
     #boxCertificado {
-        position: relative !important;
-        width: 90% !important;
-        max-width: 100% !important;
-        margin: 0 auto !important;
-        border: 4px solid #fbbf24 !important; 
-        box-shadow: none !important;
-        background: #1e293b !important;
-        padding: 40px !important;
-        box-sizing: border-box !important;
-        /* Forzamos que en la hoja física no tenga transformaciones ni desenfoques */
-        transform: none !important;
-        filter: none !important;
+        position: relative !important; width: 90% !important; max-width: 100% !important; margin: 0 auto !important;
+        border: 4px solid #fbbf24 !important; box-shadow: none !important; background: #1e293b !important; padding: 40px !important; box-sizing: border-box !important;
+        transform: none !important; filter: none !important;
     }
-
-    .ocultar-al-imprimir {
-        display: none !important;
-    }
-
-    @page {
-        size: landscape;
-        margin: 0;
-    }
+    
+    .ocultar-al-imprimir { display: none !important; }
+    @page { size: auto; margin: 0; }
 }
 </style>
 
@@ -3037,6 +3637,352 @@ function controlarEstadoDisparador() {
         if (trigger) trigger.style.display = 'flex';
         widgetFuego.style.display = 'none';
     }
+}
+
+// === VARIABLES GLOBALES PARA EL MÓDULO 3-EN-1 ===
+let modoPedidoActivo = false;
+let pasoActual = 1;
+
+// 🔒 ESCUDO INTELIGENTE: Evalúa las condiciones para liberar o bloquear el botón verde
+function validarBloqueoBotonVerde() {
+    const btnVerde = document.getElementById('btnGuardarRegistro');
+    
+    // Contamos físicamente las filas reales de productos en tu tabla (omitiendo la fila de "no hay artículos")
+    const tabla = document.getElementById('cuerpoTablaPedido');
+    const totalFilas = tabla ? tabla.querySelectorAll('tr:not(#filaVaciaPedido)').length : 0;
+
+    if (modoPedidoActivo) {
+        // Regresa el botón a la vida SOLO si está en el Paso 3 Y tiene al menos 1 producto
+        if (pasoActual === 3 && totalFilas >= 1) {
+            btnVerde.disabled = false;
+            btnVerde.style.opacity = '1';
+            btnVerde.style.cursor = 'pointer';
+            btnVerde.style.background = '#10b981'; // Tu verde original premium
+        } else {
+            // De lo contrario: Bloqueo absoluto estilo deshabilitado
+            btnVerde.disabled = true;
+            btnVerde.style.opacity = '0.4';
+            btnVerde.style.cursor = 'not-allowed';
+            btnVerde.style.background = '#64748b'; // Color gris de seguridad
+        }
+    } else {
+        // Si el modo Hoja de Pedido está APAGADO, el botón funciona libre como siempre
+        btnVerde.disabled = false;
+        btnVerde.style.opacity = '1';
+        btnVerde.style.cursor = 'pointer';
+        btnVerde.style.background = '#10b981';
+    }
+}
+
+// === MANEJADOR DEL INTERRUPTOR ESTILO IPHONE ===
+function alternarModoPedido() {
+    const checkSwitch = document.getElementById('switchModoPedido');
+    const indicador = document.getElementById('indicadorPasos');
+    const btnSig1 = document.getElementById('btnSiguiente1');
+    const textoSwitch = document.getElementById('textoSwitchPedido');
+    
+    // Capturamos los elementos clave de la interfaz
+    const btnLapicito = document.getElementById('btnProducto');
+    const btnGuardar = document.getElementById('btnGuardarRegistro');
+
+    modoPedidoActivo = checkSwitch.checked; 
+
+    ajustarValidacionesInputs();
+
+    if (modoPedidoActivo) {
+        textoSwitch.innerText = "HOJA DE PEDIDO";
+        textoSwitch.style.color = "#34c759";
+        textoSwitch.style.fontWeight = "700";
+        
+        // 🚫 AL ACTIVAR: El botón se esconde de inmediato con Zoom Out elástico
+        if (btnLapicito) {
+            btnLapicito.classList.add('lapicito-zoom-out');
+        }
+        
+        // Quitamos clases de salida por si acaso
+        indicador.classList.remove('stepper-container-salida');
+        btnSig1.classList.remove('salida-paso');
+        
+        indicador.style.display = 'flex';   
+        indicador.classList.add('stepper-container-animado');
+        
+        // Refrescar los puntitos para la cascada
+        const hijos = indicador.innerHTML;
+        indicador.innerHTML = hijos;
+
+        btnSig1.style.display = 'block';    
+        btnSig1.classList.add('animacion-paso');
+        
+        cambiarPaso(1);                    
+    } else {
+        textoSwitch.innerText = "HOJA DE PEDIDO";
+        textoSwitch.style.color = "#64748b";
+        textoSwitch.style.fontWeight = "700";
+        
+        // 🚀 METEMOS LAS ANIMACIONES DE SALIDA PRIMERO
+        indicador.classList.remove('stepper-container-animado');
+        indicador.classList.add('stepper-container-salida');
+        
+        // Aplicamos desvanecido de salida a la sección que esté abierta actualmente y al botón
+        const seccionActual = document.getElementById(`seccionPaso${pasoActual}`);
+        if (seccionActual) {
+            seccionActual.classList.remove('animacion-paso');
+            seccionActual.classList.add('salida-paso');
+        }
+        btnSig1.classList.remove('animacion-paso');
+        btnSig1.classList.add('salida-paso');
+        
+        // 🚀 ESPERAMOS QUE TERMINE LA ANIMACIÓN (200ms) PARA LIMPIAR EL DISEÑO
+        setTimeout(() => {
+            indicador.style.display = 'none';
+            indicador.classList.remove('stepper-container-salida');
+            
+            btnSig1.style.display = 'none';
+            btnSig1.classList.remove('salida-paso');
+            
+            // ✨ AL DESACTIVAR: Reaparece el lapicito con su Zoom In elástico
+            if (btnLapicito) {
+                btnLapicito.classList.remove('lapicito-zoom-out');
+            }
+            
+            // Apagamos los pasos extras y dejamos solo el Paso 1 limpio
+            for (let i = 1; i <= 3; i++) {
+                const seccion = document.getElementById(`seccionPaso${i}`);
+                if (seccion) {
+                    seccion.style.display = 'none';
+                    seccion.classList.remove('salida-paso');
+                }
+            }
+            
+            // Regresa al Paso 1 clásico sin hoja de pedido
+            const paso1 = document.getElementById('seccionPaso1');
+            paso1.style.display = 'block';
+            paso1.classList.add('animacion-paso'); // Entrada suave al formulario original
+            
+            // 🚀 EL ARREGLO CLAVE: Forzamos a que el botón de Guardar reaparezca en el formulario clásico
+            if (btnGuardar) {
+                btnGuardar.style.display = 'block';
+            }
+            
+            pasoActual = 1;
+            validarBloqueoBotonVerde();
+        }, 200);
+    }
+}
+
+// === NAVEGACIÓN DINÁMICA DE LOS 3 PUNTITOS ===
+function cambiarPaso(paso) {
+    if (!modoPedidoActivo) return;
+
+    // Validación básica al avanzar del Paso 1 al 2
+    if (paso === 2 && pasoActual === 1) {
+        if (!document.getElementById('orden').value || !document.getElementById('fecha').value || !document.getElementById('institucion').value || !document.getElementById('persona').value) {
+            alert("⚠️ Por favor, llena primero todos los campos de la orden del Paso 1.");
+            return;
+        }
+    }
+
+    // 🚀 ESCUDO NUEVO INTEGRADOR: Validación premium al intentar avanzar al Paso 3
+    if (paso === 3 && pasoActual === 2) {
+        const radioCompraDirecta = document.querySelector('input[name="tipoContratacion"][value="Compra Directa"]');
+        const inputNog = document.getElementById('nogInput');
+        
+        // Si marcaron Compra Directa y el input está vacío o con puros espacios
+        if (radioCompraDirecta && radioCompraDirecta.checked && inputNog && !inputNog.value.trim()) {
+            
+            // Metemos la clase para que shakee en pantalla con el pulso rojo
+            inputNog.classList.add('input-error-nog');
+            inputNog.focus(); // Le ponemos el cursor adentro automáticamente
+            
+            // Limpiamos la clase tras 400ms para que pueda volver a agitarse si insisten en dejarlo vacío
+            setTimeout(() => {
+                inputNog.classList.remove('input-error-nog');
+            }, 400);
+            
+            return; // 🛑 FRENAZO SEGURO: Detiene la ejecución para que no avance de pestaña
+        }
+    }
+
+    pasoActual = paso;
+
+    // Apagar contenedores y limpiar clases viejas
+    for (let i = 1; i <= 3; i++) {
+        const seccion = document.getElementById(`seccionPaso${i}`);
+        if (seccion) {
+            seccion.style.display = 'none';
+            seccion.classList.remove('animacion-paso'); 
+        }
+    }
+
+    // Encender la sección actual con su fade sutil optimizado
+    const seccionActiva = document.getElementById(`seccionPaso${paso}`);
+    if (seccionActiva) {
+        seccionActiva.style.display = 'block';
+        void seccionActiva.offsetWidth; // Forzar reflow para reiniciar animación
+        seccionActiva.classList.add('animacion-paso');
+    }
+
+    // Actualizar visualmente los colores de los puntitos activos
+    document.getElementById('dot1').className = `step-dot ${paso >= 1 ? 'active' : ''}`;
+    document.getElementById('line1').className = `step-line ${paso >= 2 ? 'active' : ''}`;
+    document.getElementById('dot2').className = `step-dot ${paso >= 2 ? 'active' : ''}`;
+    document.getElementById('line2').className = `step-line ${paso === 3 ? 'active' : ''}`;
+    document.getElementById('dot3').className = `step-dot ${paso === 3 ? 'active' : ''}`;
+
+    // 🚀 EL CAMBIO NUEVO: Controlamos dinámicamente el botón de guardar
+    const btnGuardar = document.getElementById('btnGuardarRegistro');
+    if (btnGuardar) {
+        if (paso === 3) {
+            btnGuardar.style.display = 'block'; 
+        } else {
+            btnGuardar.style.display = 'none';  
+        }
+    }
+
+    validarBloqueoBotonVerde();
+}
+
+// Desactiva o activa atributos nativos para evitar bloqueos de validación HTML al navegar por las pestañas
+function ajustarValidacionesInputs() {
+    const campos = ['orden', 'fecha', 'institucion', 'persona'];
+    campos.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            if (modoPedidoActivo) {
+                input.removeAttribute('required');
+            } else {
+                input.setAttribute('required', 'required');
+            }
+        }
+    });
+}
+
+// 📊 LÓGICA INTERACTIVA PARA EL PASO 2 Y PASO 3 (ALPROMEH)
+// Arreglo global para almacenar los productos del pedido actual
+let articulosPedidoActual = [];
+
+// Mostrar/Ocultar el input de NOG de acuerdo al Radio Button seleccionado
+function evaluarMostrarNog() {
+    const radioCompraDirecta = document.querySelector('input[name="tipoContratacion"][value="Compra Directa"]');
+    const contenedorNog = document.getElementById('contenedorCampoNog');
+    const inputNog = document.getElementById('nogInput');
+
+    if (!contenedorNog) return;
+
+    if (radioCompraDirecta && radioCompraDirecta.checked) {
+        // --- MOSTRAR CON FADE PREMIUM ---
+        contenedorNog.classList.remove('nog-oculto');
+        contenedorNog.classList.add('nog-visible');
+        
+        if (inputNog) {
+            inputNog.setAttribute('required', 'required');
+        }
+    } else {
+        // --- OCULTAR CON FADE PREMIUM (AL REVEZ) ---
+        contenedorNog.classList.remove('nog-visible');
+        contenedorNog.classList.add('nog-oculto'); 
+        
+        if (inputNog) {
+            inputNog.removeAttribute('required');
+            inputNog.value = ''; // Limpia el valor para que no arrastre basura
+        }
+    }
+}
+
+// Agregar artículo a la minitabla interactiva del Paso 3
+function agregarArticuloATabla() {
+    // 🚀 MODIFICADO: Le agregamos .replace(/,/g, '') a la Cantidad y al Precio para limpiar las comas visuales antes de calcular
+    const cod = document.getElementById('addCod').value.trim();
+    const desc = document.getElementById('addDesc').value.trim();
+    const cantRaw = document.getElementById('addCant').value.replace(/,/g, '');
+    const precioRaw = document.getElementById('addPrecio').value.replace(/,/g, '');
+
+    const cant = parseInt(cantRaw);
+    const precio = parseFloat(precioRaw);
+
+    // Validación premium para que no metan datos vacíos o rotos
+    if (!desc || isNaN(cant) || cant <= 0 || isNaN(precio) || precio < 0) {
+        alert("⚠️ Por favor, ingresa al menos Descripción, Cantidad y Precio válidos.");
+        return;
+    }
+
+    // Insertar el objeto al arreglo global
+    articulosPedidoActual.push({
+        codigo: cod || "N/A",
+        descripcion: desc,
+        cantidad: cant,
+        precioU: precio,
+        total: cant * precio
+    });
+
+    // Resetear los campos pequeños de entrada para el siguiente artículo
+    document.getElementById('addCod').value = "";
+    document.getElementById('addDesc').value = "";
+    document.getElementById('addCant').value = "";
+    document.getElementById('addPrecio').value = "";
+
+    // Refrescar la tabla visualmente
+    renderizarTablaArticulos();
+}
+
+// Pintar los artículos agregados en pantalla y calcular el total global
+function renderizarTablaArticulos() {
+    const cuerpo = document.getElementById('cuerpoTablaPedido');
+    cuerpo.innerHTML = "";
+
+    // Si la tabla se queda vacía, mostramos el mensaje elegante por defecto
+    if (articulosPedidoActual.length === 0) {
+        cuerpo.innerHTML = `<tr id="filaVaciaPedido"><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px; font-style:italic;">No hay productos agregados todavía.</td></tr>`;
+        
+        // 🚀 MODIFICADO: Cambiado a 'txtTotalPedido' para asegurar sincronía con tu HTML
+        const txtTotal = document.getElementById('txtTotalPedido');
+        if (txtTotal) txtTotal.innerText = "0.00";
+        
+        // 🚀 ESCUDO AUTOMÁTICO: Si borran todo, el botón verde se bloquea en el acto
+        validarBloqueoBotonVerde();
+        return;
+    }
+
+    let totalGeneral = 0;
+
+    // Barremos el arreglo para construir las filas dinámicamente (Tu orden ya estaba perfecto aquí)
+    articulosPedidoActual.forEach((art, index) => {
+        totalGeneral += art.total;
+
+        // 🔥 ¡AQUÍ ESTÁ EL CAMBIO NUEVO, MI BRO! 🔥
+        // Creamos el formato de comas de miles justo aquí antes de armar la fila:
+        const precioConComas = art.precioU.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const totalConComas = art.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const cantidadConComas = art.cantidad.toLocaleString('en-US');
+
+        cuerpo.innerHTML += `
+            <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding:8px; text-align:center; font-weight:bold;">${cantidadConComas}</td>
+                <td style="padding:8px; text-align:center; color:#64748b;">${art.codigo}</td>
+                <td style="padding:8px; text-align:left;">${art.descripcion}</td>
+                <td style="padding:8px; text-align:right;">Q ${precioConComas}</td>
+                <td style="padding:8px; text-align:right; font-weight:bold;">Q ${totalConComas}</td>
+                <td style="padding:8px; text-align:center;">
+                    <button type="button" onclick="eliminarArticuloPedido(${index})" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1.1rem; padding:0;">✕</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    // 🚀 MODIFICADO: Aseguramos que busque 'txtTotalPedido' con tu formato premium exacto
+    const txtTotalValue = document.getElementById('txtTotalPedido');
+    if (txtTotalValue) {
+        txtTotalValue.innerText = totalGeneral.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // 🚀 ESCUDO AUTOMÁTICO: Al renderizar los productos, evalúa si enciende el botón verde
+    validarBloqueoBotonVerde();
+}
+
+// Eliminar un artículo del saco global por si se equivocan al digitar
+function eliminarArticuloPedido(index) {
+    articulosPedidoActual.splice(index, 1);
+    renderizarTablaArticulos(); // Esto dispara la reevaluación automáticamente arriba
 }
 </script>
 </body>
