@@ -3851,6 +3851,10 @@ function pintarWidgetRacha() {
     const widgetsFuego = document.querySelectorAll('#widgetFuegoRacha');
     const textosFuego = document.querySelectorAll('#rachaTextoBoton');
 
+    // Capturamos si ya respondió hoy para que el vigilante sepa qué hacer
+    const hoyStr = new Date().toLocaleDateString();
+    const yaRespondioHoy = localStorage.getItem('triviaRespondida') === hoyStr;
+
     if (txtRacha) {
         txtRacha.innerText = `🔥 ${rachaActual}`;
     }
@@ -3864,9 +3868,9 @@ function pintarWidgetRacha() {
         }
     }
 
-    // 1. Aplicamos los textos y estilos base
+    // 1. Aplicamos los textos y estilos base según el estado real
     widgetsFuego.forEach((widget) => {
-        if (rachaActual > 0) {
+        if (rachaActual > 0 && yaRespondioHoy) {
             widget.style.cssText = "display: inline-block !important;"; 
         } else {
             widget.style.cssText = "display: none !important;";
@@ -3877,21 +3881,31 @@ function pintarWidgetRacha() {
         texto.innerText = rachaActual;
     });
 
-    // 2. 👁️ ACTIVAMOS EL VIGILANTE (Solo la primera vez que corre)
+    // 2. 👁️ EL VIGILANTE MEJORADO (Ahora con cerebro)
     if (!vigilanteFuegoInicializado && rachaActual > 0) {
         vigilanteFuegoInicializado = true;
 
-        // Le decimos que vigile todo el cuerpo del documento por si reescriben el HTML
         const observador = new MutationObserver(() => {
-            const fueguitosOcultos = document.querySelectorAll('#widgetFuegoRacha[style*="display: none"]');
-            
-            // Si el código de sincronización intentó apagar algún fueguito, lo encendemos a la fuerza
-            if (fueguitosOcultos.length > 0) {
-                fueguitosOcultos.forEach(w => w.style.cssText = "display: inline-block !important;");
+            // Re-evaluamos la fecha en cada mutación por seguridad
+            const fechaActualStr = new Date().toLocaleDateString();
+            const respondioEnMutacion = localStorage.getItem('triviaRespondida') === fechaActualStr;
+
+            if (respondioEnMutacion) {
+                // Si ya respondió, nos aseguramos que el fuego NO se oculte
+                const fueguitosOcultos = document.querySelectorAll('#widgetFuegoRacha[style*="display: none"]');
+                if (fueguitosOcultos.length > 0) {
+                    fueguitosOcultos.forEach(w => w.style.cssText = "display: inline-block !important;");
+                }
+            } else {
+                // 🛡️ CANDADO DE SEGURIDAD: Si NO ha respondido, el vigilante obliga al fuego a mantenerse APAGADO
+                widgetsFuego.forEach(w => {
+                    if (w.style.display !== 'none') {
+                        w.style.cssText = "display: none !important;";
+                    }
+                });
             }
         });
 
-        // Configuración para que vigile cambios de estilos y de estructura
         observador.observe(document.body, { 
             attributes: true, 
             childList: true, 
@@ -4029,6 +4043,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     controlarEstadoDisparador();
+    pintarWidgetRacha();
 });
 
 function controlarEstadoDisparador() {
