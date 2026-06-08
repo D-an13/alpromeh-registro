@@ -1758,11 +1758,19 @@ function removerBurbuja() {
 function cerrarChisme(event) {
     event.stopPropagation(); // Evita que al darle a la '×' se abra la trivia por accidente
     removerBurbuja();
+    
+    // 🛡️ Al cerrarla en la "×", le damos 3 días más de colchón para que deje de molestar hoy
+    let hoy = new Date();
+    localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
 }
 
 function irATrivia() {
     // 1. Esconde la burbuja de forma limpia hacia abajo
     removerBurbuja(); 
+    
+    // 🛡️ Al entrar a jugar la trivia, reiniciamos el contador de inactividad a la fecha de hoy
+    let hoy = new Date();
+    localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
     
     // 2. Levanta el modal original de la trivia con tus preguntas y la racha
     if (typeof abrirTrivia === 'function') {
@@ -3081,7 +3089,7 @@ function ejecutarImpresionPedidoFisico(datos) {
                         <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 0.5px; color: #000000;">ALPROMEH</h1>
                     </td>
                     <td style="text-align: right; vertical-align: top; font-size: 10px; font-weight: bold; color: #000000; line-height: 1.3;">
-                        23 Av. INTERCONEXIÓN NARANJO-MINERVAS 12-91 ZONA 4 DE MIXCO PARQUE INDUSTRIAL<br>
+                        23 Av. INTERCONEXIÓN NARANJO-MINERVAS 12-91 ZONA 4 DE MIXCO PARQUE INDUSTRIAL LAS TUNAS<br>
                         Tel: 2254-3188 - info@alpromeh.com
                     </td>
                 </tr>
@@ -3643,6 +3651,9 @@ function abrirTrivia() {
         return; 
     }
 
+    // 🛡️ TRUCO 1: Como ya pasó los candados y sí va a jugar, reiniciamos el contador de inactividad de la burbuja
+    localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
+
     validarRachaPorInactividad();
     pintarWidgetRacha();
 
@@ -3707,6 +3718,10 @@ function abrirTrivia() {
         btn.onclick = () => {
             if (index === preguntaActual.c) {
                 localStorage.setItem('triviaRespondida', hoy.toLocaleDateString());
+                
+                // 🛡️ TRUCO 2: Al responder con éxito, remachamos la fecha actual para asegurar los 3 días de tregua
+                localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
+
                 actualizarRachaYProgreso();
                 
                 btn.style.background = "#059669";
@@ -3753,7 +3768,7 @@ function abrirTrivia() {
                 feedbackBox.style.background = "#450a0a";
                 feedbackBox.style.color = "#fca5a5";
                 feedbackBox.style.border = "1px solid #7f1d1d";
-                feedbackBox.innerHTML = `<strong>❌ Incorrecto.</strong> ¡Analízalo bien e intenta con otra opción!`;
+                feedbackBox.innerHTML = `<strong>❌ Incorrecto.</strong> ¡Analízalo bien e intenta con otra option!`;
             }
         }; 
         opcionesBox.appendChild(btn);
@@ -4041,14 +4056,20 @@ window.addEventListener('DOMContentLoaded', async () => {
 
                 // TEMPORIZADOR INTELIGENTE A LOS 7 SEGUNDOS
                 setTimeout(function() {
-                    if (mouseEncima) {
-                        burbuja.onmouseleave = function() {
-                            if (typeof removerBurbuja === 'function') removerBurbuja(); 
-                        };
-                    } else {
-                        if (typeof removerBurbuja === 'function') removerBurbuja();
-                    }
-                }, 7000);
+    if (mouseEncima) {
+        burbuja.onmouseleave = function() {
+            if (typeof removerBurbuja === 'function') removerBurbuja(); 
+            // 🛡️ Se ocultó sola tras quitar el mouse, renovamos el colchón de 3 días
+            let hoy = new Date();
+            localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
+        };
+    } else {
+        if (typeof removerBurbuja === 'function') removerBurbuja();
+        // 🛡️ El usuario la ignoró por completo, renovamos el colchón de 3 días
+        let hoy = new Date();
+        localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
+    }
+}, 7000);
             }
         }
     }
@@ -4586,7 +4607,7 @@ function eliminarArticuloPedido(index) {
             <div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">
                 <div style="font-size: 18px; background: rgba(52, 199, 89, 0.15); padding: 7px 9px; border-radius: 8px; line-height: 1; text-align: center;">🖨️</div>
                 <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.45;">
-                    <strong style="color: #34c759; font-size: 13.5px; letter-spacing: 0.3px;">CREA TU HOJA DE PEDIDO.</strong> 
+                    <strong style="color: #34c759; font-size: 13.5px; letter-spacing: 0.3px;">Crea tu Hoja de Pedido.</strong> 
                     Nuevo Switch para dividir el formulario limpiamente y menú de 3 puntos (⋮) para reimprimir las últimas 3 órdenes al instante.
                 </p>
             </div>
@@ -4594,7 +4615,7 @@ function eliminarArticuloPedido(index) {
             <div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">
                 <div style="font-size: 18px; background: rgba(245, 158, 11, 0.15); padding: 7px 9px; border-radius: 8px; line-height: 1; text-align: center;">📊</div>
                 <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.45;">
-                    <strong style="color: #fbbf24; font-size: 13.5px; letter-spacing: 0.3px;">REPORTES DINÁMICOS.</strong> 
+                    <strong style="color: #fbbf24; font-size: 13.5px; letter-spacing: 0.3px;">Reportes Dinámicos.</strong> 
                     Ya puedes seleccionar múltiples registros desde la tabla principal con casillas para generar reportes a nivel masivo.
                 </p>
             </div>
@@ -4602,7 +4623,7 @@ function eliminarArticuloPedido(index) {
             <div style="display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;">
                 <div style="font-size: 18px; background: rgba(56, 189, 248, 0.15); padding: 7px 9px; border-radius: 8px; line-height: 1; text-align: center;">💡</div>
                 <p style="margin: 0; font-size: 13px; color: #cbd5e1; line-height: 1.45;">
-                    <strong style="color: #38bdf8; font-size: 13.5px; letter-spacing: 0.3px;">MÓDULO DE TRIVIA INTELIGENTE.</strong> 
+                    <strong style="color: #38bdf8; font-size: 13.5px; letter-spacing: 0.3px;">Módulo de Trivia Inteligente.</strong> 
                     ¡APRENDAMOS JUNTOS! Sistema interactivo de preguntas por categorías para el equipo, incluyendo un contador de rachas (🔥) integrado.
                 </p>
             </div>
