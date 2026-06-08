@@ -3992,24 +3992,37 @@ window.addEventListener('DOMContentLoaded', async () => {
         actualizarContadores();
     }
 
-    // ========================================================
-    // 🔥 LÓGICA DE CONTROL DE 3 DÍAS PARA LA BURBUJA PREMIUM
-    // ========================================================
+    // 🔥 LÓGICA DE CONTROL DE 3 DÍAS HÁBILES PARA LA BURBUJA PREMIUM
     let ultimaTrivia = localStorage.getItem('ultima_trivia_fecha');
     let hoy = new Date();
 
     if (!ultimaTrivia) {
-        // Opción A: Si es primera vez, seteamos hoy como base para darle 3 días de colchón al equipo
+        // Si es primera vez, seteamos hoy como base para darle el colchón inicial
         localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
     } else {
         let fechaPasada = new Date(ultimaTrivia);
-        let diferenciaDias = (hoy - fechaPasada) / (1000 * 60 * 60 * 24);
+        
+        // 🛡️ MOTOR DE CONTEO DE DÍAS HÁBILES (Ignora fines de semana)
+        let diasHabilesPasados = 0;
+        let fechaCopia = new Date(fechaPasada.getTime());
 
-        // Si ya pasaron 3 días o más, se activa el chisme
-        if (diferenciaDias >= 3) {
+        // Avanzamos día por día desde la última trivia hasta hoy
+        while (fechaCopia < hoy) {
+            fechaCopia.setDate(fechaCopia.getDate() + 1);
+            let diaSemana = fechaCopia.getDay();
+            
+            // Solo sumamos si el día evaluado NO es Sábado (6) ni Domingo (0)
+            if (diaSemana !== 0 && diaSemana !== 6 && fechaCopia <= hoy) {
+                diasHabilesPasados++;
+            }
+        }
+
+        // 🔥 Si pasaron 3 días hábiles o más de pura inactividad, se activa el chisme premium
+        if (diasHabilesPasados >= 3) {
             
             let ganchoDeHoy = "¡Reto del Día! 💡"; 
-            document.getElementById('titulo-gancho').innerText = ganchoDeHoy;
+            const tituloGancho = document.getElementById('titulo-gancho');
+            if (tituloGancho) tituloGancho.innerText = ganchoDeHoy;
 
             let burbuja = document.getElementById('burbuja-chisme');
             if (burbuja) {
@@ -4019,23 +4032,21 @@ window.addEventListener('DOMContentLoaded', async () => {
                 let mouseEncima = false;
                 
                 burbuja.onmouseenter = function() {
-                    mouseEncima = true; // El mouse entró, congelamos
+                    mouseEncima = true; 
                 };
                 
                 burbuja.onmouseleave = function() {
-                    mouseEncima = false; // El mouse salió
+                    mouseEncima = false; 
                 };
 
                 // TEMPORIZADOR INTELIGENTE A LOS 7 SEGUNDOS
                 setTimeout(function() {
-                    // Si el mouse está encima, esperamos a que salga para quitarla
                     if (mouseEncima) {
                         burbuja.onmouseleave = function() {
-                            removerBurbuja(); // Se va en cuanto quités el mouse
+                            if (typeof removerBurbuja === 'function') removerBurbuja(); 
                         };
                     } else {
-                        // Si el mouse NO está encima, se va normal a los 6 segundos
-                        removerBurbuja();
+                        if (typeof removerBurbuja === 'function') removerBurbuja();
                     }
                 }, 7000);
             }
