@@ -1149,18 +1149,77 @@ input::-webkit-outer-spin-button,
     }
 }
 
-/* 🖥️ OCULTAR EN CELULARES Y TABLETS */
-@media (max-width: 1024px) {
-    .contenedor-switch-ios {
-        display: none !important;
-    }
-}
-
 /* --- BORDE DE ERROR MINIMALISTA (AZUL BOTÓN) --- */
 .campo-vacio-azul {
     border-color: #0066ff !important;
     box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.20) !important;
     outline: none !important;
+}
+
+/* Estilos base comunes para los tres botones del modal */
+.btn-modal-plano, #btnConfirmarAnular {
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: background-color 0.18s ease-in-out !important;
+    cursor: pointer;
+}
+
+/* 🟢 BOTÓN RECUPERAR (Verde Esmeralda -> Verde Bosque) */
+.btn-modal-recuperar {
+    background-color: #10b981 !important;
+    color: white !important;
+}
+.btn-modal-recuperar:hover {
+    background-color: #047857 !important; /* Un verde oscuro, sólido y elegante */
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* 🚫 BOTÓN ANULAR (Rojo Intenso -> Rojo Carmesí Oscuro) */
+.btn-modal-anular {
+    background-color: #dc2626 !important;
+    color: white !important;
+}
+.btn-modal-anular:hover {
+    background-color: #991b1b !important; /* Un rojo oscuro ejecutivo, cero chillante */
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* ⚪ BOTÓN CANCELAR (Gris Suave -> Gris Pizarra Oscuro) */
+.btn-modal-cancelar, 
+#modalConfirm button[onclick="cerrarModal()"],
+#modalConfirm button:not(#btnConfirmarAnular) {
+    background-color: #e2e8f0 !important;
+    color: #475569 !important;
+    padding: 10px 20px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: background-color 0.18s ease-in-out !important;
+    cursor: pointer !important;
+}
+
+/* 🔥 HOVER BLINDADO: Fuerza el cambio al gris más oscuro al pasar el mouse */
+.btn-modal-cancelar:hover, 
+#modalConfirm button[onclick="cerrarModal()"]:hover,
+#modalConfirm button:not(#btnConfirmarAnular):hover {
+    background-color: #cbd5e1 !important; /* El gris oscuro plano */
+    color: #334155 !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
 </style>
 </head>
@@ -1849,16 +1908,30 @@ actualizarContadores()
                 title.style.color = "#10b981";
                 frame.style.borderTopColor = "#10b981";
                 msg.innerHTML = `La Orden <b>${numOrden}</b> está anulada.<br>¿Deseas restaurarla al sistema?`;
+                
+                // 🟢 CONFIGURACIÓN RECOVERY: Asignamos clase limpia
                 btnSi.innerText = "RECUPERAR ORDEN";
-                btnSi.style.background = "#10b981";
+                btnSi.className = "btn-modal-plano btn-modal-recuperar"; // <- Limpio de styles nativos
+                btnSi.style.border = "none";
+                btnSi.style.boxShadow = "none";
+                btnSi.style.transform = "none";
+                btnSi.style.textShadow = "none";
+                
                 btnSi.onclick = function() { recuperarOrden(numOrden); cerrarModal(); };
             } else {
                 title.innerText = "¿Anular Orden?";
                 title.style.color = "#dc2626";
                 frame.style.borderTopColor = "#dc2626";
                 msg.innerHTML = `¿Estás seguro que deseas anular la<br>Orden de Compra <b>${numOrden}</b>?`;
+                
+                // 🚫 CONFIGURACIÓN ANULAR: Asignamos clase limpia
                 btnSi.innerText = "ANULAR ORDEN";
-                btnSi.style.background = "#dc2626";
+                btnSi.className = "btn-modal-plano btn-modal-anular"; // <- Limpio de styles nativos
+                btnSi.style.border = "none";
+                btnSi.style.boxShadow = "none";
+                btnSi.style.transform = "none";
+                btnSi.style.textShadow = "none";
+                
                 btnSi.onclick = function() { anularOrden(numOrden); cerrarModal(); };
             }
             modal.style.display = 'flex';
