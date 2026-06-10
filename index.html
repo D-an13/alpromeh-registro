@@ -693,8 +693,23 @@ input::-webkit-outer-spin-button,
 
 /*REGULARIZACIÓN CELULARES: Esconde el Módulo de Reportes en pantallas chicas */
 @media (max-width: 767px) {
-    #btnModoReporte {
+    
+    /* 1. Escondemos el bloque derecho por completo en el celular.
+          Al no existir en móvil, ya no empuja el ancho de la pantalla. */
+    #bloqueReporteDerecha {
         display: none !important;
+    }
+
+    /* 2. Aseguramos que el contenedor de la tabla sea elástico y no se salga */
+    .busqueda-container + div, 
+    div[style*="overflow-x: auto"] {
+        width: 100% !important;
+        overflow-x: auto !important;
+        box-sizing: border-box;
+    }
+    
+    table {
+        width: 100% !important;
     }
 }
 
