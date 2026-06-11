@@ -1262,6 +1262,19 @@ input::-webkit-outer-spin-button,
 .historial-reporte-container:hover {
     color: #0f172a; /* Oscurece fino al pasar el mouse */
 }
+
+@keyframes rebotarPelota {
+    0%, 100% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-8px) scale(1); }
+    50% { transform: translateY(0) scale(1.1, 0.9); } /* Se aplasta al caer */
+    70% { transform: translateY(-4px) scale(1); }
+    90% { transform: translateY(0) scale(1.05, 0.95); }
+}
+
+#btnFlotanteQuiniela:hover .pelota-animada {
+    display: inline-block;
+    animation: rebotarPelota 0.8s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
@@ -1601,24 +1614,25 @@ input::-webkit-outer-spin-button,
     </div>
 
 <!-- BOTÓN FLOTANTE (Se mantiene igual) -->
-<button id="btnFlotanteQuiniela" onclick="abrirQuiniela()" style="display: none !important; position: fixed; top: 15px; right: 15px; z-index: 9998; background: #1e40af; color: white; border: none; padding: 10px 16px; border-radius: 50px; font-weight: bold; font-family: sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3); transition: all 0.2s ease-in-out;">
-    <span>🏆</span> Quiniela Mundialista
+<button id="btnFlotanteQuiniela" onclick="abrirQuiniela()" style="position: fixed; top: 20px; left: 20px; z-index: 9998; background: #16a34a; color: white; border: none; padding: 12px 18px; border-radius: 50px; font-weight: bold; font-family: sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4); transition: all 0.2s ease-in-out;">
+    <span class="pelota-animada">⚽</span> Quiniela
 </button>
 
 <!-- MODAL DE LA QUINIELA -->
 <div id="modalQuiniela" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 10000; padding: 10px; box-sizing: border-box;">
-    <div style="background: white; padding: 20px; border-radius: 16px; max-width: 400px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); font-family: sans-serif;">
+    <!-- max-width ajustado a 440px para dar más aire a los lados; paddings y altos originales mantenidos -->
+    <div style="background: #ffffff; padding: 20px; border-radius: 16px; max-width: 440px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); font-family: sans-serif; background-image: linear-gradient(90deg, #f0fdf4 0%, #f0fdf4 50%, #f6fef9 50%, #f6fef9 100%); background-size: 40px 100%;">
         
         <!-- Encabezado -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
-            <span style="font-size: 1.1rem; font-weight: bold; color: #0f172a;">🏆 Quiniela Mundial 2026</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+            <span style="font-size: 1.1rem; font-weight: bold; color: #15803d;">🏆 Quiniela Mundial 2026</span>
             <span onclick="cerrarQuiniela()" style="cursor: pointer; font-size: 1.3rem; color: #94a3b8; font-weight: bold; padding: 0 5px;">×</span>
         </div>
 
-        <!-- 1. ¿Quién eres? (Se mantiene tu lista original) -->
+        <!-- 1. ¿Quién eres? -->
         <div style="margin-bottom: 12px;">
-            <label style="font-size: 0.75rem; font-weight: 800; color: #475569; display: block; margin-bottom: 4px; text-transform: uppercase;">1. ¿Quién eres?</label>
-            <select id="quinielaParticipante" onchange="verificarBloqueoPartido()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-weight: bold; color: #334155;">
+            <label style="font-size: 0.75rem; font-weight: 800; color: #15803d; display: block; margin-bottom: 4px; text-transform: uppercase;">1. ¿Quién eres?</label>
+            <select id="quinielaParticipante" onchange="verificarBloqueoPartido()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; font-weight: bold; color: #334155;">
                 <option value="">-- Selecciona tu Nombre --</option>
                 <option value="Dan">Dan</option>
                 <option value="Nata">Nata</option>
@@ -1635,8 +1649,8 @@ input::-webkit-outer-spin-button,
 
         <!-- 2. NUEVO FILTRO POR FECHAS DEL CALENDARIO -->
         <div style="margin-bottom: 12px;">
-            <label style="font-size: 0.75rem; font-weight: 800; color: #475569; display: block; margin-bottom: 4px; text-transform: uppercase;">2. Selecciona la Fecha:</label>
-            <select id="selectFase" onchange="cargarPartidosPorFase()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f0fdf4; font-weight: bold; color: #15803d;">
+            <label style="font-size: 0.75rem; font-weight: 800; color: #15803d; display: block; margin-bottom: 4px; text-transform: uppercase;">2. Selecciona la Fecha:</label>
+            <select id="selectFase" onchange="cargarPartidosPorFase()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #bbf7d0; background: #ffffff; font-weight: bold; color: #15803d;">
                 <option value="11/06">📅 Jueves, 11 de Junio</option>
                 <option value="12/06">📅 Viernes, 12 de Junio</option>
                 <option value="13/06">📅 Sábado, 13 de Junio</option>
@@ -1660,44 +1674,44 @@ input::-webkit-outer-spin-button,
             </select>
         </div>
 
-        <!-- 3. SELECTOR DE PARTIDO (Ahora se llena limpio por JavaScript) -->
+        <!-- 3. SELECTOR DE PARTIDO -->
         <div style="margin-bottom: 15px;">
-            <label style="font-size: 0.75rem; font-weight: 800; color: #475569; display: block; margin-bottom: 4px; text-transform: uppercase;">3. Elige el Partido:</label>
-            <select id="selectPartido" onchange="cambiarPartidoSeleccionado()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; font-size: 0.9rem; color: #1e293b;">
+            <label style="font-size: 0.75rem; font-weight: 800; color: #15803d; display: block; margin-bottom: 4px; text-transform: uppercase;">3. Elige el Partido:</label>
+            <select id="selectPartido" onchange="cambiarPartidoSeleccionado()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; font-size: 0.9rem; color: #1e293b;">
                 <!-- Dejar vacío: JavaScript inyectará las opciones de forma dinámica según el día -->
             </select>
         </div>
 
-        <!-- ÁREA DEL MARCADOR Y BANDERAS (Se mantiene igual) -->
-        <div style="background: #f8fafc; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; position: relative;">
-            <span id="txtEstadoPartido" style="font-size: 0.75rem; font-weight: 800; color: #3b82f6; letter-spacing: 0.5px; display: block; margin-bottom: 10px; text-transform: uppercase;">Pronóstico Oficial 📅</span>
+        <!-- ÁREA DEL MARCADOR Y BANDERAS -->
+        <div style="background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e2e8f0; position: relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+            <span id="txtEstadoPartido" style="font-size: 0.75rem; font-weight: 800; color: #16a34a; letter-spacing: 0.5px; display: block; margin-bottom: 10px; text-transform: uppercase;">Pronóstico Oficial 📅</span>
             
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
                 <div style="flex: 1; text-align: center;">
-                    <div id="flagLocal" style="font-size: 1.5rem; margin-bottom: 4px;">🏳️</div>
+                    <div id="flagLocal" style="font-size: 1.6rem; margin-bottom: 4px;">🏳️</div>
                     <div id="lblLocal" style="font-size: 0.85rem; font-weight: bold; color: #1e293b; min-height: 38px; display: flex; align-items: center; justify-content: center;">-</div>
-                    <input type="number" id="golesLocal" min="0" placeholder="0" style="width: 55px; text-align: center; padding: 8px; margin-top: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 1.1rem; font-weight: bold;">
+                    <input type="number" id="golesLocal" min="0" placeholder="0" style="width: 60px; text-align: center; padding: 8px; margin-top: 8px; border-radius: 8px; border: none; background: #1e293b; color: white; font-size: 1.2rem; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); outline: none;">
                 </div>
                 
-                <div style="font-weight: 800; color: #94a3b8; font-size: 1.1rem; margin-top: 25px;">VS</div>
+                <div style="font-weight: 800; color: #cbd5e1; font-size: 1.1rem; margin-top: 25px; font-style: italic;">VS</div>
                 
                 <div style="flex: 1; text-align: center;">
-                    <div id="flagVisitante" style="font-size: 1.5rem; margin-bottom: 4px;">🏳️</div>
+                    <div id="flagVisitante" style="font-size: 1.6rem; margin-bottom: 4px;">🏳️</div>
                     <div id="lblVisitante" style="font-size: 0.85rem; font-weight: bold; color: #1e293b; min-height: 38px; display: flex; align-items: center; justify-content: center;">-</div>
-                    <input type="number" id="golesVisitante" min="0" placeholder="0" style="width: 55px; text-align: center; padding: 8px; margin-top: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 1.1rem; font-weight: bold;">
+                    <input type="number" id="golesVisitante" min="0" placeholder="0" style="width: 60px; text-align: center; padding: 8px; margin-top: 8px; border-radius: 8px; border: none; background: #1e293b; color: white; font-size: 1.2rem; font-weight: bold; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); outline: none;">
                 </div>
             </div>
 
             <!-- Capa de bloqueo para partidos ya jugados -->
-            <div id="bloqueoMensaje" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.9); border-radius: 12px; flex-direction: column; justify-content: center; align-items: center; border: 1px dashed #cbd5e1;">
+            <div id="bloqueoMensaje" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(241, 245, 249, 0.95); border-radius: 12px; flex-direction: column; justify-content: center; align-items: center; border: 2px dashed #94a3b8; box-sizing: border-box;">
                 <span style="font-size: 1.5rem;">🔒</span>
                 <span style="font-weight: bold; color: #475569; margin-top: 5px; font-size: 0.9rem;">Ya guardaste tu predicción</span>
-                <span id="txtMarcadorGuardado" style="font-size: 1.2rem; font-weight: 800; color: #1e40af; margin-top: 3px;">0 - 0</span>
+                <span id="txtMarcadorGuardado" style="font-size: 1.3rem; font-weight: 800; color: #15803d; margin-top: 3px; background: #dcfce7; padding: 2px 12px; border-radius: 6px;">0 - 0</span>
             </div>
         </div>
 
         <!-- Botón de acción -->
-        <button id="btnGuardarQuiniela" onclick="enviarPronostico()" style="width: 100%; background: #1e40af; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.2); transition: all 0.2s;">
+        <button id="btnGuardarQuiniela" onclick="enviarPronostico()" style="width: 100%; background: linear-gradient(135deg, #16a34a, #15803d); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.2); transition: all 0.2s;" onmouseenter="this.style.transform='translateY(-1px)';" onmouseleave="this.style.transform='translateY(0)';">
             ⚽ Guardar mi Predicción
         </button>
     </div>
@@ -5004,38 +5018,68 @@ const LISTA_PARTIDOS = [
     { id: "P104", fase: "Finales", desc: "Dom 19/07 - ¡La Gran Final!", loc: "Ganador P101", flLoc: "👑", vis: "Ganador P102", flVis: "👑" }
 ];
 
+function obtenerBanderaReal(emojiOriginal, nombreEquipo) {
+    // Si detecta la bandera genérica de Reino Unido, le asignamos el balón de fútbol
+    if (emojiOriginal === "🇬🇧") {
+        return "⚽"; 
+    }
+    // De lo contrario, deja la bandera original (ej: 🇲🇽, 🇿🇦, 🏳️, 👑)
+    return emojiOriginal;
+}
+
 function cargarPartidosPorFase() {
     const faseSeleccionada = document.getElementById('selectFase').value;
     const selectPartido = document.getElementById('selectPartido');
     
+    if (!selectPartido) return; // Validación por seguridad
+    
     const partidosFiltrados = LISTA_PARTIDOS.filter(p => p.fase === faseSeleccionada);
     
     if (partidosFiltrados.length > 0) {
-        selectPartido.innerHTML = partidosFiltrados.map(p => 
-            `<option value="${p.id}">${p.desc}</option>`
-        ).join('');
+        selectPartido.innerHTML = partidosFiltrados.map(p => {
+            // Limpiamos la descripción por si trae el emoji de Reino Unido en el texto
+            let descripcionLimpia = p.desc.replace(/🇬🇧/g, "⚽");
+            return `<option value="${p.id}">${descripcionLimpia}</option>`;
+        }).join('');
     } else {
         selectPartido.innerHTML = `<option value="">No hay partidos para esta fecha</option>`;
     }
     
+    // Ejecutamos para actualizar variables internas
     cambiarPartidoSeleccionado();
 }
 
 function cambiarPartidoSeleccionado() {
-    const idSel = document.getElementById('selectPartido').value;
+    const selectPartido = document.getElementById('selectPartido');
+    if (!selectPartido) return;
+
+    const idSel = selectPartido.value;
     if (!idSel) return;
     
     const partido = LISTA_PARTIDOS.find(p => p.id === idSel);
     if (!partido) return;
 
-    document.getElementById('lblLocal').innerText = partido.loc;
-    document.getElementById('flagLocal').innerText = partido.flLoc;
-    document.getElementById('lblVisitante').innerText = partido.vis;
-    document.getElementById('flagVisitante').innerText = partido.flVis;
+    // Filtramos las banderas antes de meterlas a las etiquetas de la pantalla
+    const banderaLocalCorregida = obtenerBanderaReal(partido.flLoc, partido.loc);
+    const banderaVisitanteCorregida = obtenerBanderaReal(partido.flVis, partido.vis);
 
+    // Capturamos los elementos del DOM de forma segura
+    const lblLocal = document.getElementById('lblLocal');
+    const flagLocal = document.getElementById('flagLocal');
+    const lblVisitante = document.getElementById('lblVisitante');
+    const flagVisitante = document.getElementById('flagVisitante');
+
+    // 🔥 PINTAMOS EN LA INTERFAZ (Validando que existan los elementos en tu HTML)
+    if (lblLocal) lblLocal.innerText = partido.loc;
+    if (flagLocal) flagLocal.innerText = banderaLocalCorregida; 
+    if (lblVisitante) lblVisitante.innerText = partido.vis;
+    if (flagVisitante) flagVisitante.innerText = banderaVisitanteCorregida; 
+
+    // Cada vez que cambie el partido, reevaluamos si el usuario ya participó en él
     verificarBloqueoPartido();
 }
 
+// --- FUNCIÓN CORREGIDA Y OPTIMIZADA POR TU BRO ---
 function verificarBloqueoPartido() {
     const usuario = document.getElementById('quinielaParticipante').value;
     const idSel = document.getElementById('selectPartido').value;
@@ -5043,26 +5087,40 @@ function verificarBloqueoPartido() {
     const capaBloqueo = document.getElementById('bloqueoMensaje');
     const btnGuardar = document.getElementById('btnGuardarQuiniela');
 
+    // --- CORRECCIÓN CLAVE: Bloquear si faltan datos base ---
     if (!usuario || !idSel) {
         if (capaBloqueo) capaBloqueo.style.display = "none";
-        btnGuardar.disabled = false;
-        return;
+        
+        // Ponemos el botón en Gris / 🔒 Bloqueado mientras no haya nombre o partido
+        btnGuardar.disabled = true;
+        btnGuardar.style.background = "#94a3b8"; // Gris suave de tus nuevos estilos
+        btnGuardar.style.cursor = "not-allowed"; // Cambiar cursor a bloqueo
+        btnGuardar.innerText = "🔒 Bloqueado (Falta tu Nombre)";
+        return; // Rompe la ejecución aquí
     }
 
+    // Si llegamos aquí, sí hay usuario y partido seleccionado. 
+    // Ahora revisamos el historial.
     let claveHistorial = `quiniela_${usuario}_${idSel}`;
     let prediccionExistente = localStorage.getItem(claveHistorial);
 
     if (prediccionExistente) {
+        // --- BLOQUEO POR PARTICIPACIÓN EXISTENTE ---
         const txtMarcador = document.getElementById('txtMarcadorGuardado');
         if (txtMarcador) txtMarcador.innerText = prediccionExistente;
         if (capaBloqueo) capaBloqueo.style.display = "flex";
+        
         btnGuardar.disabled = true;
-        btnGuardar.style.background = "#94a3b8";
+        btnGuardar.style.background = "#94a3b8"; // Gris de bloqueo
+        btnGuardar.style.cursor = "not-allowed"; // Cambiar cursor a bloqueo
         btnGuardar.innerText = "🔒 Bloqueado (Ya participaste)";
     } else {
+        // --- ACTIVACIÓN DEL BOTÓN PARA PARTIDO NUEVO ---
         if (capaBloqueo) capaBloqueo.style.display = "none";
+        
         btnGuardar.disabled = false;
-        btnGuardar.style.background = "#1e40af";
+        btnGuardar.style.cursor = "pointer"; // Cursor de mano (activo)
+        btnGuardar.style.background = "#1e40af"; // Azul corporativo (o tu nuevo degradado verde)
         btnGuardar.innerText = "⚽ Guardar mi Predicción";
     }
 }
@@ -5072,7 +5130,10 @@ function abrirQuiniela() {
     if (modal) {
         modal.style.display = 'flex';
         document.getElementById('selectFase').value = "11/06"; 
+        
         cargarPartidosPorFase();
+        cambiarPartidoSeleccionado();
+        verificarBloqueoPartido();
     }
 }
 
