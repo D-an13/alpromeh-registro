@@ -1736,7 +1736,7 @@ input::-webkit-outer-spin-button,
 
     <script>
         let guardandoAhora = false;
-        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzY3qbLQ9N3RPNCH2fByDm8rAfoRjCzaxLMUnKyBQ34p3a-TCud2LmY8TEhK9wCyxk-/exec";
+        const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyyi9TtVH4EKKBDzRXPD0iHR0fBlnP59EtSEHrtY4jMkRz0z9nLVZlWIcIyD3UBlcf5/exec";
         let datosLocales = JSON.parse(localStorage.getItem('alpromeh_vFinal_v10')) || [];
         let modoFiltro = "todo"; 
         let productoTemporal = "";
@@ -5019,11 +5019,9 @@ const LISTA_PARTIDOS = [
 ];
 
 function obtenerBanderaReal(emojiOriginal, nombreEquipo) {
-    // Si detecta la bandera genérica de Reino Unido, le asignamos el balón de fútbol
     if (emojiOriginal === "🇬🇧") {
         return "⚽"; 
     }
-    // De lo contrario, deja la bandera original (ej: 🇲🇽, 🇿🇦, 🏳️, 👑)
     return emojiOriginal;
 }
 
@@ -5031,13 +5029,12 @@ function cargarPartidosPorFase() {
     const faseSeleccionada = document.getElementById('selectFase').value;
     const selectPartido = document.getElementById('selectPartido');
     
-    if (!selectPartido) return; // Validación por seguridad
+    if (!selectPartido) return; 
     
     const partidosFiltrados = LISTA_PARTIDOS.filter(p => p.fase === faseSeleccionada);
     
     if (partidosFiltrados.length > 0) {
         selectPartido.innerHTML = partidosFiltrados.map(p => {
-            // Limpiamos la descripción por si trae el emoji de Reino Unido en el texto
             let descripcionLimpia = p.desc.replace(/🇬🇧/g, "⚽");
             return `<option value="${p.id}">${descripcionLimpia}</option>`;
         }).join('');
@@ -5045,7 +5042,6 @@ function cargarPartidosPorFase() {
         selectPartido.innerHTML = `<option value="">No hay partidos para esta fecha</option>`;
     }
     
-    // Ejecutamos para actualizar variables internas
     cambiarPartidoSeleccionado();
 }
 
@@ -5059,27 +5055,40 @@ function cambiarPartidoSeleccionado() {
     const partido = LISTA_PARTIDOS.find(p => p.id === idSel);
     if (!partido) return;
 
-    // Filtramos las banderas antes de meterlas a las etiquetas de la pantalla
     const banderaLocalCorregida = obtenerBanderaReal(partido.flLoc, partido.loc);
     const banderaVisitanteCorregida = obtenerBanderaReal(partido.flVis, partido.vis);
 
-    // Capturamos los elementos del DOM de forma segura
     const lblLocal = document.getElementById('lblLocal');
     const flagLocal = document.getElementById('flagLocal');
     const lblVisitante = document.getElementById('lblVisitante');
     const flagVisitante = document.getElementById('flagVisitante');
 
-    // 🔥 PINTAMOS EN LA INTERFAZ (Validando que existan los elementos en tu HTML)
     if (lblLocal) lblLocal.innerText = partido.loc;
     if (flagLocal) flagLocal.innerText = banderaLocalCorregida; 
     if (lblVisitante) lblVisitante.innerText = partido.vis;
     if (flagVisitante) flagVisitante.innerText = banderaVisitanteCorregida; 
 
-    // Cada vez que cambie el partido, reevaluamos si el usuario ya participó en él
+    // Reevaluamos el bloqueo del partido seleccionado
     verificarBloqueoPartido();
 }
 
-// --- FUNCIÓN CORREGIDA Y OPTIMIZADA POR TU BRO ---
+function actualizarHistorialDesdeSheets() {
+    if (typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) return;
+
+    // 🔥 Mandamos el parámetro tipo=quiniela para activar el escudo en el doGet
+    fetch(`${URL_SCRIPT}?tipo=quiniela`)
+    .then(response => response.json())
+    .then(datos => {
+        HISTORIAL_GENERAL_SHEETS = datos;
+        // Refrescamos la vista por si el usuario ya tenía el modal abierto
+        verificarBloqueoPartido();
+    })
+    .catch(error => console.error("Error cargando historial global:", error));
+}
+
+// ==========================================================================
+// 🔒 FUNCIÓN MODIFICADA: Ahora escanea la base de datos global de Sheets
+// ==========================================================================
 function verificarBloqueoPartido() {
     const usuario = document.getElementById('quinielaParticipante').value;
     const idSel = document.getElementById('selectPartido').value;
@@ -5087,40 +5096,41 @@ function verificarBloqueoPartido() {
     const capaBloqueo = document.getElementById('bloqueoMensaje');
     const btnGuardar = document.getElementById('btnGuardarQuiniela');
 
-    // --- CORRECCIÓN CLAVE: Bloquear si faltan datos base ---
+    // Bloqueo por falta de datos base
     if (!usuario || !idSel) {
         if (capaBloqueo) capaBloqueo.style.display = "none";
         
-        // Ponemos el botón en Gris / 🔒 Bloqueado mientras no haya nombre o partido
         btnGuardar.disabled = true;
-        btnGuardar.style.background = "#94a3b8"; // Gris suave de tus nuevos estilos
-        btnGuardar.style.cursor = "not-allowed"; // Cambiar cursor a bloqueo
+        btnGuardar.style.background = "#94a3b8"; 
+        btnGuardar.style.cursor = "not-allowed"; 
         btnGuardar.innerText = "🔒 Bloqueado (Falta tu Nombre)";
-        return; // Rompe la ejecución aquí
+        return; 
     }
 
-    // Si llegamos aquí, sí hay usuario y partido seleccionado. 
-    // Ahora revisamos el historial.
-    let claveHistorial = `quiniela_${usuario}_${idSel}`;
-    let prediccionExistente = localStorage.getItem(claveHistorial);
+    // 🔥 ESCANEO EN TIEMPO REAL: Buscamos si el usuario seleccionado ya tiene registro para este partido
+    const prediccionExistente = HISTORIAL_GENERAL_SHEETS.find(
+        p => p.participante.trim().toLowerCase() === usuario.trim().toLowerCase() && p.idPartido.toString() === idSel.toString()
+    );
 
     if (prediccionExistente) {
-        // --- BLOQUEO POR PARTICIPACIÓN EXISTENTE ---
+        // Encontramos registro en el Sheets: Mostramos sus goles guardados en pantalla
         const txtMarcador = document.getElementById('txtMarcadorGuardado');
-        if (txtMarcador) txtMarcador.innerText = prediccionExistente;
+        if (txtMarcador) {
+            txtMarcador.innerText = `${prediccionExistente.golesLocal} - ${prediccionExistente.golesVisitante}`;
+        }
         if (capaBloqueo) capaBloqueo.style.display = "flex";
         
         btnGuardar.disabled = true;
-        btnGuardar.style.background = "#94a3b8"; // Gris de bloqueo
-        btnGuardar.style.cursor = "not-allowed"; // Cambiar cursor a bloqueo
+        btnGuardar.style.background = "#94a3b8"; 
+        btnGuardar.style.cursor = "not-allowed"; 
         btnGuardar.innerText = "🔒 Bloqueado (Ya participaste)";
     } else {
-        // --- ACTIVACIÓN DEL BOTÓN PARA PARTIDO NUEVO ---
+        // El usuario no ha participado en este partido: Habilitamos el botón
         if (capaBloqueo) capaBloqueo.style.display = "none";
         
         btnGuardar.disabled = false;
-        btnGuardar.style.cursor = "pointer"; // Cursor de mano (activo)
-        btnGuardar.style.background = "#1e40af"; // Azul corporativo (o tu nuevo degradado verde)
+        btnGuardar.style.cursor = "pointer"; 
+        btnGuardar.style.background = "#1e40af"; 
         btnGuardar.innerText = "⚽ Guardar mi Predicción";
     }
 }
@@ -5142,6 +5152,9 @@ function cerrarQuiniela() {
     if (modal) modal.style.display = 'none';
 }
 
+// ==========================================================================
+// 🚀 FUNCIÓN MODIFICADA: Envía a la nube y actualiza la lista local de inmediato
+// ==========================================================================
 function enviarPronostico() {
     const usuario = document.getElementById('quinielaParticipante').value;
     const idSel = document.getElementById('selectPartido').value;
@@ -5177,14 +5190,19 @@ function enviarPronostico() {
         body: JSON.stringify(datosQuiniela)
     })
     .then(() => {
-        let claveHistorial = `quiniela_${usuario}_${idSel}`;
-        let marcadorTexto = `${gLocal} - ${gVisitante}`;
-        localStorage.setItem(claveHistorial, marcadorTexto);
+        // ✨ Metemos la nueva predicción al array en caliente para bloquear de una vez
+        HISTORIAL_GENERAL_SHEETS.push({
+            participante: usuario,
+            golesLocal: parseInt(gLocal),
+            golesVisitante: parseInt(gVisitante),
+            idPartido: idSel
+        });
 
         alert(`🏆 ¡Pronóstico Nítido! Registrado: ${partido.flLoc} ${partido.loc} ${gLocal} - ${gVisitante} ${partido.vis} ${partido.flVis}.`);
         
         document.getElementById('golesLocal').value = "";
         document.getElementById('golesVisitante').value = "";
+        
         verificarBloqueoPartido();
         cerrarQuiniela();
     })
@@ -5196,8 +5214,12 @@ function enviarPronostico() {
     });
 }
 
+// ==========================================================================
+// 🔄 INICIALIZACIÓN: Jalar datos en cuanto cargue el navegador
+// ==========================================================================
 document.addEventListener("DOMContentLoaded", function() {
     cargarPartidosPorFase();
+    actualizarHistorialDesdeSheets(); // 👈 Llama al Sheets al abrir la página
 });
 </script>
 </body>
