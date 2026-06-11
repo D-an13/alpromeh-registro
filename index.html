@@ -4884,138 +4884,138 @@ function eliminarArticuloPedido(index) {
 }
 
 // ==========================================================================
-// ⚽ MOTOR DE QUINIELA MUNDIALISTA MULTI-PARTIDO
+// ⚽ MOTOR DE QUINIELA MUNDIALISTA MULTI-PARTIDO (CON ANTICHEAT DE HORA GT)
 // ==========================================================================
 
-// Base de datos expandible con los 104 partidos segmentados por fase
+// Base de datos expandible con los 104 partidos segmentados por fase e hitos de bloqueo en Hora de Guatemala (GMT-6)
 const LISTA_PARTIDOS = [
-   // 11 de Junio
-    { id: "P1", fase: "11/06", desc: "15:00 - México v Sudáfrica", loc: "México", flLoc: "🇲🇽", vis: "Sudáfrica", flVis: "🇿🇦" },
-    { id: "P2", fase: "11/06", desc: "22:00 - Rep. de Corea v Rep. Checa", loc: "República de Corea", flLoc: "🇰🇷", vis: "República Checa", flVis: "🇨🇿" },
+    // 11 de Junio
+    { id: "P1", fase: "11/06", desc: "15:00 - México v Sudáfrica", loc: "México", flLoc: "🇲🇽", vis: "Sudáfrica", flVis: "🇿🇦", bloqueo: new Date("2026-06-11T15:00:00-06:00") },
+    { id: "P2", fase: "11/06", desc: "22:00 - Rep. de Corea v Rep. Checa", loc: "República de Corea", flLoc: "🇰🇷", vis: "República Checa", flVis: "🇨🇿", bloqueo: new Date("2026-06-11T22:00:00-06:00") },
     // 12 de Junio
-    { id: "P3", fase: "12/06", desc: "15:00 - Canadá v Bosnia y Herzegovina", loc: "Canadá", flLoc: "🇨🇦", vis: "Bosnia y Herzegovina", flVis: "🇧🇦" },
-    { id: "P4", fase: "12/06", desc: "21:00 - Estados Unidos v Paraguay", loc: "Estados Unidos", flLoc: "🇺🇸", vis: "Paraguay", flVis: "🇵🇾" },
+    { id: "P3", fase: "12/06", desc: "15:00 - Canadá v Bosnia y Herzegovina", loc: "Canadá", flLoc: "🇨🇦", vis: "Bosnia y Herzegovina", flVis: "🇧🇦", bloqueo: new Date("2026-06-12T15:00:00-06:00") },
+    { id: "P4", fase: "12/06", desc: "21:00 - Estados Unidos v Paraguay", loc: "Estados Unidos", flLoc: "🇺🇸", vis: "Paraguay", flVis: "🇵🇾", bloqueo: new Date("2026-06-12T21:00:00-06:00") },
     // 13 de Junio
-    { id: "P5", fase: "13/06", desc: "15:00 - Catar v Suiza", loc: "Catar", flLoc: "🇶🇦", vis: "Suiza", flVis: "🇨🇭" },
-    { id: "P6", fase: "13/06", desc: "18:00 - Brasil v Marruecos", loc: "Brasil", flLoc: "🇧🇷", vis: "Marruecos", flVis: "🇲🇦" },
-    { id: "P7", fase: "13/06", desc: "21:00 - Haití v Escocia", loc: "Haití", flLoc: "🇭🇹", vis: "Escocia", flVis: "🇬🇧" },
-    { id: "P8", fase: "13/06", desc: "00:00 - Australia v Turquía", loc: "Australia", flLoc: "🇦🇺", vis: "Turquía", flVis: "🇹🇷" },
+    { id: "P5", fase: "13/06", desc: "15:00 - Catar v Suiza", loc: "Catar", flLoc: "🇶🇦", vis: "Suiza", flVis: "🇨🇭", bloqueo: new Date("2026-06-13T15:00:00-06:00") },
+    { id: "P6", fase: "13/06", desc: "18:00 - Brasil v Marruecos", loc: "Brasil", flLoc: "🇧🇷", vis: "Marruecos", flVis: "🇲🇦", bloqueo: new Date("2026-06-13T18:00:00-06:00") },
+    { id: "P7", fase: "13/06", desc: "21:00 - Haití v Escocia", loc: "Haití", flLoc: "🇭🇹", vis: "Escocia", flVis: "🇬🇧", bloqueo: new Date("2026-06-13T21:00:00-06:00") },
+    { id: "P8", fase: "13/06", desc: "00:00 - Australia v Turquía", loc: "Australia", flLoc: "🇦🇺", vis: "Turquía", flVis: "🇹🇷", bloqueo: new Date("2026-06-14T00:00:00-06:00") }, // Cae madrugada del 14
     // 14 de Junio
-    { id: "P9", fase: "14/06", desc: "13:00 - Alemania v Curazao", loc: "Alemania", flLoc: "🇩🇪", vis: "Curazao", flVis: "🇨🇼" },
-    { id: "P10", fase: "14/06", desc: "16:00 - Países Bajos v Japón", loc: "Países Bajos", flLoc: "🇳🇱", vis: "Japón", flVis: "🇯🇵" },
-    { id: "P11", fase: "14/06", desc: "19:00 - Costa de Marfil v Ecuador", loc: "Costa de Marfil", flLoc: "🇨🇮", vis: "Ecuador", flVis: "🇪🇨" },
-    { id: "P12", fase: "14/06", desc: "22:00 - Suecia v Túnez", loc: "Suecia", flLoc: "🇸🇪", vis: "Túnez", flVis: "🇹🇳" },
+    { id: "P9", fase: "14/06", desc: "13:00 - Alemania v Curazao", loc: "Alemania", flLoc: "🇩🇪", vis: "Curazao", flVis: "🇨🇼", bloqueo: new Date("2026-06-14T13:00:00-06:00") },
+    { id: "P10", fase: "14/06", desc: "16:00 - Países Bajos v Japón", loc: "Países Bajos", flLoc: "🇳🇱", vis: "Japón", flVis: "🇯🇵", bloqueo: new Date("2026-06-14T16:00:00-06:00") },
+    { id: "P11", fase: "14/06", desc: "19:00 - Costa de Marfil v Ecuador", loc: "Costa de Marfil", flLoc: "🇨🇮", vis: "Ecuador", flVis: "🇪🇨", bloqueo: new Date("2026-06-14T19:00:00-06:00") },
+    { id: "P12", fase: "14/06", desc: "22:00 - Suecia v Túnez", loc: "Suecia", flLoc: "🇸🇪", vis: "Túnez", flVis: "🇹🇳", bloqueo: new Date("2026-06-14T22:00:00-06:00") },
     // 15 de Junio
-    { id: "P13", fase: "15/06", desc: "12:00 - España v Cabo Verde", loc: "España", flLoc: "🇪🇸", vis: "Cabo Verde", flVis: "🇨🇻" },
-    { id: "P14", fase: "15/06", desc: "15:00 - Bélgica v Egipto", loc: "Bélgica", flLoc: "🇧🇪", vis: "Egipto", flVis: "🇪🇬" },
-    { id: "P15", fase: "15/06", desc: "18:00 - Arabia Saudí v Uruguay", loc: "Arabia Saudí", flLoc: "🇸🇦", vis: "Uruguay", flVis: "🇺🇾" },
-    { id: "P16", fase: "15/06", desc: "21:00 - RI de Irán v Nueva Zelanda", loc: "RI de Irán", flLoc: "🇮🇷", vis: "Nueva Zelanda", flVis: "🇳🇿" },
+    { id: "P13", fase: "15/06", desc: "12:00 - España v Cabo Verde", loc: "España", flLoc: "🇪🇸", vis: "Cabo Verde", flVis: "🇨🇻", bloqueo: new Date("2026-06-15T12:00:00-06:00") },
+    { id: "P14", fase: "15/06", desc: "15:00 - Bélgica v Egipto", loc: "Bélgica", flLoc: "🇧🇪", vis: "Egipto", flVis: "🇪🇬", bloqueo: new Date("2026-06-15T15:00:00-06:00") },
+    { id: "P15", fase: "15/06", desc: "18:00 - Arabia Saudí v Uruguay", loc: "Arabia Saudí", flLoc: "🇸🇦", vis: "Uruguay", flVis: "🇺🇾", bloqueo: new Date("2026-06-15T18:00:00-06:00") },
+    { id: "P16", fase: "15/06", desc: "21:00 - RI de Irán v Nueva Zelanda", loc: "RI de Irán", flLoc: "🇮🇷", vis: "Nueva Zelanda", flVis: "🇳🇿", bloqueo: new Date("2026-06-15T21:00:00-06:00") },
     // 16 de Junio
-    { id: "P17", fase: "16/06", desc: "15:00 - Francia v Senegal", loc: "Francia", flLoc: "🇫🇷", vis: "Senegal", flVis: "🇸🇳" },
-    { id: "P18", fase: "16/06", desc: "18:00 - Irak v Noruega", loc: "Irak", flLoc: "🇮🇶", vis: "Noruega", flVis: "🇳🇴" },
-    { id: "P19", fase: "16/06", desc: "21:00 - Argentina v Argelia", loc: "Argentina", flLoc: "🇦🇷", vis: "Argelia", flVis: "🇩🇿" },
-    { id: "P20", fase: "16/06", desc: "00:00 - Austria v Jordania", loc: "Austria", flLoc: "🇦🇹", vis: "Jordania", flVis: "🇯🇴" },
+    { id: "P17", fase: "16/06", desc: "15:00 - Francia v Senegal", loc: "Francia", flLoc: "🇫🇷", vis: "Senegal", flVis: "🇸🇳", bloqueo: new Date("2026-06-16T15:00:00-06:00") },
+    { id: "P18", fase: "16/06", desc: "18:00 - Irak v Noruega", loc: "Irak", flLoc: "🇮🇶", vis: "Noruega", flVis: "🇳🇴", bloqueo: new Date("2026-06-16T18:00:00-06:00") },
+    { id: "P19", fase: "16/06", desc: "21:00 - Argentina v Argelia", loc: "Argentina", flLoc: "🇦🇷", vis: "Argelia", flVis: "🇩🇿", bloqueo: new Date("2026-06-16T21:00:00-06:00") },
+    { id: "P20", fase: "16/06", desc: "00:00 - Austria v Jordania", loc: "Austria", flLoc: "🇦🇹", vis: "Jordania", flVis: "🇯🇴", bloqueo: new Date("2026-06-17T00:00:00-06:00") }, // Cae madrugada del 17
     // 17 de Junio
-    { id: "P21", fase: "17/06", desc: "13:00 - Portugal v RD Congo", loc: "Portugal", flLoc: "🇵🇹", vis: "RD Congo", flVis: "🇨🇩" },
-    { id: "P22", fase: "17/06", desc: "16:00 - Inglaterra v Croacia", loc: "Inglaterra", flLoc: "🇬🇧", vis: "Croacia", flVis: "🇭🇷" },
-    { id: "P23", fase: "17/06", desc: "19:00 - Ghana v Panamá", loc: "Ghana", flLoc: "🇬🇭", vis: "Panamá", flVis: "🇵🇦" },
-    { id: "P24", fase: "17/06", desc: "22:00 - Uzbekistán v Colombia", loc: "Uzbekistán", flLoc: "🇺🇿", vis: "Colombia", flVis: "🇨🇴" },
+    { id: "P21", fase: "17/06", desc: "13:00 - Portugal v RD Congo", loc: "Portugal", flLoc: "🇵🇹", vis: "RD Congo", flVis: "🇨🇩", bloqueo: new Date("2026-06-17T13:00:00-06:00") },
+    { id: "P22", fase: "17/06", desc: "16:00 - Inglaterra v Croacia", loc: "Inglaterra", flLoc: "🇬🇧", vis: "Croacia", flVis: "🇭🇷", bloqueo: new Date("2026-06-17T16:00:00-06:00") },
+    { id: "P23", fase: "17/06", desc: "19:00 - Ghana v Panamá", loc: "Ghana", flLoc: "🇬🇭", vis: "Panamá", flVis: "🇵🇦", bloqueo: new Date("2026-06-17T19:00:00-06:00") },
+    { id: "P24", fase: "17/06", desc: "22:00 - Uzbekistán v Colombia", loc: "Uzbekistán", flLoc: "🇺🇿", vis: "Colombia", flVis: "🇨🇴", bloqueo: new Date("2026-06-17T22:00:00-06:00") },
     // 18 de Junio
-    { id: "P25", fase: "18/06", desc: "12:00 - República Checa v Sudáfrica", loc: "República Checa", flLoc: "🇨🇿", vis: "Sudáfrica", flVis: "🇿🇦" },
-    { id: "P26", fase: "18/06", desc: "15:00 - Suiza v Bosnia", loc: "Suiza", flLoc: "🇨🇭", vis: "Bosnia y Herzegovina", flVis: "🇧🇦" },
-    { id: "P27", fase: "18/06", desc: "18:00 - Canadá v Catar", loc: "Canadá", flLoc: "🇨🇦", vis: "Catar", flVis: "🇶🇦" },
-    { id: "P28", fase: "18/06", desc: "21:00 - México v República de Corea", loc: "México", flLoc: "🇲🇽", vis: "República de Corea", flVis: "🇰🇷" },
+    { id: "P25", fase: "18/06", desc: "12:00 - República Checa v Sudáfrica", loc: "República Checa", flLoc: "🇨🇿", vis: "Sudáfrica", flVis: "🇿🇦", bloqueo: new Date("2026-06-18T12:00:00-06:00") },
+    { id: "P26", fase: "18/06", desc: "15:00 - Suiza v Bosnia", loc: "Suiza", flLoc: "🇨🇭", vis: "Bosnia y Herzegovina", flVis: "🇧🇦", bloqueo: new Date("2026-06-18T15:00:00-06:00") },
+    { id: "P27", fase: "18/06", desc: "18:00 - Canadá v Catar", loc: "Canadá", flLoc: "🇨🇦", vis: "Catar", flVis: "🇶🇦", bloqueo: new Date("2026-06-18T18:00:00-06:00") },
+    { id: "P28", fase: "18/06", desc: "21:00 - México v República de Corea", loc: "México", flLoc: "🇲🇽", vis: "República de Corea", flVis: "🇰🇷", bloqueo: new Date("2026-06-18T21:00:00-06:00") },
     // 19 de Junio
-    { id: "P29", fase: "19/06", desc: "15:00 - Estados Unidos v Australia", loc: "Estados Unidos", flLoc: "🇺🇸", vis: "Australia", flVis: "🇦🇺" },
-    { id: "P30", fase: "19/06", desc: "18:00 - Escocia v Marruecos", loc: "Escocia", flLoc: "🇬🇧", vis: "Marruecos", flVis: "🇲🇦" },
-    { id: "P31", fase: "19/06", desc: "21:00 - Brasil v Haití", loc: "Brasil", flLoc: "🇧🇷", vis: "Haití", flVis: "🇭🇹" },
-    { id: "P32", fase: "19/06", desc: "00:00 - Turquía v Paraguay", loc: "Turquía", flLoc: "🇹🇷", vis: "Paraguay", flVis: "🇵🇾" },
+    { id: "P29", fase: "19/06", desc: "15:00 - Estados Unidos v Australia", loc: "Estados Unidos", flLoc: "🇺🇸", vis: "Australia", flVis: "🇦🇺", bloqueo: new Date("2026-06-19T15:00:00-06:00") },
+    { id: "P30", fase: "19/06", desc: "18:00 - Escocia v Marruecos", loc: "Escocia", flLoc: "🇬🇧", vis: "Marruecos", flVis: "🇲🇦", bloqueo: new Date("2026-06-19T18:00:00-06:00") },
+    { id: "P31", fase: "19/06", desc: "21:00 - Brasil v Haití", loc: "Brasil", flLoc: "🇧🇷", vis: "Haití", flVis: "🇭🇹", bloqueo: new Date("2026-06-19T21:00:00-06:00") },
+    { id: "P32", fase: "19/06", desc: "00:00 - Turquía v Paraguay", loc: "Turquía", flLoc: "🇹🇷", vis: "Paraguay", flVis: "🇵🇾", bloqueo: new Date("2026-06-20T00:00:00-06:00") }, // Cae madrugada del 20
     // 20 de Junio
-    { id: "P33", fase: "20/06", desc: "13:00 - Países Bajos v Suecia", loc: "Países Bajos", flLoc: "🇳🇱", vis: "Suecia", flVis: "🇸🇪" },
-    { id: "P34", fase: "20/06", desc: "16:00 - Alemania v Costa de Marfil", loc: "Alemania", flLoc: "🇩🇪", vis: "Costa de Marfil", flVis: "🇨🇮" },
-    { id: "P35", fase: "20/06", desc: "22:00 - Ecuador v Curazao", loc: "Ecuador", flLoc: "🇪🇨", vis: "Curazao", flVis: "🇨🇼" },
-    { id: "P36", fase: "20/06", desc: "00:00 - Túnez v Japón", loc: "Túnez", flLoc: "🇹🇳", vis: "Japón", flVis: "🇯🇵" },
+    { id: "P33", fase: "20/06", desc: "13:00 - Países Bajos v Suecia", loc: "Países Bajos", flLoc: "🇳🇱", vis: "Suecia", flVis: "🇸🇪", bloqueo: new Date("2026-06-20T13:00:00-06:00") },
+    { id: "P34", fase: "20/06", desc: "16:00 - Alemania v Costa de Marfil", loc: "Alemania", flLoc: "🇩🇪", vis: "Costa de Marfil", flVis: "🇨🇮", bloqueo: new Date("2026-06-20T16:00:00-06:00") },
+    { id: "P35", fase: "20/06", desc: "22:00 - Ecuador v Curazao", loc: "Ecuador", flLoc: "🇪🇨", vis: "Curazao", flVis: "🇨🇼", bloqueo: new Date("2026-06-20T22:00:00-06:00") },
+    { id: "P36", fase: "20/06", desc: "00:00 - Túnez v Japón", loc: "Túnez", flLoc: "🇹🇳", vis: "Japón", flVis: "🇯🇵", bloqueo: new Date("2026-06-21T00:00:00-06:00") }, // Cae madrugada del 21
     // 21 de Junio
-    { id: "P37", fase: "21/06", desc: "12:00 - España v Arabia Saudí", loc: "España", flLoc: "🇪🇸", vis: "Arabia Saudí", flVis: "🇸🇦" },
-    { id: "P38", fase: "21/06", desc: "15:00 - Bélgica v Irán", loc: "Bélgica", flLoc: "🇧🇪", vis: "RI de Irán", flVis: "🇮🇷" },
-    { id: "P39", fase: "21/06", desc: "18:00 - Uruguay v Cabo Verde", loc: "Uruguay", flLoc: "🇺🇾", vis: "Cabo Verde", flVis: "🇨🇻" },
-    { id: "P40", fase: "21/06", desc: "21:00 - Nueva Zelanda v Egipto", loc: "Nueva Zelanda", flLoc: "🇳🇿", vis: "Egipto", flVis: "🇪🇬" },
+    { id: "P37", fase: "21/06", desc: "12:00 - España v Arabia Saudí", loc: "España", flLoc: "🇪🇸", vis: "Arabia Saudí", flVis: "🇸🇦", bloqueo: new Date("2026-06-21T12:00:00-06:00") },
+    { id: "P38", fase: "21/06", desc: "15:00 - Bélgica v Irán", loc: "Bélgica", flLoc: "🇧🇪", vis: "RI de Irán", flVis: "🇮🇷", bloqueo: new Date("2026-06-21T15:00:00-06:00") },
+    { id: "P39", fase: "21/06", desc: "18:00 - Uruguay v Cabo Verde", loc: "Uruguay", flLoc: "🇺🇾", vis: "Cabo Verde", flVis: "🇨🇻", bloqueo: new Date("2026-06-21T18:00:00-06:00") },
+    { id: "P40", fase: "21/06", desc: "21:00 - Nueva Zelanda v Egipto", loc: "Nueva Zelanda", flLoc: "🇳🇿", vis: "Egipto", flVis: "🇪🇬", bloqueo: new Date("2026-06-21T21:00:00-06:00") },
     // 22 de Junio
-    { id: "P41", fase: "22/06", desc: "13:00 - Argentina v Austria", loc: "Argentina", flLoc: "🇦🇷", vis: "Austria", flVis: "🇦🇹" },
-    { id: "P42", fase: "22/06", desc: "17:00 - Francia v Irak", loc: "Francia", flLoc: "🇫🇷", vis: "Irak", flVis: "🇮🇶" },
-    { id: "P43", fase: "22/06", desc: "20:00 - Noruega v Senegal", loc: "Noruega", flLoc: "🇳🇴", vis: "Senegal", flVis: "🇸🇳" },
-    { id: "P44", fase: "22/06", desc: "23:00 - Jordania v Argelia", loc: "Jordania", flLoc: "🇯🇴", vis: "Argelia", flVis: "🇩🇿" },
+    { id: "P41", fase: "22/06", desc: "13:00 - Argentina v Austria", loc: "Argentina", flLoc: "🇦🇷", vis: "Austria", flVis: "🇦🇹", bloqueo: new Date("2026-06-22T13:00:00-06:00") },
+    { id: "P42", fase: "22/06", desc: "17:00 - Francia v Irak", loc: "Francia", flLoc: "🇫🇷", vis: "Irak", flVis: "🇮🇶", bloqueo: new Date("2026-06-22T17:00:00-06:00") },
+    { id: "P43", fase: "22/06", desc: "20:00 - Noruega v Senegal", loc: "Noruega", flLoc: "🇳🇴", vis: "Senegal", flVis: "🇸🇳", bloqueo: new Date("2026-06-22T20:00:00-06:00") },
+    { id: "P44", fase: "22/06", desc: "23:00 - Jordania v Argelia", loc: "Jordania", flLoc: "🇯🇴", vis: "Argelia", flVis: "🇩🇿", bloqueo: new Date("2026-06-22T23:00:00-06:00") },
     // 23 de Junio
-    { id: "P45", fase: "23/06", desc: "13:00 - Portugal v Uzbekistán", loc: "Portugal", flLoc: "🇵🇹", vis: "Uzbekistán", flVis: "🇺🇿" },
-    { id: "P46", fase: "23/06", desc: "16:00 - Inglaterra v Ghana", loc: "Inglaterra", flLoc: "🇬🇧", vis: "Ghana", flVis: "🇬🇭" },
-    { id: "P47", fase: "23/06", desc: "19:00 - Panamá v Croacia", loc: "Panamá", flLoc: "🇵🇦", vis: "Croacia", flVis: "🇭🇷" },
-    { id: "P48", fase: "23/06", desc: "22:00 - Colombia v RD Congo", loc: "Colombia", flLoc: "🇨🇴", vis: "RD Congo", flVis: "🇨🇩" },
+    { id: "P45", fase: "23/06", desc: "13:00 - Portugal v Uzbekistán", loc: "Portugal", flLoc: "🇵🇹", vis: "Uzbekistán", flVis: "🇺🇿", bloqueo: new Date("2026-06-23T13:00:00-06:00") },
+    { id: "P46", fase: "23/06", desc: "16:00 - Inglaterra v Ghana", loc: "Inglaterra", flLoc: "🇬🇧", vis: "Ghana", flVis: "🇬🇭", bloqueo: new Date("2026-06-23T16:00:00-06:00") },
+    { id: "P47", fase: "23/06", desc: "19:00 - Panamá v Croacia", loc: "Panamá", flLoc: "🇵🇦", vis: "Croacia", flVis: "🇭🇷", bloqueo: new Date("2026-06-23T19:00:00-06:00") },
+    { id: "P48", fase: "23/06", desc: "22:00 - Colombia v RD Congo", loc: "Colombia", flLoc: "🇨🇴", vis: "RD Congo", flVis: "🇨🇩", bloqueo: new Date("2026-06-23T22:00:00-06:00") },
     // 24 de Junio
-    { id: "P49", fase: "24/06", desc: "15:00 - Suiza v Canadá", loc: "Suiza", flLoc: "🇨🇭", vis: "Canadá", flVis: "🇨🇦" },
-    { id: "P50", fase: "24/06", desc: "15:00 - Bosnia v Catar", loc: "Bosnia y Herzegovina", flLoc: "🇧🇦", vis: "Catar", flVis: "🇶🇦" },
-    { id: "P51", fase: "24/06", desc: "18:00 - Escocia v Brasil", loc: "Escocia", flLoc: "🇬🇧", vis: "Brasil", flVis: "🇧🇷" },
-    { id: "P52", fase: "24/06", desc: "18:00 - Marruecos v Haití", loc: "Marruecos", flLoc: "🇲🇦", vis: "Haití", flVis: "🇭🇹" },
-    { id: "P53", fase: "24/06", desc: "21:00 - República Checa v México", loc: "República Checa", flLoc: "🇨🇿", vis: "México", flVis: "🇲🇽" },
-    { id: "P54", fase: "24/06", desc: "21:00 - Sudáfrica v Rep. Corea", loc: "Sudáfrica", flLoc: "🇿🇦", vis: "República de Corea", flVis: "🇰🇷" },
+    { id: "P49", fase: "24/06", desc: "15:00 - Suiza v Canadá", loc: "Suiza", flLoc: "🇨🇭", vis: "Canadá", flVis: "🇨🇦", bloqueo: new Date("2026-06-24T15:00:00-06:00") },
+    { id: "P50", fase: "24/06", desc: "15:00 - Bosnia v Catar", loc: "Bosnia y Herzegovina", flLoc: "🇧🇦", vis: "Catar", flVis: "🇶🇦", bloqueo: new Date("2026-06-24T15:00:00-06:00") },
+    { id: "P51", fase: "24/06", desc: "18:00 - Escocia v Brasil", loc: "Escocia", flLoc: "🇬🇧", vis: "Brasil", flVis: "🇧🇷", bloqueo: new Date("2026-06-24T18:00:00-06:00") },
+    { id: "P52", fase: "24/06", desc: "18:00 - Marruecos v Haití", loc: "Marruecos", flLoc: "🇲🇦", vis: "Haití", flVis: "🇭🇹", bloqueo: new Date("2026-06-24T18:00:00-06:00") },
+    { id: "P53", fase: "24/06", desc: "21:00 - República Checa v México", loc: "República Checa", flLoc: "🇨🇿", vis: "México", flVis: "🇲🇽", bloqueo: new Date("2026-06-24T21:00:00-06:00") },
+    { id: "P54", fase: "24/06", desc: "21:00 - Sudáfrica v Rep. Corea", loc: "Sudáfrica", flLoc: "🇿🇦", vis: "República de Corea", flVis: "🇰🇷", bloqueo: new Date("2026-06-24T21:00:00-06:00") },
     // 25 de Junio
-    { id: "P55", fase: "25/06", desc: "16:00 - Curazao v Costa Marfil", loc: "Curazao", flLoc: "🇨🇼", vis: "Costa de Marfil", flVis: "🇨🇮" },
-    { id: "P56", fase: "25/06", desc: "16:00 - Ecuador v Alemania", loc: "Ecuador", flLoc: "🇪🇨", vis: "Alemania", flVis: "🇩🇪" },
-    { id: "P57", fase: "25/06", desc: "19:00 - Japón v Suecia", loc: "Japón", flLoc: "🇯🇵", vis: "Suecia", flVis: "🇸🇪" },
-    { id: "P58", fase: "25/06", desc: "19:00 - Túnez v Países Bajos", loc: "Túnez", flLoc: "🇹🇳", vis: "Países Bajos", flVis: "🇳🇱" },
-    { id: "P59", fase: "25/06", desc: "22:00 - Turquía v Estados Unidos", loc: "Turquía", flLoc: "🇹🇷", vis: "Estados Unidos", flVis: "🇺🇸" },
-    { id: "P60", fase: "25/06", desc: "22:00 - Paraguay v Australia", loc: "Paraguay", flLoc: "🇵🇾", vis: "Australia", flVis: "🇦🇺" },
+    { id: "P55", fase: "25/06", desc: "16:00 - Curazao v Costa Marfil", loc: "Curazao", flLoc: "🇨🇼", vis: "Costa de Marfil", flVis: "🇨🇮", bloqueo: new Date("2026-06-25T16:00:00-06:00") },
+    { id: "P56", fase: "25/06", desc: "16:00 - Ecuador v Alemania", loc: "Ecuador", flLoc: "🇪🇨", vis: "Alemania", flVis: "🇩🇪", bloqueo: new Date("2026-06-25T16:00:00-06:00") },
+    { id: "P57", fase: "25/06", desc: "19:00 - Japón v Suecia", loc: "Japón", flLoc: "🇯🇵", vis: "Suecia", flVis: "🇸🇪", bloqueo: new Date("2026-06-25T19:00:00-06:00") },
+    { id: "P58", fase: "25/06", desc: "19:00 - Túnez v Países Bajos", loc: "Túnez", flLoc: "🇹🇳", vis: "Países Bajos", flVis: "🇳🇱", bloqueo: new Date("2026-06-25T19:00:00-06:00") },
+    { id: "P59", fase: "25/06", desc: "22:00 - Turquía v Estados Unidos", loc: "Turquía", flLoc: "🇹🇷", vis: "Estados Unidos", flVis: "🇺🇸", bloqueo: new Date("2026-06-25T22:00:00-06:00") },
+    { id: "P60", fase: "25/06", desc: "22:00 - Paraguay v Australia", loc: "Paraguay", flLoc: "🇵🇾", vis: "Australia", flVis: "🇦🇺", bloqueo: new Date("2026-06-25T22:00:00-06:00") },
     // 26 de Junio
-    { id: "P61", fase: "26/06", desc: "15:00 - Noruega v Francia", loc: "Noruega", flLoc: "🇳🇴", vis: "Francia", flVis: "🇫🇷" },
-    { id: "P62", fase: "26/06", desc: "15:00 - Senegal v Irak", loc: "Senegal", flLoc: "🇸🇳", vis: "Irak", flVis: "🇮🇶" },
-    { id: "P63", fase: "26/06", desc: "20:00 - Cabo Verde v Arabia Saudí", loc: "Cabo Verde", flLoc: "🇨🇻", vis: "Arabia Saudí", flVis: "🇸🇦" },
-    { id: "P64", fase: "26/06", desc: "20:00 - Uruguay v España", loc: "Uruguay", flLoc: "🇺🇾", vis: "España", flVis: "🇪🇸" },
-    { id: "P65", fase: "26/06", desc: "23:00 - Egipto v Irán", loc: "Egipto", flLoc: "🇪🇬", vis: "RI de Irán", flVis: "🇮🇷" },
-    { id: "P66", fase: "26/06", desc: "23:00 - Nueva Zelanda v Bélgica", loc: "Nueva Zelanda", flLoc: "🇳🇿", vis: "Bélgica", flVis: "🇧🇪" },
+    { id: "P61", fase: "26/06", desc: "15:00 - Noruega v Francia", loc: "Noruega", flLoc: "🇳🇴", vis: "Francia", flVis: "🇫🇷", bloqueo: new Date("2026-06-26T15:00:00-06:00") },
+    { id: "P62", fase: "26/06", desc: "15:00 - Senegal v Irak", loc: "Senegal", flLoc: "🇸🇳", vis: "Irak", flVis: "🇮🇶", bloqueo: new Date("2026-06-26T15:00:00-06:00") },
+    { id: "P63", fase: "26/06", desc: "20:00 - Cabo Verde v Arabia Saudí", loc: "Cabo Verde", flLoc: "🇨🇻", vis: "Arabia Saudí", flVis: "🇸🇦", bloqueo: new Date("2026-06-26T20:00:00-06:00") },
+    { id: "P64", fase: "26/06", desc: "20:00 - Uruguay v España", loc: "Uruguay", flLoc: "🇺🇾", vis: "España", flVis: "🇪🇸", bloqueo: new Date("2026-06-26T20:00:00-06:00") },
+    { id: "P65", fase: "26/06", desc: "23:00 - Egipto v Irán", loc: "Egipto", flLoc: "🇪🇬", vis: "RI de Irán", flVis: "🇮🇷", bloqueo: new Date("2026-06-26T23:00:00-06:00") },
+    { id: "P66", fase: "26/06", desc: "23:00 - Nueva Zelanda v Bélgica", loc: "Nueva Zelanda", flLoc: "🇳🇿", vis: "Bélgica", flVis: "🇧🇪", bloqueo: new Date("2026-06-26T23:00:00-06:00") },
     // 27 de Junio
-    { id: "P67", fase: "27/06", desc: "17:00 - Panamá v Inglaterra", loc: "Panamá", flLoc: "🇵🇦", vis: "Inglaterra", flVis: "🇬🇧" },
-    { id: "P68", fase: "27/06", desc: "17:00 - Croacia v Ghana", loc: "Croacia", flLoc: "🇭🇷", vis: "Ghana", flVis: "🇬🇭" },
-    { id: "P69", fase: "27/06", desc: "19:30 - Colombia v Portugal", loc: "Colombia", flLoc: "🇨🇴", vis: "Portugal", flVis: "🇵🇹" },
-    { id: "P70", fase: "27/06", desc: "19:30 - RD Congo v Uzbekistán", loc: "RD Congo", flLoc: "🇨🇩", vis: "Uzbekistán", flVis: "🇺🇿" },
-    { id: "P71", fase: "27/06", desc: "22:00 - Argelia v Austria", loc: "Argelia", flLoc: "🇩🇿", vis: "Austria", flVis: "🇦🇹" },
-    { id: "P72", fase: "27/06", desc: "22:00 - Jordania v Argentina", loc: "Jordania", flLoc: "🇯🇴", vis: "Argentina", flVis: "🇦🇷" },
+    { id: "P67", fase: "27/06", desc: "17:00 - Panamá v Inglaterra", loc: "Panamá", flLoc: "🇵🇦", vis: "Inglaterra", flVis: "🇬🇧", bloqueo: new Date("2026-06-27T17:00:00-06:00") },
+    { id: "P68", fase: "27/06", desc: "17:00 - Croacia v Ghana", loc: "Croacia", flLoc: "🇭🇷", vis: "Ghana", flVis: "🇬🇭", bloqueo: new Date("2026-06-27T17:00:00-06:00") },
+    { id: "P69", fase: "27/06", desc: "19:30 - Colombia v Portugal", loc: "Colombia", flLoc: "🇨🇴", vis: "Portugal", flVis: "🇵🇹", bloqueo: new Date("2026-06-27T19:30:00-06:00") },
+    { id: "P70", fase: "27/06", desc: "19:30 - RD Congo v Uzbekistán", loc: "RD Congo", flLoc: "🇨🇩", vis: "Uzbekistán", flVis: "🇺🇿", bloqueo: new Date("2026-06-27T19:30:00-06:00") },
+    { id: "P71", fase: "27/06", desc: "22:00 - Argelia v Austria", loc: "Argelia", flLoc: "🇩🇿", vis: "Austria", flVis: "🇦🇹", bloqueo: new Date("2026-06-27T22:00:00-06:00") },
+    { id: "P72", fase: "27/06", desc: "22:00 - Jordania v Argentina", loc: "Jordania", flLoc: "🇯🇴", vis: "Argentina", flVis: "🇦🇷", bloqueo: new Date("2026-06-27T22:00:00-06:00") },
 
-    // DIECISEISAVOS (28 de Junio al 3 de Julio)
-    { id: "P73", fase: "Dieciseisavos", desc: "Dom 28/06 - P73: 2ºA v 2ºB", loc: "2º Grupo A", flLoc: "🏳️", vis: "2º Grupo B", flVis: "🏳️" },
-    { id: "P74", fase: "Dieciseisavos", desc: "Lun 29/06 - P74: 1ºE v 3ºA/B/C/D/F", loc: "1º Grupo E", flLoc: "🏳️", vis: "3º A/B/C/D/F", flVis: "🏳️" },
-    { id: "P75", fase: "Dieciseisavos", desc: "Lun 29/06 - P75: 1ºF v 2ºC", loc: "1º Grupo F", flLoc: "🏳️", vis: "2º Grupo C", flVis: "🏳️" },
-    { id: "P76", fase: "Dieciseisavos", desc: "Lun 29/06 - P76: 1ºC v 2ºF", loc: "1º Grupo C", flLoc: "🏳️", vis: "2º Grupo F", flVis: "🏳️" },
-    { id: "P77", fase: "Dieciseisavos", desc: "Mar 30/06 - P77: 1ºI v 3ºC/D/F/G/H", loc: "1º Grupo I", flLoc: "🏳️", vis: "3º C/D/F/G/H", flVis: "🏳️" },
-    { id: "P78", fase: "Dieciseisavos", desc: "Mar 30/06 - P78: 2ºE v 2ºI", loc: "2º Grupo E", flLoc: "🏳️", vis: "2º Grupo I", flVis: "🏳️" },
-    { id: "P79", fase: "Dieciseisavos", desc: "Mar 30/06 - P79: 1ºA v 3ºC/E/F/H/I", loc: "1º Grupo A", flLoc: "🏳️", vis: "3º C/E/F/H/I", flVis: "🏳️" },
-    { id: "P80", fase: "Dieciseisavos", desc: "Mié 01/07 - P80: 1ºL v 3ºE/H/I/J/K", loc: "1º Grupo L", flLoc: "🏳️", vis: "3º E/H/I/J/K", flVis: "🏳️" },
-    { id: "P81", fase: "Dieciseisavos", desc: "Mié 01/07 - P81: 1ºD v 3ºB/E/F/I/J", loc: "1º Grupo D", flLoc: "🏳️", vis: "3º B/E/F/I/J", flVis: "🏳️" },
-    { id: "P82", fase: "Dieciseisavos", desc: "Mié 01/07 - P82: 1ºG v 3ºA/E/H/I/J", loc: "1º Grupo G", flLoc: "🏳️", vis: "3º A/E/H/I/J", flVis: "🏳️" },
-    { id: "P83", fase: "Dieciseisavos", desc: "Jue 02/07 - P83: 2ºK v 2ºL", loc: "2º Grupo K", flLoc: "🏳️", vis: "2º Grupo L", flVis: "🏳️" },
-    { id: "P84", fase: "Dieciseisavos", desc: "Jue 02/07 - P84: 1ºH v 2ºJ", loc: "1º Grupo H", flLoc: "🏳️", vis: "2º Grupo J", flVis: "🏳️" },
-    { id: "P85", fase: "Dieciseisavos", desc: "Jue 02/07 - P85: 1ºB v 3ºE/F/G/I/J", loc: "1º Grupo B", flLoc: "🏳️", vis: "3º E/F/G/I/J", flVis: "🏳️" },
-    { id: "P86", fase: "Dieciseisavos", desc: "Vie 03/07 - P86: 1ºJ v 2ºH", loc: "1º Grupo J", flLoc: "🏳️", vis: "2º Grupo H", flVis: "🏳️" },
-    { id: "P87", fase: "Dieciseisavos", desc: "Vie 03/07 - P87: 1ºK v 3ºD/E/I/J/L", loc: "1º Grupo K", flLoc: "🏳️", vis: "3º D/E/I/J/L", flVis: "🏳️" },
-    { id: "P88", fase: "Dieciseisavos", desc: "Vie 03/07 - P88: 2ºD v 2ºG", loc: "2º Grupo D", flLoc: "🏳️", vis: "2º Grupo G", flVis: "🏳️" },
+    // DIECISEISAVOS (Bloqueos calculados con fecha de evento)
+    { id: "P73", fase: "Dieciseisavos", desc: "Dom 28/06 - P73: 2ºA v 2ºB", loc: "2º Grupo A", flLoc: "🏳️", vis: "2º Grupo B", flVis: "🏳️", bloqueo: new Date("2026-06-28T12:00:00-06:00") },
+    { id: "P74", fase: "Dieciseisavos", desc: "Lun 29/06 - P74: 1ºE v 3ºA/B/C/D/F", loc: "1º Grupo E", flLoc: "🏳️", vis: "3º A/B/C/D/F", flVis: "🏳️", bloqueo: new Date("2026-06-29T12:00:00-06:00") },
+    { id: "P75", fase: "Dieciseisavos", desc: "Lun 29/06 - P75: 1ºF v 2ºC", loc: "1º Grupo F", flLoc: "🏳️", vis: "2º Grupo C", flVis: "🏳️", bloqueo: new Date("2026-06-29T16:00:00-06:00") },
+    { id: "P76", fase: "Dieciseisavos", desc: "Lun 29/06 - P76: 1ºC v 2ºF", loc: "1º Grupo C", flLoc: "🏳️", vis: "2º Grupo F", flVis: "🏳️", bloqueo: new Date("2026-06-29T20:00:00-06:00") },
+    { id: "P77", fase: "Dieciseisavos", desc: "Mar 30/06 - P77: 1ºI v 3ºC/D/F/G/H", loc: "1º Grupo I", flLoc: "🏳️", vis: "3º C/D/F/G/H", flVis: "🏳️", bloqueo: new Date("2026-06-30T12:00:00-06:00") },
+    { id: "P78", fase: "Dieciseisavos", desc: "Mar 30/06 - P78: 2ºE v 2ºI", loc: "2º Grupo E", flLoc: "🏳️", vis: "2º Grupo I", flVis: "🏳️", bloqueo: new Date("2026-06-30T16:00:00-06:00") },
+    { id: "P79", fase: "Dieciseisavos", desc: "Mar 30/06 - P79: 1ºA v 3ºC/E/F/H/I", loc: "1º Grupo A", flLoc: "🏳️", vis: "3º C/E/F/H/I", flVis: "🏳️", bloqueo: new Date("2026-06-30T20:00:00-06:00") },
+    { id: "P80", fase: "Dieciseisavos", desc: "Mié 01/07 - P80: 1ºL v 3ºE/H/I/J/K", loc: "1º Grupo L", flLoc: "🏳️", vis: "3º E/H/I/J/K", flVis: "🏳️", bloqueo: new Date("2026-07-01T12:00:00-06:00") },
+    { id: "P81", fase: "Dieciseisavos", desc: "Mié 01/07 - P81: 1ºD v 3ºB/E/F/I/J", loc: "1º Grupo D", flLoc: "🏳️", vis: "3º B/E/F/I/J", flVis: "🏳️", bloqueo: new Date("2026-07-01T16:00:00-06:00") },
+    { id: "P82", fase: "Dieciseisavos", desc: "Mié 01/07 - P82: 1ºG v 3ºA/E/H/I/J", loc: "1º Grupo G", flLoc: "🏳️", vis: "3º A/E/H/I/J", flVis: "🏳️", bloqueo: new Date("2026-07-01T20:00:00-06:00") },
+    { id: "P83", fase: "Dieciseisavos", desc: "Jue 02/07 - P83: 2ºK v 2ºL", loc: "2º Grupo K", flLoc: "🏳️", vis: "2º Grupo L", flVis: "🏳️", bloqueo: new Date("2026-07-02T12:00:00-06:00") },
+    { id: "P84", fase: "Dieciseisavos", desc: "Jue 02/07 - P84: 1ºH v 2ºJ", loc: "1º Grupo H", flLoc: "🏳️", vis: "2º Grupo J", flVis: "🏳️", bloqueo: new Date("2026-07-02T16:00:00-06:00") },
+    { id: "P85", fase: "Dieciseisavos", desc: "Jue 02/07 - P85: 1ºB v 3ºE/F/G/I/J", loc: "1º Grupo B", flLoc: "🏳️", vis: "3º E/F/G/I/J", flVis: "🏳️", bloqueo: new Date("2026-07-02T20:00:00-06:00") },
+    { id: "P86", fase: "Dieciseisavos", desc: "Vie 03/07 - P86: 1ºJ v 2ºH", loc: "1º Grupo J", flLoc: "🏳️", vis: "2º Grupo H", flVis: "🏳️", bloqueo: new Date("2026-07-03T12:00:00-06:00") },
+    { id: "P87", fase: "Dieciseisavos", desc: "Vie 03/07 - P87: 1ºK v 3ºD/E/I/J/L", loc: "1º Grupo K", flLoc: "🏳️", vis: "3º D/E/I/J/L", flVis: "🏳️", bloqueo: new Date("2026-07-03T16:00:00-06:00") },
+    { id: "P88", fase: "Dieciseisavos", desc: "Vie 03/07 - P88: 2ºD v 2ºG", loc: "2º Grupo D", flLoc: "🏳️", vis: "2º Grupo G", flVis: "🏳️", bloqueo: new Date("2026-07-03T20:00:00-06:00") },
 
-    // OCTAVOS DE FINAL (4 al 7 de Julio)
-    { id: "P89", fase: "Octavos", desc: "Sáb 04/07 - P89: GP74 v GP77", loc: "Ganador P74", flLoc: "🏳️", vis: "Ganador P77", flVis: "🏳️" },
-    { id: "P90", fase: "Octavos", desc: "Sáb 04/07 - P90: GP73 v GP75", loc: "Ganador P73", flLoc: "🏳️", vis: "Ganador P75", flVis: "🏳️" },
-    { id: "P91", fase: "Octavos", desc: "Dom 05/07 - P91: GP76 v GP78", loc: "Ganador P76", flLoc: "🏳️", vis: "Ganador P78", flVis: "🏳️" },
-    { id: "P92", fase: "Octavos", desc: "Dom 05/07 - P92: GP79 v GP80", loc: "Ganador P79", flLoc: "🏳️", vis: "Ganador P80", flVis: "🏳️" },
-    { id: "P93", fase: "Octavos", desc: "Lun 06/07 - P93: GP83 v GP84", loc: "Ganador P83", flLoc: "🏳️", vis: "Ganador P84", flVis: "🏳️" },
-    { id: "P94", fase: "Octavos", desc: "Lun 06/07 - P94: GP81 v GP82", loc: "Ganador P81", flLoc: "🏳️", vis: "Ganador P82", flVis: "🏳️" },
-    { id: "P95", fase: "Octavos", desc: "Mar 07/07 - P95: GP86 v GP88", loc: "Ganador P86", flLoc: "🏳️", vis: "Ganador P88", flVis: "🏳️" },
-    { id: "P96", fase: "Octavos", desc: "Mar 07/07 - P96: GP85 v GP87", loc: "Ganador P85", flLoc: "🏳️", vis: "Ganador P87", flVis: "🏳️" },
+    // OCTAVOS DE FINAL
+    { id: "P89", fase: "Octavos", desc: "Sáb 04/07 - P89: GP74 v GP77", loc: "Ganador P74", flLoc: "🏳️", vis: "Ganador P77", flVis: "🏳️", bloqueo: new Date("2026-07-04T12:00:00-06:00") },
+    { id: "P90", fase: "Octavos", desc: "Sáb 04/07 - P90: GP73 v GP75", loc: "Ganador P73", flLoc: "🏳️", vis: "Ganador P75", flVis: "🏳️", bloqueo: new Date("2026-07-04T17:00:00-06:00") },
+    { id: "P91", fase: "Octavos", desc: "Dom 05/07 - P91: GP76 v GP78", loc: "Ganador P76", flLoc: "🏳️", vis: "Ganador P78", flVis: "🏳️", bloqueo: new Date("2026-07-05T12:00:00-06:00") },
+    { id: "P92", fase: "Octavos", desc: "Dom 05/07 - P92: GP79 v GP80", loc: "Ganador P79", flLoc: "🏳️", vis: "Ganador P80", flVis: "🏳️", bloqueo: new Date("2026-07-05T17:00:00-06:00") },
+    { id: "P93", fase: "Octavos", desc: "Lun 06/07 - P93: GP83 v GP84", loc: "Ganador P83", flLoc: "🏳️", vis: "Ganador P84", flVis: "🏳️", bloqueo: new Date("2026-07-06T12:00:00-06:00") },
+    { id: "P94", fase: "Octavos", desc: "Lun 06/07 - P94: GP81 v GP82", loc: "Ganador P81", flLoc: "🏳️", vis: "Ganador P82", flVis: "🏳️", bloqueo: new Date("2026-07-06T17:00:00-06:00") },
+    { id: "P95", fase: "Octavos", desc: "Mar 07/07 - P95: GP86 v GP88", loc: "Ganador P86", flLoc: "🏳️", vis: "Ganador P88", flVis: "🏳️", bloqueo: new Date("2026-07-07T12:00:00-06:00") },
+    { id: "P96", fase: "Octavos", desc: "Mar 07/07 - P96: GP85 v GP87", loc: "Ganador P85", flLoc: "🏳️", vis: "Ganador P87", flVis: "🏳️", bloqueo: new Date("2026-07-07T17:00:00-06:00") },
 
-    // FINALES (Cuartos, Semis, 3er Lugar y Gran Final)
-    { id: "P97", fase: "Finales", desc: "Jue 09/07 - Cuartos P97", loc: "Ganador P89", flLoc: "🏃", vis: "Ganador P90", flVis: "🏃" },
-    { id: "P98", fase: "Finales", desc: "Vie 10/07 - Cuartos P98", loc: "Ganador P93", flLoc: "🏃", vis: "Ganador P94", flVis: "🏃" },
-    { id: "P99", fase: "Finales", desc: "Sáb 11/07 - Cuartos P99", loc: "Ganador P91", flLoc: "🏃", vis: "Ganador P92", flVis: "🏃" },
-    { id: "P100", fase: "Finales", desc: "Sáb 11/07 - Cuartos P100", loc: "Ganador P95", flLoc: "🏃", vis: "Ganador P96", flVis: "🏃" },
-    { id: "P101", fase: "Finales", desc: "Mar 14/07 - Semifinal P101", loc: "Ganador P97", flLoc: "🔥", vis: "Ganador P98", flVis: "🔥" },
-    { id: "P102", fase: "Finales", desc: "Mié 15/07 - Semifinal P102", loc: "Ganador P99", flLoc: "🔥", vis: "Ganador P100", flVis: "🔥" },
-    { id: "P103", fase: "Finales", desc: "Sáb 18/07 - Tercer Puesto", loc: "Perdedor P101", flLoc: "🥉", vis: "Perdedor P102", flVis: "🥉" },
-    { id: "P104", fase: "Finales", desc: "Dom 19/07 - ¡La Gran Final!", loc: "Ganador P101", flLoc: "👑", vis: "Ganador P102", flVis: "👑" }
+    // FINALES
+    { id: "P97", fase: "Finales", desc: "Jue 09/07 - Cuartos P97", loc: "Ganador P89", flLoc: "🏃", vis: "Ganador P90", flVis: "🏃", bloqueo: new Date("2026-07-09T15:00:00-06:00") },
+    { id: "P98", fase: "Finales", desc: "Vie 10/07 - Cuartos P98", loc: "Ganador P93", flLoc: "🏃", vis: "Ganador P94", flVis: "🏃", bloqueo: new Date("2026-07-10T15:00:00-06:00") },
+    { id: "P99", fase: "Finales", desc: "Sáb 11/07 - Cuartos P99", loc: "Ganador P91", flLoc: "🏃", vis: "Ganador P92", flVis: "🏃", bloqueo: new Date("2026-07-11T12:00:00-06:00") },
+    { id: "P100", fase: "Finales", desc: "Sáb 11/07 - Cuartos P100", loc: "Ganador P95", flLoc: "🏃", vis: "Ganador P96", flVis: "🏃", bloqueo: new Date("2026-07-11T17:00:00-06:00") },
+    { id: "P101", fase: "Finales", desc: "Mar 14/07 - Semifinal P101", loc: "Ganador P97", flLoc: "🔥", vis: "Ganador P98", flVis: "🔥", bloqueo: new Date("2026-07-14T15:00:00-06:00") },
+    { id: "P102", fase: "Finales", desc: "Mié 15/07 - Semifinal P102", loc: "Ganador P99", flLoc: "🔥", vis: "Ganador P100", flVis: "🔥", bloqueo: new Date("2026-07-15T15:00:00-06:00") },
+    { id: "P103", fase: "Finales", desc: "Sáb 18/07 - Tercer Puesto", loc: "Perdedor P101", flLoc: "🥉", vis: "Perdedor P102", flVis: "🥉", bloqueo: new Date("2026-07-18T15:00:00-06:00") },
+    { id: "P104", fase: "Finales", desc: "Dom 19/07 - ¡La Gran Final!", loc: "Ganador P101", flLoc: "👑", vis: "Ganador P102", flVis: "👑", bloqueo: new Date("2026-07-19T15:00:00-06:00") }
 ];
 
 function obtenerBanderaReal(emojiOriginal, nombreEquipo) {
@@ -5068,26 +5068,24 @@ function cambiarPartidoSeleccionado() {
     if (lblVisitante) lblVisitante.innerText = partido.vis;
     if (flagVisitante) flagVisitante.innerText = banderaVisitanteCorregida; 
 
-    // Reevaluamos el bloqueo del partido seleccionado
+    // Reevaluamos el bloqueo del partido seleccionado (Por historial o por Tiempo Agotado)
     verificarBloqueoPartido();
 }
 
 function actualizarHistorialDesdeSheets() {
     if (typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) return;
 
-    // 🔥 Mandamos el parámetro tipo=quiniela para activar el escudo en el doGet
     fetch(`${URL_SCRIPT}?tipo=quiniela`)
     .then(response => response.json())
     .then(datos => {
         HISTORIAL_GENERAL_SHEETS = datos;
-        // Refrescamos la vista por si el usuario ya tenía el modal abierto
         verificarBloqueoPartido();
     })
     .catch(error => console.error("Error cargando historial global:", error));
 }
 
 // ==========================================================================
-// 🔒 FUNCIÓN MODIFICADA: Ahora escanea la base de datos global de Sheets
+// 🔒 FUNCIÓN MODIFICADA: Ahora valida Duplicados Y Tiempo Límite de Juego (GMT-6)
 // ==========================================================================
 function verificarBloqueoPartido() {
     const usuario = document.getElementById('quinielaParticipante').value;
@@ -5095,6 +5093,7 @@ function verificarBloqueoPartido() {
     
     const capaBloqueo = document.getElementById('bloqueoMensaje');
     const btnGuardar = document.getElementById('btnGuardarQuiniela');
+    const txtMarcador = document.getElementById('txtMarcadorGuardado');
 
     // Bloqueo por falta de datos base
     if (!usuario || !idSel) {
@@ -5107,14 +5106,27 @@ function verificarBloqueoPartido() {
         return; 
     }
 
-    // 🔥 ESCANEO EN TIEMPO REAL: Buscamos si el usuario seleccionado ya tiene registro para este partido
+    const partido = LISTA_PARTIDOS.find(p => p.id === idSel);
+    const ahora = new Date(); // Hora en vivo calculada por el dispositivo del cliente
+
+    // 🔥 1. SHIELD ANTICHEAT: Si la hora actual ya superó el hito de bloqueo del partido
+    if (partido && partido.bloqueo && ahora >= partido.bloqueo) {
+        if (txtMarcador) txtMarcador.innerText = "Partido Iniciado / Cerrado";
+        if (capaBloqueo) capaBloqueo.style.display = "flex";
+        
+        btnGuardar.disabled = true;
+        btnGuardar.style.background = "#ef4444"; // Rojo vibrante de advertencia
+        btnGuardar.style.cursor = "not-allowed"; 
+        btnGuardar.innerText = "⏰ Tiempo Agotado (Ya arrancó)";
+        return;
+    }
+
+    // 2. ESCANEO EN TIEMPO REAL: Buscamos duplicados en la base de datos de Sheets
     const prediccionExistente = HISTORIAL_GENERAL_SHEETS.find(
         p => p.participante.trim().toLowerCase() === usuario.trim().toLowerCase() && p.idPartido.toString() === idSel.toString()
     );
 
     if (prediccionExistente) {
-        // Encontramos registro en el Sheets: Mostramos sus goles guardados en pantalla
-        const txtMarcador = document.getElementById('txtMarcadorGuardado');
         if (txtMarcador) {
             txtMarcador.innerText = `${prediccionExistente.golesLocal} - ${prediccionExistente.golesVisitante}`;
         }
@@ -5125,7 +5137,7 @@ function verificarBloqueoPartido() {
         btnGuardar.style.cursor = "not-allowed"; 
         btnGuardar.innerText = "🔒 Bloqueado (Ya participaste)";
     } else {
-        // El usuario no ha participado en este partido: Habilitamos el botón
+        // Todo legal y a tiempo
         if (capaBloqueo) capaBloqueo.style.display = "none";
         
         btnGuardar.disabled = false;
@@ -5135,11 +5147,29 @@ function verificarBloqueoPartido() {
     }
 }
 
+// ==========================================================================
+// 📅 FUNCIÓN MODIFICADA: Selección de Fecha Inteligente Automática
+// ==========================================================================
 function abrirQuiniela() {
     const modal = document.getElementById('modalQuiniela');
     if (modal) {
         modal.style.display = 'flex';
-        document.getElementById('selectFase').value = "11/06"; 
+        
+        // 🧠 Capturar la fecha actual en vivo del navegador ("DD/MM")
+        const hoy = new Date();
+        const dia = String(hoy.getDate()).padStart(2, '0');
+        const mes = String(hoy.getMonth() + 1).padStart(2, '0'); 
+        const fechaFormateada = `${dia}/${mes}`; // Produce cadenas como "11/06"
+
+        const selectFase = document.getElementById('selectFase');
+        // Validamos si la fecha actual existe dentro de los options del Select HTML
+        const opcionExiste = Array.from(selectFase.options).some(opt => opt.value === fechaFormateada);
+
+        if (opcionExiste) {
+            selectFase.value = fechaFormateada; // Posiciona el scroll en el día de hoy
+        } else {
+            selectFase.value = "11/06"; // Respaldo por seguridad
+        }
         
         cargarPartidosPorFase();
         cambiarPartidoSeleccionado();
@@ -5153,7 +5183,7 @@ function cerrarQuiniela() {
 }
 
 // ==========================================================================
-// 🚀 FUNCIÓN MODIFICADA: Envía a la nube y actualiza la lista local de inmediato
+// 🚀 FUNCIÓN MODIFICADA: Con Blindaje Anticheat de Ejecución Directa
 // ==========================================================================
 function enviarPronostico() {
     const usuario = document.getElementById('quinielaParticipante').value;
@@ -5163,6 +5193,13 @@ function enviarPronostico() {
 
     if (!idSel) return;
     const partido = LISTA_PARTIDOS.find(p => p.id === idSel);
+
+    // 🔥 BLINDAJE LOGICO EXTREMO: Deniega peticiones si hackean la consola para saltarse el CSS
+    const ahora = new Date();
+    if (partido && partido.bloqueo && ahora >= partido.bloqueo) {
+        alert("❌ ¡Trampa detectada! No podés mandar pronósticos de partidos que ya empezaron o terminaron.");
+        return; 
+    }
 
     if (!usuario || gLocal === "" || gVisitante === "") {
         alert("⚠️ Selecciona tu nombre y completa los goles antes de enviar.");
@@ -5190,7 +5227,6 @@ function enviarPronostico() {
         body: JSON.stringify(datosQuiniela)
     })
     .then(() => {
-        // ✨ Metemos la nueva predicción al array en caliente para bloquear de una vez
         HISTORIAL_GENERAL_SHEETS.push({
             participante: usuario,
             golesLocal: parseInt(gLocal),
@@ -5219,7 +5255,7 @@ function enviarPronostico() {
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", function() {
     cargarPartidosPorFase();
-    actualizarHistorialDesdeSheets(); // 👈 Llama al Sheets al abrir la página
+    actualizarHistorialDesdeSheets(); 
 });
 </script>
 </body>
