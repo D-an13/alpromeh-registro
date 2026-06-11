@@ -1275,6 +1275,149 @@ input::-webkit-outer-spin-button,
     display: inline-block;
     animation: rebotarPelota 0.8s ease-in-out infinite;
 }
+
+/* Botón flotante superior derecho */
+#btnFlotanteRanking {
+    position: fixed; 
+    top: 20px; 
+    right: 20px; 
+    z-index: 9998; 
+    background: linear-gradient(135deg, #eab308, #ca8a04); 
+    color: white; 
+    border: none; 
+    padding: 12px 18px; 
+    border-radius: 50px; 
+    font-weight: bold; 
+    font-family: sans-serif; 
+    font-size: 0.85rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4); 
+    transition: all 0.2s ease-in-out;
+}
+
+#btnFlotanteRanking:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px rgba(234, 179, 8, 0.6);
+}
+
+@keyframes girarTrofeo {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+    100% { transform: rotate(0deg); }
+}
+
+#btnFlotanteRanking:hover .trofeo-animado {
+    display: inline-block;
+    animation: girarTrofeo 0.5s ease-in-out infinite;
+}
+
+/* Panel Desplegable Lateral */
+#panelRanking {
+    position: fixed;
+    top: 0;
+    right: -360px; /* Escondido por defecto a la derecha */
+    width: 340px;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -10px 0 30px rgba(15, 23, 42, 0.15);
+    z-index: 10001; /* Un pelín arriba del modal por si acaso */
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); /* Desplazamiento tipo iOS */
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+#panelRanking.mostrar-panel-activo {
+    right: 0; /* Se desliza hacia adentro */
+}
+
+/* Encabezado del Panel */
+.ranking-header {
+    background-color: #15803d; /* Verde quiniela para mantener identidad corporativa */
+    color: white;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #16a34a;
+}
+
+.ranking-header h3 { 
+    margin: 0; 
+    font-size: 1.1rem; 
+    font-weight: bold; 
+}
+
+.btn-cerrar-ranking {
+    background: none;
+    border: none;
+    color: #bbf7d0;
+    font-size: 1.6rem;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0 5px;
+    transition: color 0.2s;
+}
+.btn-cerrar-ranking:hover { color: white; }
+
+/* Cuerpo interno */
+.ranking-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    background: #f8fafc;
+}
+
+/* Tabla de Posiciones Fina */
+.tabla-ranking {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.tabla-ranking th {
+    background-color: #f1f5f9;
+    color: #475569;
+    padding: 12px 8px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tabla-ranking td {
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.tabla-ranking tr:last-child td { border-bottom: none; }
+.tabla-ranking tr:nth-child(even) { background-color: #f8fafc; }
+
+/* Podio especial */
+.tabla-ranking tr.puesto-1 td { background-color: #fef9c3; font-weight: bold; color: #854d0e; } /* Oro */
+.tabla-ranking tr.puesto-2 td { background-color: #f1f5f9; font-weight: bold; color: #475569; } /* Plata */
+.tabla-ranking tr.puesto-3 td { background-color: #ffedd5; font-weight: bold; color: #9a3412; } /* Bronce */
+
+.loader-ranking {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    padding: 40px 0;
+    font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -1714,6 +1857,29 @@ input::-webkit-outer-spin-button,
         <button id="btnGuardarQuiniela" onclick="enviarPronostico()" style="width: 100%; background: linear-gradient(135deg, #16a34a, #15803d); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 0.95rem; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.2); transition: all 0.2s;" onmouseenter="this.style.transform='translateY(-1px)';" onmouseleave="this.style.transform='translateY(0)';">
             ⚽ Guardar mi Predicción
         </button>
+    </div>
+</div> <button id="btnFlotanteRanking" onclick="abrirCerrarRanking()">
+    <span class="trofeo-animado">🏆</span> Posiciones
+</button>
+
+<div id="panelRanking">
+    <div class="ranking-header">
+        <h3>🏆 Tabla de Posiciones</h3>
+        <button class="btn-cerrar-ranking" onclick="abrirCerrarRanking()">×</button>
+    </div>
+    <div class="ranking-body">
+        <div id="loadingRanking" class="loader-ranking">⚽ Trayendo tabla en tiempo real...</div>
+        <table id="tablaRankingWeb" style="width: 100%; display: none;" class="tabla-ranking">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Pos</th>
+                    <th style="text-align: left; padding-left: 15px;">Participante</th>
+                    <th style="width: 60px;">Pts</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoRankingWeb">
+                </tbody>
+        </table>
     </div>
 </div>
 
@@ -5251,12 +5417,109 @@ function enviarPronostico() {
 }
 
 // ==========================================================================
+// 📊 SISTEMA EXPERTO DE PUNTOS (5 / 2 / 0)
+// ==========================================================================
+function calcularPuntosPartido(GLReal, GVReal, GLPred, GVPred) {
+    const realL = parseInt(GLReal);
+    const realV = parseInt(GVReal);
+    const predL = parseInt(GLPred);
+    const predV = parseInt(GVPred);
+
+    if (realL === predL && realV === predV) {
+        return 5;
+    }
+
+    const tendenciaReal = realL > realV ? "LOCAL" : (realL < realV ? "VISITA" : "EMPATE");
+    const tendenciaPred = predL > predV ? "LOCAL" : (predL < predV ? "VISITA" : "EMPATE");
+
+    if (tendenciaReal === tendenciaPred) {
+        return 2;
+    }
+
+    return 0;
+}
+
+// ==========================================================================
 // 🔄 INICIALIZACIÓN: Jalar datos en cuanto cargue el navegador
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", function() {
     cargarPartidosPorFase();
     actualizarHistorialDesdeSheets(); 
 });
+
+// Variable global para trackear el estado del panel lateral
+let panelRankingAbierto = false;
+
+function abrirCerrarRanking() {
+    const panel = document.getElementById("panelRanking");
+    if (!panel) return;
+
+    panelRankingAbierto = !panelRankingAbierto;
+    
+    if (panelRankingAbierto) {
+        // Añadimos la clase CSS para que se deslice suavemente desde la derecha
+        panel.classList.add("mostrar-panel-activo"); 
+        obtenerRankingServidor();
+    } else {
+        // Quitamos la clase para que se esconda de nuevo
+        panel.classList.remove("mostrar-panel-activo"); 
+    }
+}
+
+function obtenerRankingServidor() {
+    // Usamos la misma constante URL_SCRIPT que ya tenés declarada arriba
+    const urlScript = URL_SCRIPT; 
+    
+    const loader = document.getElementById("loadingRanking");
+    const tabla = document.getElementById("tablaRankingWeb");
+    const cuerpo = document.getElementById("cuerpoRankingWeb");
+    
+    if (!loader || !tabla || !cuerpo) return;
+    
+    // Estado de carga inicial
+    loader.style.display = "block";
+    loader.innerHTML = "⚽ Trayendo tabla en tiempo real...";
+    tabla.style.display = "none";
+    cuerpo.innerHTML = "";
+    
+    // Hacemos la petición GET al Apps Script enviando el parámetro tipo=ranking
+    fetch(`${urlScript}?tipo=ranking`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data || data.length === 0) {
+                loader.innerHTML = "🏆 ¡Aún no hay puntos calculados en la hoja!";
+                return;
+            }
+            
+            // Ordenar por posición por si acaso vienen movidos del backend
+            data.sort((a, b) => a.posicion - b.posicion);
+            
+            data.forEach(fila => {
+                const tr = document.createElement("tr");
+                
+                // Mapeo estético para el podio de los tres primeros lugares
+                let medallaPos = fila.posicion;
+                if (fila.posicion === 1) { medallaPos = "🥇"; tr.classList.add("puesto-1"); }
+                else if (fila.posicion === 2) { medallaPos = "🥈"; tr.classList.add("puesto-2"); }
+                else if (fila.posicion === 3) { medallaPos = "🥉"; tr.classList.add("puesto-3"); }
+                
+                tr.innerHTML = `
+                    <td style="font-weight: 800;">${medallaPos}</td>
+                    <td style="text-align: left; padding-left: 15px; font-weight: bold; color: #1e293b;">${fila.participante}</td>
+                    <td style="font-weight: 800; color: #15803d; font-size: 1rem;">${fila.puntos} Pts</td>
+                `;
+                cuerpo.appendChild(tr);
+            });
+            
+            // Apagamos el loader y mostramos la tabla limpia
+            loader.style.display = "none";
+            tabla.style.display = "table";
+        })
+        .catch(error => {
+            console.error("Clavo al obtener el ranking:", error);
+            loader.innerHTML = "❌ No se pudo conectar con el servidor de Ranking.";
+        });
+}
 </script>
 </body>
 </html>
