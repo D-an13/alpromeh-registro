@@ -1370,7 +1370,7 @@ input::-webkit-outer-spin-button,
 .tabla-ranking th {
     background-color: #f1f5f9;
     color: #475569;
-    padding: 12px 8px;
+    padding: 10px 8px; 
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1379,7 +1379,7 @@ input::-webkit-outer-spin-button,
 }
 
 .tabla-ranking td {
-    padding: 12px 10px;
+    padding: 7px 10px !important; 
     text-align: center;
     font-size: 0.9rem;
     border-bottom: 1px solid #f1f5f9;
@@ -1400,6 +1400,33 @@ input::-webkit-outer-spin-button,
     font-size: 0.85rem;
     padding: 40px 0;
     font-weight: bold;
+}
+
+/* Estado base del fondo (oculto e invisible) */
+#modalQuiniela {
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0;
+}
+
+/* Cuando se activa, se vuelve visible el fondo */
+#modalQuiniela.modal-visible {
+    opacity: 1 !important;
+}
+
+/* El contenedor interno (tarjeta blanca) empieza encogido */
+#modalQuiniela > div {
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* Efecto ligeramente elástico */
+    transform: scale(0.8);
+}
+
+/* Cuando el modal se activa, la tarjeta hace Zoom In a su tamaño real */
+#modalQuiniela.modal-visible > div {
+    transform: scale(1) !important;
+}
+
+/* Estado de salida: Zoom Out rápido antes de esconderse */
+#modalQuiniela.modal-saliendo > div {
+    transform: scale(0.75) !important;
 }
 </style>
 </head>
@@ -1750,7 +1777,13 @@ input::-webkit-outer-spin-button,
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
             <div style="display: flex; align-items: center; width: 35px;">
-                <span onclick="abrirCerrarRanking()" class="trofeo-interactivo" title="Ver Tabla de Posiciones" style="cursor: pointer; font-size: 1.1rem; display: inline-flex; align-items: center; justify-content: center; background: #ffffff; border: 1px solid #cbd5e1; width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.2s ease-in-out;">🏆</span>
+                <!-- 🟡 CAMBIO AQUÍ: Trofeo en círculo amarillo suave, sin bordes y con efecto de brillo interactivo (Glow) -->
+                <span onclick="abrirCerrarRanking()" 
+                      class="trofeo-interactivo" 
+                      title="Ver Tabla de Posiciones" 
+                      style="cursor: pointer; font-size: 1.1rem; display: inline-flex; align-items: center; justify-content: center; background: #fef08a; border: none; width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.25s ease-in-out;"
+                      onmouseenter="this.style.transform='scale(1.1)'; this.style.boxShadow='0 0 15px 5px rgba(254, 240, 138, 0.85)';"
+                      onmouseleave="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';">🏆</span>
             </div>
             
             <div style="flex: 1; text-align: center;">
@@ -5326,11 +5359,17 @@ function verificarBloqueoPartido() {
     }
 }
 
-// 📅 FUNCIÓN MODIFICADA: Selección de Fecha Inteligente Automática
+// 📅 FUNCIÓN MODIFICADA
 function abrirQuiniela() {
     const modal = document.getElementById('modalQuiniela');
     if (modal) {
-        modal.style.display = 'flex';
+        modal.style.display = 'flex'; // 1. Se monta en el mapa
+        
+        // 🎬 NUEVO: Micro-retraso para que el navegador capte el display: flex y ejecute el Zoom In
+        setTimeout(() => {
+            modal.classList.remove('modal-saliendo');
+            modal.classList.add('modal-visible');
+        }, 10);
         
         // 🧠 Capturar la fecha actual en vivo del navegador ("DD/MM")
         const hoy = new Date();
@@ -5354,9 +5393,19 @@ function abrirQuiniela() {
     }
 }
 
+// 🍂 FUNCIÓN MODIFICADA: Animación ZOOM OUT Controlada
 function cerrarQuiniela() {
     const modal = document.getElementById('modalQuiniela');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+        modal.classList.remove('modal-visible');
+        modal.classList.add('modal-saliendo'); // 1. Activa el encogimiento visual
+        
+        // ⏳ NUEVO: Esperamos 200ms a que la animación termine antes de meter el display 'none'
+        setTimeout(() => {
+            modal.style.display = 'none';
+            modal.classList.remove('modal-saliendo');
+        }, 200);
+    }
 }
 
 // 🚀 FUNCIÓN MODIFICADA: Con Blindaje Anticheat de Ejecución Directa
