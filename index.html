@@ -2709,7 +2709,7 @@ if (yaExiste) {
     datosLocales.unshift(payload);
     save(); 
 
-    //Enviamos a tu Web App de siempre de Google Sheets
+    // === ENVIAMOS A TU WEB APP DE SIEMPRE DE GOOGLE SHEETS ===
     fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
     .then(() => {
         // 🚀 SI SE GUARDÓ CON ÉXITO Y ERA PEDIDO, DISPARAMOS LA IMPRESIÓN AL INSTANTE
@@ -2734,15 +2734,17 @@ if (yaExiste) {
         document.getElementById('btnProducto').innerText = "📝";
         aplicarColorUnico(document.getElementById('responsableSelect'));
         
-        // Si estaba el switch encendido, lo apagamos y regresamos al Paso 1 de forma limpia
+        // 🧼 REPARACIÓN DE RAÍZ PARA CARMEN: 
+        // Vaciamos por completo el saco de artículos antes de apagar el switch
+        articulosPedidoActual = [];
+        renderizarTablaArticulos(); // Deja la minitabla en "No hay productos agregados"
+
+        // Si estaba el switch encendido, lo apagamos de forma ultra segura
         if (modoPedidoActivo) {
             document.getElementById('switchModoPedido').checked = false;
+            modoPedidoActivo = false; // Forzamos el estado lógico a falso
             alternarModoPedido();
         }
-
-        // Limpiamos el saco de artículos global para el siguiente pedido
-        articulosPedidoActual = [];
-        renderizarTablaArticulos();
 
         if(!yaExiste) showToast("✅ OC. " + num + " guardada correctamente");
     })
@@ -2750,9 +2752,12 @@ if (yaExiste) {
         showToast("❌ Error de red, verifique conexión", true);
     })
     .finally(() => {
-        // Le damos 2 segundos de "paz" al sistema para que Google asiente los datos
+        // ⏳ LE DAMOS LOS 2 SEGUNDOS DE PAZ AL SISTEMA
         setTimeout(() => {
             if (formCard) formCard.classList.remove('resaltar-actualizacion');
+            
+            // 🛡️ BLINDAJE ABSOLUTO: Forzamos la resurrección total del botón de guardar
+            // No importa qué navegador use, el botón vuelve a estar 100% activo para la siguiente orden
             btnGuardar.disabled = false;
             btnGuardar.innerText = "GUARDAR REGISTRO";
             btnGuardar.style.opacity = "1";
@@ -3067,262 +3072,270 @@ function ejecutarImpresionReporte() {
     const fechaImpresion = ahora.toLocaleDateString('es-GT');
     const horaImpresion = grandma = ahora.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit', hour12: true });
     
-    // 📊 CONTADOR AUTOMÁTICO DE ÓRDENES EN TIEMPO REAL
-    const totalOrdenes = datosParaImprimir.length;
-    
-    // 3. Compilamos el HTML estructurado en formato HORIZONTAL (Landscape)
-    let cuerpoHtml = `
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Reporte de Despacho Físico - ALPROMEH</title>
-        <style>
-            /* 🔥 FUERZA EL FORMATO HORIZONTAL AUTOMÁTICO AL IMPRIMIR */
-            @page {
-                size: landscape;
-                margin: 12mm; /* Margen ideal para aprovechar el ancho */
-            }
-            body {
-                font-family: Arial, Helvetica, sans-serif;
-                color: #0f172a;
-                margin: 0;
-                padding: 0;
-                padding-right: 6px; 
-                box-sizing: border-box;
-                font-size: 11px; 
-                line-height: 1.2;
-            }
-            .header-reporte {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-end;
-                margin-bottom: 15px; /* Reducido para ahorrar espacio */
-                border-bottom: 3px double #cbd5e1;
-                padding-bottom: 8px;
-            }
-            .header-izq h1 {
-                margin: 0 0 5px 0;
-                font-size: 22px;
-                color: #1e3a8a;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-            .header-izq p {
-                margin: 0;
-                color: #64748b;
-                font-size: 12px;
-                font-weight: 500;
-            }
-            .header-der-contador {
-                text-align: right;
-                background: #f1f5f9;
-                border: 1.5px solid #cbd5e1;
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-weight: bold;
-                font-size: 12px;
-                color: #1e3a8a;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-                table-layout: fixed; 
-                box-sizing: border-box;
-                page-break-inside: auto;
-            }
-            tr {
-                page-break-inside: avoid;
-                page-break-after: auto;
-            }
-            th {
-                background-color: #1e3a8a !important; /* Azul premium corporativo */
-                color: white !important;
-                font-weight: 700;
-                text-transform: uppercase;
-                font-size: 11px;
-                border: 1.5px solid #94a3b8; 
-                padding: 0 8px;
-                height: 28px; 
-                text-align: left;
-            }
-            td {
-                border: 1.5px solid #94a3b8; 
-                padding: 4px 8px; 
-                height: 24px; 
-                vertical-align: middle;
-                font-size: 11px;
-                font-weight: 500; 
-                word-wrap: break-word; 
-            }
-            
-            /* Ajustes de ancho perfectos aprovechando el formato de lado (Landscape) */
-            .col-orden { width: 8%; font-weight: bold; }
-            .col-fecha { width: 11%; }
-            .col-institucion { width: 26%; text-transform: uppercase; }
-            .col-recibio { width: 10%; text-transform: uppercase; } 
-            .col-despachado { width: 10%; text-align: center; }
-            .col-producto { width: 35%; text-transform: uppercase; font-size: 10px; }
+ // 📊 CONTADOR AUTOMÁTICO DE ÓRDENES EN TIEMPO REAL
+const totalOrdenes = datosParaImprimir.length;
 
-            /* 🔲 EL NUEVO CUADRITO ESTILO CASILLA TUNEARDO PREMIUM */
-            .box-despachado {
-                display: inline-block;
-                width: 40px; 
-                height: 16px; 
-                border: 1.5px solid #0f172a; 
-                border-radius: 3px; 
-                background-color: #ffffff;
-                vertical-align: middle;
-            }
-
-            /* 📝 BLOQUE DE OBSERVACIONES PREMIUM (ANTES DE LAS FIRMAS) */
-            .seccion-observaciones {
-                margin-top: 20px;
-                page-break-inside: avoid;
-            }
-            .titulo-observaciones {
-                font-weight: bold;
-                font-size: 11px;
-                color: #475569;
-                text-transform: uppercase;
-                margin-bottom: 6px;
-                letter-spacing: 0.5px;
-            }
-            .lineas-observaciones {
-                border: 1.5px solid #94a3b8;
-                border-radius: 6px;
-                height: 50px;
-                background-color: #e8e8e8 !important;
-            }
-            
-            /* Bloque estructural inferior para firmas fijas distribuidas */
-            .contenedor-firmas {
-                margin-top: 90px; /* Ajuste suave para dar espacio a las notas arriba */
-                display: flex;
-                justify-content: space-around;
-                page-break-inside: avoid;
-            }
-            .bloque-firma {
-                width: 35%;
-                text-align: center;
-            }
-            .linea-firma {
-                border-top: 1.5px solid #0f172a;
-                margin-bottom: 6px;
-                width: 80%;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .cargo-firma {
-                font-size: 11px;
-                color: #64748b;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-            
-            @media print {
-                th {
-                    background-color: #1e3a8a !important;
-                    color: white !important;
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
-                }
-            }
-        </style>
-    </head>
-    <body>
-
-        <div class="header-reporte">
-            <div class="header-izq">
-                <h1>Hoja de Despacho</h1>
-                <p>Generado el: ${fechaImpresion} a las ${horaImpresion}</p>
-            </div>
-            <div class="header-der-contador">
-                Total Órdenes: ${totalOrdenes}
-            </div>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th class="col-orden">No. de Orden</th>
-                    <th class="col-fecha">Fecha de Registro</th>
-                    <th class="col-institucion">Institución</th>
-                    <th class="col-recibio">Persona que Recibió</th>
-                    <th class="col-despachado">Despachado</th>
-                    <th class="col-producto">Producto</th>
-                </tr>
-            </thead>
-            <tbody>`;
-
-    // 4. Inyectamos las filas dinámicas respetando tus mapeos de variables reales
-    datosParaImprimir.forEach(item => {
-        const institucion = item.inst || 'SIN INSTITUCIÓN';
-        const personaRecibio = item.solicitante || item.pers || 'SIN ESPECIFICAR';
+// 3. Compilamos el HTML estructurado en formato HORIZONTAL (Landscape)
+let cuerpoHtml = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Despacho Físico - ALPROMEH</title>
+    <style>
+        /* 🔥 FUERZA EL FORMATO HORIZONTAL AUTOMÁTICO AL IMPRIMIR */
+        @page {
+            size: landscape;
+            margin: 12mm; /* Margen ideal para aprovechar el ancho */
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            padding-right: 6px; 
+            box-sizing: border-box;
+            font-size: 11px; 
+            line-height: 1.2;
+            height: auto !important;
+            overflow: visible !important;
+        }
+        .header-reporte {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 15px; /* Reducido para ahorrar espacio */
+            border-bottom: 3px double #cbd5e1;
+            padding-bottom: 8px;
+        }
+        .header-izq h1 {
+            margin: 0 0 5px 0;
+            font-size: 22px;
+            color: #1e3a8a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header-izq p {
+            margin: 0;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .header-der-contador {
+            text-align: right;
+            background: #f1f5f9;
+            border: 1.5px solid #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            color: #1e3a8a;
+        }
         
-        // 🔥 MODIFICACIÓN QUIRÚRGICA: Si tiene detalles de pedido, los desglosa. Si no, usa el producto normal.
-        const producto = item.detallesPedido ? obtenerVistaPreviaDescripcion(item.detallesPedido) : (item.producto || 'SIN ESPECIFICAR');
+        /* 🚨 BLINDAJE ANTI-CORTE: Forzar visibilidad y saltos limpios */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed; 
+            box-sizing: border-box;
+            page-break-inside: auto; /* Permite que la tabla se divida en varias hojas */
+        }
+        tr {
+            page-break-inside: avoid; /* Evita que una fila se parta a la mitad horizontalmente */
+            page-break-after: auto;
+        }
+        th {
+            background-color: #1e3a8a !important; /* Azul premium corporativo */
+            color: white !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            border: 1.5px solid #94a3b8; 
+            padding: 0 8px;
+            height: 28px; 
+            text-align: left;
+        }
+        td {
+            border: 1.5px solid #94a3b8; 
+            padding: 4px 8px; 
+            height: 24px; 
+            vertical-align: middle;
+            font-size: 11px;
+            font-weight: 500; 
+            word-wrap: break-word; 
+        }
         
-        // 📅 JALAMOS LA FECHA DE LA ORDEN
-        let fechaOrden = item.fecha || '';
-        
-        // 🔄 ¡EL TOQUE PREMIUM DE DIAGONALES! 
-        if (fechaOrden.includes('-')) {
-            if (fechaOrden.indexOf('-') === 4) {
-                const partes = fechaOrden.split('-');
-                fechaOrden = `${partes[2]}/${partes[1]}/${partes[0]}`;
-            } else {
-                fechaOrden = fechaOrden.replace(/-/g, '/');
-            }
+        /* Ajustes de ancho perfectos aprovechando el formato de lado (Landscape) */
+        .col-orden { width: 8%; font-weight: bold; }
+        .col-fecha { width: 11%; }
+        .col-institucion { width: 26%; text-transform: uppercase; }
+        .col-recibio { width: 10%; text-transform: uppercase; } 
+        .col-despachado { width: 10%; text-align: center; }
+        .col-producto { width: 35%; text-transform: uppercase; font-size: 10px; }
+
+        /* 🔲 EL NUEVO CUADRITO ESTILO CASILLA TUNEARDO PREMIUM */
+        .box-despachado {
+            display: inline-block;
+            width: 40px; 
+            height: 16px; 
+            border: 1.5px solid #0f172a; 
+            border-radius: 3px; 
+            background-color: #ffffff;
+            vertical-align: middle;
         }
 
-        // 🎯 INYECTAMOS EL ESTILO PRE-LINE PARA HACER LOS SALTOS DE LÍNEA EN EL PAPEL
-        cuerpoHtml += `
+        /* 📝 BLOQUE DE OBSERVACIONES PREMIUM (ANTES DE LAS FIRMAS) */
+        .seccion-observaciones {
+            margin-top: 20px;
+            page-break-inside: avoid; /* Evita quedarse huérfano al final de la página */
+        }
+        .titulo-observaciones {
+            font-weight: bold;
+            font-size: 11px;
+            color: #475569;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .lineas-observaciones {
+            border: 1.5px solid #94a3b8;
+            border-radius: 6px;
+            height: 50px;
+            background-color: #e8e8e8 !important;
+        }
+        
+        /* Bloque estructural inferior para firmas fijas distribuidas */
+        .contenedor-firmas {
+            margin-top: 60px; /* Reducido un toque para que no empuje la firma a otra hoja innecesariamente */
+            display: flex;
+            justify-content: space-around;
+            page-break-inside: avoid;
+        }
+        .bloque-firma {
+            width: 35%;
+            text-align: center;
+        }
+        .linea-firma {
+            border-top: 1.5px solid #0f172a;
+            margin-bottom: 6px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cargo-firma {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        @media print {
+            html, body {
+                height: auto !important;
+                overflow: visible !important;
+            }
+            th {
+                background-color: #1e3a8a !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-reporte">
+        <div class="header-izq">
+            <h1>Hoja de Despacho</h1>
+            <p>Generado el: ${fechaImpresion} a las ${horaImpresion}</p>
+        </div>
+        <div class="header-der-contador">
+            Total Órdenes: ${totalOrdenes}
+        </div>
+    </div>
+
+    <table>
+        <thead>
             <tr>
-                <td class="col-orden">${item.orden || ''}</td>
-                <td class="col-fecha">${fechaOrden}</td> 
-                <td class="col-institucion">${institucion}</td>
-                <td class="col-recibio">${personaRecibio}</td>
-                <td class="col-despachado" style="text-align: center;"><div class="box-despachado"></div></td>
-                <td class="col-producto" style="white-space: pre-line; text-align: left;">${producto}</td>
-            </tr>`;
-    }); // 👈 AQUÍ CIERRA EL BUCLE DE FORMA ÚNICA Y LIMPIA
+                <th class="col-orden">No. de Orden</th>
+                <th class="col-fecha">Fecha de Registro</th>
+                <th class="col-institucion">Institución</th>
+                <th class="col-recibio">Persona que Recibió</th>
+                <th class="col-despachado">Despachado</th>
+                <th class="col-producto">Producto</th>
+            </tr>
+        </thead>
+        <tbody>`;
 
-    // 5. Compilamos el cierre de la tabla, observaciones y firmas
+// 4. Inyectamos las filas dinámicas respetando tus mapeos de variables reales
+datosParaImprimir.forEach(item => {
+    const institucion = item.inst || 'SIN INSTITUCIÓN';
+    const personaRecibio = item.solicitante || item.pers || 'SIN ESPECIFICAR';
+    
+    // 🔥 MODIFICACIÓN QUIRÚRGICA: Si tiene detalles de pedido, los desglosa. Si no, usa el producto normal.
+    const producto = item.detallesPedido ? obtenerVistaPreviaDescripcion(item.detallesPedido) : (item.producto || 'SIN ESPECIFICAR');
+    
+    // 📅 JALAMOS LA FECHA DE LA ORDEN
+    let fechaOrden = item.fecha || '';
+    
+    // 🔄 ¡EL TOQUE PREMIUM DE DIAGONALES! 
+    if (fechaOrden.includes('-')) {
+        if (fechaOrden.indexOf('-') === 4) {
+            const partes = fechaOrden.split('-');
+            fechaOrden = `${partes[2]}/${partes[1]}/${partes[0]}`;
+        } else {
+            fechaOrden = fechaOrden.replace(/-/g, '/');
+        }
+    }
+
+    // 🎯 INYECTAMOS EL ESTILO PRE-LINE PARA HACER LOS SALTOS DE LÍNEA EN EL PAPEL
     cuerpoHtml += `
-            </tbody>
-        </table>
+        <tr>
+            <td class="col-orden">${item.orden || ''}</td>
+            <td class="col-fecha">${fechaOrden}</td> 
+            <td class="col-institucion">${institucion}</td>
+            <td class="col-recibio">${personaRecibio}</td>
+            <td class="col-despachado" style="text-align: center;"><div class="box-despachado"></div></td>
+            <td class="col-producto" style="white-space: pre-line; text-align: left;">${producto}</td>
+        </tr>`;
+}); // 👈 AQUÍ CIERRA EL BUCLE DE FORMA ÚNICA Y LIMPIA
 
-        <div class="seccion-observaciones">
-            <div class="titulo-observaciones">Observaciones de Despacho:</div>
-            <div class="lineas-observaciones"></div>
+// 5. Compilamos el cierre de la tabla, observaciones y firmas
+cuerpoHtml += `
+        </tbody>
+    </table>
+
+    <div class="seccion-observaciones">
+        <div class="titulo-observaciones">Observaciones de Despacho:</div>
+        <div class="lineas-observaciones"></div>
+    </div>
+
+    <div class="contenedor-firmas">
+        <div class="bloque-firma">
+            <div class="linea-firma"></div>
+            <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Axel</strong><br>Preparación y Conteo</div>
         </div>
-
-        <div class="contenedor-firmas">
-            <div class="bloque-firma">
-                <div class="linea-firma"></div>
-                <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Axel</strong><br>Preparación y Conteo</div>
-            </div>
-            <div class="bloque-firma">
-                <div class="linea-firma"></div>
-                <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Yanet</strong><br>Revisión y Autorización</div>
-            </div>
+        <div class="bloque-firma">
+            <div class="linea-firma"></div>
+            <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Yanet</strong><br>Revisión y Autorización</div>
         </div>
+    </div>
 
-        <script>
-            window.onload = function() {
-                window.print();
-                setTimeout(function() { window.close(); }, 500); 
-            };
-        <\/script>
-    </body>
-    </html>`;
+    <script>
+        window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500); 
+        };
+    <\/script>
+</body>
+</html>`;
 
-    // 5. Escribimos y cerramos el flujo del documento en la ventana emergente
-    ventanaImpresion.document.open();
-    ventanaImpresion.document.write(cuerpoHtml);
-    ventanaImpresion.document.close();
+// 5. Escribimos y cerramos el flujo del documento en la ventana emergente
+ventanaImpresion.document.open();
+ventanaImpresion.document.write(cuerpoHtml);
+ventanaImpresion.document.close();
 }
 
 // 🖨️ PASO 2: MÓDULO DE IMPRESIÓN QUIRÚRGICA PARA HOJA DE PEDIDO (ALPROMEH)
@@ -3388,11 +3401,11 @@ function ejecutarImpresionPedidoFisico(datos) {
         
         if (unidadFormateada === 'n/a') {
             unidadFormateada = 'N/A';
-            estiloUnidad = 'text-align: center; font-size: 10px; color: #718096; font-weight: bold; letter-spacing: 0.5px;';
+            styleUnidad = 'text-align: center; font-size: 10px; color: #718096; font-weight: bold; letter-spacing: 0.5px;';
         }
         
         filasHtml += `
-            <tr style="border-bottom: 0.9px solid #000000;">
+            <tr style="border-bottom: 0.9px solid #000000; page-break-inside: avoid;">
                 <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; text-align: center; font-weight: bold; font-size: 12px; width: 8%; color: #000000; background: #ffffff;">${Number(p.cantidad).toLocaleString('en-US')}</td>
                 <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; width: 4.5%; background: #ffffff;"></td>
                 <td style="border-right: 0.9px solid #000000; border-bottom: 0.9px solid #000000; padding: 9px 4px; width: 4.5%; background: #ffffff;"></td>
@@ -3422,7 +3435,13 @@ function ejecutarImpresionPedidoFisico(datos) {
         <style>
             @media print {
                 body > *:not(#seccion-impresion-exclusiva) { display: none !important; }
-                html, body { background: #ffffff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                html, body { 
+                    background: #ffffff !important; 
+                    -webkit-print-color-adjust: exact; 
+                    print-color-adjust: exact;
+                    height: auto !important;
+                    overflow: visible !important;
+                }
                 @page { 
                     size: letter landscape !important; 
                     margin: 10mm 12mm !important; 
@@ -3430,6 +3449,17 @@ function ejecutarImpresionPedidoFisico(datos) {
                 #seccion-impresion-exclusiva { 
                     width: 100% !important; 
                     display: block !important; 
+                    height: auto !important;
+                    overflow: visible !important;
+                }
+                .tabla-pedido-fisica {
+                    page-break-inside: auto !important;
+                }
+                .tabla-pedido-fisica tr {
+                    page-break-inside: avoid !important;
+                }
+                .bloque-final-firmas {
+                    page-break-inside: avoid !important;
                 }
             }
             
@@ -3531,7 +3561,7 @@ function ejecutarImpresionPedidoFisico(datos) {
                 </tbody>
             </table>
 
-            <table style="width: 100%; border-collapse: collapse; font-size: 13px; border: 0.9px solid #000000; background: #ffffff;">
+            <table class="bloque-final-firmas" style="width: 100%; border-collapse: collapse; font-size: 13px; border: 0.9px solid #000000; background: #ffffff;">
                 <tr style="border-bottom: 0.9px solid #000000;">
                     <td colspan="4" style="border-bottom: 0.9px solid #000000; padding: 7px 8px; font-weight: bold; width: 65%; color: #000000;">
                         ORDEN DE COMPRA NO. <span style="font-weight: 900; margin-left: 4px;">${datos.orden || ''}</span>
