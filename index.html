@@ -1621,50 +1621,46 @@ input::-webkit-outer-spin-button,
 </div>
 
           <div id="seccionPaso3" style="display: none;">
-                <label style="font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px;">INGRESAR ARTÍCULOS DEL PEDIDO:</label>
-                
-                <div style="display: grid; grid-template-columns: 1.2fr 2fr 3fr 2.2fr 0.5fr; gap: 6px; margin-bottom: 10px;">
-                    
-                    <input type="text" id="addCant" placeholder="Cantidad" 
-                           oninput="
-                               let val = this.value.replace(/,/g, '').replace(/\D/g, '');
-                               this.value = val ? Number(val).toLocaleString('en-US') : '';
-                           " 
-                           style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
-                    
-                    <input type="text" id="addCod" placeholder="Unidad de Venta" style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
-                    <input type="text" id="addDesc" placeholder="Descripción del Producto" style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
-                    
-                    <div style="display: flex; align-items: center; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 0 6px; box-sizing: border-box;">
-                        <span style="font-weight: bold; color: #64748b; font-size: 0.85rem; margin-right: 4px; user-select: none;">Q</span>
-                        <input type="text" id="addPrecio" placeholder="Precio Unitario" 
-                               oninput="
-                                   let val = this.value.replace(/[^0-9.]/g, '');
-                                   let parts = val.split('.');
-                                   if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
-                                   parts = val.split('.');
-                                   if (parts[1] && parts[1].length > 2) parts[1] = parts[1].slice(0, 2);
-                                   if (parts[0]) parts[0] = Number(parts[0]).toLocaleString('en-US');
-                                   this.value = parts.join('.');
-                               " 
-                               style="flex: 1; border: none; padding: 6px 0; font-size: 0.85rem; outline: none; width: 100%; box-sizing: border-box;">
-                    </div>
+               <label style="font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px;">INGRESAR ARTÍCULOS DEL PEDIDO:</label>
 
-                    <button type="button" onclick="agregarArticuloATabla()" style="background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; height: 100%;">＋</button>
-                </div>
+<div style="display: grid; grid-template-columns: 0.8fr 1.5fr 5fr 1.2fr 0.5fr; gap: 6px; margin-bottom: 10px; position: relative;">
+    
+    <input type="text" id="addCant" placeholder="Cantidad" 
+           oninput="let val = this.value.replace(/,/g, '').replace(/\D/g, ''); this.value = val ? Number(val).toLocaleString('en-US') : '';" 
+           style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
+    
+    <div style="position: relative; width: 100%;">
+        <input type="text" id="addCod" placeholder="Unidad de Venta" autocomplete="off" style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
+        <div id="sugerenciasUnidad" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 1000; max-height: 150px; overflow-y: auto;"></div>
+    </div>
+
+    <div style="position: relative; width: 100%;">
+        <input type="text" id="addDesc" placeholder="Descripción del Producto" autocomplete="off" style="padding:6px; font-size:0.85rem; width: 100%; box-sizing: border-box;">
+        <div id="sugerenciasProducto" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 6px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); z-index: 1000; max-height: 180px; overflow-y: auto;"></div>
+    </div>
+    
+    <div style="display: flex; align-items: center; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 0 6px; box-sizing: border-box;">
+        <span style="font-weight: bold; color: #64748b; font-size: 0.85rem; margin-right: 4px; user-select: none;">Q</span>
+        <input type="text" id="addPrecio" placeholder="Precio Unit." 
+               oninput="let val = this.value.replace(/[^0-9.]/g, ''); let parts = val.split('.'); if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); parts = val.split('.'); if (parts[1] && parts[1].length > 2) parts[1] = parts[1].slice(0, 2); if (parts[0]) parts[0] = Number(parts[0]).toLocaleString('en-US'); this.value = parts.join('.');" 
+               style="flex: 1; border: none; padding: 6px 0; font-size: 0.85rem; outline: none; width: 100%; box-sizing: border-box;">
+    </div>
+
+    <button type="button" onclick="agregarArticuloATabla()" style="background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; height: 100%;">＋</button>
+</div>
 
                 <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse: collapse; text-align: left;">
-                        <thead>
-                            <tr style="background: var(--primary); color: white;">
-                                <th style="padding:8px; text-align:center; font-size:0.85rem; width: 10%;">CANT</th>
-                                <th style="padding:8px; text-align:center; font-size:0.85rem; width: 20%;">UNIDAD DE VENTA</th>
-                                <th style="padding:8px; text-align:left; font-size:0.85rem; width: 40%;">DESCRIPCIÓN</th>
-                                <th style="padding:8px; text-align:right; font-size:0.85rem; width: 15%;">PRECIO U.</th>
-                                <th style="padding:8px; text-align:right; font-size:0.85rem; width: 15%;">TOTAL</th>
-                                <th style="padding:8px; text-align:center; width: 5%;">×</th>
-                            </tr>
-                        </thead>
+    <table style="width:100%; border-collapse: collapse; text-align: left; table-layout: fixed;">
+        <thead>
+            <tr style="background-color: var(--primary); color: white;">
+                <th style="width: 9%;  padding: 10px 8px; text-align: center; border-right: 1px solid rgba(255,255,255,0.15);">CANT</th>
+                <th style="width: 13%; padding: 10px 8px; text-align: left;   border-right: 1px solid rgba(255,255,255,0.15);">UNIDAD DE VENTA</th>
+                <th style="width: 50%; padding: 10px 8px; text-align: left;   border-right: 1px solid rgba(255,255,255,0.15);">DESCRIPCIÓN</th>
+                <th style="width: 11%; padding: 10px 8px; text-align: right;  border-right: 1px solid rgba(255,255,255,0.15);">PRECIO U.</th>
+                <th style="width: 12%; padding: 10px 8px; text-align: right;  border-right: 1px solid rgba(255,255,255,0.15);">TOTAL</th>
+                <th style="width: 5%;  padding: 10px 8px; text-align: center;">×</th>
+            </tr>
+        </thead>
                         <tbody id="cuerpoTablaPedido">
                             <tr id="filaVaciaPedido">
                                 <td colspan="6" style="text-align:center; color:#94a3b8; padding:15px; font-style:italic;">No hay productos agregados todavía.</td>
@@ -5041,60 +5037,66 @@ function renderizarTablaArticulos() {
     const cuerpo = document.getElementById('cuerpoTablaPedido');
     cuerpo.innerHTML = "";
 
+    // Aseguramos que la tabla colapse sus bordes para que las líneas divisorias no se quiebren
+    if (cuerpo.parentElement) {
+        cuerpo.parentElement.style.borderCollapse = "collapse";
+    }
+
     // Si la tabla se queda vacía, mostramos el mensaje elegante por defecto
     if (articulosPedidoActual.length === 0) {
         cuerpo.innerHTML = `<tr id="filaVaciaPedido"><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px; font-style:italic;">No hay productos agregados todavía.</td></tr>`;
         
-        // 🚀 MODIFICADO: Cambiado a 'txtTotalPedido' para asegurar sincronía con tu HTML
         const txtTotal = document.getElementById('txtTotalPedido');
         if (txtTotal) txtTotal.innerText = "0.00";
         
-        // 🚀 ESCUDO AUTOMÁTICO: Si borran todo, el botón verde se bloquea en el acto
         validarBloqueoBotonVerde();
         return;
     }
 
     let totalGeneral = 0;
 
-    // Barremos el arreglo para construir las filas dinámicamente (Tu orden ya estaba perfecto aquí)
+   // Barremos el arreglo para construir las filas dinámicamente
     articulosPedidoActual.forEach((art, index) => {
         totalGeneral += art.total;
 
-        // 🔥 ¡AQUÍ ESTÁ EL CAMBIO NUEVO, MI BRO! 🔥
-        // Creamos el formato de comas de miles justo aquí antes de armar la fila:
         const precioConComas = art.precioU.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const totalConComas = art.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const cantidadConComas = art.cantidad.toLocaleString('en-US');
 
-        // Aquí usamos texto plano normal porque esta tabla es el desglose uno por uno
+        const bordeInferior = "border-bottom: 1px solid #e2e8f0;";
+        const bordeVertical = "border-right: 1px solid #e2e8f0;"; 
+
         cuerpo.innerHTML += `
-            <tr style="border-bottom: 1px solid var(--border);">
-                <td style="padding:8px; text-align:center; font-weight:bold;">${cantidadConComas}</td>
-                <td style="padding:8px; text-align:center; color:#64748b;">${art.codigo}</td>
-                <td style="padding:8px; text-align:left;">${art.descripcion}</td>
-                <td style="padding:8px; text-align:right;">Q ${precioConComas}</td>
-                <td style="padding:8px; text-align:right; font-weight:bold;">Q ${totalConComas}</td>
-                <td style="padding:8px; text-align:center;">
-                    <button type="button" onclick="eliminarArticuloPedido(${index})" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1.1rem; padding:0;">✕</button>
+            <tr style="background: white;">
+                <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">${cantidadConComas}</td>
+                
+                <td style="padding: 10px 8px; text-align: left; color: #475569; ${bordeInferior} ${bordeVertical}">${art.codigo}</td>
+                
+                <td style="padding: 10px 8px; text-align: left; color: #0f172a; font-weight: 500; word-break: break-word; ${bordeInferior} ${bordeVertical}">${art.descripcion}</td>
+                
+                <td style="padding: 10px 8px; text-align: right; color: #475569; ${bordeInferior} ${bordeVertical}">Q ${precioConComas}</td>
+                
+<td style="padding: 10px 12px 10px 8px; text-align: right; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">Q ${totalConComas}</td>
+                
+                <td style="padding: 10px 8px; text-align: center; ${bordeInferior}">
+                    <button type="button" onclick="eliminarArticuloPedido(${index})" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1.1rem; padding:0; font-weight:bold;">✕</button>
                 </td>
             </tr>
         `;
     });
 
-    // 🚀 MODIFICADO: Aseguramos que busque 'txtTotalPedido' con tu formato premium exacto
     const txtTotalValue = document.getElementById('txtTotalPedido');
     if (txtTotalValue) {
         txtTotalValue.innerText = totalGeneral.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // 🚀 ESCUDO AUTOMÁTICO: Al renderizar los productos, evalúa si enciende el botón verde
     validarBloqueoBotonVerde();
 }
 
 // Eliminar un artículo del saco global por si se equivocan al digitar
 function eliminarArticuloPedido(index) {
     articulosPedidoActual.splice(index, 1);
-    renderizarTablaArticulos(); // Esto dispara la reevaluación automáticamente arriba
+    renderizarTablaArticulos(); 
 }
 
 // ⚽ MOTOR DE QUINIELA MUNDIALISTA MULTI-PARTIDO (CON ANTICHEAT DE HORA GT)
@@ -5608,6 +5610,144 @@ function obtenerRankingServidor() {
             console.error("Clavo al obtener el ranking:", error);
             loader.innerHTML = "❌ No se pudo conectar con el servidor de Ranking.";
         });
+}
+
+// MOTOR DE AUTOCOMPLETADO PREDICTIVO DINÁMICO
+// 1. Lista de unidades optimizada con tus datos reales
+const listaUnidadesREALS = ["Unidad", "Caja", "Caja de 50 und", "Caja de 100 und", "Individual", "Bolsa de 100 und", "Bolsa de 500 und", "Bolsa de 1000 und", "Paquete", "Galon"];
+
+// 2. Inicializar los buscadores cuando la página termine de cargar
+document.addEventListener("DOMContentLoaded", function() {
+    // Buscador para Unidad de Venta (usa la lista estática)
+    configurarBuscadorPredictivo("addCod", "sugerenciasUnidad", () => listaUnidadesREALS);
+    
+    // Buscador para Productos (Lee EXCLUSIVAMENTE de lo que encuentra en pantalla)
+    configurarBuscadorPredictivo("addDesc", "sugerenciasProducto", obtenerProductosDesdeTablas);
+});
+
+// 3. FUNCIÓN OPTIMIZADA PARA FILTRAR TEXTO PURO DE PRODUCTOS
+function obtenerProductosDesdeTablas() {
+    let productosEncontrados = [];
+
+    // ==========================================
+    // PARTE A: Escanea la orden actual (Paso 3)
+    // ==========================================
+    const filasOrden = document.querySelectorAll("#cuerpoTablaPedido tr");
+    filasOrden.forEach(fila => {
+        if (fila.id === "filaVaciaPedido") return;
+        const celdaDesc = fila.cells[2]; // Tercera columna de la tabla de ingreso
+        if (celdaDesc) {
+            let texto = celdaDesc.textContent.trim();
+            if (texto && !productosEncontrados.includes(texto)) {
+                productosEncontrados.push(texto);
+            }
+        }
+    });
+
+    // ==========================================
+    // PARTE B: Escanea tu base de datos en memoria (datosLocales)
+    // ==========================================
+    if (typeof datosLocales !== 'undefined' && Array.isArray(datosLocales)) {
+        datosLocales.forEach(item => {
+            
+            // 1. Caso Producto Normal (Formato clásico de texto)
+            if (item.producto && item.producto.trim()) {
+                let prodLimpio = item.producto.trim();
+                if (!productosEncontrados.includes(prodLimpio)) {
+                    productosEncontrados.push(prodLimpio);
+                }
+            }
+            
+            // 2. Caso DetallesPedido (Si es el formato JSON o string del switch)
+            if (item.detallesPedido && item.detallesPedido.trim()) {
+                try {
+                    // Si tus detalles son un string JSON, lo parseamos para sacar los nombres
+                    const articulos = JSON.parse(item.detallesPedido);
+                    if (Array.isArray(articulos)) {
+                        articulos.forEach(art => {
+                            let nombreArt = art.producto || art.descripcion || art.desc;
+                            if (nombreArt && nombreArt.trim()) {
+                                let artLimpio = nombreArt.trim();
+                                if (!productosEncontrados.includes(artLimpio)) productosEncontrados.push(artLimpio);
+                            }
+                        });
+                    }
+                } catch (e) {
+                    // Si no es un JSON válido sino un texto plano con formato (ej: los guiones de tu imagen)
+                    // Le aplicamos la limpieza para quitarle la cantidad y la unidad (300) - (Rollo) -
+                    let textoLimpio = item.detallesPedido.trim();
+                    textoLimpio = textoLimpio.replace(/^\s*\([^)]+\)\s*-\s*\([^)]+\)\s*-\s*/i, "").trim();
+                    
+                    if (textoLimpio && textoLimpio.length > 3 && !productosEncontrados.includes(textoLimpio)) {
+                        productosEncontrados.push(textoLimpio);
+                    }
+                }
+            }
+        });
+    }
+
+    return productosEncontrados;
+}
+
+// 4. El motor que genera la interfaz flotante
+function configurarBuscadorPredictivo(inputId, contenedorId, callbackDatos) {
+    const input = document.getElementById(inputId);
+    const contenedor = document.getElementById(contenedorId);
+
+    input.addEventListener("input", function() {
+        const textoBuscar = this.value.trim().toLowerCase();
+        contenedor.innerHTML = ""; 
+
+        if (!textoBuscar) {
+            contenedor.style.display = "none";
+            return;
+        }
+
+        // Jalar los datos frescos de las tablas en este preciso segundo
+        const listaActual = callbackDatos();
+        const filtrados = listaActual.filter(item => item.toLowerCase().includes(textoBuscar));
+
+        if (filtrados.length === 0) {
+            contenedor.style.display = "none";
+            return;
+        }
+
+        // Renderizar las opciones sugeridas abajo del input
+        filtrados.forEach(item => {
+            const divOpcion = document.createElement("div");
+            divOpcion.textContent = item;
+            divOpcion.style.padding = "8px 12px";
+            divOpcion.style.cursor = "pointer";
+            divOpcion.style.fontSize = "0.85rem";
+            divOpcion.style.color = "#1e293b";
+            divOpcion.style.borderBottom = "1px solid #f1f5f9";
+            divOpcion.style.textAlign = "left"; // Forzar alineación limpia
+            
+            divOpcion.onmouseenter = () => divOpcion.style.background = "#f1f5f9";
+            divOpcion.onmouseleave = () => divOpcion.style.background = "none";
+
+            divOpcion.addEventListener("click", function() {
+                input.value = item; 
+                contenedor.style.display = "none"; 
+                
+                // Si seleccionó producto, mandar el foco directo al precio
+                if(inputId === "addDesc") {
+                    document.getElementById("addPrecio").focus();
+                }
+            });
+
+            contenedor.appendChild(divOpcion);
+        });
+
+        contenedor.style.display = "block";
+    });
+
+    // Cerrar si hacen clic afuera
+    document.addEventListener("click", function(e) {
+        if (e.target !== input && e.target !== contenedor) {
+            contenedor.style.display = "none";
+        }
+    });
 }
 </script>
 </body>
