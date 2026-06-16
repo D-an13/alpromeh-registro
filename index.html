@@ -3401,7 +3401,7 @@ function ejecutarImpresionPedidoFisico(datos) {
         
         if (unidadFormateada === 'n/a') {
             unidadFormateada = 'N/A';
-            styleUnidad = 'text-align: center; font-size: 10px; color: #718096; font-weight: bold; letter-spacing: 0.5px;';
+            estiloUnidad = 'text-align: center; font-size: 10px; color: #718096; font-weight: bold; letter-spacing: 0.5px;';
         }
         
         filasHtml += `
@@ -3461,6 +3461,17 @@ function ejecutarImpresionPedidoFisico(datos) {
                 .bloque-final-firmas {
                     page-break-inside: avoid !important;
                 }
+                
+                /* 🔥 ESCUDO DE IMPRESIÓN PARA EL LOGO CORPORATIVO */
+                .texto-titulo-print {
+                    display: none !important;
+                }
+                .logo-oficial-print {
+                    display: block !important;
+                    max-height: 55px; /* Altura perfecta calculada quirúrgicamente */
+                    width: auto;
+                    object-fit: contain;
+                }
             }
             
             /* Bordes de rejilla balanceados en 0.9px */
@@ -3488,14 +3499,20 @@ function ejecutarImpresionPedidoFisico(datos) {
                 margin-left: 6px;
                 vertical-align: middle;
             }
+            
+            /* Estilo base para controlar el logo oculto en la app web */
+            .logo-oficial-print {
+                display: none;
+            }
         </style>
 
         <div style="font-family: Arial, sans-serif; color: #000000; background: #ffffff; padding: 5px; line-height: 1.35;">
             
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
                 <tr>
-                    <td style="vertical-align: top; width: 30%;">
-                        <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 0.5px; color: #000000;">ALPROMEH</h1>
+                    <td style="vertical-align: top; width: 35%;">
+                        <h1 class="texto-titulo-print" style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 0.5px; color: #000000;">ALPROMEH</h1>
+                        <img class="logo-oficial-print" src="https://raw.githubusercontent.com/D-an13/alpromeh-registro/main/logo.png" alt="Logo ALPROMEH">
                     </td>
                     <td style="text-align: right; vertical-align: top; font-size: 10px; font-weight: bold; color: #000000; line-height: 1.3;">
                         23 Av. INTERCONEXIÓN NARANJO-MINERVAS 12-91 ZONA 4 DE MIXCO PARQUE INDUSTRIAL LAS TUNAS<br>
