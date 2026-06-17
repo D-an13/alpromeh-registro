@@ -2497,9 +2497,7 @@ function renderTable() {
     }, 700); 
 }
 
-// ===================================================
 // ⌨️ EFECTO MÁQUINA DE ESCRIBIR ROTATIVO (ALPROMEH)
-// ===================================================
 window.iniciarMaquinaEscribir = function() {
     const inputBuscar = document.getElementById('inputBuscar');
     if (!inputBuscar) return;
@@ -4943,7 +4941,7 @@ function ajustarValidacionesInputs() {
     });
 }
 
-// 📑 FUNCIÓN DE FORMATEO ESTÉTICO DE PRODUCTOS PARA LA LISTA (ALPROMEH)
+// 📑 FUNCIÓN DE FORMATEO ESTÉTICO DE PRODUCTOS PARA LA LISTA (ALPROMEH - EDICIÓN PREMIUM)
 function obtenerVistaPreviaDescripcion(valorCelda) {
     if (!valorCelda) return '';
 
@@ -4968,17 +4966,30 @@ function obtenerVistaPreviaDescripcion(valorCelda) {
         return palabras.join(' ');
     }
 
+    // 🛡️ MOTOR DE CORRECCIÓN Y LIMPIEZA DE UNIDADES 
+    function limpiarYUnificarUnidad(unidadRaw) {
+        if (!unidadRaw) return 'und';
+        let u = unidadRaw.trim().toLowerCase();
+        if (u === 'n/a' || u === 'na') return 'N/A';
+        
+        // Unifica variantes de unidades a la abreviatura limpia
+        if (u === 'unidades' || u === 'unidad' || u === 'uds' || u === 'unds') {
+            return 'und';
+        }
+        return aplicarTipoOracion(unidadRaw);
+    }
+
     if (textoLimpio.startsWith('[') && textoLimpio.endsWith(']')) {
         try {
             const arregloProductos = JSON.parse(textoLimpio);
             if (arregloProductos && arregloProductos.length > 0) {
                 const lineasFormateadas = arregloProductos.map(p => {
                     const cant = p.cantidad || '0';
-                    let undRaw = p.codigo || 'N/A';
-                    let und = (undRaw.toLowerCase() === 'n/a' || undRaw.toLowerCase() === 'na') ? 'N/A' : aplicarTipoOracion(undRaw);
+                    const und = limpiarYUnificarUnidad(p.codigo); // Usa el nuevo corrector inteligente
                     const desc = aplicarTipoOracion(p.descripcion);
                     
-                    return `• (${cant}) - (${und}) - ${desc}`;
+                    // ✨ REMOCIÓN DE PARÉNTESIS Y NUEVA ESTRUCTURA PREMIUM ESTILIZADA
+                    return `• ${cant} ${und} - ${desc}`;
                 });
                 return lineasFormateadas.join('\n');
             }
@@ -5656,9 +5667,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function obtenerProductosDesdeTablas() {
     let productosEncontrados = [];
 
-    // ==========================================
     // PARTE A: Escanea la orden actual (Paso 3)
-    // ==========================================
     const filasOrden = document.querySelectorAll("#cuerpoTablaPedido tr");
     filasOrden.forEach(fila => {
         if (fila.id === "filaVaciaPedido") return;
@@ -5671,9 +5680,7 @@ function obtenerProductosDesdeTablas() {
         }
     });
 
-    // ==========================================
     // PARTE B: Escanea tu base de datos en memoria (datosLocales)
-    // ==========================================
     if (typeof datosLocales !== 'undefined' && Array.isArray(datosLocales)) {
         datosLocales.forEach(item => {
             
