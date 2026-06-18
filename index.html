@@ -219,8 +219,22 @@ input::-webkit-outer-spin-button,
 }
 
 .alpro-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px;
     width: 100%;
+}
+
+.alpro-grid .game-card:last-child {
+    grid-column: span 2;
+    flex-direction: row; /* Cambia a horizontal para que no se mire vacía */
+    justify-content: center;
+    gap: 15px;
+    padding: 15px; /* Un poco más esbelta */
+}
+
+.alpro-grid .game-card:last-child .game-emoji {
+    margin-bottom: 0; 
 }
 
 .game-card {
@@ -3853,7 +3867,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <div id="modalAlproGames" class="alpro-modal" onclick="cerrarAlproGames()">
     <div class="alpro-content" onclick="event.stopPropagation()">
         <span class="alpro-title">ALPROGAMES 🎮</span>
-        <span class="alpro-subtitle">Módulos de entrenamiento activos</span>
+        <span class="alpro-subtitle">Juegos de entrenamiento activos</span>
         
         <div class="alpro-grid">
             <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/alprogame.html', '_blank')">
@@ -3871,6 +3885,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/neonflow.html', '_blank')">
                 <span class="game-emoji">✨</span>
                 <span class="game-name">ALPRONEON</span>
+            </div>
+            <div class="game-card" onclick="window.open('https://d-an13.github.io/alpromeh-registro/arkanoid.html', '_blank')">
+                <span class="game-emoji">🚀</span>
+                <span class="game-name">ARKANOID</span>
             </div>
         </div>
         
