@@ -3078,8 +3078,8 @@ function ejecutarImpresionReporte() {
     // Conseguir la fecha y hora formateada de hoy en tiempo real
     const ahora = new Date();
     const fechaImpresion = ahora.toLocaleDateString('es-GT');
-    const horaImpresion = grandma = ahora.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit', hour12: true });
-    
+    const horaImpresion = ahora.toLocaleTimeString('es-GT', { hour: '2-digit', minute: '2-digit', hour12: true });    
+
  // 📊 CONTADOR AUTOMÁTICO DE ÓRDENES EN TIEMPO REAL
 const totalOrdenes = datosParaImprimir.length;
 
