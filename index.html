@@ -2592,12 +2592,15 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
     // --- ESCUDO ANTI-DUPLICADOS ---
     if (btnGuardar.disabled) return; 
 
-// --- EL FRENO DE MANO AQUÍ ---    
-const num = document.getElementById('orden').value;
-const ordenPrevia = datosLocales.find(d => d.orden.toString() === num.toString());
-const yaExiste = !!ordenPrevia;
+    // 🔥 BLINDAJE INMEDIATO: Apagamos cualquier intento de auto-sync en el milisegundo en que dan clic
+    guardandoAhora = true;
 
-if (yaExiste) {
+    // --- EL FRENO DE MANO AQUÍ ---    
+    const num = document.getElementById('orden').value;
+    const ordenPrevia = datosLocales.find(d => d.orden.toString() === num.toString());
+    const yaExiste = !!ordenPrevia;
+
+    if (yaExiste) {
         const quienLaTiene = ordenPrevia.responsable;
         const estadoActual = ordenPrevia.despachado ? "LISTA ✅" : "PENDIENTE ⏳";
         
@@ -2627,38 +2630,29 @@ if (yaExiste) {
         contenido.classList.add('salida');
         setTimeout(() => { modal.style.display = 'none'; }, 200);
 
-        // Si eligieron "CANCELAR", el código se frena por completo aquí
-        if (!respuestaUsuario) return;
+        // Si eligieron "CANCELAR", liberamos el flujo y salimos de inmediato
+        if (!respuestaUsuario) {
+            guardandoAhora = false;
+            return;
+        }
     }
-
-    // 2. Si es una orden nueva o confirmaron la actualización, el código sigue su curso:
-    guardandoAhora = true;
 
     if(yaExiste) {
         showToast("⚙️ La OC. " + num + " se está actualizando...", "warning");
-        formCard.classList.add('resaltar-actualizacion');
+        if (formCard) formCard.classList.add('resaltar-actualizacion');
     }
 
-    // Bloqueo de botón para evitar doble envío
+    // Bloqueo estricto del botón visible en pantalla
     btnGuardar.disabled = true;
     btnGuardar.innerText = "REGISTRANDO...";
     btnGuardar.style.opacity = "0.5";
     btnGuardar.style.cursor = "not-allowed";
 
-    const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
-    const fechaActual = document.getElementById('fecha').value;
-    const fechaARegistrar = yaExiste ? ordenPrevia.fecha : fechaActual;
-    const horaARegistrar = yaExiste ? ordenPrevia.hora : horaActual;
-
-    // Limpiamos versión vieja si existe para evitar duplicados en la lista local
-    datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
-
-    // 🛡️ MODIFICACIÓN INTERNA: PAYLOAD HÍBRIDO (Orden Normal / Hoja de Pedido)
-    // Si está en Modo Pedido y la tabla está vacía, frenamos con advertencia premium
-    if (modoPedidoActivo && articulosPedidoActual.length === 0) {
+    // Validamos el Modo Pedido de forma ultra segura antes de armar el payload
+    if (modoPedidoActivo && (!articulosPedidoActual || articulosPedidoActual.length === 0)) {
         showToast("⚠️ Agrega al menos un artículo en el Paso 3", true);
         
-        // Liberamos el botón para que no se quede trabado en "REGISTRANDO..."
+        // Liberamos el botón para que no se quede trabado
         btnGuardar.disabled = false;
         btnGuardar.innerText = "GUARDAR REGISTRO";
         btnGuardar.style.opacity = "1";
@@ -2667,6 +2661,14 @@ if (yaExiste) {
         if (formCard) formCard.classList.remove('resaltar-actualizacion');
         return; 
     }
+
+    const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+    const fechaActual = document.getElementById('fecha').value;
+    const fechaARegistrar = yaExiste ? ordenPrevia.fecha : fechaActual;
+    const horaARegistrar = yaExiste ? ordenPrevia.hora : horaActual;
+
+    // Limpiamos versión vieja si existe para evitar duplicados en la lista local
+    datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
 
     const payload = {
         orden: num, 
@@ -2680,17 +2682,15 @@ if (yaExiste) {
         movimiento: "Ingreso/Edición: " + document.getElementById('persona').value, 
         ultimoMov: "Ingreso/Edición: " + document.getElementById('persona').value,
         
-        // Guardamos el producto normal si no es pedido, o los detalles en JSON si es Modo Pedido
         producto: modoPedidoActivo ? "📄 HOJA DE PEDIDO GENERADA" : productoTemporal,
 
-        // Campos nuevos exclusivos para la Hoja de Pedido en Google Sheets
         tipoCompra: modoPedidoActivo ? document.querySelector('input[name="tipoContratacion"]:checked').value : "Normal",
         nog: modoPedidoActivo ? document.getElementById('nogInput').value.trim() : "",
         observaciones: modoPedidoActivo ? document.getElementById('observacionesPedido').value.trim() : "",
         detallesPedido: modoPedidoActivo ? JSON.stringify(articulosPedidoActual) : ""
     };
 
-    // Si no es Modo Pedido, mantenemos tu freno original de obligar a ingresar producto por el modal
+    // Freno para órdenes normales sin producto seleccionado
     if (!modoPedidoActivo && (!productoTemporal || productoTemporal.trim() === "")) {
         btnGuardar.disabled = false;
         btnGuardar.innerText = "GUARDAR REGISTRO";
@@ -2714,13 +2714,15 @@ if (yaExiste) {
         return; 
     }
 
+    // Guardamos localmente antes del fetch para asegurar que la data no se pierda jamás en la compu de ellas
     datosLocales.unshift(payload);
     save(); 
 
-    // === ENVIAMOS A TU WEB APP DE SIEMPRE DE GOOGLE SHEETS ===
-    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-    .then(() => {
-        // 🚀 SI SE GUARDÓ CON ÉXITO Y ERA PEDIDO, DISPARAMOS LA IMPRESIÓN AL INSTANTE
+    // === ENVIAMOS A GOOGLE SHEETS DENTRO DE UN BLOQUE TRY SEGURO ===
+    try {
+        await fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        
+        // Ejecuciones de éxito
         if (modoPedidoActivo) {
             ejecutarImpresionPedidoFisico(payload);
         }
@@ -2729,52 +2731,45 @@ if (yaExiste) {
             registrarRespaldoPedidoHistorial(payload);
         }
 
-        // Limpieza estándar de tu interfaz
-        this.reset(); 
+        // Limpieza de interfaz original
+        document.getElementById('formOrdenes').reset(); 
         setFechaHoy(); 
         productoTemporal = ""; 
         const inputProd = document.getElementById('inputProducto');
-        if (inputProd) {
-            inputProd.value = ""; 
-        }
+        if (inputProd) inputProd.value = ""; 
 
         document.getElementById('btnProducto').classList.remove('lleno');
         document.getElementById('btnProducto').innerText = "📝";
         aplicarColorUnico(document.getElementById('responsableSelect'));
         
-        // 🧼 REPARACIÓN DE RAÍZ PARA CARMEN: 
-        // Vaciamos por completo el saco de artículos antes de apagar el switch
+        // Vaciamos los artículos locales y refrescamos la vista
         articulosPedidoActual = [];
-        renderizarTablaArticulos(); // Deja la minitabla en "No hay productos agregados"
+        if (typeof renderizarTablaArticulos === "function") renderizarTablaArticulos();
 
-        // Si estaba el switch encendido, lo apagamos de forma ultra segura
         if (modoPedidoActivo) {
             document.getElementById('switchModoPedido').checked = false;
-            modoPedidoActivo = false; // Forzamos el estado lógico a falso
-            alternarModoPedido();
+            modoPedidoActivo = false; 
+            if (typeof alternarModoPedido === "function") alternarModoPedido();
         }
 
         if(!yaExiste) showToast("✅ OC. " + num + " guardada correctamente");
-    })
-    .catch(err => {
-        showToast("❌ Error de red, verifique conexión", true);
-    })
-    .finally(() => {
-        // ⏳ LE DAMOS LOS 2 SEGUNDOS DE PAZ AL SISTEMA
+
+    } catch (err) {
+        console.error("Error crítico al guardar:", err);
+        showToast("❌ Error de comunicación, los datos se guardaron localmente.", true);
+    } finally {
+        // El botón vuelve a la vida pase lo que pase tras los 2 segundos para no trabar la app
         setTimeout(() => {
             if (formCard) formCard.classList.remove('resaltar-actualizacion');
-            
-            // 🛡️ BLINDAJE ABSOLUTO: Forzamos la resurrección total del botón de guardar
-            // No importa qué navegador use, el botón vuelve a estar 100% activo para la siguiente orden
             btnGuardar.disabled = false;
             btnGuardar.innerText = "GUARDAR REGISTRO";
             btnGuardar.style.opacity = "1";
             btnGuardar.style.cursor = "pointer";
             
-            // LIBERAMOS EL FRENO: El sistema ya puede volver a sincronizar solo
+            // Liberamos el freno para que las sincronizaciones automáticas vuelvan a activarse limpiamente
             guardandoAhora = false; 
         }, 2000); 
-    });
+    }
 };
 
         function toggle(orden) {
@@ -4626,7 +4621,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (burbuja) {
                 burbuja.classList.add('mostrar'); 
 
-                // 🕵️‍♂️ SENSOR DE MOUSE (Detecta si estás encima)
+                //SENSOR DE MOUSE (Detecta si estás encima)
                 let mouseEncima = false;
                 
                 burbuja.onmouseenter = function() {
