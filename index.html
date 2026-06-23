@@ -268,40 +268,71 @@ input::-webkit-outer-spin-button,
 }
 #update-banner {
     display: none; 
-    /* Blanco casi invisible (10%) para que brille como vidrio */
-    background: rgba(255, 255, 255, 0.1); 
-    
-    /* Desenfoque fuerte para el efecto Liquid Glass */
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    
-    /* Texto en color oscuro para que sea legible sobre el vidrio */
-    color: #333333; 
-    text-align: center; 
-    padding: 16px; 
-    font-weight: 800; 
     position: fixed; 
-    top: 0; 
-    left: 0;
-    width: 100%; 
+    top: 20px; /* Separado del techo como en iOS */
+    left: 50%;
+    transform: translateX(-50%) translateY(-150%); /* Posición inicial para la animación de entrada */
+    width: 90%;
+    max-width: 500px; /* Se adapta perfecto a monitores o laptops */
+    
+    /* El efecto Liquid Glass Puro */
+    background: rgba(255, 255, 255, 0.14); 
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    
+    /* Estilo Cápsula / Isla Dinámica */
+    border-radius: 30px;
+    padding: 18px 24px; /* Más alto y cómodo para hacer clic */
     z-index: 9999; 
     cursor: pointer; 
-    font-family: 'Segoe UI', Roboto, sans-serif; 
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-
-    /* El "brillo" del borde del vidrio */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     
-    animation: slideDown 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Tipografía y Estilo de Texto */
+    color: #111827; /* Gris oscuro premium ultra legible */
+    text-align: center; 
+    font-weight: 800; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 0.82rem;
+    
+    /* Bordes de cristal y sombras profundas de iOS */
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+    
+    /* Animaciones: Entrada suave + Latido infinito de atención */
+    animation: slideDownCapsule 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, 
+               iosPulse 3s ease-in-out infinite alternate;
+    
+    /* Transición suave para los estados del mouse */
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes slideDown {
-    from { transform: translateY(-100%); }
-    to { transform: translateY(0); }
-}    
+/* 🔥 EFECTO HOVER: Eleva la tarjeta visualmente al pasar el mouse */
+#update-banner:hover {
+    background: rgba(255, 255, 255, 0.22);
+    /* La sombra crece hacia abajo simulando que la cápsula flota más alto */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18), 0 0 15px rgba(16, 185, 129, 0.3);
+    /* Efecto "Pop" de crecimiento nativo de Apple */
+    transform: translateX(-50%) translateY(2px) scale(1.02); 
+}
+
+/* 🔥 EFECTO ACTIVE: Se hunde cuando le dan clic (Feedback de botón real) */
+#update-banner:active {
+    transform: translateX(-50%) translateY(4px) scale(0.98);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Animación de entrada estilo notificación de iPhone */
+@keyframes slideDownCapsule {
+    from { transform: translateX(-50%) translateY(-150%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+/* Animación de latido sutil para captar la atención de las chicas */
+@keyframes iosPulse {
+    0% { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12); }
+    100% { box-shadow: 0 12px 45px rgba(16, 185, 129, 0.25); /* Aura verde éxito parpadeando en el fondo */ }
+}
 
 /* --- OPTIMIZACIÓN PARA MÓVIL (SISTEMA HÍBRIDO) --- */
 
@@ -1446,8 +1477,9 @@ input::-webkit-outer-spin-button,
 </head>
 <body>
 <div id="update-banner">
-    ¡NUEVA VERSIÓN DISPONIBLE! HAZ CLIC AQUÍ PARA ACTUALIZAR
-</div>    
+    <span style="color: #ea580c; margin-right: 8px; font-size: 1rem; vertical-align: middle;">●</span>
+    <strong style="vertical-align: middle;">Nueva versión detectada • Actualizar aquí</strong>
+</div>
 <button class="theme-switch" onclick="toggleTheme()">🌓</button>
     <div id="toast"></div>
 
@@ -2993,20 +3025,23 @@ let huellaActual = null;
 
 async function chequearActualizacionAutomatica() {
     try {
-        // Consultamos solo el encabezado del archivo index.html (o el archivo de tu juego)
-        const respuesta = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
+        // 🔥 Agregamos un timestamp (?t=...) para que el servidor de GitHub no devuelva caché
+        const urlDestino = window.location.href.split('?')[0] + "?t=" + Date.now();
         
-        // Obtenemos el ETag o la fecha de última modificación
+        const respuesta = await fetch(urlDestino, { method: 'HEAD', cache: 'no-cache' });
+        
         const nuevaHuella = respuesta.headers.get('ETag') || respuesta.headers.get('Last-Modified');
 
         if (huellaActual && nuevaHuella && huellaActual !== nuevaHuella) {
-            // ¡Algo cambió en el servidor! Mostramos el banner
             const banner = document.getElementById('update-banner');
             banner.style.display = 'block';
-            banner.onclick = () => window.location.reload(true);
+            
+            // 🔥 SOLUCIÓN DEFINITIVA: Forzamos la recarga rompiendo la caché de la página principal también
+            banner.onclick = () => {
+                window.location.href = window.location.origin + window.location.pathname + "?v=" + Date.now();
+            };
         }
 
-        // Guardamos la huella para la siguiente comparación
         huellaActual = nuevaHuella;
         
     } catch (e) {
