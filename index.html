@@ -4442,7 +4442,48 @@ function actualizarRachaYProgreso() {
         congeladores++; 
         localStorage.setItem('congeladoresDisponibles', congeladores);
         
-        alert(`🎉 ¡Por terminar la semana con éxito ganaste 1 ❄️ Congelador de Racha! Acumulados: ${congeladores}`);
+        // 🎨 REEMPLAZO DEL ALERT FEO POR EL TOAST FLOATING PREMIUM (Estilo iOS)
+        const toastRecompensa = document.createElement('div');
+        toastRecompensa.innerHTML = `
+            <div style="
+                position: fixed; 
+                top: -100px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
+                border: 2px solid #38bdf8; 
+                box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.3); 
+                border-radius: 16px; 
+                padding: 16px 24px; 
+                color: #f8fafc; 
+                font-family: sans-serif; 
+                z-index: 99999; 
+                display: flex; 
+                align-items: center; 
+                gap: 14px; 
+                min-width: 290px; 
+                max-width: 90vw;
+                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            ">
+                <span style="font-size: 28px; filter: drop-shadow(0 0 8px #38bdf8);">🎉</span>
+                <div>
+                    <strong style="display: block; font-size: 13.5px; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                        ¡Bono de Fin de Semana!
+                    </strong>
+                    <span style="font-size: 12.5px; color: #cbd5e1; display: block; line-height: 1.4;">
+                        Ganaste 1 <span style="color: #38bdf8; font-weight: bold;">❄️ Congelador</span>. Acumulados: ${congeladores}
+                    </span>
+                </div>
+            </div>
+        `;
+        const nodoToast = toastRecompensa.firstElementChild;
+        document.body.appendChild(nodoToast);
+        setTimeout(() => { nodoToast.style.top = '20px'; }, 100);
+        setTimeout(() => {
+            nodoToast.style.top = '-100px';
+            nodoToast.style.opacity = '0';
+            setTimeout(() => nodoToast.remove(), 500);
+        }, 4500);
         
         // Ejecutamos el renderizador para que pinte el copito de nieve al instante
         pintarWidgetRacha();
@@ -4495,7 +4536,49 @@ function validarRachaPorInactividad() {
             ayer.setDate(ayer.getDate() - 1);
             localStorage.setItem('ultimaFechaRespuesta', ayer.toISOString().split('T')[0]);
 
-            alert(`❄️ ¡Ups! Se te olvidó responder la trivia, pero tu racha fue salvada por un Congelador. Te quedan: ${congeladores}`);
+            // 🎨 REEMPLAZO DEL ALERT DE INACTIVIDAD POR TOAST BLUE PREMIUM
+            const toastSalvado = document.createElement('div');
+            toastSalvado.innerHTML = `
+                <div style="
+                    position: fixed; 
+                    top: -100px; 
+                    left: 50%; 
+                    transform: translateX(-50%); 
+                    background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%); 
+                    border: 2px solid #0284c7; 
+                    box-shadow: 0 10px 25px -5px rgba(3, 105, 161, 0.3); 
+                    border-radius: 16px; 
+                    padding: 16px 24px; 
+                    color: #f8fafc; 
+                    font-family: sans-serif; 
+                    z-index: 99999; 
+                    display: flex; 
+                    align-items: center; 
+                    gap: 14px; 
+                    min-width: 290px; 
+                    max-width: 90vw;
+                    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                ">
+                    <span style="font-size: 28px; filter: drop-shadow(0 0 8px #0284c7);">❄️</span>
+                    <div>
+                        <strong style="display: block; font-size: 13.5px; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
+                            ¡Racha Salvada!
+                        </strong>
+                        <span style="font-size: 12.5px; color: #cbd5e1; display: block; line-height: 1.4;">
+                            Olvidaste la trivia, pero se usó un <span style="color: #38bdf8; font-weight: bold;">Escudo</span>. Te quedan: ${congeladores}
+                        </span>
+                    </div>
+                </div>
+            `;
+            const nodoToast = toastSalvado.firstElementChild;
+            document.body.appendChild(nodoToast);
+            setTimeout(() => { nodoToast.style.top = '20px'; }, 100);
+            setTimeout(() => {
+                nodoToast.style.top = '-100px';
+                nodoToast.style.opacity = '0';
+                setTimeout(() => nodoToast.remove(), 500);
+            }, 4500);
+
             pintarWidgetRacha();
         } else {
             // ❌ Si no tiene congeladores, se destruye la racha como siempre
@@ -4535,7 +4618,7 @@ function pintarWidgetRacha() {
     if (txtMaximo) {
         if (rangoMaximo > 0 && rachaActual < rangoMaximo) {
             txtMaximo.innerText = `🏆 ${rangoMaximo}`;
-            txtMaximo.style.display = 'inline'; // Aquí puedes cambiarlo a 'inline-block' o dejarlo libre si rompe el flex
+            txtMaximo.style.display = 'inline'; 
         } else {
             txtMaximo.style.display = 'none';
         }
@@ -4631,8 +4714,8 @@ function procesarNombreCertificado() {
 
 function ejecutarImpresionLimpia() {
     window.print();
-
 }
+
 function cerrarCertificado() {
     const modal = document.getElementById('certificadoModal');
     if (!modal) return;
