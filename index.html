@@ -1540,16 +1540,24 @@ input::-webkit-outer-spin-button,
             </div>
 
             <div style="display: flex; gap: 10px; background: #0f172a; padding: 8px; border-radius: 8px; justify-content: space-around;">
-                <div style="text-align: center;">
-                    <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Racha</span>
-                    <strong style="font-size: 16px; color: #f97316;" id="widgetRachaActual">🔥 0</strong>
-                </div>
-                <div style="border-left: 1px solid #334155;"></div>
-                <div style="text-align: center;">
-                    <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Récord</span>
-                    <strong style="font-size: 16px; color: #eab308;" id="widgetRangoMaximo">🏆 0</strong>
-                </div>
-            </div>
+    <div style="text-align: center;">
+        <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Racha</span>
+        <strong style="font-size: 16px; color: #f97316;" id="widgetRachaActual">🔥 0</strong>
+    </div>
+    
+    <div style="border-left: 1px solid #334155;"></div>
+    
+    <div style="text-align: center;">
+        <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Escudos</span>
+        <strong style="font-size: 16px; color: #38bdf8;" id="miniWidgetCongeladores">❄️ 0</strong> </div>
+    
+    <div style="border-left: 1px solid #334155;"></div>
+    
+    <div style="text-align: center;">
+        <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Récord</span>
+        <strong style="font-size: 16px; color: #eab308;" id="widgetRangoMaximo">🏆 0</strong>
+    </div>
+</div>
         </div>
 
         <div id="triggerTrivia" class="libro-parpadeante" onclick="abrirTrivia()">📖</div>
@@ -4427,6 +4435,19 @@ function actualizarRachaYProgreso() {
     console.log(`🔥 Racha: ${rachaActual} días. Récord: ${rangoMaximo} días.`);
     pintarWidgetRacha();
 
+// ❄️ ¡AQUÍ VA EL COPIADO INTELIGENTE DEL VIERNES!
+    const diaSemana = new Date().getDay(); // 5 es Viernes
+    if (diaSemana === 5) {
+        let congeladores = parseInt(localStorage.getItem('congeladoresDisponibles')) || 0;
+        congeladores++; 
+        localStorage.setItem('congeladoresDisponibles', congeladores);
+        
+        alert(`🎉 ¡Por terminar la semana con éxito ganaste 1 ❄️ Congelador de Racha! Acumulados: ${congeladores}`);
+        
+        // Ejecutamos el renderizador para que pinte el copito de nieve al instante
+        pintarWidgetRacha();
+    }
+
     const hitos = [10, 25, 50, 75, 120, 180, 250];
     if (hitos.includes(rachaActual) && rachaActual === rangoMaximo) {
         let medallaDatos = { emoji: '🥼', titulo: 'POSTULANTE', borde: '#475569' };
@@ -4462,8 +4483,25 @@ function validarRachaPorInactividad() {
     }
 
     if (diferenciaDias > 1) {
-        localStorage.setItem('rachaActual', 0);
-        console.log("❌ Racha reiniciada a 0 por inactividad.");
+        // ❄️ MODIFICACIÓN AQUÍ: REVISAMOS SI TIENE ESCUDOS GUARDADOS
+        let congeladores = parseInt(localStorage.getItem('congeladoresDisponibles')) || 0;
+
+        if (congeladores > 0) {
+            congeladores--; // Le restamos uno por usarlo
+            localStorage.setItem('congeladoresDisponibles', congeladores);
+            
+            // Re-escribimos la fecha a ayer para que la app no intente borrar la racha de nuevo hoy
+            const ayer = new Date();
+            ayer.setDate(ayer.getDate() - 1);
+            localStorage.setItem('ultimaFechaRespuesta', ayer.toISOString().split('T')[0]);
+
+            alert(`❄️ ¡Ups! Se te olvidó responder la trivia, pero tu racha fue salvada por un Congelador. Te quedan: ${congeladores}`);
+            pintarWidgetRacha();
+        } else {
+            // ❌ Si no tiene congeladores, se destruye la racha como siempre
+            localStorage.setItem('rachaActual', 0);
+            console.log("❌ Racha reiniciada a 0 por inactividad.");
+        }
     }
 }
 
@@ -4472,14 +4510,16 @@ let vigilanteFuegoInicializado = false;
 function pintarWidgetRacha() {
     let rachaActual = parseInt(localStorage.getItem('rachaActual')) || 0;
     let rangoMaximo = parseInt(localStorage.getItem('rangoMaximo')) || 0;
+    let congeladores = parseInt(localStorage.getItem('congeladoresDisponibles')) || 0; 
     
-    const txtRacha = document.getElementById('miniWidgetRacha');
-    const txtMaximo = document.getElementById('miniWidgetMaximo');
+    // 🔍 Ajustados para que enganchen con tus IDs reales del HTML:
+    const txtRacha = document.getElementById('widgetRachaActual'); 
+    const txtMaximo = document.getElementById('widgetRangoMaximo'); 
+    const txtCongeladores = document.getElementById('miniWidgetCongeladores');
     
     const widgetsFuego = document.querySelectorAll('#widgetFuegoRacha');
     const textosFuego = document.querySelectorAll('#rachaTextoBoton');
 
-    // Capturamos si ya respondió hoy para que el vigilante sepa qué hacer
     const hoyStr = new Date().toLocaleDateString();
     const yaRespondioHoy = localStorage.getItem('triviaRespondida') === hoyStr;
 
@@ -4487,10 +4527,15 @@ function pintarWidgetRacha() {
         txtRacha.innerText = `🔥 ${rachaActual}`;
     }
 
+    // ❄️ PINTA EL CONTADOR EN PANTALLA
+    if (txtCongeladores) {
+        txtCongeladores.innerText = `❄️ ${congeladores}`;
+    }
+
     if (txtMaximo) {
         if (rangoMaximo > 0 && rachaActual < rangoMaximo) {
             txtMaximo.innerText = `🏆 ${rangoMaximo}`;
-            txtMaximo.style.display = 'inline';
+            txtMaximo.style.display = 'inline'; // Aquí puedes cambiarlo a 'inline-block' o dejarlo libre si rompe el flex
         } else {
             txtMaximo.style.display = 'none';
         }
@@ -4509,23 +4554,20 @@ function pintarWidgetRacha() {
         texto.innerText = rachaActual;
     });
 
-    // 2. 👁️ EL VIGILANTE MEJORADO (Ahora con cerebro)
+    // 2. 👁️ EL VIGILANTE MEJORADO (Tu lógica original de mutación intacta)
     if (!vigilanteFuegoInicializado && rachaActual > 0) {
         vigilanteFuegoInicializado = true;
 
         const observador = new MutationObserver(() => {
-            // Re-evaluamos la fecha en cada mutación por seguridad
             const fechaActualStr = new Date().toLocaleDateString();
             const respondioEnMutacion = localStorage.getItem('triviaRespondida') === fechaActualStr;
 
             if (respondioEnMutacion) {
-                // Si ya respondió, nos aseguramos que el fuego NO se oculte
                 const fueguitosOcultos = document.querySelectorAll('#widgetFuegoRacha[style*="display: none"]');
                 if (fueguitosOcultos.length > 0) {
                     fueguitosOcultos.forEach(w => w.style.cssText = "display: inline-block !important;");
                 }
             } else {
-                // 🛡️ CANDADO DE SEGURIDAD: Si NO ha respondido, el vigilante obliga al fuego a mantenerse APAGADO
                 widgetsFuego.forEach(w => {
                     if (w.style.display !== 'none') {
                         w.style.cssText = "display: none !important;";
