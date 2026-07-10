@@ -3563,7 +3563,7 @@ function ejecutarImpresionPedidoFisico(datos) {
                     </td>
                     <td style="vertical-align: middle; width: 75%; font-size: 10px; font-weight: bold; color: #000000; line-height: 1.4; text-align: right;">
                         <div style="display: inline-block; text-align: right;">
-                            23 Av. INTERCONEXIÓN NARANJO-MINERVAS 12-91 ZONA 4 DE MIXCO PARQUE INDUSTRIAL LAS TUNAS<br>
+                            23 AVENIDA 12-90 COLONIA EL NARANJO, BODEGA 13, ZONA 4, MIXCO, GUATEMALA<br>
                             Tel: 2254-3188 - info@alpromeh.com
                         </div>
                     </td>
@@ -4284,6 +4284,24 @@ function abrirTrivia() {
     const opcionesBox = document.getElementById('opcionesContainer');
     const feedbackBox = document.getElementById('feedbackContainer');
     const catTxt = document.getElementById('triviaCategoria');
+
+    // 🔥 EL FIX: ACOPLAR LOS DATOS REALES DE RACHA AL MODAL APENAS ABRE
+    let rachaActual = parseInt(localStorage.getItem('rachaActual')) || 0;
+    let rangoMaximo = parseInt(localStorage.getItem('rangoMaximo')) || 0;
+    
+    const miniWidgetRachaModal = document.getElementById('miniWidgetRacha');
+    const miniWidgetMaximoModal = document.getElementById('miniWidgetMaximo');
+
+    if (miniWidgetRachaModal) {
+        miniWidgetRachaModal.innerText = `🔥 ${rachaActual}`;
+    }
+
+    if (miniWidgetMaximoModal && rangoMaximo > 0 && rachaActual < rangoMaximo) {
+        miniWidgetMaximoModal.innerText = `🏆 ${rangoMaximo}`;
+        miniWidgetMaximoModal.style.display = 'inline';
+    } else if (miniWidgetMaximoModal) {
+        miniWidgetMaximoModal.style.display = 'none';
+    }
 
     const coloresCategorias = {
         "LABORATORIO": "#2596be",
