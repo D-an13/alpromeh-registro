@@ -4453,6 +4453,44 @@ function actualizarRachaYProgreso() {
     console.log(`🔥 Racha: ${rachaActual} días. Récord: ${rangoMaximo} días.`);
     pintarWidgetRacha();
 
+    // 🕹️ EFECTO DE VIDEOJUEGO: Sube la racha con delay de 1s y animación Premium
+    const miniWidgetRachaModal = document.getElementById('miniWidgetRacha');
+    if (miniWidgetRachaModal) {
+        setTimeout(() => {
+            // 1. Inyectamos los estilos de la animación de subida de nivel si no existen
+            if (!document.getElementById('cssEfectoRacha')) {
+                const estilo = document.createElement('style');
+                estilo.id = 'cssEfectoRacha';
+                estilo.innerHTML = `
+                    @keyframes rachaLevelUp {
+                        0% { transform: scale(1); filter: drop-shadow(0 0 0px #eab308); }
+                        30% { transform: scale(1.6) rotate(-10deg); color: #facc15; filter: drop-shadow(0 0 15px #eab308); font-weight: 900; }
+                        50% { transform: scale(1.4) rotate(10deg); color: #f97316; filter: drop-shadow(0 0 25px #f97316); }
+                        70% { transform: scale(1.5) rotate(0deg); }
+                        100% { transform: scale(1); filter: drop-shadow(0 0 0px #eab308); }
+                    }
+                    .animacion-levelup {
+                        display: inline-block;
+                        animation: rachaLevelUp 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+                    }
+                `;
+                document.head.appendChild(estilo);
+            }
+
+            // 2. Cambiamos el número en vivo
+            miniWidgetRachaModal.innerText = `🔥 ${rachaActual}`;
+
+            // 3. Activamos el efecto visual de videojuego
+            miniWidgetRachaModal.classList.add('animacion-levelup');
+
+            // 4. Limpiamos la clase cuando termine la animación para que pueda volver a usarse
+            setTimeout(() => {
+                miniWidgetRachaModal.classList.remove('animacion-levelup');
+            }, 800);
+
+        }, 1000); // ⏱️ El retraso exacto de 1 segundo que pediste
+    }
+
 // ❄️ ¡AQUÍ VA EL COPIADO INTELIGENTE DEL VIERNES!
     const diaSemana = new Date().getDay(); // 5 es Viernes
     if (diaSemana === 5) {
