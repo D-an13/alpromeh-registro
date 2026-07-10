@@ -1473,6 +1473,25 @@ input::-webkit-outer-spin-button,
 #modalQuiniela.modal-saliendo > div {
     transform: scale(0.75) !important;
 }
+
+/* ✨ ANIMACIONES DE VIDEOJUEGO PARA MODALES (Zoom In / Zoom Out) */
+@keyframes modalZoomIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes modalZoomOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.85); opacity: 0; }
+}
+
+.animacion-zoom-in {
+    animation: modalZoomIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+.animacion-zoom-out {
+    animation: modalZoomOut 0.18s ease-in-out forwards !important;
+}
 </style>
 </head>
 <body>
@@ -1483,10 +1502,18 @@ input::-webkit-outer-spin-button,
 <button class="theme-switch" onclick="toggleTheme()">🌓</button>
     <div id="toast"></div>
 
-    <div id="modalConfirm" class="modal-overlay">
-        <div class="modal-content" id="modalFrame">
+   <div id="modalConfirm" class="modal-overlay" style="display: none;">
+        <div class="modal-content" id="modalFrame" style="transition: all 0.2s ease;">
             <h3 style="margin-top:0;" id="modalTitle">¿Anular Orden?</h3>
             <p id="modalMsg">¿Estás seguro que deseas eliminar esta Orden de Compra?</p>
+            
+            <div id="contenedorMotivo" style="display: none; text-align: left; margin: 20px 0 15px 0; width: 100%;">
+                <label for="motivoAnulacion" style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Motivo de la Anulación:
+                </label>
+                <textarea id="motivoAnulacion" placeholder="Ej: Error de precio, cliente canceló, duplicada..." rows="3" style="width: 100%; box-sizing: border-box; padding: 12px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 13px; resize: none; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#dc2626'"></textarea>
+            </div>
+
             <div class="modal-btns">
                 <button class="btn-modal btn-cancelar" onclick="cerrarModal()">CANCELAR</button>
                 <button id="btnConfirmarAnular" class="btn-modal btn-confirmar">ACEPTAR</button>
@@ -2318,62 +2345,107 @@ window.onload = () => {
 actualizarContadores()
 };
 
-        function abrirModalAnular(numOrden) {
+      function abrirModalAnular(numOrden) {
             const modal = document.getElementById('modalConfirm');
             const frame = document.getElementById('modalFrame');
             const title = document.getElementById('modalTitle');
             const msg = document.getElementById('modalMsg');
             const btnSi = document.getElementById('btnConfirmarAnular');
+            const contenedorMotivo = document.getElementById('contenedorMotivo');
+            const inputMotivo = document.getElementById('motivoAnulacion');
             
             const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
             const esAnulada = item && item.responsable === "ANULADA";
 
+            // ✨ Limpiamos clases de animación viejas antes de abrir
+            frame.classList.remove('animacion-zoom-out');
+
             if (esAnulada) {
+                // Ocultamos el campo de texto al recuperar
+                contenedorMotivo.style.display = 'none';
+
                 title.innerText = "¿Recuperar Orden?";
                 title.style.color = "#10b981";
                 frame.style.borderTopColor = "#10b981";
                 msg.innerHTML = `La Orden <b>${numOrden}</b> está anulada.<br>¿Deseas restaurarla al sistema?`;
                 
-                // 🟢 CONFIGURACIÓN RECOVERY: Asignamos clase limpia
                 btnSi.innerText = "RECUPERAR ORDEN";
-                btnSi.className = "btn-modal-plano btn-modal-recuperar"; // <- Limpio de styles nativos
-                btnSi.style.border = "none";
-                btnSi.style.boxShadow = "none";
-                btnSi.style.transform = "none";
-                btnSi.style.textShadow = "none";
+                btnSi.className = "btn-modal-plano btn-modal-recuperar";
+                btnSi.style.border = "none"; btnSi.style.boxShadow = "none"; btnSi.style.transform = "none"; btnSi.style.textShadow = "none";
                 
                 btnSi.onclick = function() { recuperarOrden(numOrden); cerrarModal(); };
             } else {
+                // Muestra el campo de texto y lo limpia para la nueva anulación
+                contenedorMotivo.style.display = 'block';
+                inputMotivo.value = '';
+
                 title.innerText = "¿Anular Orden?";
                 title.style.color = "#dc2626";
                 frame.style.borderTopColor = "#dc2626";
                 msg.innerHTML = `¿Estás seguro que deseas anular la<br>Orden de Compra <b>${numOrden}</b>?`;
                 
-                // 🚫 CONFIGURACIÓN ANULAR: Asignamos clase limpia
                 btnSi.innerText = "ANULAR ORDEN";
-                btnSi.className = "btn-modal-plano btn-modal-anular"; // <- Limpio de styles nativos
-                btnSi.style.border = "none";
-                btnSi.style.boxShadow = "none";
-                btnSi.style.transform = "none";
-                btnSi.style.textShadow = "none";
+                btnSi.className = "btn-modal-plano btn-modal-anular";
+                btnSi.style.border = "none"; btnSi.style.boxShadow = "none"; btnSi.style.transform = "none"; btnSi.style.textShadow = "none";
                 
-                btnSi.onclick = function() { anularOrden(numOrden); cerrarModal(); };
+                // Pasamos el inputMotivo a la función para validar que no vaya vacío
+                btnSi.onclick = function() { 
+                    const motivoTexto = inputMotivo.value.trim();
+                    if (motivoTexto === "") {
+                        alert("❌ Debes escribir un motivo para poder anular la orden.");
+                        inputMotivo.focus();
+                        return;
+                    }
+                    anularOrden(numOrden, motivoTexto); 
+                    cerrarModal(); 
+                };
             }
+            
+            // 🎬 Mostramos el overlay e inyectamos el efecto Zoom In
             modal.style.display = 'flex';
+            frame.classList.add('animacion-zoom-in');
+            
+            // Auto-focus al cuadro de texto si se va a anular
+            if (!esAnulada && inputMotivo) {
+                setTimeout(() => inputMotivo.focus(), 50);
+            }
         }
 
-        function cerrarModal() { document.getElementById('modalConfirm').style.display = 'none'; }
+        function cerrarModal() { 
+            const modal = document.getElementById('modalConfirm');
+            const frame = document.getElementById('modalFrame');
+            
+            if (frame) {
+                // 🔄 Reemplazamos la animación por la de salida (Zoom Out)
+                frame.classList.remove('animacion-zoom-in');
+                frame.classList.add('animacion-zoom-out');
+            }
+            
+            // ⏱️ Esperamos 180ms a que termine el efecto visual antes de apagar el display
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 180);
+        }
 
-        function anularOrden(numOrden) {
+      function anularOrden(numOrden, motivo) {
             const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
-            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
-            item.movimiento = "ANULADA 🚫";
+            
+            // 📅 Generamos la fecha del día del cambio
+            const hoy = new Date();
+            const fechaFormateada = hoy.toLocaleDateString('es-GT', {day: '2-digit', month: '2-digit', year: 'numeric'});
+            
+            // 🔥 Guardamos todo el paquete en movimiento: "10/07/2026 - Duplicada por Carmen"
+            item.movimiento = `${fechaFormateada} - ${motivo}`; 
+            
             item.ultimoMov = "ANULADA";
             item.responsable = "ANULADA";
             item.despachado = false;
-            item.hora = horaActual;
+            // item.hora = horaActual; // 👈 Lo dejamos intacto o que el servidor lo maneje para que no falle la actualización
+            
             save();
             fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+            
+            renderTable(); 
             showToast("🚫 Orden " + numOrden + " anulada.");
         }
 
@@ -2533,7 +2605,12 @@ function renderTable() {
                     <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
                     <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
                 </select>
-                <br><small style="opacity:0.8; font-weight:normal;">🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b></small>
+<br><small style="opacity:0.8; font-weight:normal;">
+                    ${esAnulada 
+                        ? `📅 <b>${item.movimiento || 'Sin motivo registrado'}</b>` 
+                        : `🕒 ${item.hora} <b>${item.movimiento ? ' - ' + item.movimiento : ''}${textoExtra}</b>`
+                    }
+                </small>
             </td>
             <td style="text-align:center;">${esAnulada ? '' : contenidoColumnaListo}</td>
         `;
