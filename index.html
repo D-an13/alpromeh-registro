@@ -1617,6 +1617,37 @@ input::-webkit-outer-spin-button,
         transform: translateY(0);
     }
 }
+
+/* ✨ TEXTO FLOTANTE DE MONEDAS GANADAS */
+.alpro-coin-float-text {
+    position: fixed;
+    font-weight: 900;
+    font-size: 20px;
+    color: #eab308; /* Dorado */
+    text-shadow: 0 0 10px rgba(234, 179, 8, 0.6), 0 2px 4px rgba(0,0,0,0.3);
+    pointer-events: none;
+    z-index: 100000;
+    animation: flotarTextoArriba 1.2s ease-out forwards;
+}
+
+@keyframes flotarTextoArriba {
+    0% { 
+        transform: translateY(0) scale(0.7); 
+        opacity: 0; 
+    }
+    15% { 
+        transform: translateY(-20px) scale(1.2);
+        opacity: 1; 
+    }
+    65% {
+        transform: translateY(-50px) scale(1.05);
+        opacity: 1;
+    }
+    100% { 
+        transform: translateY(-65px) scale(1); 
+        opacity: 0; 
+    }
+}
 </style>
 </head>
 <body>
@@ -2983,12 +3014,39 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             registrarRespaldoPedidoHistorial(payload);
         }
 
-        // 🪙 2. RECOMPENSA INSTANTÁNEA
+    // 🪙 2. RECOMPENSA INSTANTÁNEA (CON PROBABILIDADES PONDERADAS)
         if (!yaExiste) {
             showToast("✅ OC. " + num + " guardada correctamente");
-            if (typeof animarMonedasAlpro === "function") {
-                animarMonedasAlpro(); 
-            }
+            
+            // ⏳ Esperamos 3 segundos completos para que termine el proceso de impresión
+            setTimeout(() => {
+                if (typeof animarMonedasAlpro === "function") {
+                    
+                    // 🎲 TÓMBOLA DE PREMIOS (20 elementos en total)
+                    // Ajustamos cuántas veces aparece cada número para controlar su probabilidad:
+                    const bolsaPremios = [
+                        3, 3, 3,          // 15% de probabilidad (Normal)
+                        4, 4, 4, 4,       // 20% de probabilidad (Normal)
+                        5, 5, 5, 5, 5,    // 25% de probabilidad (¡Muy Común! 🟢)
+                        6, 6, 6, 6, 6,    // 25% de probabilidad (¡Muy Común! 🟢)
+                        7, 7,             // 10% de probabilidad (Raro 🔵)
+                        8                 // 5% de probabilidad  (¡Ultra Raro / Legendario! 🏆)
+                    ]; 
+                    
+                    // Al elegir uno al azar de esta lista, el sistema respetará las probabilidades
+                    const suerte = bolsaPremios[Math.floor(Math.random() * bolsaPremios.length)];
+                    
+                    // 📝 Monitoreo en consola para que verifiques los drops
+                    console.log(`🎲 ¡Suerte del usuario! Sacó un drop de ${suerte} Alprocoins.`);
+                    
+                    // ✨ Creamos el texto flotante "+X 🪙"
+                    crearTextoFlotanteMonedas(suerte);
+                    
+                    // 🚀 Disparamos la animación física de las moneditas
+                    animarMonedasAlpro(suerte); 
+                }
+            }, 3000); 
+            
         } else {
             showToast("✅ OC. " + num + " actualizada correctamente");
         }
@@ -6239,7 +6297,7 @@ function configurarBuscadorPredictivo(inputId, contenedorId, callbackDatos) {
     });
 }
 
-function animarMonedasAlpro() {
+function animarMonedasAlpro(cantidadMonedas) {
     const boton = document.getElementById('btnGuardarRegistro'); 
     const contador = document.getElementById('contadorMonedasCompu');
     
@@ -6251,12 +6309,13 @@ function animarMonedasAlpro() {
     const xOrigen = rectBoton.left + rectBoton.width / 2;
     const yOrigen = rectBoton.top;
 
-    for (let i = 0; i < 5; i++) {
+    // 🚀 El ciclo ahora corre exactamente la cantidad de monedas ganadas (3, 4, 6, 7 u 8)
+    for (let i = 0; i < cantidadMonedas; i++) {
         setTimeout(() => {
             const moneda = document.createElement('div');
             moneda.className = 'alprocoin-flying';
             moneda.innerText = '🪙';
-            moneda.style.position = 'fixed'; // Asegura que se posicione respecto al viewport
+            moneda.style.position = 'fixed'; 
             moneda.style.zIndex = '99999';
             moneda.style.pointerEvents = 'none';
             moneda.style.left = `${xOrigen}px`;
@@ -6266,7 +6325,6 @@ function animarMonedasAlpro() {
             const yImpulso = -(Math.random() * 60 + 50);  
             const yCaida = yImpulso + (Math.random() * 40 + 70); 
 
-            // Recalcular destino dinámicamente respecto al origen de cada moneda
             const xDestino = rectContador.left - xOrigen + 10;
             const yDestino = rectContador.top - yOrigen + 5;
 
@@ -6276,33 +6334,72 @@ function animarMonedasAlpro() {
             moneda.style.setProperty('--x-destino', `${xDestino}px`);
             moneda.style.setProperty('--y-destino', `${yDestino}px`);
 
-            // Fase 1: Expulsión física y rebote
             moneda.style.animation = `expulsarYRebotar 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
             document.body.appendChild(moneda);
 
-            // Fase 2: Atracción magnética hacia el contador (ejecutada tras terminar la fase 1)
             setTimeout(() => {
                 moneda.style.animation = `magnetizarAlContador 0.7s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards`;
                 
-                // Fase 3: Limpieza y actualización del contador
                 setTimeout(() => {
                     moneda.remove();
-                    // Al llegar la última moneda (índice 4), disparamos la suma y el pulso
-                    if (i === 4) {
+                    // Al llegar la última moneda (índice cantidadMonedas - 1), disparamos la suma digital
+                    if (i === (cantidadMonedas - 1)) {
                         contador.classList.add('contador-pulse');
                         setTimeout(() => contador.classList.remove('contador-pulse'), 300);
-                        sumarAlprocoinsLocales(); 
+                        sumarAlprocoinsLocales(cantidadMonedas); // <-- Le pasamos el valor para sumar
                     }
-                }, 700); // Duración de magnetizarAlContador
-            }, 800); // Duración de expulsarYRebotar
+                }, 700); 
+            }, 800); 
 
-        }, i * 120); // Retraso secuencial entre monedas ligeramente optimizado
+        }, i * 120); 
     }
 }
 
-function sumarAlprocoinsLocales() {
+function crearTextoFlotanteMonedas(cantidad) {
+    const boton = document.getElementById('btnGuardarRegistro');
+    if (!boton) return;
+
+    const rectBoton = boton.getBoundingClientRect();
+    const textoFlotante = document.createElement('div');
+    textoFlotante.innerText = `+${cantidad} 🪙`;
+    
+    // 🛠️ BLINDAJE INLINE CON TONOS CÁLIDOS Y ELESTILO DE VIDEOJUEGO
+    textoFlotante.style.position = 'fixed';
+    textoFlotante.style.fontWeight = '900';
+    textoFlotante.style.fontSize = '20px'; 
+    
+    // 🎨 Color dorado/ámbar con borde de contraste en anaranjado oscuro/terracota
+    textoFlotante.style.color = '#fbbf24'; // Dorado brillante (Amber 400)
+    
+    // El borde ahora usa un hermoso anaranjado quemado (#9a3412) en lugar de negro puro
+    textoFlotante.style.textShadow = `
+        -1.5px -1.5px 0 #9a3412,  
+         1.5px -1.5px 0 #9a3412,
+        -1.5px  1.5px 0 #9a3412,
+         1.5px  1.5px 0 #9a3412,
+         0px  3px 8px rgba(154, 52, 18, 0.4)
+    `; 
+    
+    textoFlotante.style.pointerEvents = 'none';
+    textoFlotante.style.zIndex = '9999999'; 
+    
+    // Posicionamiento inicial centrado y limpio
+    textoFlotante.style.left = `${rectBoton.left + rectBoton.width / 2 - 25}px`;
+    textoFlotante.style.top = `${rectBoton.top - 40}px`; 
+    
+    // Animación fluida
+    textoFlotante.style.animation = 'flotarTextoArriba 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards';
+    
+    document.body.appendChild(textoFlotante);
+    
+    setTimeout(() => {
+        textoFlotante.remove();
+    }, 1600);
+}
+
+function sumarAlprocoinsLocales(monedasGanadas) {
     let actuales = parseInt(localStorage.getItem('alprocoins')) || 0;
-    let nuevoTotal = actuales + 5;
+    let nuevoTotal = actuales + monedasGanadas;
     localStorage.setItem('alprocoins', nuevoTotal);
 
     // Animación de incremento del contador digital paso a paso
@@ -6617,7 +6714,7 @@ function sumarAlprocoinsLocales() {
 <script>
 // 🛒 1. ESTADO GLOBAL (Variables limpias y únicas)
 let carrito = {}; 
-let tiendaCargadaPorPrimeraVez = false; // <-- 🚩 Bandera para controlar la animación una sola vez
+let tiendaCargadaPorPrimeraVez = false;
 
 const premios = [
     { id: 1, nombre: "Gomitas", precio: 300, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM" },
