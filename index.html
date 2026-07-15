@@ -1492,6 +1492,131 @@ input::-webkit-outer-spin-button,
 .animacion-zoom-out {
     animation: modalZoomOut 0.18s ease-in-out forwards !important;
 }
+
+/* 🪙 CONTENEDOR DE MONEDAS VOLADORAS */
+.alprocoin-flying {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    background: #eab308;
+    border: 2px solid #fef08a;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+    color: #854d0e;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* 🚀 ANIMACIÓN 1: IMPULSO Y CAÍDA CON REBOTE (0s a 1s) */
+@keyframes expulsarYRebotar {
+    0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+    15% { opacity: 1; }
+    40% { transform: translate(var(--x-impulso), var(--y-impulso)) scale(1.1); }
+    70% { transform: translate(var(--x-impulso), var(--y-caida)) scale(1); }
+    85% { transform: translate(var(--x-impulso), calc(var(--y-caida) - 15px)) scale(0.95); } /* Rebote ligero */
+    100% { transform: translate(var(--x-impulso), var(--y-caida)) scale(1); opacity: 1; }
+}
+
+/* 🧲 ANIMACIÓN 2: TRASLADO HACIA EL CONTADOR (1s a 2s) */
+@keyframes magnetizarAlContador {
+    0% { transform: translate(var(--x-impulso), var(--y-caida)) scale(1); opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translate(var(--x-destino), var(--y-destino)) scale(0.3); opacity: 0; }
+}
+
+/* ✨ EFECTO SCALE PARA EL CONTADOR TOP */
+.contador-pulse {
+    animation: pulseContador 0.3s ease-in-out;
+}
+@keyframes pulseContador {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); background-color: #fef08a; }
+    100% { transform: scale(1); }
+}
+
+/* ⚡ BOTÓN CON BORDE ELÉCTRICO ANIMADO */
+.boton-electrico-contenedor {
+    position: relative;
+    width: 170px;
+    height: 38px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 1px; /* Grosor del borde */
+    background: rgba(255, 255, 255, 0.05);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.boton-electrico-contenedor:hover {
+    transform: scale(1.05);
+}
+
+/* El haz de luz eléctrica que gira */
+.boton-electrico-contenedor::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 30%,
+        #f59e0b 50%,
+        #ea580c 70%,
+        transparent 100%
+    );
+    animation: rotacionElectrica 2s linear infinite;
+    z-index: 1;
+}
+
+/* El fondo interno que tapa el centro para simular el borde transparente */
+.boton-electrico-interno {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #f8fafc; /* Color de fondo de tu barra del carrito */
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 11px;
+    color: #ea580c;
+    z-index: 2;
+    text-shadow: 0 0 8px rgba(234, 88, 12, 0.15);
+    transition: background 0.2s, color 0.2s;
+}
+
+.boton-electrico-contenedor:hover .boton-electrico-interno {
+    background: #ffffff;
+    color: #f59e0b;
+}
+
+/* Animación de rotación infinita */
+@keyframes rotacionElectrica {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 🔔 ANIMACIÓN PARA EL BANNER INFORMATIVO */
+@keyframes slideDownBanner {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 </style>
 </head>
 <body>
@@ -2342,7 +2467,19 @@ window.onload = () => {
         console.log("Sincronizando automáticamente...");
         sincronizarSilencioso(); 
     }, 20000); 
-actualizarContadores()
+
+    actualizarContadores();
+
+    // 🪙 CARGAR EL SALDO ACUMULADO DE ALPROCOINS EN PANTALLA
+    const inputMonedas = document.getElementById('numero-alprocoins');
+    if (inputMonedas) {
+        inputMonedas.innerText = localStorage.getItem('alprocoins') || 0;
+    }
+
+    // 🛒 DIBUJAR LA TIENDA DE TEMPORADA AUTOMÁTICAMENTE
+    if (typeof renderizarTiendaAlpro === "function") {
+        renderizarTiendaAlpro();
+    }
 };
 
       function abrirModalAnular(numOrden) {
@@ -2703,13 +2840,13 @@ document.addEventListener('DOMContentLoaded', window.iniciarMaquinaEscribir);
 document.getElementById('formOrdenes').onsubmit = async function(e) {
     e.preventDefault();
     
-    const btnGuardar = document.querySelector('.btn-guardar');
+    const btnGuardar = document.getElementById('btnGuardarRegistro'); 
     const formCard = document.getElementById('contenedorForm');
     
     // --- ESCUDO ANTI-DUPLICADOS ---
     if (btnGuardar.disabled) return; 
 
-    // 🔥 BLINDAJE INMEDIATO: Apagamos cualquier intento de auto-sync en el milisegundo en que dan clic
+    // 🔥 BLINDAJE INMEDIATO
     guardandoAhora = true;
 
     // --- EL FRENO DE MANO AQUÍ ---    
@@ -2721,7 +2858,6 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         const quienLaTiene = ordenPrevia.responsable;
         const estadoActual = ordenPrevia.despachado ? "LISTA ✅" : "PENDIENTE ⏳";
         
-        // Metemos el texto en tu nuevo modal
         document.getElementById('textoAlertaDuplicado').innerHTML = `
             La OC. <b>${num}</b> ya fue ingresada previamente.<br><br>
             <div style="text-align: left; background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px;">
@@ -2731,23 +2867,19 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             ¿De verdad quieres sobreescribirla o actualizarla?
         `;
 
-        // Activamos el modal con Flex y quitamos la clase de salida
         const modal = document.getElementById('modalConfirmDuplicado');
         const contenido = modal.querySelector('.alpro-content');
         modal.style.display = 'flex';
         contenido.classList.remove('salida');
 
-        // La promesa se queda esperando a que den clic a "CANCELAR" o "SOBREESCRIBIR"
         const respuestaUsuario = await new Promise((resolve) => {
             document.getElementById('btnAceptarDuplicado').onclick = () => resolve(true);
             document.getElementById('btnCancelarDuplicado').onclick = () => resolve(false);
         });
 
-        // Metemos animación de salida (Zoom Out) y ocultamos a los 200ms
         contenido.classList.add('salida');
         setTimeout(() => { modal.style.display = 'none'; }, 200);
 
-        // Si eligieron "CANCELAR", liberamos el flujo y salimos de inmediato
         if (!respuestaUsuario) {
             guardandoAhora = false;
             return;
@@ -2765,11 +2897,10 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
     btnGuardar.style.opacity = "0.5";
     btnGuardar.style.cursor = "not-allowed";
 
-    // Validamos el Modo Pedido de forma ultra segura antes de armar el payload
+    // Validamos el Modo Pedido de forma ultra segura
     if (modoPedidoActivo && (!articulosPedidoActual || articulosPedidoActual.length === 0)) {
         showToast("⚠️ Agrega al menos un artículo en el Paso 3", true);
         
-        // Liberamos el botón para que no se quede trabado
         btnGuardar.disabled = false;
         btnGuardar.innerText = "GUARDAR REGISTRO";
         btnGuardar.style.opacity = "1";
@@ -2784,9 +2915,9 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
     const fechaARegistrar = yaExiste ? ordenPrevia.fecha : fechaActual;
     const horaARegistrar = yaExiste ? ordenPrevia.hora : horaActual;
 
-    // Limpiamos versión vieja si existe para evitar duplicados en la lista local
     datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
 
+    // 💡 SOLUCIÓN RECTIFICADA: Usamos 'detallesPedido' para que calce exactamente con tu función de impresión
     const payload = {
         orden: num, 
         fecha: fechaARegistrar, 
@@ -2800,14 +2931,12 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         ultimoMov: "Ingreso/Edición: " + document.getElementById('persona').value,
         
         producto: modoPedidoActivo ? "📄 HOJA DE PEDIDO GENERADA" : productoTemporal,
-
         tipoCompra: modoPedidoActivo ? document.querySelector('input[name="tipoContratacion"]:checked').value : "Normal",
         nog: modoPedidoActivo ? document.getElementById('nogInput').value.trim() : "",
         observaciones: modoPedidoActivo ? document.getElementById('observacionesPedido').value.trim() : "",
         detallesPedido: modoPedidoActivo ? JSON.stringify(articulosPedidoActual) : ""
     };
 
-    // Freno para órdenes normales sin producto seleccionado
     if (!modoPedidoActivo && (!productoTemporal || productoTemporal.trim() === "")) {
         btnGuardar.disabled = false;
         btnGuardar.innerText = "GUARDAR REGISTRO";
@@ -2831,15 +2960,21 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         return; 
     }
 
-    // Guardamos localmente antes del fetch para asegurar que la data no se pierda jamás en la compu de ellas
-    datosLocales.unshift(payload);
+   datosLocales.unshift(payload);
     save(); 
 
-    // === ENVIAMOS A GOOGLE SHEETS DENTRO DE UN BLOQUE TRY SEGURO ===
+    // === ENVIAMOS A GOOGLE SHEETS EN SEGUNDO PLANO (SIN AWAIT) ===
+    // 🚀 Se ejecuta en el fondo. Si falla, el .catch interno lo maneja sin trabar nada.
+    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+        .catch(err => {
+            console.error("Error asíncrono en Sheets:", err);
+            // Si quieres avisar discretamente en pantalla sin bloquear el flujo:
+            // showToast("⚠️ Error al subir a la nube, guardado localmente.", true);
+        });
+    
+    // === FLUJO INSTANTÁNEO EN PRIMER PLANO ===
     try {
-        await fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-        
-        // Ejecuciones de éxito
+        // 🖨️ 1. MANDAMOS A IMPRIMIR DE INMEDIATO
         if (modoPedidoActivo) {
             ejecutarImpresionPedidoFisico(payload);
         }
@@ -2848,9 +2983,19 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             registrarRespaldoPedidoHistorial(payload);
         }
 
-        // Limpieza de interfaz original
+        // 🪙 2. RECOMPENSA INSTANTÁNEA
+        if (!yaExiste) {
+            showToast("✅ OC. " + num + " guardada correctamente");
+            if (typeof animarMonedasAlpro === "function") {
+                animarMonedasAlpro(); 
+            }
+        } else {
+            showToast("✅ OC. " + num + " actualizada correctamente");
+        }
+
+        // 🧹 3. LIMPIEZA INMEDIATA
         document.getElementById('formOrdenes').reset(); 
-        setFechaHoy(); 
+        setFechaHoy();
         productoTemporal = ""; 
         const inputProd = document.getElementById('inputProducto');
         if (inputProd) inputProd.value = ""; 
@@ -2859,7 +3004,6 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         document.getElementById('btnProducto').innerText = "📝";
         aplicarColorUnico(document.getElementById('responsableSelect'));
         
-        // Vaciamos los artículos locales y refrescamos la vista
         articulosPedidoActual = [];
         if (typeof renderizarTablaArticulos === "function") renderizarTablaArticulos();
 
@@ -2869,61 +3013,56 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             if (typeof alternarModoPedido === "function") alternarModoPedido();
         }
 
-        if(!yaExiste) showToast("✅ OC. " + num + " guardada correctamente");
-
     } catch (err) {
-        console.error("Error crítico al guardar:", err);
-        showToast("❌ Error de comunicación, los datos se guardaron localmente.", true);
+        console.error("Error crítico en la interfaz:", err);
     } finally {
-        // El botón vuelve a la vida pase lo que pase tras los 2 segundos para no trabar la app
+        // El freno de 2 segundos para reactivar el botón se queda aquí firme
         setTimeout(() => {
             if (formCard) formCard.classList.remove('resaltar-actualizacion');
             btnGuardar.disabled = false;
             btnGuardar.innerText = "GUARDAR REGISTRO";
             btnGuardar.style.opacity = "1";
             btnGuardar.style.cursor = "pointer";
-            
-            // Liberamos el freno para que las sincronizaciones automáticas vuelvan a activarse limpiamente
             guardandoAhora = false; 
         }, 2000); 
     }
 };
 
-        function toggle(orden) {
-            const item = datosLocales.find(d => d.orden === orden);
-            item.despachado = !item.despachado;
-            if (item.despachado) {
-                item.ultimaHora = item.hora; 
-                item.movimiento = "LISTO ✅";
-                item.hora = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
-            } else {
-                item.movimiento = item.ultimoMov || ("Ingresada por " + item.pers);
-                item.hora = item.ultimaHora || item.hora;
+function toggle(orden) {
+    const item = datosLocales.find(d => d.orden.toString() === orden.toString());
+    if (!item) return;
+    item.despachado = !item.despachado;
+    if (item.despachado) {
+        item.ultimaHora = item.hora; 
+        item.movimiento = "LISTO ✅";
+        item.hora = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+    } else {
+        item.movimiento = item.ultimoMov || ("Ingresada por " + item.pers);
+        item.hora = item.ultimaHora || item.hora;
+    }
+    item.miCambioReciente = Date.now();
+    save();
+    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
 }
-item.miCambioReciente = Date.now();
-            save();
-fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
-        }
 
-        function cambiarResp(orden, nuevo) {
-            const item = datosLocales.find(d => d.orden === orden);
-            const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
-            const track = "De: " + item.responsable + " Para: " + nuevo;
-            item.responsable = nuevo;
-            item.movimiento = track; 
-            item.ultimoMov = track; 
-            item.hora = horaActual;
-            item.ultimaHora = horaActual; 
-            item.miCambioReciente = Date.now();
-            save();
-            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
-        }
+function cambiarResp(orden, nuevo) {
+    const item = datosLocales.find(d => d.orden.toString() === orden.toString());
+    if (!item) return;
+    const horaActual = new Date().toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit', hour12: false});
+    const track = "De: " + item.responsable + " Para: " + nuevo;
+    item.responsable = nuevo;
+    item.movimiento = track; 
+    item.ultimoMov = track; 
+    item.hora = horaActual;
+    item.ultimaHora = horaActual; 
+    item.miCambioReciente = Date.now();
+    save();
+    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+}
 
-       function save() {
-    // 💾 El localStorage se queda EXACTAMENTE IGUAL para no perder tu data
+function save() {
     localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
     renderTable();
-    
     if (typeof actualizarContadores === "function") {
         actualizarContadores();
     }
@@ -2931,16 +3070,15 @@ fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) 
 
 async function sincronizar() {
     const btn = document.getElementById('btnSync');
+    if (!btn) return;
     btn.innerText = "Sincronizando...";
     btn.disabled = true;
     try {
         const r = await fetch(URL_SCRIPT);
         const d = await r.json();
         if(Array.isArray(d)) { 
-            // 🛡️ APLICAMOS EL MISMO ESCUDO QUE EN EL SILENCIOSO
             const datosMezclados = d.map(ordenGoogle => {
-                const local = datosLocales.find(l => l.orden === ordenGoogle.orden);
-                // Si lo editaste hace menos de 15 segundos, protegemos tu versión local
+                const local = datosLocales.find(l => l.orden.toString() === ordenGoogle.orden.toString());
                 if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
                     return local; 
                 }
@@ -2950,10 +3088,7 @@ async function sincronizar() {
             datosLocales = datosMezclados; 
             save();
 
-            // 2. ÉXITO: Aplicamos el pulso verde
             btn.classList.add('animar-pulso');
-            
-            // Esperamos un segundo para que se vea el efecto antes de volver al original
             setTimeout(() => {
                 btn.classList.remove('animar-pulso');
                 btn.innerText = "Sincronizar";
@@ -3137,8 +3272,11 @@ async function chequearActualizacionAutomatica() {
 // Ejecutar cada 2 minutos
 setInterval(chequearActualizacionAutomatica, 120000);
 
+
 // Primera ejecución al cargar para tener la huella inicial
 chequearActualizacionAutomatica();
+
+renderizarTiendaAlpro();
 
 // --- FUNCIÓN PARA MOSTRAR/OCULTAR FORMULARIO CON EFECTOS ---
 function toggleForm() {
@@ -5443,6 +5581,17 @@ function eliminarArticuloPedido(index) {
     renderizarTablaArticulos(); 
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    // ⏱️ Esperamos 1 segundo a que la app cargue y se estabilice en gris
+    setTimeout(() => {
+        const checkSwitch = document.getElementById('switchModoPedido');
+        if (checkSwitch) {
+            checkSwitch.checked = true; // 🟢 Aquí pasa a verde automáticamente
+            alternarModoPedido();       // 🚀 Lanza el flujo, los pasos y los zooms elásticos
+        }
+    }, 1000);
+});
+
 // ⚽ MOTOR DE QUINIELA MUNDIALISTA MULTI-PARTIDO (CON ANTICHEAT DE HORA GT)
 // Base de datos expandible con los 104 partidos segmentados por fase e hitos de bloqueo en Hora de Guatemala (GMT-6)
 const LISTA_PARTIDOS = [
@@ -6088,6 +6237,884 @@ function configurarBuscadorPredictivo(inputId, contenedorId, callbackDatos) {
             contenedor.style.display = "none";
         }
     });
+}
+
+function animarMonedasAlpro() {
+    const boton = document.getElementById('btnGuardarRegistro'); 
+    const contador = document.getElementById('contadorMonedasCompu');
+    
+    if (!boton || !contador) return;
+
+    const rectBoton = boton.getBoundingClientRect();
+    const rectContador = contador.getBoundingClientRect();
+    
+    const xOrigen = rectBoton.left + rectBoton.width / 2;
+    const yOrigen = rectBoton.top;
+
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            const moneda = document.createElement('div');
+            moneda.className = 'alprocoin-flying';
+            moneda.innerText = '🪙';
+            moneda.style.position = 'fixed'; // Asegura que se posicione respecto al viewport
+            moneda.style.zIndex = '99999';
+            moneda.style.pointerEvents = 'none';
+            moneda.style.left = `${xOrigen}px`;
+            moneda.style.top = `${yOrigen}px`;
+
+            const xImpulso = (Math.random() - 0.5) * 140; 
+            const yImpulso = -(Math.random() * 60 + 50);  
+            const yCaida = yImpulso + (Math.random() * 40 + 70); 
+
+            // Recalcular destino dinámicamente respecto al origen de cada moneda
+            const xDestino = rectContador.left - xOrigen + 10;
+            const yDestino = rectContador.top - yOrigen + 5;
+
+            moneda.style.setProperty('--x-impulso', `${xImpulso}px`);
+            moneda.style.setProperty('--y-impulso', `${yImpulso}px`);
+            moneda.style.setProperty('--y-caida', `${yCaida}px`);
+            moneda.style.setProperty('--x-destino', `${xDestino}px`);
+            moneda.style.setProperty('--y-destino', `${yDestino}px`);
+
+            // Fase 1: Expulsión física y rebote
+            moneda.style.animation = `expulsarYRebotar 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
+            document.body.appendChild(moneda);
+
+            // Fase 2: Atracción magnética hacia el contador (ejecutada tras terminar la fase 1)
+            setTimeout(() => {
+                moneda.style.animation = `magnetizarAlContador 0.7s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards`;
+                
+                // Fase 3: Limpieza y actualización del contador
+                setTimeout(() => {
+                    moneda.remove();
+                    // Al llegar la última moneda (índice 4), disparamos la suma y el pulso
+                    if (i === 4) {
+                        contador.classList.add('contador-pulse');
+                        setTimeout(() => contador.classList.remove('contador-pulse'), 300);
+                        sumarAlprocoinsLocales(); 
+                    }
+                }, 700); // Duración de magnetizarAlContador
+            }, 800); // Duración de expulsarYRebotar
+
+        }, i * 120); // Retraso secuencial entre monedas ligeramente optimizado
+    }
+}
+
+function sumarAlprocoinsLocales() {
+    let actuales = parseInt(localStorage.getItem('alprocoins')) || 0;
+    let nuevoTotal = actuales + 5;
+    localStorage.setItem('alprocoins', nuevoTotal);
+
+    // Animación de incremento del contador digital paso a paso
+    let inter = setInterval(() => {
+        actuales++;
+        const numeroMarcador = document.getElementById('numero-alprocoins');
+        if (numeroMarcador) {
+            numeroMarcador.innerText = actuales.toLocaleString('en-US');
+        }
+        if (actuales >= nuevoTotal) clearInterval(inter);
+    }, 40);
+}
+</script>
+<style>
+/* 🖥️ CONTROL RESPONSIVE PARA EL MARCADOR */
+#contadorMonedasCompu {
+    display: none !important;
+}
+@media (min-width: 1024px) {
+    #contadorMonedasCompu {
+        display: inline-flex !important;
+    }
+}
+
+/* 🌐 CONTENEDOR PADRE CON PERSPECTIVA 3D */
+#modalTiendaAlpro {
+    perspective: 1200px;
+    transition: background-color 0.3s ease;
+}
+
+/* 🎪 ANIMACIONES DE PERSUASIÓN 3D */
+.tienda-unfold {
+    animation: unfold3D 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: center;
+}
+@keyframes unfold3D {
+    0% { transform: scaleY(0.005) scaleX(0.3); opacity: 0; filter: brightness(2); }
+    40% { transform: scaleY(0.005) scaleX(1); opacity: 1; filter: brightness(1.5); }
+    100% { transform: scaleY(1) scaleX(1); opacity: 1; filter: brightness(1); }
+}
+
+.tienda-fold {
+    animation: fold3D 0.35s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    transform-origin: center;
+}
+@keyframes fold3D {
+    0% { transform: scaleY(1) scaleX(1); opacity: 1; }
+    60% { transform: scaleY(0.005) scaleX(1); opacity: 0.8; }
+    100% { transform: scaleY(0.005) scaleX(0); opacity: 0; }
+}
+
+@keyframes entradaTarjeta {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🖨️ ESTILOS CORREGIDOS PARA IMPRESIÓN / GUARDADO PDF CLEAN */
+@media print {
+    /* Ocultamos de forma segura el contenedor general del body */
+    body > * { 
+        display: none !important; 
+    }
+    
+    /* Forzamos a que las capas contenedoras del ticket SÍ existan en la hoja */
+    #capaFondoTicket, #modalTicketFactura { 
+        display: block !important; 
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        background: white !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Le quitamos el borde naranja de arriba para que sea una factura 100% limpia */
+    #modalTicketFactura {
+        border-top: none !important;
+        width: 320px !important; /* Proporción ideal para el PDF */
+        margin: 0 auto !important;
+    }
+
+    /* Escondemos los botones de acción para que no salgan impresos */
+    .no-print { 
+        display: none !important; 
+    }
+}
+</style>
+
+<!-- 🪙 MARCADOR COMPACTO PREMIUM -->
+<div id="contadorMonedasCompu" onclick="toggleTiendaAlpro()" style="position: fixed; top: 15px; left: 15px; z-index: 9999; align-items: center; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 16px; font-weight: 600; font-size: 14px; color: #0f172a; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">
+    <span style="margin-right: 6px; font-size: 16px;">🪙</span>
+    <span id="numero-alprocoins">0</span>
+</div>
+
+<div id="modalTiendaAlpro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); z-index: 9998; justify-content: center; align-items: center; overflow: hidden;">
+    
+    <style>
+        #contenedorItemsTienda::-webkit-scrollbar {
+            display: none; /* Oculta barra en Chrome, Safari, Edge */
+        }
+        #contenedorItemsTienda {
+            -ms-overflow-style: none;  /* Oculta barra en IE/Edge antiguo */
+            scrollbar-width: none;  /* Oculta barra en Firefox */
+        }
+
+        /* 🎬 ANIMACIONES DE TRANSICIÓN ELÁSTICAS */
+        @keyframes modalZoomIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes modalZoomOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0; }
+        }
+
+        .modal-zoom-in {
+            animation: modalZoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .modal-zoom-out {
+            animation: modalZoomOut 0.2s ease forwards;
+        }
+    </style>
+
+    <div id="cuerpoTienda" class="tienda-unfold" style="background: #ffffff; width: 820px; max-width: 94%; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.22); position: relative; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; overflow: hidden;">
+
+<!-- ==========================================================
+     🔒🔒🔒 CAPA DE BLOQUEO "PRÓXIMAMENTE" (Poner para bloquear, borrar para activar)
+     ========================================================== -->
+<div id="bloqueoProximamente" style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 100; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; box-sizing: border-box;">
+    <!-- Icono animado -->
+    <div style="font-size: 64px; margin-bottom: 16px; animation: flotarIcono 3s ease-in-out infinite;">🛠️</div>
+    <style>
+        @keyframes flotarIcono {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+    <h2 style="margin: 0; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, #ea580c, #85200c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px;">
+        PRÓXIMAMENTE...
+    </h2>
+    <p style="margin: 10px 0 24px 0; font-size: 14px; color: #475569; max-width: 440px; line-height: 1.5; font-weight: 500;">
+        ¡La Tienda de Recompensas se está abasteciendo! Mientras tanto, sigue acumulando todos los <b>Alprocoins</b> que puedas. Tu saldo actual se guardará automáticamente. 🪙
+    </p>
+    
+    <button onclick="toggleTiendaAlpro()" style="background: #0f172a; color: white; border: none; padding: 12px 28px; font-weight: 800; font-size: 13px; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); transition: transform 0.2s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">
+        ¡Entendido, a juntar coins!
+    </button>
+</div>
+<!-- 🔒🔒🔒========================================================== -->
+        
+        <div style="background: linear-gradient(135deg, #ea580c, #85200c); padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <div>
+                <h2 style="margin: 0; font-size: 17px; font-weight: 900; color: #ffffff; letter-spacing: 0.6px; display: flex; align-items: center; gap: 8px;">
+                    <span>🎁</span> TIENDA DE <span style="color: #fef08a; text-shadow: 0 0 10px rgba(254, 240, 138, 0.4);">RECOMPENSAS</span>
+                </h2>
+                <p style="margin: 3px 0 0 0; font-size: 11px; color: #ffedd5; opacity: 0.9; font-weight: 500;">Tus Alprocoins tienen premio. ¡Úsalos aquí!</p>
+            </div>
+            <button onclick="toggleTiendaAlpro()" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 14px; cursor: pointer; color: #ffffff; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.2s;" onmouseenter="this.style.background='#ef4444'; this.style.borderColor='#ef4444';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">×</button>
+        </div>
+
+        <div style="padding: 12px 24px 24px 24px; display: flex; flex-direction: column; gap: 12px;">
+            
+            <div id="contenedorItemsTienda" style="max-height: 340px; overflow-y: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px; margin-top: 4px;">
+                </div>
+
+            <div id="barraCarrito" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    
+                    <div class="boton-electrico-contenedor" onclick="abrirModalRecarga()">
+                        <div class="boton-electrico-interno">
+                            ⚡ ¿Quieres más Alprocoins?
+                        </div>
+                    </div>
+
+                    <div style="font-size: 13px; color: #64748b; font-weight: 600;">
+                        Items: <span id="cart-cantidad" style="color: #0f172a; font-weight: 800; font-size: 15px;">0</span>
+                    </div>
+                    <div style="font-size: 13px; color: #64748b; font-weight: 600;">
+                        Total: <span style="color: #ea580c; font-weight: 800; font-size: 16px;">🪙 <span id="cart-total">0</span></span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="vaciarCarrito()" style="background: #e2e8f0; color: #475569; border: none; padding: 8px 14px; font-weight: 700; font-size: 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">Vaciar</button>
+                    <button id="btnProcesarCompra" onclick="procesarCarrito()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 20px; font-weight: 800; font-size: 12px; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); transition: all 0.2s;">PROCESAR PEDIDO 🧾</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="modalRecargaCoins" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 9999; justify-content: center; align-items: center;">
+    
+    <div id="cuerpoRecarga" class="modal-zoom-in" style="background: #ffffff; width: 420px; max-width: 90%; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4); font-family: system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; overflow: hidden;">
+        
+        <div style="background: linear-gradient(135deg, #ea580c, #85200c); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <div>
+                <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+                    <span>🪙</span> OBTÉN MÁS <span style="color: #fef08a;">ALPROCOINS</span>
+                </h3>
+                <p style="margin: 2px 0 0 0; font-size: 10px; color: #ffedd5; opacity: 0.9;">Consigue monedas al instante sin esperar</p>
+            </div>
+            <button onclick="cerrarModalRecarga()" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 14px; cursor: pointer; color: #ffffff; width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.2s;" onmouseenter="this.style.background='#ef4444'; this.style.borderColor='#ef4444';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">×</button>
+        </div>
+
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+            
+            <div id="bannerInstruccionesAlpro" style="display: none; background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 12px; animation: slideDownBanner 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                    <span style="font-weight: 800; font-size: 11px; color: #b45309;">👉 ¿Cómo obtener tu código?</span>
+                    <span onclick="cerrarBannerInstrucciones()" style="font-size: 14px; cursor: pointer; color: #b45309; font-weight: 900; line-height: 1;">×</span>
+                </div>
+                <p id="textoInstruccionesBanner" style="margin: 0; font-size: 11px; color: #78350f; line-height: 1.4;"></p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 22px;">🪙</span>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 800; font-size: 14px; color: #0f172a;">1,000 Alprocoins</span>
+                            <span style="font-size: 10px; color: #64748b; font-weight: 500;">Pack Bronce</span>
+                        </div>
+                    </div>
+                    <button onclick="mostrarInstruccionesEnBanner(1000, 5)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 5.00</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 22px;">🪙</span>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 800; font-size: 14px; color: #0f172a;">2,500 Alprocoins</span>
+                            <span style="font-size: 10px; color: #64748b; font-weight: 500;">Pack Plata</span>
+                        </div>
+                    </div>
+                    <button onclick="mostrarInstruccionesEnBanner(2500, 10)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 10.00</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 22px;">🪙</span>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 800; font-size: 14px; color: #0f172a;">7,000 Alprocoins</span>
+                            <span style="font-size: 10px; color: #64748b; font-weight: 500;">Pack Oro</span>
+                        </div>
+                    </div>
+                    <button onclick="mostrarInstruccionesEnBanner(7000, 25)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 25.00</button>
+                </div>
+            </div>
+
+            <div style="border-top: 1px dashed #cbd5e1; padding-top: 14px; margin-top: 6px;">
+                <label style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 6px; letter-spacing: 0.3px;">¿YA TIENES UN CÓDIGO DE RECARGA?</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="inputAlproPin" placeholder="ALPRO-1000-XXXX" style="flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-transform: uppercase; font-family: monospace; font-weight: 700; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);" autocomplete="off">
+                    <button onclick="canjearAlproPin()" style="background: #0f172a; color: white; border: none; padding: 0 18px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: background 0.2s;" onmouseenter="this.style.background='#1e293b'" onmouseleave="this.style.background='#0f172a'">Validar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="capaFondoTicket" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 9999; justify-content: center; align-items: center; overflow-y: auto; padding: 20px;">
+    <div id="modalTicketFactura" style="background: #ffffff; width: 340px; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); padding: 24px; font-family: 'Courier New', Courier, monospace; color: #1e293b; position: relative; border-top: 8px solid #f59e0b;">
+        <div style="text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 12px; margin-bottom: 12px;">
+            <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 800; letter-spacing: 1px;">ALPROMEH STORE</h4>
+            <span style="font-size: 11px; color: #64748b;">Comprobante de Canje Oficial</span>
+            <div id="ticket-fecha" style="font-size: 11px; color: #475569; margin-top: 6px;">Fecha: --/--/--</div>
+        </div>
+
+        <div style="font-size: 12px; font-weight: 600; margin-bottom: 10px;">ARTÍCULOS ADQUIRIDOS:</div>
+        <div id="ticket-listado-items" style="font-size: 12px; display: flex; flex-direction: column; gap: 6px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 12px; margin-bottom: 12px;">
+            </div>
+
+        <div style="font-size: 13px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between;">
+                <span>Subtotal:</span>
+                <span id="ticket-subtotal">🪙 0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-weight: 800; color: #10b981;">
+                <span>Total Descontado:</span>
+                <span id="ticket-total-descuento">- 0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #64748b; margin-top: 4px;">
+                <span>Saldo Restante:</span>
+                <span id="ticket-saldo-restante">🪙 0</span>
+            </div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; margin-bottom: 16px;">
+            <div style="font-size: 10px; color: #64748b; font-weight: 700; margin-bottom: 2px;">CÓDIGO DE VALIDACIÓN ÚNICO</div>
+            <div id="ticket-codigo-token" style="font-size: 13px; font-weight: 800; color: #0f172a; letter-spacing: 0.5px;">ALPRO-XXXXXX</div>
+        </div>
+
+        <div style="font-size: 10px; text-align: center; color: #64748b; line-height: 1.4; margin-bottom: 16px; font-style: italic;">
+            ⚠️ Por favor toma una captura de este ticket o descárgalo en PDF para entregárselo a Dan.
+        </div>
+
+        <div class="no-print" style="display: flex; gap: 8px; margin-top: 10px;">
+            <button onclick="imprimirTicketClonado()" style="flex: 1; background: #0f172a; color: white; border: none; padding: 10px; font-family: sans-serif; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                📥 Guardar PDF
+            </button>
+            <button onclick="cerrarTicketExito()" style="flex: 1; background: #ef4444; color: white; border: none; padding: 10px; font-family: sans-serif; font-size: 12px; font-weight: 700; border-radius: 8px; cursor: pointer;">
+                Cerrar Ticket
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 🛒 1. ESTADO GLOBAL (Variables limpias y únicas)
+let carrito = {}; 
+let tiendaCargadaPorPrimeraVez = false; // <-- 🚩 Bandera para controlar la animación una sola vez
+
+const premios = [
+    { id: 1, nombre: "Gomitas", precio: 300, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM" },
+    { id: 2, nombre: "Galletas", precio: 500, emoji: "🍪", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "GL" },
+    { id: 3, nombre: "Chocolate", precio: 700, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH" },
+    { id: 4, nombre: "Ricitos", precio: 900, emoji: "🍿", colorBadge: "#fef9c3", colorTexto: "#ca8a04", esUnico: false, prefijo: "RC" },
+    { id: 5, nombre: "Gaseosa", precio: 1000, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: true, prefijo: "GS" },
+    { id: 6, nombre: "Tupper de Plástico", precio: 2800, emoji: "🍱", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HP" },
+    { id: 7, nombre: "Taza", precio: 3500, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ" },
+    { id: 8, nombre: "Tupper de Vidrio", precio: 6500, emoji: "🫙", colorBadge: "#e2e8f0", colorTexto: "#475569", esUnico: true, prefijo: "HV" }
+];
+
+// 🔑 CLAVE CRIPTOGRÁFICA SECRETA PARA TUS PINES
+const PALABRA_SECRETA = "alpromeh_premium_key_2026";
+
+// 🎪 2. CONTROL DE APERTURA Y CIERRE (ANIMACIÓN PERSPECTIVA)
+function toggleTiendaAlpro() {
+    const tiendaModal = document.getElementById('modalTiendaAlpro');
+    const cuerpo = document.getElementById('cuerpoTienda');
+    if (!tiendaModal || !cuerpo) return;
+
+    if (tiendaModal.style.display === 'none' || tiendaModal.style.display === '') {
+        cuerpo.classList.remove('tienda-fold');
+        cuerpo.classList.add('tienda-unfold');
+        tiendaModal.style.display = 'flex';
+        
+        setTimeout(() => {
+            tiendaModal.style.backgroundColor = "rgba(15, 23, 42, 0.4)";
+            tiendaModal.style.backdropFilter = "blur(4px)";
+            tiendaModal.style.webkitBackdropFilter = "blur(4px)";
+        }, 10);
+
+        // Activamos las animaciones de entrada solo al abrir la tienda
+        tiendaCargadaPorPrimeraVez = true;
+
+        actualizarMarcadoresVisuales();
+        renderizarTiendaAlpro();
+    } else {
+        cuerpo.classList.remove('tienda-unfold');
+        cuerpo.classList.add('tienda-fold');
+        
+        tiendaModal.style.backgroundColor = "rgba(15, 23, 42, 0)";
+        tiendaModal.style.backdropFilter = "blur(0px)";
+        tiendaModal.style.webkitBackdropFilter = "blur(0px)";
+        
+        setTimeout(() => {
+            tiendaModal.style.display = 'none';
+        }, 340);
+    }
+}
+
+// Clic afuera para cerrar (siempre que no estén otros modales abiertos)
+document.getElementById('modalTiendaAlpro').addEventListener('click', function(e) {
+    const ticketAbierto = document.getElementById('capaFondoTicket').style.display === 'flex';
+    const recargaAbierto = document.getElementById('modalRecargaCoins').style.display === 'flex';
+    if (e.target === this && !ticketAbierto && !recargaAbierto) {
+        toggleTiendaAlpro();
+    }
+});
+
+function actualizarMarcadoresVisuales() {
+    const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
+    const marcadorCompu = document.getElementById('numero-alprocoins');
+    if (marcadorCompu) marcadorCompu.innerText = monedasActuales.toLocaleString('en-US');
+}
+
+// ⚡ LÓGICA DE MODAL DE RECARGA DE COINS CON EFECTO ZOOM
+function abrirModalRecarga() {
+    cerrarBannerInstrucciones();
+    const modal = document.getElementById('modalRecargaCoins');
+    const cuerpo = document.getElementById('cuerpoRecarga');
+    
+    if (modal && cuerpo) {
+        cuerpo.classList.remove('modal-zoom-out');
+        cuerpo.classList.add('modal-zoom-in');
+        modal.style.display = 'flex';
+    }
+}
+
+function cerrarModalRecarga() {
+    const modal = document.getElementById('modalRecargaCoins');
+    const cuerpo = document.getElementById('cuerpoRecarga');
+    
+    if (modal && cuerpo) {
+        cuerpo.classList.remove('modal-zoom-in');
+        cuerpo.classList.add('modal-zoom-out');
+        
+        // Esperamos a que la animación de Zoom-Out termine antes de ocultar
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 180);
+    }
+}
+
+// 🔔 NUEVO CONTROL DEL BANNER DE INSTRUCCIONES
+function mostrarInstruccionesEnBanner(monedas, precioQuetzales) {
+    const banner = document.getElementById('bannerInstruccionesAlpro');
+    const texto = document.getElementById('textoInstruccionesBanner');
+    
+    if (banner && texto) {
+        texto.innerHTML = `Entrega <b>Q ${precioQuetzales}.00</b> en efectivo a Dan. Él te dará tu pin secreto para acreditar <b>🪙 ${monedas.toLocaleString('en-US')} Alprocoins</b> inmediatamente en la casilla de abajo.`;
+        banner.style.display = 'block';
+    }
+}
+
+function cerrarBannerInstrucciones() {
+    const banner = document.getElementById('bannerInstruccionesAlpro');
+    if (banner) banner.style.display = 'none';
+}
+
+// 🔐 VALIDACIÓN Y QUEMA DE PINES
+function generarFirmaSencilla(monedas, claveSecreta) {
+    let hash = 0;
+    const cadenaCombinada = monedas.toString() + claveSecreta;
+    for (let i = 0; i < cadenaCombinada.length; i++) {
+        const char = cadenaCombinada.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).substring(0, 4).toUpperCase();
+}
+
+function canjearAlproPin() {
+    const inputPin = document.getElementById('inputAlproPin');
+    if (!inputPin) return;
+
+    const pinIngresado = inputPin.value.trim().toUpperCase();
+
+    // 1. Validar formato básico: ALPRO-[MONEDAS]-[FIRMA]
+    const partes = pinIngresado.split('-');
+    if (partes.length !== 3 || partes[0] !== 'ALPRO') {
+        alert("⚠️ Formato de PIN incorrecto. Debe ser como: ALPRO-1000-XXXX");
+        return;
+    }
+
+    const monedas = parseInt(partes[1]);
+    const firmaRecibida = partes[2];
+
+    if (isNaN(monedas) || monedas <= 0) {
+        alert("⚠️ El código contiene un valor de monedas inválido.");
+        return;
+    }
+
+    // 2. Verificar autenticidad matemática (Fórmula Criptográfica)
+    const firmaCorrecta = generarFirmaSencilla(monedas, PALABRA_SECRETA);
+    if (firmaRecibida !== firmaCorrecta) {
+        alert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
+        return;
+    }
+
+    // 3. Verificar si el PIN ya fue usado/destruido localmente en esta computadora
+    let pinesUsados = JSON.parse(localStorage.getItem('alpro_pines_usados')) || [];
+    if (pinesUsados.includes(pinIngresado)) {
+        alert("🚫 Este código ya fue canjeado en este equipo.");
+        return;
+    }
+
+    // 4. Sumamos las monedas al balance local del navegador
+    let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
+    saldoActual += monedas;
+    localStorage.setItem('alprocoins', saldoActual);
+
+    // 5. Destruimos el PIN guardándolo en la lista negra local
+    pinesUsados.push(pinIngresado);
+    localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados));
+
+    // 6. Feedback visual
+    alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
+    
+    // Limpieza, actualización de UI y cierre
+    actualizarMarcadoresVisuales();
+    inputPin.value = "";
+    cerrarModalRecarga();
+}
+
+// 🛒 3. LÓGICA CORE DEL CARRITO (AGREGAR, RESTAR, VACIAR)
+function agregarAlCarrito(item) {
+    const reclamados = JSON.parse(localStorage.getItem('alpro_reclamados')) || [];
+    if (item.esUnico && reclamados.includes(item.id)) return;
+
+    if (item.esUnico && carrito[item.id] >= 1) {
+        alert("Este artículo es único. No puedes agregar más de uno.");
+        return;
+    }
+
+    carrito[item.id] = (carrito[item.id] || 0) + 1;
+    renderizarTiendaAlpro();
+}
+
+function restarDelCarrito(id) {
+    if (carrito[id]) {
+        carrito[id]--;
+        if (carrito[id] <= 0) {
+            delete carrito[id];
+        }
+    }
+    renderizarTiendaAlpro();
+}
+
+function vaciarCarrito() {
+    carrito = {};
+    renderizarTiendaAlpro();
+}
+
+function actualizarResumenBarraCarrito() {
+    let totalMonedasItem = 0;
+    let cantidadTotalUnidades = 0;
+
+    for (const id in carrito) {
+        const producto = premios.find(p => p.id == id);
+        if (producto) {
+            totalMonedasItem += producto.precio * carrito[id];
+            amountText = carrito[id];
+            cantidadTotalUnidades += carrito[id];
+        }
+    }
+
+    document.getElementById('cart-cantidad').innerText = cantidadTotalUnidades;
+    document.getElementById('cart-total').innerText = totalMonedasItem.toLocaleString('en-US');
+
+    const btnProcesar = document.getElementById('btnProcesarCompra');
+    const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
+
+    if (cantidadTotalUnidades === 0 || totalMonedasItem > monedasActuales) {
+        btnProcesar.disabled = true;
+        btnProcesar.style.background = "#cbd5e1";
+        btnProcesar.style.color = "#94a3b8";
+        btnProcesar.style.cursor = "not-allowed";
+        btnProcesar.style.boxShadow = "none";
+        if (totalMonedasItem > monedasActuales) {
+            btnProcesar.innerText = "FONDOS INSUFICIENTES 🔒";
+        } else {
+            btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
+        }
+    } else {
+        btnProcesar.disabled = false;
+        btnProcesar.style.background = "linear-gradient(135deg, #10b981, #059669)";
+        btnProcesar.style.color = "white";
+        btnProcesar.style.cursor = "pointer";
+        btnProcesar.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.2)";
+        btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
+    }
+}
+
+// 🎨 4. RENDERIZADO COMPLETO DEL ESTANTE INTERACTIVO
+function renderizarTiendaAlpro() {
+    const contenedor = document.getElementById('contenedorItemsTienda');
+    if (!contenedor) return;
+    contenedor.innerHTML = "";
+
+    const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
+    const reclamados = JSON.parse(localStorage.getItem('alpro_reclamados')) || [];
+
+    premios.forEach((item, index) => {
+        const divItem = document.createElement('div');
+        const yaCanjeadoPermanente = item.esUnico && reclamados.includes(item.id);
+        const cantidadEnCarrito = carrito[item.id] || 0;
+
+        divItem.style.background = yaCanjeadoPermanente ? "#f8fafc" : "#ffffff";
+        divItem.style.border = yaCanjeadoPermanente ? "1px dashed #cbd5e1" : "1px solid #e2e8f0";
+        divItem.style.borderRadius = "18px";
+        divItem.style.padding = "12px 10px";
+        divItem.style.display = "flex";
+        divItem.style.flexDirection = "column";
+        divItem.style.alignItems = "center";
+        divItem.style.justifyContent = "space-between";
+        divItem.style.position = "relative";
+        divItem.style.transition = "all 0.2s ease";
+        
+        // 🏁 CONTROL DE ANIMACIÓN DE ENTRADA INTELIGENTE:
+        if (tiendaCargadaPorPrimeraVez) {
+            divItem.style.opacity = "0";
+            divItem.style.animation = "entradaTarjeta 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards";
+            divItem.style.animationDelay = `${0.05 + (index * 0.03)}s`;
+        } else {
+            divItem.style.opacity = "1";
+            divItem.style.transform = "translateY(0) scale(1)";
+        }
+
+        if (!yaCanjeadoPermanente) {
+            divItem.onmouseenter = () => {
+                divItem.style.borderColor = "#f59e0b";
+                divItem.style.transform = "translateY(-3px)";
+            };
+            divItem.onmouseleave = () => {
+                divItem.style.borderColor = "#e2e8f0";
+                divItem.style.transform = "translateY(0)";
+            };
+        }
+
+        const precioFormateado = item.precio.toLocaleString('en-US');
+
+        divItem.innerHTML = `
+            <div style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}">${item.emoji}</div>
+            <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; min-height: 32px; display: flex; align-items: center; justify-content: center; line-height: 1.2;">
+                ${item.nombre}
+            </div>
+            <div style="font-size: 11px; color: ${yaCanjeadoPermanente ? '#94a3b8' : item.colorTexto}; background: ${yaCanjeadoPermanente ? '#f1f5f9' : item.colorBadge}; font-weight: 800; padding: 2px 8px; border-radius: 9999px; margin-bottom: 8px;">
+                🪙 ${precioFormateado}
+            </div>
+        `;
+
+        const contenedorAcciones = document.createElement('div');
+        contenedorAcciones.style.width = "100%";
+
+        if (yaCanjeadoPermanente) {
+            const btnBloqueado = document.createElement('button');
+            btnBloqueado.style.width = "100%";
+            btnBloqueado.style.padding = "6px 0";
+            btnBloqueado.style.fontSize = "11px";
+            btnBloqueado.style.fontWeight = "700";
+            btnBloqueado.style.border = "none";
+            btnBloqueado.style.borderRadius = "8px";
+            btnBloqueado.style.background = "#e2e8f0";
+            btnBloqueado.style.color = "#64748b";
+            btnBloqueado.disabled = true;
+            btnBloqueado.innerText = "CANJEADO";
+            contenedorAcciones.appendChild(btnBloqueado);
+        } 
+        else if (cantidadEnCarrito > 0) {
+            contenedorAcciones.style.display = "flex";
+            contenedorAcciones.style.alignItems = "center";
+            contenedorAcciones.style.justifyContent = "space-between";
+            contenedorAcciones.style.background = "#f1f5f9";
+            contenedorAcciones.style.borderRadius = "8px";
+            contenedorAcciones.style.border = "1px solid #cbd5e1";
+            contenedorAcciones.style.overflow = "hidden";
+
+            const btnRestar = document.createElement('button');
+            btnRestar.innerText = "−";
+            btnRestar.style.width = "30px";
+            btnRestar.style.height = "28px";
+            btnRestar.style.border = "none";
+            btnRestar.style.background = "transparent";
+            btnRestar.style.cursor = "pointer";
+            btnRestar.style.fontWeight = "bold";
+            btnRestar.style.fontSize = "14px";
+            btnRestar.style.color = "#ef4444";
+            btnRestar.onclick = () => restarDelCarrito(item.id);
+
+            const spanCantidad = document.createElement('span');
+            spanCantidad.innerText = cantidadEnCarrito;
+            spanCantidad.style.fontSize = "12px";
+            spanCantidad.style.fontWeight = "800";
+            spanCantidad.style.color = "#0f172a";
+
+            const btnSumar = document.createElement('button');
+            btnSumar.innerText = "+";
+            btnSumar.style.width = "30px";
+            btnSumar.style.height = "28px";
+            btnSumar.style.border = "none";
+            btnSumar.style.background = "transparent";
+            btnSumar.style.cursor = "pointer";
+            btnSumar.style.fontWeight = "bold";
+            btnSumar.style.fontSize = "14px";
+            btnSumar.style.color = "#10b981";
+            
+            if (item.esUnico && cantidadEnCarrito >= 1) {
+                btnSumar.disabled = true;
+                btnSumar.style.color = "#94a3b8";
+                btnSumar.style.cursor = "not-allowed";
+            } else {
+                btnSumar.onclick = () => agregarAlCarrito(item);
+            }
+
+            contenedorAcciones.appendChild(btnRestar);
+            contenedorAcciones.appendChild(spanCantidad);
+            contenedorAcciones.appendChild(btnSumar);
+        } 
+        else {
+            const btnAgregar = document.createElement('button');
+            btnAgregar.style.width = "100%";
+            btnAgregar.style.padding = "6px 0";
+            btnAgregar.style.fontSize = "11px";
+            btnAgregar.style.fontWeight = "700";
+            btnAgregar.style.border = "none";
+            btnAgregar.style.borderRadius = "8px";
+            btnAgregar.style.cursor = "pointer";
+            btnAgregar.style.background = "linear-gradient(135deg, #f59e0b, #ea580c)";
+            btnAgregar.style.color = "#ffffff";
+            btnAgregar.innerText = "AGREGAR";
+            btnAgregar.onclick = () => agregarAlCarrito(item);
+            contenedorAcciones.appendChild(btnAgregar);
+        }
+
+        divItem.appendChild(contenedorAcciones);
+        contenedor.appendChild(divItem);
+    });
+
+    // Desactivamos la bandera de carga para que las próximas interacciones (clicks) sean instantáneas
+    tiendaCargadaPorPrimeraVez = false;
+
+    actualizarResumenBarraCarrito();
+}
+
+// 🔐 5. PROCESAMIENTO Y GENERACIÓN DE FACTURA TICKET
+function generarCodigoSeguroGlobal() {
+    const ahora = new Date();
+    const año = ahora.getFullYear().toString().slice(-2);
+    const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    const dia = String(ahora.getDate()).padStart(2, '0');
+    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let randomID = '';
+    for (let i = 0; i < 5; i++) {
+        randomID += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    return `ALPRO-BILL-${año}${mes}${dia}-${randomID}`;
+}
+
+function procesarCarrito() {
+    const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
+    let totalCosto = 0;
+    let reclamados = JSON.parse(localStorage.getItem('alpro_reclamados')) || [];
+
+    const listadoContenedor = document.getElementById('ticket-listado-items');
+    listadoContenedor.innerHTML = "";
+
+    let tieneItems = false;
+    for (const id in carrito) {
+        const item = premios.find(p => p.id == id);
+        if (item) {
+            tieneItems = true;
+            const sub = item.precio * carrito[id];
+            totalCosto += sub;
+
+            if (item.esUnico) {
+                reclamados.push(item.id);
+            }
+
+            const fila = document.createElement('div');
+            fila.style.display = "flex";
+            fila.style.justifyContent = "space-between";
+            fila.style.marginBottom = "4px";
+            fila.innerHTML = `<span>${carrito[id]}x ${item.nombre}</span><span>🪙 ${sub.toLocaleString('en-US')}</span>`;
+            listadoContenedor.appendChild(fila);
+        }
+    }
+
+    if (totalCosto > monedasActuales || !tieneItems) return;
+
+    let nuevoSaldo = monedasActuales - totalCosto;
+    localStorage.setItem('alprocoins', nuevoSaldo);
+    localStorage.setItem('alpro_reclamados', JSON.stringify(reclamados));
+
+    const ahora = new Date();
+    document.getElementById('ticket-fecha').innerText = `Fecha: ${ahora.toLocaleDateString('es-GT')} ${ahora.toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit'})}`;
+    document.getElementById('ticket-subtotal').innerText = `🪙 ${totalCosto.toLocaleString('en-US')}`;
+    document.getElementById('ticket-total-descuento').innerText = `- ${totalCosto.toLocaleString('en-US')}`;
+    document.getElementById('ticket-saldo-restante').innerText = `🪙 ${nuevoSaldo.toLocaleString('en-US')}`;
+    
+    const tokenGlobal = generarCodigoSeguroGlobal();
+    document.getElementById('ticket-codigo-token').innerText = tokenGlobal;
+
+    actualizarMarcadoresVisuales();
+    document.getElementById('capaFondoTicket').style.display = 'flex';
+}
+
+function imprimirTicketClonado() {
+    const contenidoTicket = document.getElementById('modalTicketFactura').innerHTML;
+    const ventanaImpresion = window.open('', '_blank', 'width=400,height=600');
+    
+    ventanaImpresion.document.write(`
+        <html>
+        <head>
+            <title>Ticket ALPROMEH</title>
+            <style>
+                body { 
+                    font-family: 'Courier New', Courier, monospace; 
+                    color: #1e293b; 
+                    padding: 20px;
+                    background: #ffffff;
+                }
+                .no-print { display: none !important; }
+                div { line-height: 1.4; }
+            </style>
+        </head>
+        <body>
+            <div style="width: 100%; max-width: 320px; margin: 0 auto;">
+                ${contenidoTicket}
+            </div>
+            <script>
+                setTimeout(() => {
+                    window.print();
+                    window.close();
+                }, 250);
+            <\/script>
+        </body>
+        </html>
+    `);
+    
+    ventanaImpresion.document.close();
+}
+
+function cerrarTicketExito() {
+    carrito = {};
+    document.getElementById('capaFondoTicket').style.display = 'none';
+    toggleTiendaAlpro();
 }
 </script>
 </body>
