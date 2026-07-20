@@ -6859,7 +6859,7 @@ function sumarAlprocoinsLocales(monedasGanadas) {
             <div style="border-top: 1px dashed #cbd5e1; padding-top: 14px; margin-top: 6px;">
                 <label style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 6px; letter-spacing: 0.3px;">¿YA TIENES UN CÓDIGO DE RECARGA?</label>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" id="inputAlproPin" placeholder="ALPRO-1000-XXXX" style="flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-transform: uppercase; font-family: monospace; font-weight: 700; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);" autocomplete="off">
+                    <input type="text" id="inputAlproPin" placeholder="ALPRO-1000-XXXX-YYYY" style="flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-transform: uppercase; font-family: monospace; font-weight: 700; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);" autocomplete="off">
                     <button onclick="canjearAlproPin()" style="background: #0f172a; color: white; border: none; padding: 0 18px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: background 0.2s;" onmouseenter="this.style.background='#1e293b'" onmouseleave="this.style.background='#0f172a'">Validar</button>
                 </div>
             </div>
@@ -7077,9 +7077,10 @@ function cerrarBannerInstrucciones() {
     if (banner) banner.style.display = 'none';
 }
 
-function generarFirmaSencilla(monedas, claveSecreta) {
+// 🔐 NUEVO SISTEMA DE FIRMA COMPATIBLE CON CÓDIGOS ÚNICOS
+function generarFirmaSencilla(monedas, textoAleatorio, claveSecreta) {
     let hash = 0;
-    const cadenaCombinada = monedas.toString() + claveSecreta;
+    const cadenaCombinada = monedas.toString() + textoAleatorio + claveSecreta;
     for (let i = 0; i < cadenaCombinada.length; i++) {
         const char = cadenaCombinada.charCodeAt(i);
         hash = (hash << 5) - hash + char;
@@ -7094,20 +7095,25 @@ async function canjearAlproPin() {
 
     const pinIngresado = inputPin.value.trim().toUpperCase();
     const partes = pinIngresado.split('-');
-    if (partes.length !== 3 || partes[0] !== 'ALPRO') {
-        alert("⚠️ Formato de PIN incorrecto. Debe ser como: ALPRO-1000-XXXX");
+    
+    // Validamos el nuevo formato de 4 partes: ALPRO-[MONEDAS]-[RANDOM]-[FIRMA]
+    if (partes.length !== 4 || partes[0] !== 'ALPRO') {
+        alert("⚠️ Formato de PIN incorrecto o antiguo. Debe ser como: ALPRO-1500-XXXX-XXXX");
         return;
     }
 
     const monedas = parseInt(partes[1]);
-    const firmaRecibida = partes[2];
+    const textoAleatorio = partes[2];
+    const firmaRecibida = partes[3];
 
     if (isNaN(monedas) || monedas <= 0) {
         alert("⚠️ El código contiene un valor de monedas inválido.");
         return;
     }
 
-    const firmaCorrecta = generarFirmaSencilla(monedas, PALABRA_SECRETA);
+    // Usamos la nueva función pasando los 3 parámetros correctos
+    const firmaCorrecta = generarFirmaSencilla(monedas, textoAleatorio, PALABRA_SECRETA);
+
     if (firmaRecibida !== firmaCorrecta) {
         alert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
         return;
