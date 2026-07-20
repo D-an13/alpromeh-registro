@@ -4160,7 +4160,199 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // AQUÍ TERMINA TU BLOQUE DE JAVASCRIPT PRINCIPAL. NO DEBEN HABER MÁS SCRIPTS CAÍDOS ABAJO.
 </script>
+<!-- =========================================================================
+     🚀 PAQUETE TODO-EN-UNO: MODAL DE BIENVENIDA CON TEXTOS SÚPER CLAROS Y EFECTO PREMIUM
+     ========================================================================= -->
+<!-- 🎨 1. ESTRUCTURA INTERFAZ (HTML) -->
+<div id="modalBienvenidaAlpro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; justify-content: center; align-items: center;">
+    
+    <div id="cuerpoBienvenida" style="background: #ffffff; width: 460px; max-width: 92%; border-radius: 28px; box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.5); font-family: system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 400px; transform: scale(0.95); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+        
+        <!-- Contenedor Dinámico de Diapositivas -->
+        <div style="padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            
+           <!-- 🛝 DIAPOSITIVA 1: ¡Lanzamiento Oficial! (Versión Ultra Limpia y Grande) -->
+            <div class="alpro-slide" style="display: block; width: 100%; padding: 10px 0;">
+                <span style="font-size: 70px; display: block; margin-bottom: 20px; filter: drop-shadow(0 4px 8px rgba(234,88,12,0.2));">✨🎁✨</span>
+                
+                <h2 style="margin: 0 auto 24px auto; font-size: 28px; font-weight: 950; color: #0f172a; letter-spacing: -0.8px; line-height: 1.25; max-width: 95%;">
+                    ¡La Tienda de Recompensas<br>ya está aquí!
+                </h2>
+                
+                <p style="margin: 0; font-size: 15.5px; color: #475569; line-height: 1.6; font-weight: 600; padding: 0 20px;">
+                    ¡Disfruta al máximo esta temporada especial y descubre todo lo que tenemos preparado para ti!
+                </p>
+            </div>
 
+            <!-- 🛝 DIAPOSITIVA 2: Generar Órdenes -->
+            <div class="alpro-slide" style="display: none;">
+                <span style="font-size: 60px; display: block; margin-bottom: 16px;">📝</span>
+                <h2 style="margin: 0 0 10px 0; font-size: 21px; font-weight: 900; color: #ea580c;">Gana Monedas al Guardar</h2>
+                <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">Cada vez que guardes una nueva <b>Orden de Compra</b>, el sistema te regalará monedas automáticamente. La tómbola de la suerte te dará entre <b>3 y 7 Alprocoins</b> al instante.</p>
+            </div>
+
+            <!-- 🛝 DIAPOSITIVA 3: Artículos Únicos -->
+            <div class="alpro-slide" style="display: none;">
+                <span style="font-size: 60px; display: block; margin-bottom: 16px;">🛍️</span>
+                <h2 style="margin: 0 0 10px 0; font-size: 21px; font-weight: 900; color: #059669;">Junta y Cambia tus Monedas</h2>
+                <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">Ve acumulando todas tus monedas para comprar tus antojos favoritos en el catálogo. ¡Ojo! Algunos premios son súper especiales y <b>solo se pueden comprar una sola vez</b>.</p>
+            </div>
+
+            <!-- 🛝 DIAPOSITIVA 4: Recargas Premium (EFECTO ARCOÍRIS) -->
+            <div class="alpro-slide" style="display: none; width: 100%;">
+                <style>
+                    @keyframes arcoirisFondoOnboarding {
+                        0% { background-position: 0% 50%; }
+                        50% { background-position: 100% 50%; }
+                        100% { background-position: 0% 50%; }
+                    }
+                    .tarjeta-premium-onboarding {
+                        background: linear-gradient(45deg, rgba(255,42,95,0.08), rgba(255,126,64,0.08), rgba(42,245,152,0.08), rgba(0,158,253,0.08), rgba(155,81,224,0.08));
+                        background-size: 300% 300%;
+                        animation: arcoirisFondoOnboarding 6s ease infinite;
+                        border: 2px solid #3b82f6 !important;
+                    }
+                    .btn-arcoiris-onboarding {
+                        background: linear-gradient(45deg, #ff2a5f, #ff7e40, #ffeb3b, #2af598, #009efd, #9b51e0, #ff2a5f);
+                        background-size: 400% 400%;
+                        animation: arcoirisFondoOnboarding 6s ease infinite;
+                        color: white;
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+                    }
+                </style>
+                
+                <div class="tarjeta-premium-onboarding" style="padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(59,130,246,0.15);">
+                    <span style="font-size: 65px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">💎</span>
+                    <h2 style="margin: 0 0 10px 0; font-size: 21px; font-weight: 950; color: #1d4ed8; letter-spacing: -0.5px;">¿No quieres esperar?</h2>
+                    <p style="margin: 0 0 15px 0; font-size: 14px; color: #1e293b; line-height: 1.5; font-weight: 500;">Si te urge un premio o una tarjeta de regalo y no quieres esperar, ¡puedes comprar Alprocoins con dinero real directamente con Dan para canjear lo que quieras hoy mismo!</p>
+                    <div class="btn-arcoiris-onboarding" style="display: inline-block; padding: 6px 16px; border-radius: 9999px; font-size: 11px; font-weight: 900; letter-spacing: 1px;">OPCIÓN DIAMANTE DISPONIBLE</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 🕹️ BARRA INFERIOR DE NAVEGACIÓN Y CONTROLES -->
+        <div style="background: #f8fafc; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0;">
+            
+            <!-- Indicadores de bolitas de progreso -->
+            <div style="display: flex; gap: 6px;">
+                <span class="alpro-dot" style="width: 18px; height: 6px; border-radius: 3px; background: #ea580c; transition: all 0.3s;"></span>
+                <span class="alpro-dot" style="width: 6px; height: 6px; border-radius: 3px; background: #cbd5e1; transition: all 0.3s;"></span>
+                <span class="alpro-dot" style="width: 6px; height: 6px; border-radius: 3px; background: #cbd5e1; transition: all 0.3s;"></span>
+                <span class="alpro-dot" style="width: 6px; height: 6px; border-radius: 3px; background: #cbd5e1; transition: all 0.3s;"></span>
+            </div>
+
+            <!-- Botones interactivos de acción -->
+            <div style="display: flex; gap: 10px;">
+                <button id="btnAtrasSlide" onclick="cambiarSlideTutorial(-1)" style="background: transparent; color: #64748b; border: none; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: none; transition: color 0.2s;" onmouseenter="this.style.color='#0f172a'" onmouseleave="this.style.color='#64748b'">Atrás</button>
+                
+                <button id="btnSiguienteSlide" onclick="cambiarSlideTutorial(1)" style="background: #0f172a; color: #ffffff; border: none; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(15,23,42,0.15); transition: background 0.2s;" onmouseenter="this.style.background='#1e293b'" onmouseleave="this.style.background='#0f172a'">Siguiente</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- ⚙️ 2. LÓGICA DE CONTROL AUTO-EJECUTABLE (JAVASCRIPT INDEPENDIENTE CON HOVER CORREGIDO) -->
+<script>
+(function() {
+    let slideActual = 0;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const yaVisto = localStorage.getItem('alpro_tutorial_visto');
+        
+        if (!yaVisto) {
+            const modal = document.getElementById('modalBienvenidaAlpro');
+            const cuerpo = document.getElementById('cuerpoBienvenida');
+            if (modal && cuerpo) {
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    cuerpo.style.transform = 'scale(1)';
+                    cuerpo.style.opacity = '1';
+                }, 50);
+                slideActual = 0;
+                actualizarInterfazSlides();
+            }
+        }
+    });
+
+    window.cambiarSlideTutorial = function(direccion) {
+        const slides = document.getElementsByClassName('alpro-slide');
+        slideActual += direccion;
+        
+        if (slideActual >= slides.length) {
+            finalizarTutorialAlpro();
+            return;
+        }
+        
+        if (slideActual < 0) slideActual = 0;
+        actualizarInterfazSlides();
+    };
+
+    function actualizarInterfazSlides() {
+        const slides = document.getElementsByClassName('alpro-slide');
+        const dots = document.getElementsByClassName('alpro-dot');
+        const btnAtras = document.getElementById('btnAtrasSlide');
+        const btnSiguiente = document.getElementById('btnSiguienteSlide');
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = 'none';
+            dots[i].style.width = '6px';
+            dots[i].style.background = '#cbd5e1';
+        }
+
+        slides[slideActual].style.display = 'block';
+        dots[slideActual].style.width = '18px';
+        
+        // Colores temáticos de las bolitas de progreso
+        dots[slideActual].style.background = slideActual === 1 ? '#ea580c' : (slideActual === 2 ? '#059669' : (slideActual === 3 ? '#2563eb' : '#0f172a'));
+
+        btnAtras.style.display = slideActual === 0 ? 'none' : 'block';
+
+        // 🎯 AQUÍ SE HIZO EL CAMBIO: Control dinámico y limpio de los hovers
+        if (slideActual === slides.length - 1) {
+            btnSiguiente.innerText = "¡Empezar a Ganar! 🚀";
+            btnSiguiente.style.background = "#0f172a"; // Color gris oscuro por defecto
+            
+            // Cuando el mouse entra en la última diapositiva
+            btnSiguiente.onmouseenter = () => {
+                btnSiguiente.style.background = "linear-gradient(45deg, #ff2a5f, #ff7e40)";
+            };
+            
+            // Cuando el mouse sale en la última diapositiva
+            btnSiguiente.onmouseleave = () => {
+                btnSiguiente.style.background = "#0f172a";
+            };
+        } else {
+            btnSiguiente.innerText = "Siguiente";
+            btnSiguiente.style.background = "#0f172a";
+            
+            // Hover normal para los botones de las diapositivas anteriores
+            btnSiguiente.onmouseenter = () => { 
+                btnSiguiente.style.background = "#1e293b"; 
+            };
+            btnSiguiente.onmouseleave = () => { 
+                btnSiguiente.style.background = "#0f172a"; 
+            };
+        }
+    }
+
+    function finalizarTutorialAlpro() {
+        const modal = document.getElementById('modalBienvenidaAlpro');
+        const cuerpo = document.getElementById('cuerpoBienvenida');
+        if (modal && cuerpo) {
+            cuerpo.style.transform = 'scale(0.95)';
+            cuerpo.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        // 🔒 Guardado definitivo de por vida
+        localStorage.setItem('alpro_tutorial_visto', 'true');
+    }
+})();
+</script>
 
 <div id="modalConfirmDuplicado" class="alpro-modal" style="display:none; align-items:center; justify-content:center; z-index: 10000;">
     <div class="alpro-content modal-animacion-zoom" onclick="event.stopPropagation()" style="max-width: 400px; text-align: center; border: 2px solid #ea580c;">
@@ -6733,7 +6925,7 @@ const premios = [
     // 🍬 CATEGORÍA 1: Chucherías Rápidas (Ultra Accesibles)
     { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM" },
     { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN" },
-    { id: 3, nombre: "Chicles", precio: 160, emoji: "🫧", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH" },
+    { id: 3, nombre: "Chicles", precio: 160, emoji: "🍬", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH" },
     { id: 4, nombre: "Ricito XL", precio: 360, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX" },
     { id: 5, nombre: "Galletas", precio: 370, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL" },
 
@@ -6810,7 +7002,6 @@ function toggleTiendaAlpro() {
             tiendaModal.style.webkitBackdropFilter = "blur(4px)";
         }, 10);
 
-        // Activamos las animaciones de entrada solo al abrir la tienda
         tiendaCargadaPorPrimeraVez = true;
 
         actualizarMarcadoresVisuales();
@@ -6865,14 +7056,12 @@ function cerrarModalRecarga() {
         cuerpo.classList.remove('modal-zoom-in');
         cuerpo.classList.add('modal-zoom-out');
         
-        // Esperamos a que la animación de Zoom-Out termine antes de ocultar
         setTimeout(() => {
             modal.style.display = 'none';
         }, 180);
     }
 }
 
-// 🔔 NUEVO CONTROL DEL BANNER DE INSTRUCCIONES
 function mostrarInstruccionesEnBanner(monedas, precioQuetzales) {
     const banner = document.getElementById('bannerInstruccionesAlpro');
     const texto = document.getElementById('textoInstruccionesBanner');
@@ -6888,7 +7077,6 @@ function cerrarBannerInstrucciones() {
     if (banner) banner.style.display = 'none';
 }
 
-// 🔐 VALIDACIÓN Y QUEMA DE PINES
 function generarFirmaSencilla(monedas, claveSecreta) {
     let hash = 0;
     const cadenaCombinada = monedas.toString() + claveSecreta;
@@ -6905,8 +7093,6 @@ async function canjearAlproPin() {
     if (!inputPin) return;
 
     const pinIngresado = inputPin.value.trim().toUpperCase();
-
-    // 1. Validar formato básico: ALPRO-[MONEDAS]-[FIRMA]
     const partes = pinIngresado.split('-');
     if (partes.length !== 3 || partes[0] !== 'ALPRO') {
         alert("⚠️ Formato de PIN incorrecto. Debe ser como: ALPRO-1000-XXXX");
@@ -6921,26 +7107,22 @@ async function canjearAlproPin() {
         return;
     }
 
-    // 2. Verificar autenticidad matemática local (¡Cero lag!)
     const firmaCorrecta = generarFirmaSencilla(monedas, PALABRA_SECRETA);
     if (firmaRecibida !== firmaCorrecta) {
         alert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
         return;
     }
 
-    // 3. Verificar si el PIN ya fue usado localmente en esta computadora
     let pinesUsados = JSON.parse(localStorage.getItem('alpro_pines_usados')) || [];
     if (pinesUsados.includes(pinIngresado)) {
         alert("🚫 Este código ya fue canjeado en este equipo.");
         return;
     }
 
-    // Deshabilitar botón temporalmente para evitar doble clic
     const btn = document.querySelector('.alpro-canje-container button');
     if (btn) btn.disabled = true;
 
     try {
-        // 4. 🌐 CONSULTAR A LA NUBE INVISIBLE SI EL PIN YA FUE USADO EN OTRA COMPU
         const responseCheck = await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`);
         const estadoPin = await responseCheck.text();
 
@@ -6950,22 +7132,18 @@ async function canjearAlproPin() {
             return;
         }
 
-        // 5. 🔥 SI ESTÁ LIBRE, MARCAR EL PIN COMO "USADO" EN LA NUBE AL INSTANTE
         await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, {
             method: 'POST',
             body: 'USADO'
         });
 
-        // 6. ¡ÉXITO! Sumamos las monedas al balance local del navegador
         let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
         let nuevoTotal = saldoActual + monedas;
         localStorage.setItem('alprocoins', nuevoTotal);
 
-        // 7. Destruimos el PIN guardándolo en la lista negra local
         pinesUsados.push(pinIngresado);
         localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados));
 
-        // 8. Animación dinámica del incremento digital en el marcador
         let inter = setInterval(() => {
             saldoActual += Math.ceil(monedas / 25);
             if (saldoActual >= nuevoTotal) {
@@ -6978,14 +7156,12 @@ async function canjearAlproPin() {
             }
         }, 30);
 
-        // 9. ¡Feedback visual de videojuego! 🪙🎮
         if (typeof crearTextoFlotanteMonedas === "function") {
             crearTextoFlotanteMonedas(monedas);
         }
 
         alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
         
-        // Limpieza, actualización de UI y cierre
         actualizarMarcadoresVisuales();
         inputPin.value = "";
         cerrarModalRecarga();
@@ -6998,7 +7174,7 @@ async function canjearAlproPin() {
     }
 }
 
-// 🛒 3. LÓGICA CORE DEL CARRITO (AGREGAR, RESTAR, VACIAR)
+// 🛒 3. LÓGICA CORE DEL CARRITO
 function agregarAlCarrito(item) {
     const reclamados = JSON.parse(localStorage.getItem('alpro_reclamados')) || [];
     if (item.esUnico && reclamados.includes(item.id)) return;
@@ -7044,20 +7220,17 @@ function actualizarResumenBarraCarrito() {
 
     const btnProcesar = document.getElementById('btnProcesarCompra');
     const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
-
-    // 🛑 REGLA DE NEGOCIO: 350 Alprocoins mínimo por pedido individual
     const MINIMO_CANJE = 350;
 
-    // Buscamos o creamos el globo de texto flotante institucional
     let tooltip = document.getElementById('cart-tooltip-alerta');
     if (!tooltip) {
         tooltip = document.createElement('div');
         tooltip.id = 'cart-tooltip-alerta';
         tooltip.style.position = 'absolute';
-        tooltip.style.bottom = '125%'; // Posicionado exactamente arriba del botón
+        tooltip.style.bottom = '125%';
         tooltip.style.left = '50%';
         tooltip.style.transform = 'translateX(-50%)';
-        tooltip.style.background = '#1e293b'; // Gris oscuro Slate profesional
+        tooltip.style.background = '#1e293b';
         tooltip.style.color = '#ffffff';
         tooltip.style.padding = '6px 12px';
         tooltip.style.fontSize = '12px';
@@ -7070,7 +7243,6 @@ function actualizarResumenBarraCarrito() {
         tooltip.style.pointerEvents = 'none';
         tooltip.style.transition = 'opacity 0.15s ease';
         
-        // Flechita inferior del globo
         const flecha = document.createElement('div');
         flecha.style.position = 'absolute';
         flecha.style.top = '100%';
@@ -7087,16 +7259,13 @@ function actualizarResumenBarraCarrito() {
         }
     }
 
-    // Texto exacto y limpio solicitado
     tooltip.innerHTML = `El mínimo de Canje Requerido es de ${MINIMO_CANJE} 🪙`;
 
-    // 🔍 EVALUACIÓN DE REGLAS
     if (cantidadTotalUnidades === 0 || totalMonedasItem > monedasActuales || totalMonedasItem < MINIMO_CANJE) {
-        // Mantenemos el estilo de botón inactivo gris clásico
         btnProcesar.style.background = "#cbd5e1";
         btnProcesar.style.color = "#94a3b8";
         btnProcesar.style.boxShadow = "none";
-        btnProcesar.disabled = false; // Lo dejamos activo en el DOM para poder detectar el movimiento del mouse
+        btnProcesar.disabled = false;
         btnProcesar.style.cursor = "not-allowed";
 
         if (totalMonedasItem > monedasActuales) {
@@ -7106,32 +7275,24 @@ function actualizarResumenBarraCarrito() {
             btnProcesar.onmouseleave = null;
         } else if (cantidadTotalUnidades > 0 && totalMonedasItem < MINIMO_CANJE) {
             btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
-            
-            // Bloqueamos el clic para que no avance al ticket si no cumple el mínimo
-            btnProcesar.onclick = (e) => {
-                e.preventDefault();
-            };
+            btnProcesar.onclick = (e) => e.preventDefault();
 
-            // 🖱️ EFECTO HOVER: Muestra el globo al pasar el mouse
             btnProcesar.onmouseenter = () => {
                 tooltip.style.display = 'block';
                 setTimeout(() => tooltip.style.opacity = '1', 10);
             };
 
-            // 🖱️ Oculta el globo al quitar el mouse
             btnProcesar.onmouseleave = () => {
                 tooltip.style.opacity = '0';
                 setTimeout(() => tooltip.style.display = 'none', 150);
             };
         } else {
-            // Carrito vacío
             btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
             btnProcesar.onclick = (e) => e.preventDefault();
             btnProcesar.onmouseenter = null;
             btnProcesar.onmouseleave = null;
         }
     } else {
-        // 🔥 ¡REGLAS CUMPLIDAS! El sistema desbloquea y vuelve a la normalidad
         btnProcesar.disabled = false;
         btnProcesar.style.background = "linear-gradient(135deg, #10b981, #059669)";
         btnProcesar.style.color = "white";
@@ -7139,19 +7300,17 @@ function actualizarResumenBarraCarrito() {
         btnProcesar.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.2)";
         btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
         
-        // Limpiamos los eventos hover de advertencia ya que el carrito es válido
         btnProcesar.onmouseenter = null;
         btnProcesar.onmouseleave = null;
         tooltip.style.display = 'none';
 
-        // Habilitamos la compra
         btnProcesar.onclick = function() { 
             procesarCarrito(); 
         };
     }
 }
 
-// 🎨 4. RENDERIZADO COMPLETO DEL ESTANTE INTERACTIVO
+// 🎨 4. RENDERIZADO COMPLETO DEL ESTANTE INTERACTIVO (AHORA SÍ DECLARADA ANTES DE USARSE)
 function renderizarTiendaAlpro() {
     const contenedor = document.getElementById('contenedorItemsTienda');
     if (!contenedor) return;
@@ -7176,7 +7335,6 @@ function renderizarTiendaAlpro() {
         divItem.style.position = "relative";
         divItem.style.transition = "all 0.2s ease";
         
-        // 🏁 CONTROL DE ANIMACIÓN DE ENTRADA INTELIGENTE:
         if (tiendaCargadaPorPrimeraVez) {
             divItem.style.opacity = "0";
             divItem.style.animation = "entradaTarjeta 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards";
@@ -7198,8 +7356,6 @@ function renderizarTiendaAlpro() {
         }
 
         const precioFormateado = item.precio.toLocaleString('en-US');
-        
-        // 🔮 EXTRAEMOS EL FILTRO CSS SI EL PREMIO LO TIENE (Para las tarjetas premium)
         let estiloDelEmoji = item.efectoEmoji ? item.efectoEmoji : "";
 
         divItem.innerHTML = `
@@ -7301,9 +7457,7 @@ function renderizarTiendaAlpro() {
         contenedor.appendChild(divItem);
     });
 
-    // Desactivamos la bandera de carga para que las próximas interacciones (clicks) sean instantáneas
     tiendaCargadaPorPrimeraVez = false;
-
     actualizarResumenBarraCarrito();
 }
 
