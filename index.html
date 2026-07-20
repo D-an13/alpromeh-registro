@@ -3014,7 +3014,7 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             registrarRespaldoPedidoHistorial(payload);
         }
 
-    // 🪙 2. RECOMPENSA INSTANTÁNEA (CON PROBABILIDADES PONDERADAS)
+   // 🪙 2. RECOMPENSA INSTANTÁNEA (CON PROBABILIDADES PONDERADAS DE 3 A 7)
         if (!yaExiste) {
             showToast("✅ OC. " + num + " guardada correctamente");
             
@@ -3022,15 +3022,14 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             setTimeout(() => {
                 if (typeof animarMonedasAlpro === "function") {
                     
-                    // 🎲 TÓMBOLA DE PREMIOS (20 elementos en total)
-                    // Ajustamos cuántas veces aparece cada número para controlar su probabilidad:
+                    // 🎲 TÓMBOLA DE PREMIOS REBALANCEADA (20 elementos en total - Máximo 7)
+                    // Ajustamos las apariciones para eliminar el 8 y potenciar el 7:
                     const bolsaPremios = [
                         3, 3, 3,          // 15% de probabilidad (Normal)
                         4, 4, 4, 4,       // 20% de probabilidad (Normal)
                         5, 5, 5, 5, 5,    // 25% de probabilidad (¡Muy Común! 🟢)
                         6, 6, 6, 6, 6,    // 25% de probabilidad (¡Muy Común! 🟢)
-                        7, 7,             // 10% de probabilidad (Raro 🔵)
-                        8                 // 5% de probabilidad  (¡Ultra Raro / Legendario! 🏆)
+                        7, 7, 7           // 15% de probabilidad (Raro 🔵 - Subió un 5%)
                     ]; 
                     
                     // Al elegir uno al azar de esta lista, el sistema respetará las probabilidades
@@ -6525,71 +6524,52 @@ function sumarAlprocoinsLocales(monedasGanadas) {
         }
     </style>
 
-    <div id="cuerpoTienda" class="tienda-unfold" style="background: #ffffff; width: 820px; max-width: 94%; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.22); position: relative; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; overflow: hidden;">
-
-<!-- ==========================================================
-     🔒🔒🔒 CAPA DE BLOQUEO "PRÓXIMAMENTE" (Poner para bloquear, borrar para activar)
-     ========================================================== -->
-<div id="bloqueoProximamente" style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 100; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; box-sizing: border-box;">
-    <!-- Icono animado -->
-    <div style="font-size: 64px; margin-bottom: 16px; animation: flotarIcono 3s ease-in-out infinite;">🛠️</div>
-    <style>
-        @keyframes flotarIcono {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-    </style>
-    <h2 style="margin: 0; font-size: 26px; font-weight: 900; background: linear-gradient(135deg, #ea580c, #85200c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px;">
-        PRÓXIMAMENTE...
-    </h2>
-    <p style="margin: 10px 0 24px 0; font-size: 14px; color: #475569; max-width: 440px; line-height: 1.5; font-weight: 500;">
-        ¡La Tienda de Recompensas se está abasteciendo! Mientras tanto, sigue acumulando todos los <b>Alprocoins</b> que puedas. Tu saldo actual se guardará automáticamente. 🪙
-    </p>
-    
-    <button onclick="toggleTiendaAlpro()" style="background: #0f172a; color: white; border: none; padding: 12px 28px; font-weight: 800; font-size: 13px; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); transition: transform 0.2s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">
-        ¡Entendido, a juntar coins!
-    </button>
-</div>
-<!-- 🔒🔒🔒========================================================== -->
+   <div id="cuerpoTienda" class="tienda-unfold" style="background: #ffffff; width: 820px; max-width: 94%; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.22); position: relative; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column; overflow: hidden;">
         
-        <div style="background: linear-gradient(135deg, #ea580c, #85200c); padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-            <div>
-                <h2 style="margin: 0; font-size: 17px; font-weight: 900; color: #ffffff; letter-spacing: 0.6px; display: flex; align-items: center; gap: 8px;">
-                    <span>🎁</span> TIENDA DE <span style="color: #fef08a; text-shadow: 0 0 10px rgba(254, 240, 138, 0.4);">RECOMPENSAS</span>
-                </h2>
-                <p style="margin: 3px 0 0 0; font-size: 11px; color: #ffedd5; opacity: 0.9; font-weight: 500;">Tus Alprocoins tienen premio. ¡Úsalos aquí!</p>
+    <div style="background: linear-gradient(135deg, #ea580c, #85200c); padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+        <div>
+            <h2 style="margin: 0; font-size: 17px; font-weight: 900; color: #ffffff; letter-spacing: 0.6px; display: flex; align-items: center; gap: 8px;">
+                <span>✨</span> TIENDA DE <span style="color: #fef08a; text-shadow: 0 0 10px rgba(254, 240, 138, 0.4);">RECOMPENSAS</span>
+            </h2>
+            <p style="margin: 3px 0 0 0; font-size: 11px; color: #ffedd5; opacity: 0.9; font-weight: 500;">Tus Alprocoins tienen premio. ¡Úsalos aquí!</p>
+        </div>
+        <button onclick="toggleTiendaAlpro()" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 14px; cursor: pointer; color: #ffffff; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.2s;" onmouseenter="this.style.background='#ef4444'; this.style.borderColor='#ef4444';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">×</button>
+    </div>
+
+    <div style="padding: 12px 24px 24px 24px; display: flex; flex-direction: column; gap: 12px;">
+        
+<div style="background: #fafafa; padding: 6px 16px; border-bottom: 1px dashed #e2e8f0; display: flex; align-items: center; justify-content: center; margin: 0;">
+    <p style="margin: 0; font-size: 11px; color: #475569; font-weight: 600; text-align: center; line-height: 1.3; letter-spacing: 0.1px;">
+        Cada orden registrada te otorga <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 850;">🪙 Alprocoins</span>. ¡Mientras más órdenes ingresas, más recompensas desbloqueas!
+    </p>
+</div>
+
+<div id="contenedorItemsTienda" style="max-height: 340px; overflow-y: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px;">
+</div>
+
+        <div id="barraCarrito" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+            <div style="display: flex; gap: 16px; align-items: center;">
+                
+                <div class="boton-electrico-contenedor" onclick="abrirModalRecarga()">
+                    <div class="boton-electrico-interno" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+                        <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 13px; display: inline-block; transform: translateY(0.5px); flex-shrink: 0; font-weight: 800; line-height: 1;">🎟️</span>
+                        ¿Quieres más Alprocoins?
+                    </div>
+                </div>
+
+                <div style="font-size: 13px; color: #64748b; font-weight: 600;">
+                    Items: <span id="cart-cantidad" style="color: #0f172a; font-weight: 800; font-size: 15px;">0</span>
+                </div>
+                <div style="font-size: 13px; color: #64748b; font-weight: 600;">
+                    Total: <span style="color: #ea580c; font-weight: 800; font-size: 16px;">🪙 <span id="cart-total">0</span></span>
+                </div>
             </div>
-            <button onclick="toggleTiendaAlpro()" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 14px; cursor: pointer; color: #ffffff; width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.2s;" onmouseenter="this.style.background='#ef4444'; this.style.borderColor='#ef4444';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">×</button>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="vaciarCarrito()" style="background: #e2e8f0; color: #475569; border: none; padding: 8px 14px; font-weight: 700; font-size: 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">Vaciar</button>
+                <button id="btnProcesarCompra" onclick="procesarCarrito()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 20px; font-weight: 800; font-size: 12px; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); transition: all 0.2s;">PROCESAR PEDIDO 🧾</button>
+            </div>
         </div>
 
-        <div style="padding: 12px 24px 24px 24px; display: flex; flex-direction: column; gap: 12px;">
-            
-            <div id="contenedorItemsTienda" style="max-height: 340px; overflow-y: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px; margin-top: 4px;">
-                </div>
-
-            <div id="barraCarrito" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                <div style="display: flex; gap: 16px; align-items: center;">
-                    
-                    <div class="boton-electrico-contenedor" onclick="abrirModalRecarga()">
-                        <div class="boton-electrico-interno">
-                            ⚡ ¿Quieres más Alprocoins?
-                        </div>
-                    </div>
-
-                    <div style="font-size: 13px; color: #64748b; font-weight: 600;">
-                        Items: <span id="cart-cantidad" style="color: #0f172a; font-weight: 800; font-size: 15px;">0</span>
-                    </div>
-                    <div style="font-size: 13px; color: #64748b; font-weight: 600;">
-                        Total: <span style="color: #ea580c; font-weight: 800; font-size: 16px;">🪙 <span id="cart-total">0</span></span>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button onclick="vaciarCarrito()" style="background: #e2e8f0; color: #475569; border: none; padding: 8px 14px; font-weight: 700; font-size: 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">Vaciar</button>
-                    <button id="btnProcesarCompra" onclick="procesarCarrito()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 20px; font-weight: 800; font-size: 12px; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); transition: all 0.2s;">PROCESAR PEDIDO 🧾</button>
-                </div>
-            </div>
-
-        </div>
     </div>
 </div>
 
@@ -6599,9 +6579,11 @@ function sumarAlprocoinsLocales(monedasGanadas) {
         
         <div style="background: linear-gradient(135deg, #ea580c, #85200c); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
             <div>
-                <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
-                    <span>🪙</span> OBTÉN MÁS <span style="color: #fef08a;">ALPROCOINS</span>
-                </h3>
+             <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+    <!-- 🎟️ Ticket original pintado de dorado con el efecto de tu título -->
+    <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 16px; display: inline-block; transform: translateY(-0.5px); flex-shrink: 0; font-weight: 800;">🎟️</span>
+    OBTÉN MÁS <span style="color: #fef08a;">ALPROCOINS</span>
+</h3>
                 <p style="margin: 2px 0 0 0; font-size: 10px; color: #ffedd5; opacity: 0.9;">Consigue monedas al instante sin esperar</p>
             </div>
             <button onclick="cerrarModalRecarga()" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 14px; cursor: pointer; color: #ffffff; width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.2s;" onmouseenter="this.style.background='#ef4444'; this.style.borderColor='#ef4444';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">×</button>
@@ -6618,39 +6600,69 @@ function sumarAlprocoinsLocales(monedasGanadas) {
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 22px;">🪙</span>
-                        <div style="display: flex; flex-direction: column;">
-                            <span style="font-weight: 800; font-size: 14px; color: #0f172a;">1,000 Alprocoins</span>
-                            <span style="font-size: 10px; color: #64748b; font-weight: 500;">Pack Bronce</span>
-                        </div>
-                    </div>
-                    <button onclick="mostrarInstruccionesEnBanner(1000, 5)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 5.00</button>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 22px;">🪙</span>
-                        <div style="display: flex; flex-direction: column;">
-                            <span style="font-weight: 800; font-size: 14px; color: #0f172a;">2,500 Alprocoins</span>
-                            <span style="font-size: 10px; color: #64748b; font-weight: 500;">Pack Plata</span>
-                        </div>
-                    </div>
-                    <button onclick="mostrarInstruccionesEnBanner(2500, 10)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 10.00</button>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 22px;">🪙</span>
-                        <div style="display: flex; flex-direction: column;">
-                            <span style="font-weight: 800; font-size: 14px; color: #0f172a;">7,000 Alprocoins</span>
-                            <span style="font-size: 10px; color: #64748b; font-weight: 500;">Pack Oro</span>
-                        </div>
-                    </div>
-                    <button onclick="mostrarInstruccionesEnBanner(7000, 25)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 25.00</button>
-                </div>
+    <!-- 🥉 PACK BRONCE (Borde Cobre en Hover) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#ca8a04'; this.style.boxShadow='0 4px 12px rgba(202,138,4,0.05)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 22px;">🪙</span>
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">200 Alprocoins</span>
+                <span style="font-size: 10px; color: #b45309; font-weight: 700;">Pack Bronce</span>
             </div>
+        </div>
+        <button onclick="mostrarInstruccionesEnBanner(200, 25)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 25.00</button>
+    </div>
+
+    <!-- 🥈 PACK PLATA (Borde Plata en Hover) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#94a3b8'; this.style.boxShadow='0 4px 12px rgba(148,163,184,0.08)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 22px;">🪙</span>
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">500 Alprocoins</span>
+                <span style="font-size: 10px; color: #475569; font-weight: 700;">Pack Plata</span>
+            </div>
+        </div>
+        <button onclick="mostrarInstruccionesEnBanner(500, 50)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 50.00</button>
+    </div>
+
+    <!-- 🥇 PACK ORO (Borde Oro en Hover) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#eab308'; this.style.boxShadow='0 4px 12px rgba(234,179,8,0.1)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 22px;">🪙</span>
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">1,200 Alprocoins</span>
+                <span style="font-size: 10px; color: #a16207; font-weight: 700;">Pack Oro</span>
+            </div>
+        </div>
+        <button onclick="mostrarInstruccionesEnBanner(1200, 100)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 100.00</button>
+    </div>
+
+    <!-- 💎 PACK DIAMANTE (Tu joya animada intacta) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #cbd5e1; transition: all 0.2s;" onmouseenter="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 4px 14px rgba(59,130,246,0.08)';" onmouseleave="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
+        <style>
+            @keyframes arcoirisAlpro {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            .btn-arcoiris-diamante {
+                background: linear-gradient(45deg, #ff2a5f, #ff7e40, #ffeb3b, #2af598, #009efd, #9b51e0, #ff2a5f);
+                background-size: 400% 400%;
+                animation: arcoirisAlpro 8s ease infinite;
+                color: #ffffff;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            }
+        </style>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 22px;">💎</span>
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">1,900 Alprocoins</span>
+                <span style="font-size: 10px; color: #2563eb; font-weight: 700; letter-spacing: 0.2px;">Pack Diamante</span>
+            </div>
+        </div>
+        <button class="btn-arcoiris-diamante" onclick="mostrarInstruccionesEnBanner(1900, 150)" style="border: none; padding: 8px 14px; border-radius: 10px; font-weight: 900; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 150.00</button>
+    </div>
+</div>
 
             <div style="border-top: 1px dashed #cbd5e1; padding-top: 14px; margin-top: 6px;">
                 <label style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 6px; letter-spacing: 0.3px;">¿YA TIENES UN CÓDIGO DE RECARGA?</label>
@@ -6716,19 +6728,70 @@ function sumarAlprocoinsLocales(monedasGanadas) {
 let carrito = {}; 
 let tiendaCargadaPorPrimeraVez = false;
 
+// Premios ordenados con prioridad de accesibilidad (IDs corregidos y sin duplicados)
 const premios = [
-    { id: 1, nombre: "Gomitas", precio: 300, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM" },
-    { id: 2, nombre: "Galletas", precio: 500, emoji: "🍪", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "GL" },
-    { id: 3, nombre: "Chocolate", precio: 700, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH" },
-    { id: 4, nombre: "Ricitos", precio: 900, emoji: "🍿", colorBadge: "#fef9c3", colorTexto: "#ca8a04", esUnico: false, prefijo: "RC" },
-    { id: 5, nombre: "Gaseosa", precio: 1000, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: true, prefijo: "GS" },
-    { id: 6, nombre: "Tupper de Plástico", precio: 2800, emoji: "🍱", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HP" },
-    { id: 7, nombre: "Taza", precio: 3500, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ" },
-    { id: 8, nombre: "Tupper de Vidrio", precio: 6500, emoji: "🫙", colorBadge: "#e2e8f0", colorTexto: "#475569", esUnico: true, prefijo: "HV" }
+    // 🍬 CATEGORÍA 1: Chucherías Rápidas (Ultra Accesibles)
+    { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM" },
+    { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN" },
+    { id: 3, nombre: "Chicles", precio: 160, emoji: "🍬", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH" },
+    { id: 4, nombre: "Ricito XL", precio: 360, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX" },
+    { id: 5, nombre: "Galletas", precio: 370, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL" },
+
+    // ☕ CATEGORÍA 2: Oficina y Útiles de Uso Diario
+    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ" },
+    { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC" },
+    { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP" },
+    { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB" }, // 🔒 Modificado a true
+    { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR" },
+
+    // 🍱 CATEGORÍA 3: Tecnología y Accesorios Intermedios
+    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV" },
+    { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS" },
+    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS" },
+    { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD" },
+    { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV" }, // 🔒 Modificado a true
+
+    // 🎁 CATEGORÍA 4: Premios Aspiracionales Premium (Efectos de Color sobre la Tarjeta)
+   { 
+        id: 17, 
+        nombre: "Tarjeta de Regalo Básica", 
+        precio: 1600, 
+        emoji: "💳", 
+        colorBadge: "#d1fae5", 
+        colorTexto: "#064e3b", 
+        esUnico: true, 
+        prefijo: "TB",
+        // 🛍️ VERDE DOLLARCITY PREMIUM:
+        efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;" 
+    },
+    { 
+        id: 18, 
+        nombre: "Tarjeta de Regalo Pro", 
+        precio: 2400, 
+        emoji: "💳", 
+        colorBadge: "#f1f5f9", 
+        colorTexto: "#0f172a", 
+        esUnico: true, 
+        prefijo: "TP",
+        efectoEmoji: "filter: grayscale(1) contrast(1.2) brightness(1.3); display: inline-block;" // ⚪ Plateado Metálico
+    },
+    { 
+        id: 19, 
+        nombre: "Tarjeta de Regalo Max", 
+        precio: 3200, 
+        emoji: "💳", 
+        colorBadge: "#fef9c3", 
+        colorTexto: "#451a03", 
+        esUnico: true, 
+        prefijo: "TM",
+        efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;" // 🟡 Dorado de Oro
+    }
 ];
 
-// 🔑 CLAVE CRIPTOGRÁFICA SECRETA PARA TUS PINES
+// 🔑 CONFIGURACIÓN SEGURA PARA TUS PINES (KVDB + FIRMA)
 const PALABRA_SECRETA = "alpromeh_premium_key_2026";
+// 🤫 Tu casillero secreto global en la nube (100% gratis, seguro y sin cuentas)
+const URL_NUBE_SECRETA = "https://kvdb.io/7N8vYFwM5qK2uX1pZ89aB/pines_alpro_"; 
 
 // 🎪 2. CONTROL DE APERTURA Y CIERRE (ANIMACIÓN PERSPECTIVA)
 function toggleTiendaAlpro() {
@@ -6837,7 +6900,7 @@ function generarFirmaSencilla(monedas, claveSecreta) {
     return Math.abs(hash).toString(16).substring(0, 4).toUpperCase();
 }
 
-function canjearAlproPin() {
+async function canjearAlproPin() {
     const inputPin = document.getElementById('inputAlproPin');
     if (!inputPin) return;
 
@@ -6858,36 +6921,81 @@ function canjearAlproPin() {
         return;
     }
 
-    // 2. Verificar autenticidad matemática (Fórmula Criptográfica)
+    // 2. Verificar autenticidad matemática local (¡Cero lag!)
     const firmaCorrecta = generarFirmaSencilla(monedas, PALABRA_SECRETA);
     if (firmaRecibida !== firmaCorrecta) {
         alert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
         return;
     }
 
-    // 3. Verificar si el PIN ya fue usado/destruido localmente en esta computadora
+    // 3. Verificar si el PIN ya fue usado localmente en esta computadora
     let pinesUsados = JSON.parse(localStorage.getItem('alpro_pines_usados')) || [];
     if (pinesUsados.includes(pinIngresado)) {
         alert("🚫 Este código ya fue canjeado en este equipo.");
         return;
     }
 
-    // 4. Sumamos las monedas al balance local del navegador
-    let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
-    saldoActual += monedas;
-    localStorage.setItem('alprocoins', saldoActual);
+    // Deshabilitar botón temporalmente para evitar doble clic
+    const btn = document.querySelector('.alpro-canje-container button');
+    if (btn) btn.disabled = true;
 
-    // 5. Destruimos el PIN guardándolo en la lista negra local
-    pinesUsados.push(pinIngresado);
-    localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados));
+    try {
+        // 4. 🌐 CONSULTAR A LA NUBE INVISIBLE SI EL PIN YA FUE USADO EN OTRA COMPU
+        const responseCheck = await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`);
+        const estadoPin = await responseCheck.text();
 
-    // 6. Feedback visual
-    alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
-    
-    // Limpieza, actualización de UI y cierre
-    actualizarMarcadoresVisuales();
-    inputPin.value = "";
-    cerrarModalRecarga();
+        if (estadoPin === "USADO") {
+            alert("🚫 Este código ya fue canjeado en otra computadora. No se puede reutilizar.");
+            if (btn) btn.disabled = false;
+            return;
+        }
+
+        // 5. 🔥 SI ESTÁ LIBRE, MARCAR EL PIN COMO "USADO" EN LA NUBE AL INSTANTE
+        await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, {
+            method: 'POST',
+            body: 'USADO'
+        });
+
+        // 6. ¡ÉXITO! Sumamos las monedas al balance local del navegador
+        let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
+        let nuevoTotal = saldoActual + monedas;
+        localStorage.setItem('alprocoins', nuevoTotal);
+
+        // 7. Destruimos el PIN guardándolo en la lista negra local
+        pinesUsados.push(pinIngresado);
+        localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados));
+
+        // 8. Animación dinámica del incremento digital en el marcador
+        let inter = setInterval(() => {
+            saldoActual += Math.ceil(monedas / 25);
+            if (saldoActual >= nuevoTotal) {
+                saldoActual = nuevoTotal;
+                clearInterval(inter);
+            }
+            const numeroMarcador = document.getElementById('numero-alprocoins');
+            if (numeroMarcador) {
+                numeroMarcador.innerText = saldoActual.toLocaleString('en-US');
+            }
+        }, 30);
+
+        // 9. ¡Feedback visual de videojuego! 🪙🎮
+        if (typeof crearTextoFlotanteMonedas === "function") {
+            crearTextoFlotanteMonedas(monedas);
+        }
+
+        alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
+        
+        // Limpieza, actualización de UI y cierre
+        actualizarMarcadoresVisuales();
+        inputPin.value = "";
+        cerrarModalRecarga();
+
+    } catch (error) {
+        console.error("Error de conexión:", error);
+        alert("⚠️ Error de red. Asegúrate de tener conexión a internet para validar tu PIN.");
+    } finally {
+        if (btn) btn.disabled = false;
+    }
 }
 
 // 🛒 3. LÓGICA CORE DEL CARRITO (AGREGAR, RESTAR, VACIAR)
@@ -6927,7 +7035,6 @@ function actualizarResumenBarraCarrito() {
         const producto = premios.find(p => p.id == id);
         if (producto) {
             totalMonedasItem += producto.precio * carrito[id];
-            amountText = carrito[id];
             cantidadTotalUnidades += carrito[id];
         }
     }
@@ -6938,24 +7045,109 @@ function actualizarResumenBarraCarrito() {
     const btnProcesar = document.getElementById('btnProcesarCompra');
     const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
 
-    if (cantidadTotalUnidades === 0 || totalMonedasItem > monedasActuales) {
-        btnProcesar.disabled = true;
+    // 🛑 REGLA DE NEGOCIO: 350 Alprocoins mínimo por pedido individual
+    const MINIMO_CANJE = 350;
+
+    // Buscamos o creamos el globo de texto flotante institucional
+    let tooltip = document.getElementById('cart-tooltip-alerta');
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'cart-tooltip-alerta';
+        tooltip.style.position = 'absolute';
+        tooltip.style.bottom = '125%'; // Posicionado exactamente arriba del botón
+        tooltip.style.left = '50%';
+        tooltip.style.transform = 'translateX(-50%)';
+        tooltip.style.background = '#1e293b'; // Gris oscuro Slate profesional
+        tooltip.style.color = '#ffffff';
+        tooltip.style.padding = '6px 12px';
+        tooltip.style.fontSize = '12px';
+        tooltip.style.fontWeight = '600';
+        tooltip.style.borderRadius = '6px';
+        tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        tooltip.style.whiteSpace = 'nowrap';
+        tooltip.style.zIndex = '9999';
+        tooltip.style.display = 'none';
+        tooltip.style.pointerEvents = 'none';
+        tooltip.style.transition = 'opacity 0.15s ease';
+        
+        // Flechita inferior del globo
+        const flecha = document.createElement('div');
+        flecha.style.position = 'absolute';
+        flecha.style.top = '100%';
+        flecha.style.left = '50%';
+        flecha.style.transform = 'translateX(-50%)';
+        flecha.style.borderWidth = '5px';
+        flecha.style.borderStyle = 'solid';
+        flecha.style.borderColor = '#1e293b transparent transparent transparent';
+        tooltip.appendChild(flecha);
+
+        if (btnProcesar.parentElement) {
+            btnProcesar.parentElement.style.position = 'relative';
+            btnProcesar.parentElement.appendChild(tooltip);
+        }
+    }
+
+    // Texto exacto y limpio solicitado
+    tooltip.innerHTML = `El mínimo de Canje Requerido es de ${MINIMO_CANJE} 🪙`;
+
+    // 🔍 EVALUACIÓN DE REGLAS
+    if (cantidadTotalUnidades === 0 || totalMonedasItem > monedasActuales || totalMonedasItem < MINIMO_CANJE) {
+        // Mantenemos el estilo de botón inactivo gris clásico
         btnProcesar.style.background = "#cbd5e1";
         btnProcesar.style.color = "#94a3b8";
-        btnProcesar.style.cursor = "not-allowed";
         btnProcesar.style.boxShadow = "none";
+        btnProcesar.disabled = false; // Lo dejamos activo en el DOM para poder detectar el movimiento del mouse
+        btnProcesar.style.cursor = "not-allowed";
+
         if (totalMonedasItem > monedasActuales) {
             btnProcesar.innerText = "FONDOS INSUFICIENTES 🔒";
-        } else {
+            btnProcesar.onclick = (e) => e.preventDefault();
+            btnProcesar.onmouseenter = null;
+            btnProcesar.onmouseleave = null;
+        } else if (cantidadTotalUnidades > 0 && totalMonedasItem < MINIMO_CANJE) {
             btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
+            
+            // Bloqueamos el clic para que no avance al ticket si no cumple el mínimo
+            btnProcesar.onclick = (e) => {
+                e.preventDefault();
+            };
+
+            // 🖱️ EFECTO HOVER: Muestra el globo al pasar el mouse
+            btnProcesar.onmouseenter = () => {
+                tooltip.style.display = 'block';
+                setTimeout(() => tooltip.style.opacity = '1', 10);
+            };
+
+            // 🖱️ Oculta el globo al quitar el mouse
+            btnProcesar.onmouseleave = () => {
+                tooltip.style.opacity = '0';
+                setTimeout(() => tooltip.style.display = 'none', 150);
+            };
+        } else {
+            // Carrito vacío
+            btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
+            btnProcesar.onclick = (e) => e.preventDefault();
+            btnProcesar.onmouseenter = null;
+            btnProcesar.onmouseleave = null;
         }
     } else {
+        // 🔥 ¡REGLAS CUMPLIDAS! El sistema desbloquea y vuelve a la normalidad
         btnProcesar.disabled = false;
         btnProcesar.style.background = "linear-gradient(135deg, #10b981, #059669)";
         btnProcesar.style.color = "white";
         btnProcesar.style.cursor = "pointer";
         btnProcesar.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.2)";
         btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
+        
+        // Limpiamos los eventos hover de advertencia ya que el carrito es válido
+        btnProcesar.onmouseenter = null;
+        btnProcesar.onmouseleave = null;
+        tooltip.style.display = 'none';
+
+        // Habilitamos la compra
+        btnProcesar.onclick = function() { 
+            procesarCarrito(); 
+        };
     }
 }
 
@@ -7006,10 +7198,15 @@ function renderizarTiendaAlpro() {
         }
 
         const precioFormateado = item.precio.toLocaleString('en-US');
+        
+        // 🔮 EXTRAEMOS EL FILTRO CSS SI EL PREMIO LO TIENE (Para las tarjetas premium)
+        let estiloDelEmoji = item.efectoEmoji ? item.efectoEmoji : "";
 
         divItem.innerHTML = `
-            <div style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}">${item.emoji}</div>
-            <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; min-height: 32px; display: flex; align-items: center; justify-content: center; line-height: 1.2;">
+            <div style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}; ${estiloDelEmoji}">
+                ${item.emoji}
+            </div>
+            <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; min-height: 32px; display: flex; align-items: center; justify-content: center; line-height: 1.2; text-align: center;">
                 ${item.nombre}
             </div>
             <div style="font-size: 11px; color: ${yaCanjeadoPermanente ? '#94a3b8' : item.colorTexto}; background: ${yaCanjeadoPermanente ? '#f1f5f9' : item.colorBadge}; font-weight: 800; padding: 2px 8px; border-radius: 9999px; margin-bottom: 8px;">
@@ -7173,8 +7370,19 @@ function procesarCarrito() {
 }
 
 function imprimirTicketClonado() {
-    const contenidoTicket = document.getElementById('modalTicketFactura').innerHTML;
-    const ventanaImpresion = window.open('', '_blank', 'width=400,height=600');
+    // 🎫 Agarramos el nodo original con sus estilos inline
+    const nodoTicket = document.getElementById('modalTicketFactura');
+    if (!nodoTicket) return;
+    
+    // Clonamos el nodo para poder limpiarle los botones antes de imprimir
+    const clonTicket = nodoTicket.cloneNode(true);
+    
+    // ✂️ Removemos la barra de botones (.no-print)
+    const botones = clonTicket.querySelector('.no-print');
+    if (botones) botones.remove();
+
+    // Abrimos la pestaña para el render
+    const ventanaImpresion = window.open('', '_blank', 'width=450,height=700');
     
     ventanaImpresion.document.write(`
         <html>
@@ -7184,22 +7392,30 @@ function imprimirTicketClonado() {
                 body { 
                     font-family: 'Courier New', Courier, monospace; 
                     color: #1e293b; 
-                    padding: 20px;
-                    background: #ffffff;
+                    padding: 30px 20px;
+                    background: #f8fafc;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
                 }
-                .no-print { display: none !important; }
-                div { line-height: 1.4; }
+                * {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
             </style>
         </head>
         <body>
-            <div style="width: 100%; max-width: 320px; margin: 0 auto;">
-                ${contenidoTicket}
-            </div>
+            <!-- Inyectamos el clon completo -->
+            ${clonTicket.outerHTML}
+            
             <script>
-                setTimeout(() => {
-                    window.print();
-                    window.close();
-                }, 250);
+                // 🔥 SOLUCIÓN: Esperamos a que todo el HTML esté pintado, disparamos
+                // y dejamos que el flujo nativo maneje la ventana sin forzar el close inmediato
+                window.onload = function() {
+                    setTimeout(() => {
+                        window.print();
+                    }, 500);
+                };
             <\/script>
         </body>
         </html>
