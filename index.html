@@ -1648,6 +1648,98 @@ input::-webkit-outer-spin-button,
         opacity: 0; 
     }
 }
+
+/* Asegura que las tarjetas permitan elementos flotantes sin cortarlos */
+#contenedorItemsTienda > div {
+    overflow: visible !important;
+}
+
+/* 🎈 Container del Emoji preparado para el Globo Flotante */
+.contenedor-emoji-item {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* ⚡ 1. Animación con pausa sutil (pasa el rayo y espera un momento) */
+@keyframes destelloPausado {
+    0% { 
+        left: -150%; 
+    }
+    35% { 
+        left: 200%; /* El rayo cruza rápido al principio */
+    }
+    100% { 
+        left: 200%; /* Se queda esperando afuera el resto del tiempo */
+    }
+}
+
+/* 🩶 TOOLTIP ELEGANTE SLATE MATE */
+.tooltip-desc-sutil {
+    position: absolute;
+    top: 115%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    background: #334155;
+    color: #f8fafc;
+    padding: 6px 10px;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.3;
+    border-radius: 8px;
+    width: max-content;
+    max-width: 150px;
+    text-align: center;
+    box-shadow: 0 8px 16px -2px rgba(15, 23, 42, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 999;
+    overflow: hidden !important; /* Mantiene la ráfaga dentro del globo */
+}
+
+/* Flechita superior del tooltip */
+.tooltip-desc-sutil::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #334155 transparent;
+}
+
+/* Aparece el tooltip al pasar el cursor sobre el emoji */
+.contenedor-emoji-item:hover .tooltip-desc-sutil {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0px);
+}
+
+/* ✨ Ráfaga de luz diamantina que cruza en diagonal */
+.tooltip-desc-sutil::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 65%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+/* 🚀 Se activa la ráfaga con tiempo de espera entre ciclo y ciclo */
+.contenedor-emoji-item:hover .tooltip-desc-sutil::before {
+    animation: destelloPausado 3.5s infinite ease-in-out;
+}
 </style>
 </head>
 <body>
@@ -6920,72 +7012,40 @@ function sumarAlprocoinsLocales(monedasGanadas) {
 let carrito = {}; 
 let tiendaCargadaPorPrimeraVez = false;
 
-// Premios ordenados con prioridad de accesibilidad (IDs corregidos y sin duplicados)
+// Premios oficiales con descripciones integradas
 const premios = [
-    // 🍬 CATEGORÍA 1: Chucherías Rápidas (Ultra Accesibles)
-    { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM" },
-    { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN" },
-    { id: 3, nombre: "Chicles", precio: 160, emoji: "🍬", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH" },
-    { id: 4, nombre: "Ricito XL", precio: 360, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX" },
-    { id: 5, nombre: "Galletas", precio: 370, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL" },
+    // 🍬 CATEGORÍA 1: Chucherías Rápidas
+    { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM", desc: "Disfruta tu dosis de dulce diaria" },
+    { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN", desc: "El snack perfecto de media tarde" },
+    { id: 3, nombre: "Chicles", precio: 160, emoji: "🫧", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH", desc: "Refresca tu aliento con unos Stick de larga duración" },
+    { id: 4, nombre: "Ricito XL", precio: 360, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX", desc: "Nada mejor que un antojo XL" },
+    { id: 5, nombre: "Galletas", precio: 370, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL", desc: "Acompáñalas con tu café" },
 
-    // ☕ CATEGORÍA 2: Oficina y Útiles de Uso Diario
-    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ" },
-    { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC" },
-    { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP" },
-    { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB" }, // 🔒 Modificado a true
-    { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR" },
+    // ☕ CATEGORÍA 2: Oficina y Útiles
+    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
+    { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC", desc: "Disfruta de un buen chocolate premium JacQuot francés" },
+    { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP", desc: "El pack perfecto para que nunca falte tinta" },
+    { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
+    { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
 
-    // 🍱 CATEGORÍA 3: Tecnología y Accesorios Intermedios
-    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV" },
-    { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS" },
-    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS" },
-    { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD" },
-    { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV" }, // 🔒 Modificado a true
+    // 🍱 CATEGORÍA 3: Tecnología y Accesorios
+    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV", desc: "Tu comida fresca y segura" },
+    { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
+    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
+    { id: 15, nombre: "Audífonos Sencillos Tech1", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
+    { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
 
-    // 🎁 CATEGORÍA 4: Premios Aspiracionales Premium (Efectos de Color sobre la Tarjeta)
-   { 
-        id: 17, 
-        nombre: "Tarjeta de Regalo Básica", 
-        precio: 1600, 
-        emoji: "💳", 
-        colorBadge: "#d1fae5", 
-        colorTexto: "#064e3b", 
-        esUnico: true, 
-        prefijo: "TB",
-        // 🛍️ VERDE DOLLARCITY PREMIUM:
-        efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;" 
-    },
-    { 
-        id: 18, 
-        nombre: "Tarjeta de Regalo Pro", 
-        precio: 2400, 
-        emoji: "💳", 
-        colorBadge: "#f1f5f9", 
-        colorTexto: "#0f172a", 
-        esUnico: true, 
-        prefijo: "TP",
-        efectoEmoji: "filter: grayscale(1) contrast(1.2) brightness(1.3); display: inline-block;" // ⚪ Plateado Metálico
-    },
-    { 
-        id: 19, 
-        nombre: "Tarjeta de Regalo Max", 
-        precio: 3200, 
-        emoji: "💳", 
-        colorBadge: "#fef9c3", 
-        colorTexto: "#451a03", 
-        esUnico: true, 
-        prefijo: "TM",
-        efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;" // 🟡 Dorado de Oro
-    }
+    // 🎁 CATEGORÍA 4: Premios Premium
+    { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 1600, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
+    { id: 18, nombre: "Tarjeta de Regalo Pro", precio: 2400, emoji: "💳", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "TP", efectoEmoji: "filter: grayscale(1) contrast(1.2) brightness(1.3); display: inline-block;", desc: "Q120.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
+    { id: 19, nombre: "Tarjeta de Regalo Max", precio: 3200, emoji: "💳", colorBadge: "#fef9c3", colorTexto: "#451a03", esUnico: true, prefijo: "TM", efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;", desc: "Q160.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" }
 ];
 
-// 🔑 CONFIGURACIÓN SEGURA PARA TUS PINES (KVDB + FIRMA)
+// 🔑 CONFIGURACIÓN SEGURA PARA TUS PINES
 const PALABRA_SECRETA = "alpromeh_premium_key_2026";
-// 🤫 Tu casillero secreto global en la nube (100% gratis, seguro y sin cuentas)
 const URL_NUBE_SECRETA = "https://kvdb.io/7N8vYFwM5qK2uX1pZ89aB/pines_alpro_"; 
 
-// 🎪 2. CONTROL DE APERTURA Y CIERRE (ANIMACIÓN PERSPECTIVA)
+// 🎪 2. CONTROL DE APERTURA Y CIERRE
 function toggleTiendaAlpro() {
     const tiendaModal = document.getElementById('modalTiendaAlpro');
     const cuerpo = document.getElementById('cuerpoTienda');
@@ -7003,7 +7063,6 @@ function toggleTiendaAlpro() {
         }, 10);
 
         tiendaCargadaPorPrimeraVez = true;
-
         actualizarMarcadoresVisuales();
         renderizarTiendaAlpro();
     } else {
@@ -7020,12 +7079,17 @@ function toggleTiendaAlpro() {
     }
 }
 
-// Clic afuera para cerrar (siempre que no estén otros modales abiertos)
-document.getElementById('modalTiendaAlpro').addEventListener('click', function(e) {
-    const ticketAbierto = document.getElementById('capaFondoTicket').style.display === 'flex';
-    const recargaAbierto = document.getElementById('modalRecargaCoins').style.display === 'flex';
-    if (e.target === this && !ticketAbierto && !recargaAbierto) {
-        toggleTiendaAlpro();
+// 🛡️ FIX CRÍTICO: Esperamos que el HTML cargue para asignar el listener sin romper el script
+document.addEventListener("DOMContentLoaded", function() {
+    const modalTienda = document.getElementById('modalTiendaAlpro');
+    if (modalTienda) {
+        modalTienda.addEventListener('click', function(e) {
+            const ticketAbierto = document.getElementById('capaFondoTicket')?.style.display === 'flex';
+            const recargaAbierto = document.getElementById('modalRecargaCoins')?.style.display === 'flex';
+            if (e.target === this && !ticketAbierto && !recargaAbierto) {
+                toggleTiendaAlpro();
+            }
+        });
     }
 });
 
@@ -7035,7 +7099,7 @@ function actualizarMarcadoresVisuales() {
     if (marcadorCompu) marcadorCompu.innerText = monedasActuales.toLocaleString('en-US');
 }
 
-// ⚡ LÓGICA DE MODAL DE RECARGA DE COINS CON EFECTO ZOOM
+// ⚡ LÓGICA DE MODAL DE RECARGA
 function abrirModalRecarga() {
     cerrarBannerInstrucciones();
     const modal = document.getElementById('modalRecargaCoins');
@@ -7077,7 +7141,6 @@ function cerrarBannerInstrucciones() {
     if (banner) banner.style.display = 'none';
 }
 
-// 🔐 NUEVO SISTEMA DE FIRMA COMPATIBLE CON CÓDIGOS ÚNICOS
 function generarFirmaSencilla(monedas, textoAleatorio, claveSecreta) {
     let hash = 0;
     const cadenaCombinada = monedas.toString() + textoAleatorio + claveSecreta;
@@ -7096,7 +7159,6 @@ async function canjearAlproPin() {
     const pinIngresado = inputPin.value.trim().toUpperCase();
     const partes = pinIngresado.split('-');
     
-    // Validamos el nuevo formato de 4 partes: ALPRO-[MONEDAS]-[RANDOM]-[FIRMA]
     if (partes.length !== 4 || partes[0] !== 'ALPRO') {
         alert("⚠️ Formato de PIN incorrecto o antiguo. Debe ser como: ALPRO-1500-XXXX-XXXX");
         return;
@@ -7111,7 +7173,6 @@ async function canjearAlproPin() {
         return;
     }
 
-    // Usamos la nueva función pasando los 3 parámetros correctos
     const firmaCorrecta = generarFirmaSencilla(monedas, textoAleatorio, PALABRA_SECRETA);
 
     if (firmaRecibida !== firmaCorrecta) {
@@ -7221,10 +7282,14 @@ function actualizarResumenBarraCarrito() {
         }
     }
 
-    document.getElementById('cart-cantidad').innerText = cantidadTotalUnidades;
-    document.getElementById('cart-total').innerText = totalMonedasItem.toLocaleString('en-US');
+    const cartCant = document.getElementById('cart-cantidad');
+    const cartTot = document.getElementById('cart-total');
+    if (cartCant) cartCant.innerText = cantidadTotalUnidades;
+    if (cartTot) cartTot.innerText = totalMonedasItem.toLocaleString('en-US');
 
     const btnProcesar = document.getElementById('btnProcesarCompra');
+    if (!btnProcesar) return;
+
     const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
     const MINIMO_CANJE = 350;
 
@@ -7316,7 +7381,7 @@ function actualizarResumenBarraCarrito() {
     }
 }
 
-// 🎨 4. RENDERIZADO COMPLETO DEL ESTANTE INTERACTIVO (AHORA SÍ DECLARADA ANTES DE USARSE)
+// 🎨 RENDERIZADO CON GLOBO FLOTANTE SUTIL EN EL EMOJI
 function renderizarTiendaAlpro() {
     const contenedor = document.getElementById('contenedorItemsTienda');
     if (!contenedor) return;
@@ -7364,13 +7429,22 @@ function renderizarTiendaAlpro() {
         const precioFormateado = item.precio.toLocaleString('en-US');
         let estiloDelEmoji = item.efectoEmoji ? item.efectoEmoji : "";
 
+        // Renderizado con globo flotante sutil atado al emoji
         divItem.innerHTML = `
-            <div style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}; ${estiloDelEmoji}">
+            <!-- Contenedor del Emoji con el Globo Flotante -->
+            <div class="contenedor-emoji-item" style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}; ${estiloDelEmoji}">
                 ${item.emoji}
+                
+                <!-- 🎈 Globo flotante (Solo si el ítem tiene descripción) -->
+                ${item.desc ? `<div class="tooltip-desc-sutil">${item.desc}</div>` : ''}
             </div>
-            <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; min-height: 32px; display: flex; align-items: center; justify-content: center; line-height: 1.2; text-align: center;">
+
+            <!-- Título del producto -->
+            <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; text-align: center; line-height: 1.2; margin-bottom: 8px;">
                 ${item.nombre}
             </div>
+
+            <!-- Badge de Precio -->
             <div style="font-size: 11px; color: ${yaCanjeadoPermanente ? '#94a3b8' : item.colorTexto}; background: ${yaCanjeadoPermanente ? '#f1f5f9' : item.colorBadge}; font-weight: 800; padding: 2px 8px; border-radius: 9999px; margin-bottom: 8px;">
                 🪙 ${precioFormateado}
             </div>
@@ -7487,7 +7561,7 @@ function procesarCarrito() {
     let reclamados = JSON.parse(localStorage.getItem('alpro_reclamados')) || [];
 
     const listadoContenedor = document.getElementById('ticket-listado-items');
-    listadoContenedor.innerHTML = "";
+    if (listadoContenedor) listadoContenedor.innerHTML = "";
 
     let tieneItems = false;
     for (const id in carrito) {
@@ -7501,12 +7575,14 @@ function procesarCarrito() {
                 reclamados.push(item.id);
             }
 
-            const fila = document.createElement('div');
-            fila.style.display = "flex";
-            fila.style.justifyContent = "space-between";
-            fila.style.marginBottom = "4px";
-            fila.innerHTML = `<span>${carrito[id]}x ${item.nombre}</span><span>🪙 ${sub.toLocaleString('en-US')}</span>`;
-            listadoContenedor.appendChild(fila);
+            if (listadoContenedor) {
+                const fila = document.createElement('div');
+                fila.style.display = "flex";
+                fila.style.justifyContent = "space-between";
+                fila.style.marginBottom = "4px";
+                fila.innerHTML = `<span>${carrito[id]}x ${item.nombre}</span><span>🪙 ${sub.toLocaleString('en-US')}</span>`;
+                listadoContenedor.appendChild(fila);
+            }
         }
     }
 
@@ -7517,31 +7593,31 @@ function procesarCarrito() {
     localStorage.setItem('alpro_reclamados', JSON.stringify(reclamados));
 
     const ahora = new Date();
-    document.getElementById('ticket-fecha').innerText = `Fecha: ${ahora.toLocaleDateString('es-GT')} ${ahora.toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit'})}`;
-    document.getElementById('ticket-subtotal').innerText = `🪙 ${totalCosto.toLocaleString('en-US')}`;
-    document.getElementById('ticket-total-descuento').innerText = `- ${totalCosto.toLocaleString('en-US')}`;
-    document.getElementById('ticket-saldo-restante').innerText = `🪙 ${nuevoSaldo.toLocaleString('en-US')}`;
-    
-    const tokenGlobal = generarCodigoSeguroGlobal();
-    document.getElementById('ticket-codigo-token').innerText = tokenGlobal;
+    const ticketFecha = document.getElementById('ticket-fecha');
+    const ticketSub = document.getElementById('ticket-subtotal');
+    const ticketDesc = document.getElementById('ticket-total-descuento');
+    const ticketSaldo = document.getElementById('ticket-saldo-restante');
+    const ticketToken = document.getElementById('ticket-codigo-token');
+
+    if (ticketFecha) ticketFecha.innerText = `Fecha: ${ahora.toLocaleDateString('es-GT')} ${ahora.toLocaleTimeString('es-GT', {hour: '2-digit', minute:'2-digit'})}`;
+    if (ticketSub) ticketSub.innerText = `🪙 ${totalCosto.toLocaleString('en-US')}`;
+    if (ticketDesc) ticketDesc.innerText = `- ${totalCosto.toLocaleString('en-US')}`;
+    if (ticketSaldo) ticketSaldo.innerText = `🪙 ${nuevoSaldo.toLocaleString('en-US')}`;
+    if (ticketToken) ticketToken.innerText = generarCodigoSeguroGlobal();
 
     actualizarMarcadoresVisuales();
-    document.getElementById('capaFondoTicket').style.display = 'flex';
+    const capaTicket = document.getElementById('capaFondoTicket');
+    if (capaTicket) capaTicket.style.display = 'flex';
 }
 
 function imprimirTicketClonado() {
-    // 🎫 Agarramos el nodo original con sus estilos inline
     const nodoTicket = document.getElementById('modalTicketFactura');
     if (!nodoTicket) return;
     
-    // Clonamos el nodo para poder limpiarle los botones antes de imprimir
     const clonTicket = nodoTicket.cloneNode(true);
-    
-    // ✂️ Removemos la barra de botones (.no-print)
     const botones = clonTicket.querySelector('.no-print');
     if (botones) botones.remove();
 
-    // Abrimos la pestaña para el render
     const ventanaImpresion = window.open('', '_blank', 'width=450,height=700');
     
     ventanaImpresion.document.write(`
@@ -7565,12 +7641,8 @@ function imprimirTicketClonado() {
             </style>
         </head>
         <body>
-            <!-- Inyectamos el clon completo -->
             ${clonTicket.outerHTML}
-            
             <script>
-                // 🔥 SOLUCIÓN: Esperamos a que todo el HTML esté pintado, disparamos
-                // y dejamos que el flujo nativo maneje la ventana sin forzar el close inmediato
                 window.onload = function() {
                     setTimeout(() => {
                         window.print();
@@ -7586,7 +7658,8 @@ function imprimirTicketClonado() {
 
 function cerrarTicketExito() {
     carrito = {};
-    document.getElementById('capaFondoTicket').style.display = 'none';
+    const capaTicket = document.getElementById('capaFondoTicket');
+    if (capaTicket) capaTicket.style.display = 'none';
     toggleTiendaAlpro();
 }
 </script>
