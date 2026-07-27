@@ -1740,9 +1740,124 @@ input::-webkit-outer-spin-button,
 .contenedor-emoji-item:hover .tooltip-desc-sutil::before {
     animation: destelloPausado 3.5s infinite ease-in-out;
 }
+
+/* Animación Glass Blur Pop */
+.modal-overlay.m-blur-pop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.modal-overlay.m-blur-pop .modal-content {
+    transform: scale(0.85);
+    filter: blur(10px);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+}
+
+/* Estado Activo cuando se abre */
+.modal-overlay.m-blur-pop.activo {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-overlay.m-blur-pop.activo .modal-content {
+    transform: scale(1);
+    filter: blur(0px);
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* 🟡 BANNER MODO BÚSQUEDA AVANZADA (DARK GLASSMORPHISM) */
+.banner-historico {
+    position: fixed !important;
+    top: 15px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 999999 !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* Fondo azul slate semitransparente con desenfoque Glass */
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(12px) -webkit-backdrop-filter: blur(12px) !important;
+    
+    /* Borde brillante sutil estilo cristal */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.3) !important; /* Brillo superior */
+    
+    /* Sombra suave e iluminación ámbar sutil detrás */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 15px rgba(245, 158, 11, 0.15) !important;
+    
+    padding: 7px 20px !important;
+    border-radius: 50px !important;
+    color: #f1f5f9 !important;
+    font-family: system-ui, -apple-system, sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px !important;
+    
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+}
+
+.banner-historico-contenido {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    white-space: nowrap !important;
+}
+
+/* Puntito LED parpadeante estilo ámbar */
+.punto-parpadeante {
+    width: 8px !important;
+    height: 8px !important;
+    background-color: #f59e0b !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 8px #f59e0b !important;
+    animation: pulsoLuz 1.5s infinite ease-in-out !important;
+}
+
+/* Animaciones */
+@keyframes pulsoLuz {
+    0% { opacity: 0.3; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0.3; transform: scale(0.85); }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
 </style>
 </head>
 <body>
+<!-- BANNER MODO BÚSQUEDA AVANZADA -->
+<div id="bannerModoHistorico" 
+     style="display: none !important;" 
+     class="banner-historico" 
+     onclick="restablecerFiltroDefault()" 
+     title="Haz clic para salir del Modo Búsqueda Avanzada y volver a En Vivo">
+    <div class="banner-historico-contenido">
+        <span class="punto-parpadeante"></span>
+        <span>Estás en <strong>Modo Búsqueda Avanzada</strong></span>
+    </div>
+</div>
+
 <div id="update-banner">
     <span style="color: #ea580c; margin-right: 8px; font-size: 1rem; vertical-align: middle;">●</span>
     <strong style="vertical-align: middle;">Nueva versión detectada • Actualizar aquí</strong>
@@ -2028,27 +2143,24 @@ input::-webkit-outer-spin-button,
 
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; width: 100%;">
         
-    <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: wrap; gap: 8px;">
-        <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
-        <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
-        <button id="filtroAtraso" class="btn-filtro" style="background: #a35f5f;" onclick="toggleFiltroAtraso()">⚠️ En Atraso (+2d)</button>
-    </div>
+        <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
+            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
+            <button id="filtroAtraso" class="btn-filtro" style="background: #a35f5f;" onclick="toggleFiltroAtraso()">⚠️ En Atraso (+2d)</button>
+        </div>
 
-   <div id="bloqueReporteDerecha" style="display: flex; align-items: center; gap: 10px; margin-left: auto; position: relative;">
+        <div id="bloqueReporteDerecha" style="display: flex; align-items: center; gap: 10px; margin-left: auto; position: relative;">
             
             <div id="menuHistorialReportes" class="historial-reporte-container" onclick="toggleMenuHistorialReportes(event)" 
-     style="display: none; position: relative; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: #64748b; padding: 4px 8px; border-radius: 6px; user-select: none; line-height: 1; margin: 0; transition: background 0.1s ease, color 0.1s ease, opacity 0.25s ease-in-out, transform 0.25s ease-in-out; opacity: 1; transform: translateX(0);"
-     onmouseenter="this.style.background='#fff7ed'; this.style.color='#ea580c';"
-     onmouseleave="this.style.background='none'; this.style.color='#64748b';">
-    ⋮
+                 style="display: none; position: relative; cursor: pointer; font-size: 1.2rem; font-weight: bold; color: #64748b; padding: 4px 8px; border-radius: 6px; user-select: none; line-height: 1; margin: 0; transition: background 0.1s ease, color 0.1s ease, opacity 0.25s ease-in-out, transform 0.25s ease-in-out; opacity: 1; transform: translateX(0);"
+                 onmouseenter="this.style.background='#fff7ed'; this.style.color='#ea580c';"
+                 onmouseleave="this.style.background='none'; this.style.color='#64748b';">
+                 ⋮
                 <div id="dropdownHistorialReportes" style="display: none; position: absolute; top: 110%; right: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08), 0 6px 8px -4px rgba(0, 0, 0, 0.08); width: 200px; z-index: 9999; padding: 5px; box-sizing: border-box; font-family: Arial, sans-serif;">
-    
-    <div style="font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 6px 6px 6px; border-bottom: 1px solid #f1f5f9; margin-bottom: 3px; user-select: none; cursor: default; pointer-events: none;">
-    REIMPRIMIR REPORTES:
-</div>
-
-    <div id="listaUltimosReportes" style="display: flex; flex-direction: column; gap: 2px;">
-        </div>
+                    <div style="font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 6px 6px 6px; border-bottom: 1px solid #f1f5f9; margin-bottom: 3px; user-select: none; cursor: default; pointer-events: none;">
+                        REIMPRIMIR REPORTES:
+                    </div>
+                    <div id="listaUltimosReportes" style="display: flex; flex-direction: column; gap: 2px;"></div>
                 </div>
             </div>
 
@@ -2060,36 +2172,99 @@ input::-webkit-outer-spin-button,
                 📋 Imprimir
             </button>
 
+           <!-- 📅 BOTÓN FILTRAR FECHAS HISTÓRICAS -->
+<button id="btnFiltrarFechas" 
+        class="btn-filtro" 
+        onclick="abrirModalFechas()" 
+        title="Filtrar por rango de fechas" 
+        style="padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; background-color: #2563eb;">
+    📅
+</button>
+
             <button id="btnModoReporte" class="btn-filtro" onclick="toggleModoReporte()" style="background: #c79f00; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px;">
                 📊 Reporte
             </button>
-    </div>
-
-</div>
-
-        <div style="overflow-x: auto;">
-    <table>
-        <thead>
-            <tr>
-                <th>ORDEN</th>
-                <th>FECHA</th>
-                <th>INSTITUCIÓN</th>
-                <th>RESPONSABLE</th>
-                <th style="text-align:center;">¿LISTO?</th>
-            </tr>
-        </thead>
-        <tbody id="tablaBody"></tbody>
-    </table>
-</div>
-    </div> <div id="burbuja-chisme" class="burbuja-oculta">
-        <span id="cerrar-chisme" onclick="cerrarChisme(event)">×</span>
-        <div class="contenido-chisme" onclick="irATrivia()">
-            <div class="burbuja-header">
-                <span id="titulo-gancho">¡Reto del Día! 💡</span>
-            </div>
-            <p class="texto-invitacion">Pon a prueba tu conocimiento en 1 minuto.</p>
         </div>
+
     </div>
+
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ORDEN</th>
+                    <th>FECHA</th>
+                    <th>INSTITUCIÓN</th>
+                    <th>RESPONSABLE</th>
+                    <th style="text-align:center;">¿LISTO?</th>
+                </tr>
+            </thead>
+            <tbody id="tablaBody"></tbody>
+        </table>
+    </div>
+</div> 
+
+<!-- Trigger para controlar apertura/cierre si usas el método de checkbox -->
+<input type="checkbox" id="modalFiltroTrigger" class="modal-trigger" style="display: none;">
+
+<!-- Modal Overlay con Glass Blur Pop -->
+<div id="modalFiltroFechas" class="modal-overlay m-blur-pop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 9999;">
+    
+    <div class="modal-content" style="background: #ffffff; width: 92%; max-width: 500px; border-radius: 24px; padding: 32px 28px 28px 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; font-family: system-ui, -apple-system, sans-serif; overflow: hidden; border-top: 5px solid #2563eb;">
+        
+        <!-- Botón cerrar (X) -->
+        <button type="button" onclick="cerrarModalFechas()" style="position: absolute; top: 20px; right: 20px; background: #f1f5f9; border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; font-size: 1rem; font-weight: bold; transition: all 0.2s ease;">
+            ✕
+        </button>
+
+        <!-- Encabezado -->
+        <div style="text-align: center; margin-bottom: 26px;">
+            <h3 style="margin: 0; color: #0f172a; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                📅 <span>Filtrar por Fechas</span>
+            </h3>
+        </div>
+
+        <!-- Inputs de fecha -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; text-align: center;">Desde</label>
+                <input type="date" id="filtroFechaDesde" style="width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.9rem; color: #1e293b; background: #f8fafc; outline: none; box-sizing: border-box; text-align: center; font-weight: 600; transition: border-color 0.2s;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; text-align: center;">Hasta</label>
+                <input type="date" id="filtroFechaHasta" style="width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 0.9rem; color: #1e293b; background: #f8fafc; outline: none; box-sizing: border-box; text-align: center; font-weight: 600; transition: border-color 0.2s;">
+            </div>
+        </div>
+
+        <!-- Botones de rango rápido en pills dinámicos -->
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap;">
+            <button type="button" id="btnRango_mesActual" class="btn-rango-pills" onclick="setRangoRapido('mesActual')" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">Este Mes</button>
+            <button type="button" id="btnRango_mesAnterior" class="btn-rango-pills" onclick="setRangoRapido('mesAnterior')" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">Mes Anterior</button>
+            <button type="button" id="btnRango_anio" class="btn-rango-pills" onclick="setRangoRapido('anio')" style="background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">Todo el Año</button>
+        </div>
+
+        <!-- Acciones principales -->
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 12px;">
+            <button type="button" onclick="restablecerFiltroDefault()" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f8fafc'" style="background: #f8fafc; color: #475569; border: 1.5px solid #cbd5e1; padding: 12px 18px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;">
+                Restablecer
+            </button>
+            <button type="button" onclick="aplicarFiltroFechas()" onmouseover="this.style.background='linear-gradient(135deg, #1d4ed8, #1e40af)'" onmouseout="this.style.background='linear-gradient(135deg, #2563eb, #1d4ed8)'" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 12px 18px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); transition: background 0.2s;">
+                Buscar
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="burbuja-chisme" class="burbuja-oculta">
+    <span id="cerrar-chisme" onclick="cerrarChisme(event)">×</span>
+    <div class="contenido-chisme" onclick="irATrivia()">
+        <div class="burbuja-header">
+            <span id="titulo-gancho">¡Reto del Día! 💡</span>
+        </div>
+        <p class="texto-invitacion">Pon a prueba tu conocimiento en 1 minuto.</p>
+    </div>
+</div>
 
 <!-- BOTÓN FLOTANTE (Se mantiene igual) -->
 <button id="btnFlotanteQuiniela" onclick="abrirQuiniela()" style="position: fixed; top: 20px; left: 20px; z-index: 9998; background: #16a34a; color: white; border: none; padding: 12px 18px; border-radius: 50px; font-weight: bold; font-family: sans-serif; font-size: 0.85rem; display: none; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4); transition: all 0.2s ease-in-out;">
@@ -2248,6 +2423,9 @@ input::-webkit-outer-spin-button,
 
         let clicsRapidos = 0;
         let timerClics;
+
+// 🔒 BANDERA GLOBAL: Pausa el auto-refresco solo cuando se consulta un rango histórico
+    let filtroHistoricoActivo = false;
 
 // === VARIABLES DE CONTROL PARA EL MÓDULO DE REPORTES ===
 let modoReporteActivo = false;
@@ -3218,6 +3396,11 @@ function save() {
 }
 
 async function sincronizar() {
+    if (filtroHistoricoActivo) {
+        mostrarBannerHistorico();
+        return;
+    }
+
     const btn = document.getElementById('btnSync');
     if (!btn) return;
     btn.innerText = "Sincronizando...";
@@ -3252,6 +3435,7 @@ async function sincronizar() {
 }
 // --- SINCRONIZACION SILENCIOSA INTELIGENTE ---
 async function sincronizarSilencioso() {
+if (filtroHistoricoActivo) return;
 if (guardandoAhora) return;
     // Quitamos el bloqueo global para que los cambios de Danna sigan entrando
     try {
@@ -3652,7 +3836,7 @@ let cuerpoHtml = `
                 print-color-adjust: exact;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 
@@ -7662,6 +7846,240 @@ function cerrarTicketExito() {
     if (capaTicket) capaTicket.style.display = 'none';
     toggleTiendaAlpro();
 }
+
+// 📅 FUNCIONALIDAD DE FILTRO HISTÓRICO POR FECHAS
+// 1. Funciones para Abrir y Cerrar con efecto Glass Blur Pop
+function abrirModalFechas() {
+    const modal = document.getElementById('modalFiltroFechas');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('activo'), 10);
+}
+
+function cerrarModalFechas() {
+    const modal = document.getElementById('modalFiltroFechas');
+    if (!modal) return;
+    modal.classList.remove('activo');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 250);
+}
+
+// Helper para formatear fechas a YYYY-MM-DD
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+// 2. Selección rápida (Este Mes, Mes Anterior, Todo el Año)
+function setRangoRapido(tipo) {
+    const hoy = new Date();
+    let desde, hasta;
+
+    if (tipo === 'mesActual') {
+        desde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        hasta = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+    } else if (tipo === 'mesAnterior') {
+        desde = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+        hasta = new Date(hoy.getFullYear(), hoy.getMonth(), 0);
+    } else if (tipo === 'anio') {
+        desde = new Date(hoy.getFullYear(), 0, 1);
+        hasta = new Date(hoy.getFullYear(), 11, 31);
+    }
+
+    document.getElementById('filtroFechaDesde').value = formatDate(desde);
+    document.getElementById('filtroFechaHasta').value = formatDate(hasta);
+
+    // 🎨 Iluminar el botón presionado y apagar los demás
+    const botones = document.querySelectorAll('.btn-rango-pills');
+    botones.forEach(btn => {
+        btn.style.background = '#f1f5f9';
+        btn.style.color = '#475569';
+        btn.style.borderColor = '#e2e8f0';
+        btn.style.fontWeight = '600';
+    });
+
+    const btnActivo = document.getElementById(`btnRango_${tipo}`);
+    if (btnActivo) {
+        btnActivo.style.background = '#fef3c7'; // Fondo amarillo/naranja suave
+        btnActivo.style.color = '#b45309';      // Texto café/naranja oscuro
+        btnActivo.style.borderColor = '#f59e0b'; // Borde amarillo anaranjado
+        btnActivo.style.fontWeight = '700';
+    }
+}
+
+// 3. Restablecer al flujo en vivo de 2 semanas con spinner de carga
+function restablecerFiltroDefault() {
+    filtroHistoricoActivo = false;
+
+    const btnRestablecer = (typeof event !== 'undefined' && event) ? event.currentTarget : document.querySelector('button[onclick="restablecerFiltroDefault()"]');
+    const btnConsultar = document.querySelector('button[onclick="aplicarFiltroFechas()"]');
+    
+    let htmlOriginal = "Restablecer";
+    if (btnRestablecer) {
+        htmlOriginal = btnRestablecer.innerHTML;
+        btnRestablecer.disabled = true;
+        btnRestablecer.style.opacity = "0.8";
+        btnRestablecer.style.cursor = "wait";
+        btnRestablecer.innerHTML = `
+            <svg style="animation: spin 1s linear infinite; width: 18px; height: 18px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Restableciendo...</span>
+        `;
+    }
+    if (btnConsultar) btnConsultar.disabled = true;
+
+    const hoy = new Date();
+    const haceDosSemanas = new Date();
+    haceDosSemanas.setDate(hoy.getDate() - 14);
+
+    const desde = formatDate(haceDosSemanas);
+    const hasta = formatDate(hoy);
+
+    document.getElementById('filtroFechaDesde').value = desde;
+    document.getElementById('filtroFechaHasta').value = hasta;
+
+    document.querySelectorAll('.btn-rango-pills').forEach(btn => {
+        btn.style.background = '#f1f5f9';
+        btn.style.color = '#475569';
+        btn.style.borderColor = '#e2e8f0';
+        btn.style.fontWeight = '600';
+    });
+
+    const urlConsulta = `${URL_SCRIPT}?desde=${desde}&hasta=${hasta}`;
+
+    fetch(urlConsulta)
+        .then(response => response.json())
+        .then(data => {
+            datosLocales = data;
+            if (typeof renderTable === 'function') {
+                renderTable();
+            } else if (typeof pintarTabla === 'function') {
+                pintarTabla(data);
+            }
+
+            cerrarModalFechas();
+            ocultarBannerHistorico(); // 👈 AQUÍ SE OCULTA AL RESTABLECER
+
+            setTimeout(() => {
+                if (btnRestablecer) {
+                    btnRestablecer.disabled = false;
+                    btnRestablecer.style.opacity = "1";
+                    btnRestablecer.style.cursor = "pointer";
+                    btnRestablecer.innerHTML = htmlOriginal;
+                }
+                if (btnConsultar) btnConsultar.disabled = false;
+            }, 300);
+        })
+        .catch(error => {
+            console.error("Error al restablecer rango por defecto:", error);
+            alert("❌ Hubo un error al restablecer el rango por defecto.");
+
+            if (btnRestablecer) {
+                btnRestablecer.disabled = false;
+                btnRestablecer.style.opacity = "1";
+                btnRestablecer.style.cursor = "pointer";
+                btnRestablecer.innerHTML = htmlOriginal;
+            }
+            if (btnConsultar) btnConsultar.disabled = false;
+        });
+}
+
+// 4. Ejecutar la búsqueda manual con feedback visual de carga
+function aplicarFiltroFechas() {
+    const fechaDesde = document.getElementById('filtroFechaDesde').value;
+    const fechaHasta = document.getElementById('filtroFechaHasta').value;
+
+    if (!fechaDesde || !fechaHasta) {
+        alert("⚠️ Por favor selecciona ambas fechas para filtrar.");
+        return;
+    }
+
+    // 🔒 Freno al auto-refresco en vivo mientras consulta el historial
+    filtroHistoricoActivo = true;
+
+    const btnConsultar = (typeof event !== 'undefined' && event) ? event.currentTarget : document.querySelector('button[onclick="aplicarFiltroFechas()"]');
+    const btnRestablecer = document.querySelector('button[onclick="restablecerFiltroDefault()"]');
+    
+    let htmlOriginal = "Consultar";
+    if (btnConsultar) {
+        htmlOriginal = btnConsultar.innerHTML;
+        btnConsultar.disabled = true;
+        btnConsultar.style.opacity = "0.8";
+        btnConsultar.style.cursor = "wait";
+        btnConsultar.innerHTML = `
+            <svg style="animation: spin 1s linear infinite; width: 18px; height: 18px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Buscando...</span>
+        `;
+    }
+    if (btnRestablecer) btnRestablecer.disabled = true;
+
+    const urlConsulta = `${URL_SCRIPT}?desde=${fechaDesde}&hasta=${fechaHasta}`;
+    console.log("🔍 Consultando rango histórico:", fechaDesde, "a", fechaHasta);
+
+    fetch(urlConsulta)
+        .then(response => response.json())
+        .then(data => {
+            datosLocales = data;
+            
+            if (typeof renderTable === 'function') {
+                renderTable();
+            } else if (typeof pintarTabla === 'function') {
+                pintarTabla(data);
+            }
+
+            cerrarModalFechas();
+            mostrarBannerHistorico(); // 👈 AQUÍ SE MUESTRA AL FILTRAR FECHAS
+
+            setTimeout(() => {
+                if (btnConsultar) {
+                    btnConsultar.disabled = false;
+                    btnConsultar.style.opacity = "1";
+                    btnConsultar.style.cursor = "pointer";
+                    btnConsultar.innerHTML = htmlOriginal;
+                }
+                if (btnRestablecer) btnRestablecer.disabled = false;
+            }, 300);
+        })
+        .catch(error => {
+            console.error("Error al consultar el historial por fecha:", error);
+            alert("❌ Hubo un error al consultar las fechas en Apps Script.");
+
+            if (btnConsultar) {
+                btnConsultar.disabled = false;
+                btnConsultar.style.opacity = "1";
+                btnConsultar.style.cursor = "pointer";
+                btnConsultar.innerHTML = htmlOriginal;
+            }
+            if (btnRestablecer) btnRestablecer.disabled = false;
+        });
+}
+
+function mostrarBannerHistorico() {
+    const banner = document.getElementById('bannerModoHistorico');
+    if (banner) {
+        banner.style.setProperty('display', 'flex', 'important');
+    }
+}
+
+function ocultarBannerHistorico() {
+    const banner = document.getElementById('bannerModoHistorico');
+    if (banner) {
+        banner.style.setProperty('display', 'none', 'important');
+    }
+}
+
+// 🔒 Asegurar que al cargar la página NUNCA aparezca el banner
+document.addEventListener('DOMContentLoaded', () => {
+    ocultarBannerHistorico();
+});
 </script>
 </body>
 </html>
