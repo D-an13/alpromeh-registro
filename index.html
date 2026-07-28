@@ -1843,6 +1843,33 @@ input::-webkit-outer-spin-button,
     from { opacity: 0; transform: translate(-50%, -20px); }
     to { opacity: 1; transform: translate(-50%, 0); }
 }
+
+/* Hover para los botones del modal */
+.btn-hover-secundario:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+.btn-hover-principal:hover {
+  background-color: #1d4ed8 !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Animación Zoom In al abrir */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animacion-modal-zoom {
+  animation: popIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
 </style>
 </head>
 <body>
@@ -2020,7 +2047,7 @@ input::-webkit-outer-spin-button,
                     </select>
                 </div>
                 
-                <button type="button" id="btnSiguiente1" class="btn-navegacion-pasos btn-azul" style="display: none; width: 100%; margin-top: 15px; font-size: 0.9rem;" onclick="cambiarPaso(2)">
+                <button type="button" id="btnSiguiente1" class="btn-navegacion-pasos btn-azul" style="display: none; width: 100%; margin-top: 15px; font-size: 0.9rem;" onclick="validarYPasarAlPaso2()">
     SIGUIENTE ➡️
 </button>
 </div>
@@ -3437,6 +3464,13 @@ async function sincronizar() {
 async function sincronizarSilencioso() {
 if (filtroHistoricoActivo) return;
 if (guardandoAhora) return;
+
+// ⛔ FRENO DE MANO: Si el modal de advertencia de orden está visible, NO sincronizar
+    const modal = document.getElementById('modalOrdenExistente');
+if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
+    console.log("⏸️ Sincronización pausada: El usuario tiene el modal de advertencia abierto.");
+    return;
+}
     // Quitamos el bloqueo global para que los cambios de Danna sigan entrando
     try {
         const r = await fetch(URL_SCRIPT);
@@ -7216,7 +7250,7 @@ const premios = [
     { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV", desc: "Tu comida fresca y segura" },
     { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
     { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
-    { id: 15, nombre: "Audífonos Sencillos Tech1", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
+    { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
     { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
 
     // 🎁 CATEGORÍA 4: Premios Premium
@@ -8076,10 +8110,146 @@ function ocultarBannerHistorico() {
     }
 }
 
+// 🚀 FUNCIÓN ACTUALIZADA Y CORREGIDA
+async function validarYPasarAlPaso2() {
+  const inputOrden = document.getElementById('orden');
+  const numOrden = inputOrden ? inputOrden.value.trim() : '';
+  
+  if (!numOrden) {
+    alert("Por favor ingresa un número de orden para continuar.");
+    return;
+  }
+
+  const btnSiguiente = document.getElementById('btnSiguiente1');
+  let textoOriginal = "";
+  if (btnSiguiente) {
+    textoOriginal = btnSiguiente.innerHTML;
+    btnSiguiente.disabled = true;
+    btnSiguiente.innerHTML = "BUSCANDO ORDEN...";
+  }
+
+  try {
+    const url = `${URL_SCRIPT}?validarOrden=${encodeURIComponent(numOrden)}`;
+    const response = await fetch(url, { redirect: 'follow' });
+    const textData = await response.text(); 
+
+    let data;
+    try {
+      data = JSON.parse(textData);
+    } catch (e) {
+      const jsonMatch = textData.match(/\{[\s\S]*\}/);
+      data = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+    }
+
+    // Restaurar el botón inmediatamente
+    if (btnSiguiente) {
+      btnSiguiente.disabled = false;
+      btnSiguiente.innerHTML = textoOriginal;
+    }
+
+    // EVALUACIÓN DE ORDEN EXISTENTE
+    if (data && (data.existe === true || data.existe === "true")) {
+      console.log("🚨 Orden duplicada detectada:", data);
+
+      const lblOrden = document.getElementById('lblNumOrdenModal');
+      const detalles = document.getElementById('detallesOrdenModal');
+      const modal = document.getElementById('modalOrdenExistente');
+
+      if (lblOrden) lblOrden.innerText = `#${data.orden || numOrden}`;
+      if (detalles) {
+        detalles.innerHTML = `
+          <strong>📂 Mes:</strong> ${data.nombreHoja || 'N/A'}<br>
+          <strong>📅 Fecha:</strong> ${data.fecha || 'N/A'}<br>
+          <strong>🏢 Institución:</strong> ${data.inst || 'N/A'}<br>
+          <strong>👤 Recibió:</strong> ${data.pers || 'N/A'}<br>
+          <strong>📋 Responsable:</strong> ${data.responsable || 'N/A'}
+        `;
+      }
+      
+      if (modal) {
+        // Mueve el modal al <body> directamente en tiempo de ejecución por si estaba atrapado en un div contenedor
+        document.body.appendChild(modal);
+        modal.style.setProperty('display', 'flex', 'important');
+      } else {
+        alert("❌ No se encontró en el HTML el div id='modalOrdenExistente'");
+      }
+
+    } else {
+      console.log("🟢 La orden no existe. Avanzando al Paso 2...");
+      cambiarPaso(2);
+    }
+
+  } catch (error) {
+    console.error("❌ Error en la verificación:", error);
+    if (btnSiguiente) {
+      btnSiguiente.disabled = false;
+      btnSiguiente.innerHTML = textoOriginal;
+    }
+    alert("⚠️ Ocurrió un detalle al consultar la orden: " + error.message);
+  }
+}
+
+function cerrarModalAdvertencia(callback) {
+  const modal = document.getElementById('modalOrdenExistente');
+  if (modal) {
+    const tarjeta = modal.querySelector('div');
+    if (tarjeta) {
+      tarjeta.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+      tarjeta.style.transform = "scale(0.85)";
+      tarjeta.style.opacity = "0";
+    }
+    modal.style.transition = "opacity 0.2s ease";
+    modal.style.opacity = "0";
+
+    setTimeout(() => {
+      modal.style.setProperty('display', 'none', 'important');
+      // Reset de estilos para la próxima vez que se abra
+      if (tarjeta) {
+        tarjeta.style.transform = "";
+        tarjeta.style.opacity = "";
+        tarjeta.style.transition = "";
+      }
+      modal.style.opacity = "";
+      modal.style.transition = "";
+      if (typeof callback === 'function') callback();
+    }, 200);
+  }
+}
+
+function continuarAPaso2() {
+  cerrarModalAdvertencia(() => cambiarPaso(2));
+}
+
 // 🔒 Asegurar que al cargar la página NUNCA aparezca el banner
 document.addEventListener('DOMContentLoaded', () => {
+  if (typeof ocultarBannerHistorico === 'function') {
     ocultarBannerHistorico();
+  }
 });
 </script>
+
+<!-- ⚠️ MODAL ADVERTENCIA: ORDEN DUPLICADA -->
+<div id="modalOrdenExistente" style="display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(15, 23, 42, 0.75) !important; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); justify-content: center !important; align-items: center !important; z-index: 999999 !important;">
+    <div class="animacion-modal-zoom" style="background: #ffffff; width: 90%; max-width: 400px; border-radius: 18px; padding: 25px 20px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3); border-top: 5px solid #f59e0b; font-family: system-ui, -apple-system, sans-serif;">
+        
+        <div style="font-size: 2.2rem; margin-bottom: 5px;">⚠️</div>
+        <h3 style="margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 800;">¡Orden ya registrada!</h3>
+        <p style="color: #64748b; font-size: 0.85rem; margin-top: 6px; margin-bottom: 14px;">
+            La orden <strong id="lblNumOrdenModal" style="color: #0f172a;"></strong> ya se encuentra registrada:
+        </p>
+        
+        <div id="detallesOrdenModal" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 18px; text-align: left; font-size: 0.82rem; color: #334155; line-height: 1.5;">
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-hover-secundario" onclick="cerrarModalAdvertencia()" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; font-weight: bold; cursor: pointer; color: #475569; font-size: 0.82rem; transition: all 0.2s ease;">
+                Volver
+            </button>
+            <button type="button" class="btn-hover-principal" onclick="continuarAPaso2()" style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: #2563eb; color: #ffffff; font-weight: bold; cursor: pointer; font-size: 0.82rem; transition: all 0.2s ease;">
+                Continuar
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
