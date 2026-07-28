@@ -8122,9 +8122,17 @@ async function validarYPasarAlPaso2() {
 
   const btnSiguiente = document.getElementById('btnSiguiente1');
   let textoOriginal = "";
+  
   if (btnSiguiente) {
     textoOriginal = btnSiguiente.innerHTML;
     btnSiguiente.disabled = true;
+    
+    // 🎨 FORZAR COLOR GRIS CON !IMPORTANT (para que le gane a cualquier CSS)
+    btnSiguiente.style.setProperty('background-color', '#94a3b8', 'important');
+    btnSiguiente.style.setProperty('color', '#ffffff', 'important');
+    btnSiguiente.style.setProperty('cursor', 'not-allowed', 'important');
+    btnSiguiente.style.setProperty('pointer-events', 'none', 'important');
+    
     btnSiguiente.innerHTML = "BUSCANDO ORDEN...";
   }
 
@@ -8141,9 +8149,13 @@ async function validarYPasarAlPaso2() {
       data = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     }
 
-    // Restaurar el botón inmediatamente
+    // 🔓 RESTAURAR BOTÓN A SU ESTADO AZUL ORIGINAL
     if (btnSiguiente) {
       btnSiguiente.disabled = false;
+      btnSiguiente.style.removeProperty('background-color');
+      btnSiguiente.style.removeProperty('color');
+      btnSiguiente.style.removeProperty('cursor');
+      btnSiguiente.style.removeProperty('pointer-events');
       btnSiguiente.innerHTML = textoOriginal;
     }
 
@@ -8167,7 +8179,6 @@ async function validarYPasarAlPaso2() {
       }
       
       if (modal) {
-        // Mueve el modal al <body> directamente en tiempo de ejecución por si estaba atrapado en un div contenedor
         document.body.appendChild(modal);
         modal.style.setProperty('display', 'flex', 'important');
       } else {
@@ -8183,6 +8194,10 @@ async function validarYPasarAlPaso2() {
     console.error("❌ Error en la verificación:", error);
     if (btnSiguiente) {
       btnSiguiente.disabled = false;
+      btnSiguiente.style.removeProperty('background-color');
+      btnSiguiente.style.removeProperty('color');
+      btnSiguiente.style.removeProperty('cursor');
+      btnSiguiente.style.removeProperty('pointer-events');
       btnSiguiente.innerHTML = textoOriginal;
     }
     alert("⚠️ Ocurrió un detalle al consultar la orden: " + error.message);
