@@ -8164,18 +8164,38 @@ async function validarYPasarAlPaso2() {
       console.log("🚨 Orden duplicada detectada:", data);
 
       const lblOrden = document.getElementById('lblNumOrdenModal');
+      const txtVeces = document.getElementById('lblVecesModal');
       const detalles = document.getElementById('detallesOrdenModal');
       const modal = document.getElementById('modalOrdenExistente');
 
       if (lblOrden) lblOrden.innerText = `#${data.orden || numOrden}`;
+      
+      // Si existe más de 1 vez, agrega la etiqueta "(X veces)"
+      if (txtVeces) {
+        txtVeces.innerHTML = (data.totalVeces && data.totalVeces > 1) 
+          ? ` <span style="color: #d97706; font-weight: 700;">(${data.totalVeces} veces)</span>` 
+          : '';
+      }
+
       if (detalles) {
-        detalles.innerHTML = `
+        let htmlDetalles = `
           <strong>📂 Mes:</strong> ${data.nombreHoja || 'N/A'}<br>
           <strong>📅 Fecha:</strong> ${data.fecha || 'N/A'}<br>
           <strong>🏢 Institución:</strong> ${data.inst || 'N/A'}<br>
           <strong>👤 Recibió:</strong> ${data.pers || 'N/A'}<br>
           <strong>📋 Responsable:</strong> ${data.responsable || 'N/A'}
         `;
+
+        // Si hay varias coincidencias, agrega el desglose al final
+        if (data.totalVeces && data.totalVeces > 1 && data.historialFechas) {
+          htmlDetalles += `
+            <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 10px 0;">
+            <strong>🕒 Registros encontrados:</strong><br>
+            <span style="font-size: 0.78rem; color: #475569; display: inline-block; margin-top: 3px;">${data.historialFechas}</span>
+          `;
+        }
+
+        detalles.innerHTML = htmlDetalles;
       }
       
       if (modal) {
@@ -8218,7 +8238,6 @@ function cerrarModalAdvertencia(callback) {
 
     setTimeout(() => {
       modal.style.setProperty('display', 'none', 'important');
-      // Reset de estilos para la próxima vez que se abra
       if (tarjeta) {
         tarjeta.style.transform = "";
         tarjeta.style.opacity = "";
@@ -8250,8 +8269,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="font-size: 2.2rem; margin-bottom: 5px;">⚠️</div>
         <h3 style="margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 800;">¡Orden ya registrada!</h3>
         <p style="color: #64748b; font-size: 0.85rem; margin-top: 6px; margin-bottom: 14px;">
-            La orden <strong id="lblNumOrdenModal" style="color: #0f172a;"></strong> ya se encuentra registrada:
-        </p>
+    La orden <strong id="lblNumOrdenModal" style="color: #0f172a;"></strong> ya se encuentra registrada:<span id="lblVecesModal"></span>
+</p>
         
         <div id="detallesOrdenModal" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 18px; text-align: left; font-size: 0.82rem; color: #334155; line-height: 1.5;">
         </div>
