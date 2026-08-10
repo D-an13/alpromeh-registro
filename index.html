@@ -133,21 +133,21 @@
         .fila-despachada td { color: #166534 !important; } /* Asegura color en despachados */
         
         .check-axel { width: 18px; height: 18px; cursor: pointer; accent-color: #10b981; vertical-align: middle; }
-        .label-axel { font-size: 0.65em; color: var(--placeholder); display: block; font-weight: normal; margin-top: 2px; }
+.label-axel { font-size: 0.65em; color: var(--placeholder); display: block; font-weight: normal; margin-top: 2px; }
 
-        .oculto { display: none !important; }
+.oculto { display: none !important; }
 
-        .btn-guardar { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1.1rem; }
-        .btn-sync { background: #4f46e5; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-        .btn-excel { text-decoration: none; padding: 8px 12px; background: #166534; color: white; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+.btn-sync { background: #4f46e5; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+.btn-excel { text-decoration: none; padding: 8px 12px; background: #166534; color: white; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
 
-        .theme-switch { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 100; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
-        th { background: var(--primary); color: white; text-transform: uppercase; }
-        #toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 3000; font-weight: bold; }
-        #toast.warning { background-color: #ffc400; color: #000; visibility: visible; display: block; }
+.theme-switch { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 100; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
+th { background: var(--primary); color: white; text-transform: uppercase; }
+
+#toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 3000; font-weight: bold; }
+#toast.warning { background-color: #ffc400; color: #000; visibility: visible; display: block; }
 
         .resaltar-actualizacion {
             background-color: #fff9c4 !important;
@@ -476,50 +476,97 @@ input::-webkit-outer-spin-button,
     color: #dc2626;     
     transform: scale(1.15); 
 }
-/* --- EFECTO DE FLOTADO Y RESPLANDOR PARA GUARDAR REGISTRO --- */
+/* --- BOTÓN GUARDAR REGISTRO: EFECTO BARRA DOBLE (DESDE LOS LADOS) --- */
 .btn-guardar {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; /* Animación súper suave */
+  position: relative !important;
+  overflow: hidden !important;
+  width: 100%;
+  padding: 15px;
+  background-color: #065f46 !important; /* Verde oscuro elegante de base */
+  color: #ffffff !important;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: 1;
 }
 
-/* El brillo solo se activa si pasas el mouse Y el botón NO está deshabilitado */
+/* Las dos barras que cubren el botón de lado a lado */
+.btn-guardar::before,
+.btn-guardar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 51%; /* Un poco más de la mitad para que traslape perfecto al centro */
+  height: 100%;
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: -1; /* Van detrás del texto */
+}
+
+/* Lado Izquierdo: Verde Menta / Neón Brillante */
+.btn-guardar::before {
+  left: 0;
+  background-color: #10b981; 
+  transform: translateX(-100%); /* Oculto completamente a la izquierda */
+}
+
+/* Lado Derecho: Verde Lima / Neón Turquesa */
+.btn-guardar::after {
+  right: 0;
+  background-color: #34d399; 
+  transform: translateX(100%); /* Oculto completamente a la derecha */
+}
+
+/* HOVER: Las barras entran a toda velocidad y chocan en el centro */
 .btn-guardar:not(:disabled):hover {
-    transform: translateY(-2px); /* El botón flota un poquito hacia arriba */
-    /* Crea un resplandor verde esmeralda pro usando sombras */
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); 
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
 }
 
-/* Si hace clic, baja un milímetro para dar sensación de pulsación real */
-.btn-guardar:not(:disabled):active {
-    transform: translateY(-1px);
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+.btn-guardar:not(:disabled):hover::before {
+  transform: translateX(0); /* Llena la mitad izquierda */
 }
+
+.btn-guardar:not(:disabled):hover::after {
+  transform: translateX(0); /* Llena la mitad derecha */
+}
+
+/* CLICK (ACTIVE): Se presiona sutilmente */
+.btn-guardar:not(:disabled):active {
+  transform: translateY(1px);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
 /* --- NUEVO EFECTO ZOOM ELÁSTICO PARA EL LOGO (EASTER EGG) --- */
 #triggerHuevo {
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
-    cursor: pointer;      /* Convierte la flecha en manita de botón */
-    display: inline-block; /* Obligatorio para que el zoom se aplique bien */
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.2s ease;
+  cursor: pointer;
+  display: inline-block;
 }
 
-/* Cuando el mouse entra a la caja del logo */
 #triggerHuevo:hover {
-    transform: scale(1.08);    /* Se agranda un 8% con rebote fino */
-    filter: brightness(1.15); /* Enciende los colores originales del logo */
+  transform: scale(1.08);
+  filter: brightness(1.15);
 }
 
-/* Cuando le dan clic (efecto de hundido) */
 #triggerHuevo:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
-/* El botón del librito */
+
+/* --- TRIVIA Y COMPONENTES GENERALES --- */
 #triggerTrivia {
-    position: absolute;   
-    bottom: 20px;         /* Alilineado al piso de la tarjeta */
-    right: 25px;          /* Pegado a la derecha */
-    font-size: 1.3rem;    /* Tamaño discreto y premium */
-    cursor: pointer;
-    z-index: 10;
-    transition: transform 0.2s ease;
-    animation: parpadeoForzado 1.5s infinite ease-in-out;
+  position: absolute;   
+  bottom: 20px;         
+  right: 25px;          
+  font-size: 1.3rem;    
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease;
+  animation: parpadeoForzado 1.5s infinite ease-in-out;
 }
 
 /* El nuevo div estático para motivar al equipo */
@@ -1829,6 +1876,90 @@ body.dark-mode .themeToggle-container {
   0% { transform: scale(0); }
   100% { transform: scale(1); }
 }
+
+/* Configuración base para los botones de navegación */
+.btn-navegacion-pasos {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 16px;
+  border: none;
+  font-weight: bold;
+}
+
+/* === BOTÓN SIGUIENTE (AZUL) === */
+.btn-navegacion-pasos.btn-azul {
+  background-color: #0066ff;
+  color: #ffffff;
+}
+
+/* === BOTÓN ATRÁS (GRIS PIZARRA) === */
+.btn-navegacion-pasos:not(.btn-azul) {
+  background-color: #475569;
+  color: #ffffff;
+}
+
+/* Texto del botón (Alineación flex exacta con lo que tenga a la par) */
+.btn-texto {
+  display: inline-block;
+  line-height: 1;
+  transform: translateY(1.5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Estilos de las flechas SVG */
+.flecha-svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Márgenes de las flechas */
+.flecha-derecha {
+  margin-left: 8px;
+}
+
+.flecha-izquierda {
+  margin-right: 8px;
+}
+
+/* === EFECTO HOVER PARA AMBOS BOTONES === */
+
+/* Ocultar el texto en hover respetando el desplazamiento */
+.btn-navegacion-pasos:hover .btn-texto {
+  opacity: 0;
+  transform: translateY(1.5px) scale(0.8);
+}
+
+/* Mover flecha derecha (SIGUIENTE) al centro */
+.btn-navegacion-pasos:hover .flecha-derecha {
+  transform: translateX(-35px) scale(1.3);
+}
+
+/* Mover flecha izquierda (ATRÁS) al centro */
+.btn-navegacion-pasos:hover .flecha-izquierda {
+  transform: translateX(35px) scale(1.3);
+}
+
+/* Tono un poco más oscuro al estar encima del botón ATRÁS */
+.btn-navegacion-pasos:not(.btn-azul):hover {
+  background-color: #334155;
+}
+
+/* Clic táctil */
+.btn-navegacion-pasos:active {
+  transform: scale(0.98);
+}
 </style>
 </head>
 <body>
@@ -2028,8 +2159,11 @@ body.dark-mode .themeToggle-container {
                     </select>
                 </div>
                 
-                <button type="button" id="btnSiguiente1" class="btn-navegacion-pasos btn-azul" style="display: none; width: 100%; margin-top: 15px; font-size: 0.9rem;" onclick="validarYPasarAlPaso2()">
-    SIGUIENTE ➡️
+                <button type="button" id="btnSiguiente1" class="btn-navegacion-pasos btn-azul animacion-paso" style="display: none; width: 100%; margin-top: 15px;" onclick="validarYPasarAlPaso2()">
+  <span class="btn-texto">SIGUIENTE</span>
+  <svg class="flecha-svg flecha-derecha" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14M12 5l7 7-7 7"/>
+  </svg>
 </button>
 </div>
 
@@ -2064,11 +2198,17 @@ body.dark-mode .themeToggle-container {
                 
 <div style="display: flex; gap: 10px; margin-top: 20px;">
     <button type="button" class="btn-navegacion-pasos" style="flex: 1; font-size: 0.9rem;" onclick="cambiarPaso(1)">
-        ⬅️ ATRÁS
-    </button>
+  <svg class="flecha-svg flecha-izquierda" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  <span class="btn-texto">ATRÁS</span>
+</button>
     <button type="button" class="btn-navegacion-pasos btn-azul" style="flex: 1; font-size: 0.9rem;" onclick="cambiarPaso(3)">
-        SIGUIENTE ➡️
-    </button>
+  <span class="btn-texto">SIGUIENTE</span>
+  <svg class="flecha-svg flecha-derecha" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14M12 5l7 7-7 7"/>
+  </svg>
+</button>
 </div>
 </div>
 
@@ -2126,11 +2266,18 @@ body.dark-mode .themeToggle-container {
                 </div>
                 
                 <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 15px;">
-                    <button type="button" class="btn-navegacion-pasos" style="width: 100%;" onclick="cambiarPaso(2)">⬅️ ATRÁS</button>
+                   <button type="button" class="btn-navegacion-pasos" style="width: 100%;" onclick="cambiarPaso(1)">
+  <svg class="flecha-svg flecha-izquierda" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  <span class="btn-texto">ATRÁS</span>
+</button>
                 </div>
             </div>
 
-            <button type="submit" id="btnGuardarRegistro" class="btn-guardar" style="transition: all 0.3s ease;">GUARDAR REGISTRO</button>
+            <button type="submit" id="btnGuardarRegistro" class="btn-guardar">
+  GUARDAR REGISTRO
+</button>
         </form>
     </div>
 
