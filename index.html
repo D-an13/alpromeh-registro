@@ -1721,7 +1721,7 @@ input::-webkit-outer-spin-button,
     animation: pulsoLuz 1.5s infinite ease-in-out !important;
 }
 
-/* Animaciones */
+/* Animaciones Generales */
 @keyframes pulsoLuz {
     0% { opacity: 0.3; transform: scale(0.85); }
     50% { opacity: 1; transform: scale(1.2); }
@@ -1735,238 +1735,483 @@ input::-webkit-outer-spin-button,
 
 /* Hover para los botones del modal */
 .btn-hover-secundario:hover {
-  background-color: #f1f5f9 !important;
-  border-color: #94a3b8 !important;
+    background-color: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
 }
 
 .btn-hover-principal:hover {
-  background-color: #1d4ed8 !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    background-color: #1d4ed8 !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-/* Animación Zoom In al abrir */
+/* Animación Zoom In al abrir modal */
 @keyframes popIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+    0% { opacity: 0; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 .animacion-modal-zoom {
-  animation: popIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: popIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Contenedor en tamaño medio (42px) */
+/* --- ESTILOS DEL SWITCH DE TEMA (Cristal) --- */
 .themeToggle-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-  
-  /* Punto medio entre 48px y 36px */
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border-radius: 50%;
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    
-  transition: all 0.3s ease;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
 
-/* Efecto Hover para darle interacción de cristal */
 .themeToggle-container:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.4);
-  transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
 }
 
-/* Ajuste sutil cuando la web pasa a modo oscuro (mantiene el cristal) */
 body.dark-mode .themeToggle-container {
-  background: rgba(15, 23, 42, 0.25);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.4),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+    background: rgba(15, 23, 42, 0.25);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Ícono ajustado a 20px */
 .st-sunMoonThemeToggleBtn {
-  position: relative;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: relative;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .st-sunMoonThemeToggleBtn .themeToggleInput {
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  cursor: pointer;
-  z-index: 2;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    cursor: pointer;
+    z-index: 2;
 }
 
 .st-sunMoonThemeToggleBtn svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.4s ease, color 0.4s ease;
-  transform: rotate(40deg);
-  color: #334155; 
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease, color 0.4s ease;
+    transform: rotate(40deg);
+    color: #334155; 
 }
 
 .st-sunMoonThemeToggleBtn svg .sunMoon {
-  transform-origin: center center;
-  transition: inherit;
-  transform: scale(1);
+    transform-origin: center center;
+    transition: inherit;
+    transform: scale(1);
 }
 
 .st-sunMoonThemeToggleBtn svg .sunRay {
-  transform-origin: center center;
-  transform: scale(0);
-  transition: transform 0.3s ease;
+    transform-origin: center center;
+    transform: scale(0);
+    transition: transform 0.3s ease;
 }
 
 .st-sunMoonThemeToggleBtn svg mask > circle {
-  transition: transform 0.64s cubic-bezier(0.41, 0.64, 0.32, 1.575);
-  transform: translate(0px, 0px);
+    transition: transform 0.64s cubic-bezier(0.41, 0.64, 0.32, 1.575);
+    transform: translate(0px, 0px);
 }
 
-/* Transiciones de rayos del Sol */
 .st-sunMoonThemeToggleBtn svg .sunRay2 { animation-delay: 0.05s !important; }
 .st-sunMoonThemeToggleBtn svg .sunRay3 { animation-delay: 0.1s !important; }
 .st-sunMoonThemeToggleBtn svg .sunRay4 { animation-delay: 0.17s !important; }
 .st-sunMoonThemeToggleBtn svg .sunRay5 { animation-delay: 0.25s !important; }
 .st-sunMoonThemeToggleBtn svg .sunRay6 { animation-delay: 0.29s !important; }
 
-/* ☀️ Estado ACTIVO / MODO OSCURO (Transformación a Sol Amarillo) */
 .st-sunMoonThemeToggleBtn .themeToggleInput:checked + svg {
-  transform: rotate(90deg);
-  /* ☀️ Color del Sol: Amarillo Elegante */
-  color: #f59e0b;
+    transform: rotate(90deg);
+    color: #f59e0b;
 }
 
 .st-sunMoonThemeToggleBtn .themeToggleInput:checked + svg mask > circle {
-  transform: translate(16px, -3px);
+    transform: translate(16px, -3px);
 }
 
 .st-sunMoonThemeToggleBtn .themeToggleInput:checked + svg .sunMoon {
-  transform: scale(0.55);
+    transform: scale(0.55);
 }
 
 .st-sunMoonThemeToggleBtn .themeToggleInput:checked + svg .sunRay {
-  animation: showRay1832 0.4s ease 0s 1 forwards;
+    animation: showRay1832 0.4s ease 0s 1 forwards;
 }
 
 @keyframes showRay1832 {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
 }
 
-/* Configuración base para los botones de navegación */
+/* --- ESTILOS DE BOTONES DE NAVEGACIÓN --- */
 .btn-navegacion-pasos {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  border-radius: 12px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0 16px;
-  border: none;
-  font-weight: bold;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-radius: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0 16px;
+    border: none;
+    font-weight: bold;
 }
 
-/* === BOTÓN SIGUIENTE (AZUL) === */
 .btn-navegacion-pasos.btn-azul {
-  background-color: #0066ff;
-  color: #ffffff;
+    background-color: #0066ff;
+    color: #ffffff;
 }
 
-/* === BOTÓN ATRÁS (GRIS PIZARRA) === */
 .btn-navegacion-pasos:not(.btn-azul) {
-  background-color: #475569;
-  color: #ffffff;
+    background-color: #475569;
+    color: #ffffff;
 }
 
-/* Texto del botón (Alineación flex exacta con lo que tenga a la par) */
 .btn-texto {
-  display: inline-block;
-  line-height: 1;
-  transform: translateY(1.5px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  white-space: nowrap;
+    display: inline-block;
+    line-height: 1;
+    transform: translateY(1.5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    white-space: nowrap;
 }
 
-/* Estilos de las flechas SVG */
 .flecha-svg {
-  width: 20px;
-  height: 20px;
-  stroke: #ffffff;
-  display: inline-block;
-  vertical-align: middle;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 20px;
+    height: 20px;
+    stroke: #ffffff;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Márgenes de las flechas */
-.flecha-derecha {
-  margin-left: 8px;
-}
+.flecha-derecha { margin-left: 8px; }
+.flecha-izquierda { margin-right: 8px; }
 
-.flecha-izquierda {
-  margin-right: 8px;
-}
-
-/* === EFECTO HOVER PARA AMBOS BOTONES === */
-
-/* Ocultar el texto en hover respetando el desplazamiento */
 .btn-navegacion-pasos:hover .btn-texto {
-  opacity: 0;
-  transform: translateY(1.5px) scale(0.8);
+    opacity: 0;
+    transform: translateY(1.5px) scale(0.8);
 }
 
-/* Mover flecha derecha (SIGUIENTE) al centro */
 .btn-navegacion-pasos:hover .flecha-derecha {
-  transform: translateX(-35px) scale(1.3);
+    transform: translateX(-35px) scale(1.3);
 }
 
-/* Mover flecha izquierda (ATRÁS) al centro */
 .btn-navegacion-pasos:hover .flecha-izquierda {
-  transform: translateX(35px) scale(1.3);
+    transform: translateX(35px) scale(1.3);
 }
 
-/* Tono un poco más oscuro al estar encima del botón ATRÁS */
 .btn-navegacion-pasos:not(.btn-azul):hover {
-  background-color: #334155;
+    background-color: #334155;
 }
 
-/* Clic táctil */
 .btn-navegacion-pasos:active {
-  transform: scale(0.98);
+    transform: scale(0.98);
+}
+
+/* --- Full Screen Oscuro con Blur --- */
+.overlay-hamster {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999 !important;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+}
+
+.overlay-hamster.oculto {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; 
+}
+
+/* --- Contenedor sin tarjeta blanca --- */
+.contenedor-loader-hamster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: transparent !important;
+  padding: 0;
+  box-shadow: none !important;
+  transition: transform 0.3s ease-in-out;
+  transform: scale(1);
+}
+
+/* Efecto de encogimiento al ocultar */
+.overlay-hamster.oculto .contenedor-loader-hamster {
+  transform: scale(0.9);
+}
+
+/* --- Texto para fondo oscuro --- */
+.texto-cargando-hamster {
+  color: #f8fafc !important;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* --- ESTRUCTURA EXACTA DEL HÁMSTER (UIVERSE ORIGINAL) --- */
+.wheel-and-hamster {
+  --dur: 1s;
+  position: relative;
+  width: 12em;
+  height: 12em;
+  font-size: 14px !important;
+}
+
+/* Aislamiento estricto de caja para evitar deformaciones globales */
+.wheel-and-hamster,
+.wheel-and-hamster * {
+  box-sizing: content-box !important;
+}
+
+.wheel,
+.hamster,
+.hamster div,
+.spoke {
+  position: absolute;
+}
+
+.wheel,
+.spoke {
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.wheel {
+  background: radial-gradient(100% 100% at center, hsla(0,0%,60%,0) 47.8%, hsl(0,0%,60%) 48%);
+  z-index: 2;
+}
+
+.hamster {
+  animation: hamster var(--dur) ease-in-out infinite;
+  top: 50%;
+  left: calc(50% - 3.5em);
+  width: 7em;
+  height: 3.75em;
+  transform: rotate(4deg) translate(-0.8em, 1.85em);
+  transform-origin: 50% 0;
+  z-index: 1;
+}
+
+.hamster__head {
+  animation: hamsterHead var(--dur) ease-in-out infinite;
+  background: hsl(30,90%,55%);
+  border-radius: 70% 30% 0 100% / 40% 25% 25% 60%;
+  box-shadow: 0 -0.25em 0 hsl(30,90%,80%) inset,
+              0.75em -1.55em 0 hsl(30,90%,90%) inset;
+  top: 0;
+  left: -2em; /* Al estar dentro del cuerpo, -2em se toma a partir de la esquina del cuerpo y ensambla perfecto */
+  width: 2.75em;
+  height: 2.5em;
+  transform-origin: 100% 50%;
+  position: absolute;
+}
+
+.hamster__ear {
+  animation: hamsterEar var(--dur) ease-in-out infinite;
+  background: hsl(0,90%,85%);
+  border-radius: 50%;
+  box-shadow: -0.25em 0 hsl(30,90%,55%) inset;
+  top: -0.25em;
+  right: -0.25em;
+  width: 0.75em;
+  height: 0.75em;
+  transform-origin: 50% 75%;
+}
+
+.hamster__eye {
+  animation: hamsterEye var(--dur) linear infinite;
+  background-color: hsl(0,0%,0%);
+  border-radius: 50%;
+  top: 0.375em;
+  left: 1.25em;
+  width: 0.5em;
+  height: 0.5em;
+}
+
+.hamster__nose {
+  background: hsl(0,90%,75%);
+  border-radius: 35% 65% 85% 15% / 70% 50% 50% 30%;
+  top: 0.75em;
+  left: 0;
+  width: 0.2em;
+  height: 0.25em;
+}
+
+.hamster__body {
+  animation: hamsterBody var(--dur) ease-in-out infinite;
+  background: hsl(30,90%,90%);
+  border-radius: 50% 30% 50% 30% / 15% 60% 40% 40%;
+  box-shadow: 0.1em 0.75em 0 hsl(30,90%,55%) inset,
+              0.15em -0.5em 0 hsl(30,90%,80%) inset;
+  top: 0.25em;
+  left: 2em;
+  width: 4.5em;
+  height: 3em;
+  transform-origin: 17% 50%;
+  transform-style: preserve-3d;
+  position: absolute;
+}
+
+.hamster__limb--fr,
+.hamster__limb--fl {
+  clip-path: polygon(0 0,100% 0,70% 80%,60% 100%,0% 100%,40% 80%);
+  top: 2em;
+  left: 0.5em;
+  width: 1em;
+  height: 1.5em;
+  transform-origin: 50% 0;
+}
+
+.hamster__limb--fr {
+  animation: hamsterFRLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,80%) 80%,hsl(0,90%,75%) 80%);
+  transform: rotate(15deg) translateZ(-1px);
+}
+
+.hamster__limb--fl {
+  animation: hamsterFLLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,90%) 80%,hsl(0,90%,85%) 80%);
+  transform: rotate(15deg);
+}
+
+.hamster__limb--br,
+.hamster__limb--bl {
+  border-radius: 0.75em 0.75em 0 0;
+  clip-path: polygon(0 0,100% 0,100% 30%,70% 90%,70% 100%,30% 100%,40% 90%,0% 30%);
+  top: 1em;
+  left: 2.8em;
+  width: 1.5em;
+  height: 2.5em;
+  transform-origin: 50% 30%;
+}
+
+.hamster__limb--br {
+  animation: hamsterBRLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,80%) 90%,hsl(0,90%,75%) 90%);
+  transform: rotate(-25deg) translateZ(-1px);
+}
+
+.hamster__limb--bl {
+  animation: hamsterBLLimb var(--dur) linear infinite;
+  background: linear-gradient(hsl(30,90%,90%) 90%,hsl(0,90%,85%) 90%);
+  transform: rotate(-25deg);
+}
+
+.hamster__tail {
+  animation: hamsterTail var(--dur) linear infinite;
+  background: hsl(0,90%,85%);
+  border-radius: 0.25em 50% 50% 0.25em;
+  box-shadow: 0 -0.2em 0 hsl(0,90%,75%) inset;
+  top: 1.5em;
+  right: -0.5em;
+  width: 1em;
+  height: 0.5em;
+  transform: rotate(30deg) translateZ(-1px);
+  transform-origin: 0.25em 0.25em;
+}
+
+.spoke {
+  animation: spoke var(--dur) linear infinite;
+  background: radial-gradient(100% 100% at center,hsl(0,0%,60%) 4.8%,hsla(0,0%,60%,0) 5%),
+              linear-gradient(hsla(0,0%,55%,0) 46.9%,hsl(0,0%,65%) 47% 52.9%,hsla(0,0%,65%,0) 53%) 50% 50% / 99% 99% no-repeat;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes hamster {
+  from, to { transform: rotate(4deg) translate(-0.8em,1.85em); }
+  50% { transform: rotate(0) translate(-0.8em,1.85em); }
+}
+
+@keyframes hamsterHead {
+  from, 25%, 50%, 75%, to { transform: rotate(0); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(8deg); }
+}
+
+@keyframes hamsterEye {
+  from, 90%, to { transform: scaleY(1); }
+  95% { transform: scaleY(0); }
+}
+
+@keyframes hamsterEar {
+  from, 25%, 50%, 75%, to { transform: rotate(0); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(12deg); }
+}
+
+@keyframes hamsterBody {
+  from, 25%, 50%, 75%, to { transform: rotate(0); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(-2deg); }
+}
+
+@keyframes hamsterFRLimb {
+  from, 25%, 50%, 75%, to { transform: rotate(50deg) translateZ(-1px); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(-30deg) translateZ(-1px); }
+}
+
+@keyframes hamsterFLLimb {
+  from, 25%, 50%, 75%, to { transform: rotate(-30deg); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(50deg); }
+}
+
+@keyframes hamsterBRLimb {
+  from, 25%, 50%, 75%, to { transform: rotate(-60deg) translateZ(-1px); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(20deg) translateZ(-1px); }
+}
+
+@keyframes hamsterBLLimb {
+  from, 25%, 50%, 75%, to { transform: rotate(20deg); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(-60deg); }
+}
+
+@keyframes hamsterTail {
+  from, 25%, 50%, 75%, to { transform: rotate(30deg) translateZ(-1px); }
+  12.5%, 37.5%, 62.5%, 87.5% { transform: rotate(10deg) translateZ(-1px); }
+}
+
+@keyframes spoke {
+  from { transform: rotate(0); }
+  to { transform: rotate(-1turn); }
 }
 </style>
 </head>
@@ -7620,7 +7865,33 @@ function ocultarBannerHistorico() {
     }
 }
 
-// 🚀 FUNCIÓN ACTUALIZADA Y CORREGIDA
+// 🐹 FUNCIONES PARA MOSTRAR Y OCULTAR EL HÁMSTER
+function mostrarCargandoHamster() {
+  const overlay = document.querySelector('.overlay-hamster');
+  if (overlay) {
+    // Si la estructura del HTML quedó atrapada en un contenedor, lo movemos al final del body
+    if (overlay.parentNode !== document.body) {
+      document.body.appendChild(overlay);
+    }
+
+    // Le pedimos al navegador un frame de tiempo para que registre la opacidad 0 antes de quitar la clase
+    requestAnimationFrame(() => {
+      overlay.classList.remove('oculto');
+    });
+  } else {
+    console.warn("⚠️ No se encontró la clase .overlay-hamster en el HTML");
+  }
+}
+
+function ocultarCargandoHamster() {
+  const overlay = document.querySelector('.overlay-hamster');
+  if (overlay) {
+    // Agregamos la clase 'oculto' para activar la transición de fade-out
+    overlay.classList.add('oculto');
+  }
+}
+
+// 🚀 FUNCIÓN DE VALIDACIÓN LIMPIA
 async function validarYPasarAlPaso2() {
   const inputOrden = document.getElementById('orden');
   const numOrden = inputOrden ? inputOrden.value.trim() : '';
@@ -7636,15 +7907,10 @@ async function validarYPasarAlPaso2() {
   if (btnSiguiente) {
     textoOriginal = btnSiguiente.innerHTML;
     btnSiguiente.disabled = true;
-    
-    // 🎨 FORZAR COLOR GRIS CON !IMPORTANT (para que le gane a cualquier CSS)
-    btnSiguiente.style.setProperty('background-color', '#94a3b8', 'important');
-    btnSiguiente.style.setProperty('color', '#ffffff', 'important');
-    btnSiguiente.style.setProperty('cursor', 'not-allowed', 'important');
-    btnSiguiente.style.setProperty('pointer-events', 'none', 'important');
-    
-    btnSiguiente.innerHTML = "BUSCANDO ORDEN...";
   }
+
+  // 🐹 MOSTRAR EL HÁMSTER EN PANTALLA
+  mostrarCargandoHamster();
 
   try {
     const url = `${URL_SCRIPT}?validarOrden=${encodeURIComponent(numOrden)}`;
@@ -7659,15 +7925,14 @@ async function validarYPasarAlPaso2() {
       data = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     }
 
-    // 🔓 RESTAURAR BOTÓN A SU ESTADO AZUL ORIGINAL
+    // 🔓 RESTAURAR BOTÓN A SU ESTADO ORIGINAL
     if (btnSiguiente) {
       btnSiguiente.disabled = false;
-      btnSiguiente.style.removeProperty('background-color');
-      btnSiguiente.style.removeProperty('color');
-      btnSiguiente.style.removeProperty('cursor');
-      btnSiguiente.style.removeProperty('pointer-events');
       btnSiguiente.innerHTML = textoOriginal;
     }
+
+    // 🐹 OCULTAR HÁMSTER
+    ocultarCargandoHamster();
 
     // EVALUACIÓN DE ORDEN EXISTENTE
     if (data && (data.existe === true || data.existe === "true")) {
@@ -7680,7 +7945,6 @@ async function validarYPasarAlPaso2() {
 
       if (lblOrden) lblOrden.innerText = `#${data.orden || numOrden}`;
       
-      // Si existe más de 1 vez, agrega la etiqueta "(X veces)"
       if (txtVeces) {
         txtVeces.innerHTML = (data.totalVeces && data.totalVeces > 1) 
           ? ` <span style="color: #d97706; font-weight: 700;">(${data.totalVeces} veces)</span>` 
@@ -7696,7 +7960,6 @@ async function validarYPasarAlPaso2() {
           <strong>📋 Responsable:</strong> ${data.responsable || 'N/A'}
         `;
 
-        // Si hay varias coincidencias, agrega el desglose al final
         if (data.totalVeces && data.totalVeces > 1 && data.historialFechas) {
           htmlDetalles += `
             <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 10px 0;">
@@ -7722,12 +7985,12 @@ async function validarYPasarAlPaso2() {
 
   } catch (error) {
     console.error("❌ Error en la verificación:", error);
+
+    // 🐹 OCULTAR HÁMSTER SI HAY ERROR
+    ocultarCargandoHamster();
+
     if (btnSiguiente) {
       btnSiguiente.disabled = false;
-      btnSiguiente.style.removeProperty('background-color');
-      btnSiguiente.style.removeProperty('color');
-      btnSiguiente.style.removeProperty('cursor');
-      btnSiguiente.style.removeProperty('pointer-events');
       btnSiguiente.innerHTML = textoOriginal;
     }
     alert("⚠️ Ocurrió un detalle al consultar la orden: " + error.message);
@@ -7795,5 +8058,32 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
 </div>
-</body>
+
+<!-- OVERLAY DE CARGA CON HÁMSTER -->
+<div class="overlay-hamster oculto">
+  <div class="contenedor-loader-hamster">
+    <div class="wheel-and-hamster">
+      <div class="wheel"></div>
+      <div class="hamster">
+        
+        <!-- EL CUERPO AHORA CONTIENE A LA CABEZA -->
+        <div class="hamster__body">
+          <div class="hamster__head">
+            <div class="hamster__ear"></div>
+            <div class="hamster__eye"></div>
+            <div class="hamster__nose"></div>
+          </div>
+          <div class="hamster__limb hamster__limb--fr"></div>
+          <div class="hamster__limb hamster__limb--fl"></div>
+          <div class="hamster__limb hamster__limb--br"></div>
+          <div class="hamster__limb hamster__limb--bl"></div>
+          <div class="hamster__tail"></div>
+        </div>
+
+      </div>
+      <div class="spoke"></div>
+    </div>
+    <p class="texto-cargando-hamster">BUSCANDO ORDEN...</p>
+  </div>
+</div></body>
 </html>
