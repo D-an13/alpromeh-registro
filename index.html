@@ -2238,6 +2238,576 @@ body.dark-mode .themeToggle-container {
   height: 0.12em;
   background: #d97706; /* Dorado oscuro para la base */
 }
+
+/* 🛍️ GRID DE LA TIENDA */
+.store-grid-3d {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 🎨 CONTENEDOR BASE CON BORDE VISIBLE SIEMPRE Y GLOW SUAVE */
+.card-3d-container {
+  width: 100%;
+  height: 250px;
+  border-radius: 16px;
+  padding: 2px; /* Define el grosor del borde visible */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* GRADIENTES Y BRIILLO SUTIL EN ESTADO NORMAL */
+.card-bronce-wrap {
+  background-image: linear-gradient(163deg, #d97706 0%, #78350f 100%);
+  box-shadow: 0 2px 8px rgba(120, 53, 15, 0.15);
+}
+.card-bronce-wrap:hover {
+  box-shadow: 0px 0px 20px 2px rgba(217, 119, 6, 0.5);
+}
+
+.card-plata-wrap {
+  background-image: linear-gradient(163deg, #94a3b8 0%, #334155 100%);
+  box-shadow: 0 2px 8px rgba(51, 65, 85, 0.15);
+}
+.card-plata-wrap:hover {
+  box-shadow: 0px 0px 20px 2px rgba(148, 163, 184, 0.55);
+}
+
+.card-oro-wrap {
+  background-image: linear-gradient(163deg, #facc15 0%, #ca8a04 100%);
+  box-shadow: 0 2px 8px rgba(202, 138, 4, 0.2);
+}
+.card-oro-wrap:hover {
+  box-shadow: 0px 0px 22px 2px rgba(234, 179, 8, 0.6);
+}
+
+/* 💎 PACK DIAMANTE - EFECTO MULTICOLOR ANIMADO (PREMIUM) */
+.card-diamante-wrap {
+  /* Gradiente espectro de varios colores neón */
+  background: linear-gradient(
+    124deg, 
+    #ff2400, 
+    #e81d1d, 
+    #e8b71d, 
+    #1de840, 
+    #1ddde8, 
+    #2b1de8, 
+    #dd1de8, 
+    #ff2400
+  );
+  background-size: 180% 180%;
+  animation: rainbowFlow 3s ease infinite;
+  box-shadow: 0 4px 15px rgba(221, 29, 232, 0.3);
+}
+
+.card-diamante-wrap:hover {
+  box-shadow: 0px 0px 28px 4px rgba(29, 221, 232, 0.6);
+}
+
+/* ==========================================
+   1. ANIMACIONES GLOBALES DE ENTRADA Y SALIDA
+   ========================================== */
+@keyframes rainbowFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeOutScale {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+@keyframes pulseAmber {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+/* ==========================================
+   2. TARJETAS DE PAQUETES (TIENDA)
+   ========================================== */
+.card-3d {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 10px 12px 10px;
+  transition: transform 0.2s ease, border-radius 0.2s ease;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.card-3d-container:hover .card-3d {
+  transform: scale(0.985);
+  border-radius: 13px;
+}
+
+.card-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e293b;
+  text-align: center;
+}
+
+.card-coins {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coin-num {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.coin-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.card-btn {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 12px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.card-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* BOTONES Y BADGES POR RANGO */
+.btn-bronce { background: linear-gradient(135deg, #d97706, #78350f); }
+.btn-plata { background: linear-gradient(135deg, #64748b, #334155); }
+.btn-oro { background: linear-gradient(135deg, #eab308, #ca8a04); }
+
+.btn-diamante {
+  background: linear-gradient(124deg, #1ddde8, #2b1de8, #dd1de8, #e81d1d, #1ddde8) !important;
+  background-size: 200% 200% !important;
+  animation: rainbowFlow 3s ease infinite !important;
+  border: none;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.badge-poput {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ef4444;
+  color: white;
+  font-size: 9px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4);
+}
+.badge-top { background: #eab308; box-shadow: 0 2px 5px rgba(234, 179, 8, 0.4); }
+.badge-ultra { background: linear-gradient(135deg, #3b82f6, #ec4899); box-shadow: 0 2px 5px rgba(236, 72, 153, 0.4); }
+
+/* ==========================================
+   3. VISTA CHECKOUT (ORDEN PENDIENTE)
+   ========================================== */
+.ticket-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #b45309;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 6px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.6px;
+}
+
+.status-pulse {
+  width: 7px;
+  height: 7px;
+  background-color: #f59e0b;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  animation: pulseAmber 1.6s infinite;
+}
+
+.ticket-card-vip {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.06);
+}
+
+.ticket-grid-summary {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ticket-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.summary-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.text-dark { color: #0f172a; }
+.text-success { color: #16a34a; }
+.text-primary { color: #ea580c; }
+
+.ticket-divider {
+  width: 1px;
+  height: 28px;
+  background: #e2e8f0;
+}
+
+.steps-checkout-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+  padding: 0 6px;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+}
+
+.step-number {
+  background: #ea580c;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 900;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.step-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.step-desc {
+  margin: 0;
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+.step-line-connector {
+  width: 2px;
+  height: 10px;
+  background: #e2e8f0;
+  margin-left: 10px;
+}
+
+.ticket-pin-group {
+  display: flex;
+  gap: 10px;
+}
+
+.input-pin-style {
+  flex: 1;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-weight: 800;
+  text-align: center;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+
+.input-pin-style:focus {
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+}
+
+/* ==========================================
+   4. COMPONENTES UIVERSE (BOTONES NÍTIDOS)
+   ========================================== */
+
+/* 🚀 BOTÓN CAMBIAR PAQUETE (REGRESAR) */
+.btn-volver-uiverse {
+  position: relative;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  height: 34px;
+  padding-left: 38px;
+  padding-right: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.btn-volver-icon-box {
+  background-color: #0f172a;
+  border-radius: 7px;
+  height: 26px;
+  width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  z-index: 10;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-volver-icon-box svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-volver-text {
+  color: #334155;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  z-index: 5;
+  white-space: nowrap;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-volver-uiverse:hover .btn-volver-icon-box {
+  width: calc(100% - 6px);
+}
+
+.btn-volver-uiverse:hover .btn-volver-text {
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+.btn-volver-uiverse:hover {
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.btn-volver-uiverse:active {
+  transform: scale(0.96);
+}
+
+/* 🚀 BOTÓN VALIDAR PIN */
+.btn-validar-pin-uiverse {
+  position: relative;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  border-radius: 12px;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: #ffffff;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.3, 1, 0.8, 1), box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25);
+}
+
+.btn-validar-pin-uiverse span {
+  position: relative;
+  z-index: 10;
+  transition: color 0.4s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  gap: 8px;
+}
+
+.btn-validar-pin-uiverse span svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-validar-pin-uiverse::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10%;
+  width: 120%;
+  height: 100%;
+  z-index: 1;
+  background: #0f172a;
+  transform: skew(30deg);
+  transition: transform 0.45s cubic-bezier(0.3, 1, 0.8, 1);
+}
+
+.btn-validar-pin-uiverse:hover::before {
+  transform: translate3d(120%, 0, 0);
+}
+
+.btn-validar-pin-uiverse:hover {
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
+}
+
+.btn-validar-pin-uiverse:active {
+  transform: scale(0.96);
+}
+/* 🚀 BOTÓN REGRESAR AJUSTADO Y SIN SOLAPAMIENTO */
+.btn-volver-uiverse {
+  position: relative;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  height: 34px;               /* Altura igualada con badges */
+  padding-left: 38px;         /* Espacio reservado para que el cuadro NO traslape el texto */
+  padding-right: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Cuadrado con la flecha */
+.btn-volver-icon-box {
+  background-color: #0f172a;
+  border-radius: 7px;
+  height: 26px;               /* Proporcional a la altura de 34px */
+  width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  z-index: 10;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icono SVG dentro del cuadro */
+.btn-volver-icon-box svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Texto del botón */
+.btn-volver-text {
+  color: #334155;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  z-index: 5;
+  white-space: nowrap;        /* Evita saltos de línea */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* --- EFECTOS EN HOVER --- */
+
+/* El cuadro oscuro se expande a todo lo largo suavemente */
+.btn-volver-uiverse:hover .btn-volver-icon-box {
+  width: calc(100% - 6px);
+}
+
+/* El texto cambia a blanco y se desliza ligeramente */
+.btn-volver-uiverse:hover .btn-volver-text {
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+.btn-volver-uiverse:hover {
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+/* Click */
+.btn-volver-uiverse:active {
+  transform: scale(0.96);
+}
+
+/* CLASES DE ANIMACIÓN PARA LA VISTA DE LA ORDEN */
+.anim-entrada {
+  animation: fadeInScale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-salida {
+  animation: fadeOutScale 0.20s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
 </style>
 </head>
 <body>
@@ -6855,104 +7425,148 @@ function sumarAlprocoinsLocales(monedasGanadas) {
     </div>
 </div>
 
+<!-- ⚡ MODAL DE RECARGA DE ALPROCOINS -->
 <div id="modalRecargaCoins" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 9999; justify-content: center; align-items: center;">
     
-    <div id="cuerpoRecarga" class="modal-zoom-in" style="background: #ffffff; width: 420px; max-width: 90%; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4); font-family: system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; overflow: hidden;">
+    <div id="cuerpoRecarga" class="modal-zoom-in" style="background: #ffffff; width: 800px; max-width: 95%; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4); font-family: system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; overflow: hidden;">
         
+        <!-- HEADER -->
         <div style="background: linear-gradient(135deg, #ea580c, #85200c); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
             <div>
-             <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
-    <!-- 🎟️ Ticket original pintado de dorado con el efecto de tu título -->
-    <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 16px; display: inline-block; transform: translateY(-0.5px); flex-shrink: 0; font-weight: 800;">🎟️</span>
-    OBTÉN MÁS <span style="color: #fef08a;">ALPROCOINS</span>
-</h3>
+                <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #ffffff; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;">
+                    <span style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 16px; display: inline-block; transform: translateY(-0.5px); flex-shrink: 0; font-weight: 800;">🎟️</span>
+                    OBTÉN MÁS <span style="color: #fef08a;">ALPROCOINS</span>
+                </h3>
                 <p style="margin: 2px 0 0 0; font-size: 10px; color: #ffedd5; opacity: 0.9;">Consigue monedas al instante sin esperar</p>
             </div>
             <button onclick="cerrarModalRecarga()" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 14px; cursor: pointer; color: #ffffff; width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.2s;" onmouseenter="this.style.background='#ef4444'; this.style.borderColor='#ef4444';" onmouseleave="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.borderColor='rgba(255, 255, 255, 0.2)';">×</button>
         </div>
 
-        <div style="padding: 20px; display: flex; flex-direction: column; gap: 14px;">
-            
-            <div id="bannerInstruccionesAlpro" style="display: none; background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 12px; animation: slideDownBanner 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                    <span style="font-weight: 800; font-size: 11px; color: #b45309;">👉 ¿Cómo obtener tu código?</span>
-                    <span onclick="cerrarBannerInstrucciones()" style="font-size: 14px; cursor: pointer; color: #b45309; font-weight: 900; line-height: 1;">×</span>
+        <div style="padding: 20px;">
+
+            <!-- 🛍️ VISTA 1: TIENDA DE TARJETAS -->
+            <div id="vistaPacksCoins" class="store-grid-3d">
+                
+                <!-- 🥉 BRONCE -->
+                <div class="card-3d-container card-bronce-wrap">
+                    <div class="card-3d">
+                        <div class="card-icon">🏛️</div>
+                        <h4 class="card-title">Pack Bronce</h4>
+                        <div class="card-coins"><span class="coin-num">200</span><span class="coin-label">ALPROCOINS</span></div>
+                        <button class="card-btn btn-bronce" onclick="seleccionarPack('Pack Bronce', 200, 25)">Q 25.00</button>
+                    </div>
                 </div>
-                <p id="textoInstruccionesBanner" style="margin: 0; font-size: 11px; color: #78350f; line-height: 1.4;"></p>
+
+                <!-- 🥈 PLATA -->
+                <div class="card-3d-container card-plata-wrap">
+                    <div class="card-3d">
+                        <div class="card-icon">🏛️</div>
+                        <h4 class="card-title">Pack Plata</h4>
+                        <div class="card-coins"><span class="coin-num">500</span><span class="coin-label">ALPROCOINS</span></div>
+                        <button class="card-btn btn-plata" onclick="seleccionarPack('Pack Plata', 500, 50)">Q 50.00</button>
+                    </div>
+                </div>
+
+                <!-- 🥇 ORO -->
+                <div class="card-3d-container card-oro-wrap">
+                    <div class="card-3d">
+                        <div class="card-icon">🏛️</div>
+                        <h4 class="card-title">Pack Oro</h4>
+                        <div class="card-coins"><span class="coin-num">1,200</span><span class="coin-label">ALPROCOINS</span></div>
+                        <button class="card-btn btn-oro" onclick="seleccionarPack('Pack Oro', 1200, 100)">Q 100.00</button>
+                    </div>
+                </div>
+
+                <!-- 💎 DIAMANTE -->
+                <div class="card-3d-container card-diamante-wrap">
+                    <div class="card-3d">
+                        <div class="card-icon">💎</div>
+                        <h4 class="card-title">Pack Diamante</h4>
+                        <div class="card-coins"><span class="coin-num">1,900</span><span class="coin-label">ALPROCOINS</span></div>
+                        <button class="card-btn btn-diamante" onclick="seleccionarPack('Pack Diamante', 1900, 150)">Q 150.00</button>
+                    </div>
+                </div>
+
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-    <!-- 🥉 PACK BRONCE (Borde Cobre en Hover) -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#ca8a04'; this.style.boxShadow='0 4px 12px rgba(202,138,4,0.05)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 22px;">🪙</span>
-            <div style="display: flex; flex-direction: column;">
-                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">200 Alprocoins</span>
-                <span style="font-size: 10px; color: #b45309; font-weight: 700;">Pack Bronce</span>
-            </div>
+            <!-- 🧾 VISTA 2: CHECKOUT PREMIUM -->
+<div id="vistaOrdenPendiente" style="display: none; animation: fadeInScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+    
+    <!-- BARRA SUPERIOR DE ACCIONES -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+       <button onclick="regresarATienda()" type="button" class="btn-volver-uiverse">
+  <div class="btn-volver-icon-box">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+      <path d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z" fill="#ffffff"></path>
+      <path d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z" fill="#ffffff"></path>
+    </svg>
+  </div>
+  <span class="btn-volver-text">Cambiar paquete</span>
+</button>
+
+        <div class="ticket-status-badge">
+            <span class="status-pulse"></span>
+            ORDEN PENDIENTE
         </div>
-        <button onclick="mostrarInstruccionesEnBanner(200, 25)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 25.00</button>
     </div>
 
-    <!-- 🥈 PACK PLATA (Borde Plata en Hover) -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#94a3b8'; this.style.boxShadow='0 4px 12px rgba(148,163,184,0.08)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 22px;">🪙</span>
-            <div style="display: flex; flex-direction: column;">
-                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">500 Alprocoins</span>
-                <span style="font-size: 10px; color: #475569; font-weight: 700;">Pack Plata</span>
+    <!-- TICKET CARD VIP -->
+    <div class="ticket-card-vip">
+        
+        <!-- RESUMEN DE COMPRA CON ESTILO MINIMALISTA -->
+        <div class="ticket-grid-summary">
+            <div class="ticket-summary-item">
+                <span class="summary-label">PAQUETE</span>
+                <strong id="ordenPackNombre" class="summary-value text-dark">-</strong>
+            </div>
+            <div class="ticket-divider"></div>
+            <div class="ticket-summary-item">
+                <span class="summary-label">RECIBES</span>
+                <strong class="summary-value text-success">🪙 <span id="ordenCoins">0</span></strong>
+            </div>
+            <div class="ticket-divider"></div>
+            <div class="ticket-summary-item">
+                <span class="summary-label">TOTAL A PAGAR</span>
+                <strong id="ordenPrecio" class="summary-value text-primary">Q 0.00</strong>
             </div>
         </div>
-        <button onclick="mostrarInstruccionesEnBanner(500, 50)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 50.00</button>
-    </div>
 
-    <!-- 🥇 PACK ORO (Borde Oro en Hover) -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #e2e8f0; transition: all 0.2s;" onmouseenter="this.style.borderColor='#eab308'; this.style.boxShadow='0 4px 12px rgba(234,179,8,0.1)';" onmouseleave="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 22px;">🪙</span>
-            <div style="display: flex; flex-direction: column;">
-                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">1,200 Alprocoins</span>
-                <span style="font-size: 10px; color: #a16207; font-weight: 700;">Pack Oro</span>
+        <!-- FLUJO DE PASOS ELEGANTE (SIN GLOBOS NI ALERTAS) -->
+        <div class="steps-checkout-container">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <span class="step-title">Pago en efectivo</span>
+                    <p id="textoInstruccionPago" class="step-desc"></p>
+                </div>
             </div>
-        </div>
-        <button onclick="mostrarInstruccionesEnBanner(1200, 100)" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 100.00</button>
-    </div>
 
-    <!-- 💎 PACK DIAMANTE (Tu joya animada intacta) -->
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 16px; border: 1px solid #cbd5e1; transition: all 0.2s;" onmouseenter="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 4px 14px rgba(59,130,246,0.08)';" onmouseleave="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';">
-        <style>
-            @keyframes arcoirisAlpro {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-            .btn-arcoiris-diamante {
-                background: linear-gradient(45deg, #ff2a5f, #ff7e40, #ffeb3b, #2af598, #009efd, #9b51e0, #ff2a5f);
-                background-size: 400% 400%;
-                animation: arcoirisAlpro 8s ease infinite;
-                color: #ffffff;
-                text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            }
-        </style>
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 22px;">💎</span>
-            <div style="display: flex; flex-direction: column;">
-                <span style="font-weight: 800; font-size: 14px; color: #0f172a;">1,900 Alprocoins</span>
-                <span style="font-size: 10px; color: #2563eb; font-weight: 700; letter-spacing: 0.2px;">Pack Diamante</span>
+            <div class="step-line-connector"></div>
+
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <span class="step-title">Ingresa tu PIN secreto</span>
+                    <p class="step-desc">Escribe el código proporcionado para acreditar tus Alprocoins.</p>
+                </div>
             </div>
         </div>
-        <button class="btn-arcoiris-diamante" onclick="mostrarInstruccionesEnBanner(1900, 150)" style="border: none; padding: 8px 14px; border-radius: 10px; font-weight: 900; font-size: 12px; cursor: pointer; transition: transform 0.1s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">Q 150.00</button>
+
+        <!-- CAMPO DE PIN Y BOTÓN DE VALIDACIÓN -->
+        <div class="ticket-pin-group">
+            <input type="text" id="inputAlproPin" placeholder="ALPRO-XXXX-XXXX-XXXX" class="input-pin-style">
+            <button onclick="canjearAlproPin()" class="btn-validar-pin-uiverse">
+  <span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    Validar PIN
+  </span>
+</button>
+        </div>
+
     </div>
 </div>
-
-            <div style="border-top: 1px dashed #cbd5e1; padding-top: 14px; margin-top: 6px;">
-                <label style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 6px; letter-spacing: 0.3px;">¿YA TIENES UN CÓDIGO DE RECARGA?</label>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" id="inputAlproPin" placeholder="ALPRO-1000-XXXX-YYYY" style="flex: 1; padding: 10px 12px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 12px; text-transform: uppercase; font-family: monospace; font-weight: 700; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);" autocomplete="off">
-                    <button onclick="canjearAlproPin()" style="background: #0f172a; color: white; border: none; padding: 0 18px; border-radius: 10px; font-weight: 800; font-size: 12px; cursor: pointer; transition: background 0.2s;" onmouseenter="this.style.background='#1e293b'" onmouseleave="this.style.background='#0f172a'">Validar</button>
-                </div>
-            </div>
 
         </div>
     </div>
@@ -8145,11 +8759,9 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="wheel-and-hamster">
       <div class="wheel"></div>
       <div class="hamster">
-        
-        <!-- EL CUERPO AHORA CONTIENE A LA CABEZA -->
         <div class="hamster__body">
           <div class="hamster__head">
-                             <div class="hamster__crown" id="coronaHamster"></div>
+            <div class="hamster__crown" id="coronaHamster"></div>
             <div class="hamster__ear"></div>
             <div class="hamster__eye"></div>
             <div class="hamster__nose"></div>
@@ -8160,12 +8772,63 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="hamster__limb hamster__limb--bl"></div>
           <div class="hamster__tail"></div>
         </div>
-
       </div>
       <div class="spoke"></div>
     </div>
     <p class="texto-cargando-hamster">BUSCANDO ORDEN...</p>
   </div>
 </div>
+
+<!-- ⚡ SCRIPTS JS (DENTRO DE LA ETIQUETA SCRIPT) -->
+<script>
+  // 🛒 SELECCIONAR PAQUETE Y MOSTRAR RECIBO
+  function seleccionarPack(nombrePack, monedas, precio) {
+      const vistaPacks = document.getElementById('vistaPacksCoins');
+      const vistaOrden = document.getElementById('vistaOrdenPendiente');
+      
+      if (vistaPacks && vistaOrden) {
+          // 1. Ocultar tienda de paquetes
+          vistaPacks.style.display = 'none';
+          
+          // 2. Llenar información en el recibo
+          document.getElementById('ordenPackNombre').innerText = nombrePack;
+          document.getElementById('ordenCoins').innerText = monedas.toLocaleString('en-US');
+          document.getElementById('ordenPrecio').innerText = `Q ${precio}.00`;
+          
+          document.getElementById('textoInstruccionPago').innerHTML = 
+              `Entrega <b>Q ${precio}.00</b> en efectivo a Dan. Él te entregará el PIN de activación para ingresarlo abajo:`;
+              
+          const inputPin = document.getElementById('inputAlproPin');
+          if (inputPin) inputPin.value = '';
+
+          // 3. Preparar clases de animación y mostrar orden
+          vistaOrden.classList.remove('anim-salida');
+          vistaOrden.classList.add('anim-entrada');
+          vistaOrden.style.display = 'block';
+      }
+  }
+
+  // 🔙 REGRESAR A LA TIENDA DE PAQUETES
+  function regresarATienda() {
+    const vistaPendiente = document.getElementById('vistaOrdenPendiente');
+    const vistaPacks = document.getElementById('vistaPacksCoins');
+
+    if (!vistaPendiente) return;
+
+    // 1. Iniciar animación de salida en la orden
+    vistaPendiente.classList.remove('anim-entrada');
+    vistaPendiente.classList.add('anim-salida');
+
+    // 2. Esperar que termine la animación (200ms) antes de alternar las vistas
+    setTimeout(() => {
+        vistaPendiente.style.display = 'none';
+        vistaPendiente.classList.remove('anim-salida'); // Limpieza para la próxima apertura
+        
+        if (vistaPacks) {
+            vistaPacks.style.display = ''; // Restaura la alineación horizontal intacta
+        }
+    }, 200);
+  }
+</script>
 </body>
 </html>
