@@ -2808,6 +2808,91 @@ body.dark-mode .themeToggle-container {
 .anim-salida {
   animation: fadeOutScale 0.20s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+
+/* 1. ELIMINAR ESPACIO SUPERIOR (Pegar bien arriba) */
+.banner-central-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+    margin-top: -10px; /* Sube todo el bloque para eliminar el espacio de la tarjeta */
+    width: 100%;
+}
+
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85px;
+    width: 100%;
+}
+
+.logo-alpromeh {
+    max-height: 85px;
+    width: auto;
+    object-fit: contain;
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* 2. LOGO EN MODO OSCURO (Se vuelve blanco/luminoso) */
+[data-theme="dark"] .logo-alpromeh {
+    filter: brightness(0) invert(1);
+}
+
+/* EFECTO SHINE CORREGIDO */
+.frase-inspiradora {
+    margin: 6px 0 10px 0;
+    padding: 0;
+    font-weight: 600;
+    font-size: 15px;
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    text-align: center;
+    line-height: 1.4;
+    max-width: 95%;
+    
+    /* MODO CLARO: Base gris oscuro, brillo en AZUL INTENSO */
+    background: linear-gradient(
+        to right, 
+        #64748b 0%, 
+        #64748b 35%, 
+        #1e40af 50%,  /* Azul oscuro fuerte para el destello */
+        #64748b 65%, 
+        #64748b 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shineLento 6s infinite linear;
+}
+
+/* MODO OSCURO: Base gris claro, brillo BLANCO PURO (Se mantiene intacto) */
+[data-theme="dark"] .frase-inspiradora {
+    background: linear-gradient(
+        to right, 
+        #94a3b8 0%, 
+        #94a3b8 35%, 
+        #ffffff 50%,  /* Blanco brillante para el destello */
+        #94a3b8 65%, 
+        #94a3b8 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* ANIMACIÓN SUAVE Y COMPLETA */
+@keyframes shineLento {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
 </style>
 </head>
 <body>
@@ -2887,55 +2972,58 @@ body.dark-mode .themeToggle-container {
     </div>
     
 <div class="contenedor" style="position: relative;">
-        <div class="mood-container">
-            <div id="moodFace" class="mood-face">🙂</div>
-            <div class="barra-fondo">
-                <div id="barraProgreso" class="barra-llenado"></div>
-            </div>
+    
+  <!-- BLOQUE CENTRAL: COMPACTO Y LIMPIO -->
+<div class="banner-central-welcome">
+    <div class="logo-wrapper" id="logoWrapper">
+        <img src="https://raw.githubusercontent.com/D-an13/alpromeh-registro/main/logo.png" alt="ALPROMEH" id="appLogo" class="logo-alpromeh">
+    </div>
+    <p id="fraseMotivacional" class="frase-inspiradora">
+        "El trabajo en equipo divide los esfuerzos y multiplica los resultados."
+    </p>
+</div>
+
+    <!-- MANTENEMOS TUS PASTILLAS ORIGINALES -->
+    <div class="contenedor-pastillas">
+        <span class="pastilla p-urgente">
+            <span class="punto-color pt-urgente">•</span> Urgentes: <span id="count-atrasadas">38</span>
+        </span>
+        <span class="pastilla p-hoy">
+            <span class="punto-color pt-hoy">•</span> Hoy: <span id="count-hoy">0</span>
+        </span>
+        <span class="pastilla p-listos">
+            <span class="punto-color pt-listos">•</span> Listas: <span id="count-listos">0</span>
+        </span>
+    </div>
+
+    <!-- MANTENEMOS TUS WIDGETS DE RACHA, TRIVIA Y FUEGO -->
+    <div id="rachaWidget" style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin: 15px 0; color: #cbd5e1; font-family: sans-serif; display: none; width: 100%; max-width: 340px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Rango Alpromeh</span>
+            <span id="widgetMedalla" style="font-size: 18px;">🥼</span>
         </div>
         
-        <div class="contenedor-pastillas">
-            <span class="pastilla p-urgente">
-                <span class="punto-color pt-urgente">•</span> Urgentes: <span id="count-atrasadas">0</span>
-            </span>
-            <span class="pastilla p-hoy">
-                <span class="punto-color pt-hoy">•</span> Hoy: <span id="count-hoy">0</span>
-            </span>
-            <span class="pastilla p-listos">
-                <span class="punto-color pt-listos">•</span> Listas: <span id="count-listos">0</span>
-            </span>
+        <div style="font-size: 13.5px; font-weight: bold; color: #f8fafc; margin-bottom: 10px; letter-spacing: 0.3px;" id="widgetTituloRango">
+            CARGANDO RANGO...
         </div>
 
-        <div id="rachaWidget" style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 12px; margin: 15px 0; color: #cbd5e1; font-family: sans-serif; display: none; width: 100%; max-width: 340px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Rango Alpromeh</span>
-                <span id="widgetMedalla" style="font-size: 18px;">🥼</span>
+        <div style="display: flex; gap: 10px; background: #0f172a; padding: 8px; border-radius: 8px; justify-content: space-around;">
+            <div style="text-align: center;">
+                <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Racha</span>
+                <strong style="font-size: 16px; color: #f97316;" id="widgetRachaActual">🔥 54</strong>
             </div>
-            
-            <div style="font-size: 13.5px; font-weight: bold; color: #f8fafc; margin-bottom: 10px; letter-spacing: 0.3px;" id="widgetTituloRango">
-                CARGANDO RANGO...
+            <div style="border-left: 1px solid #334155;"></div>
+            <div style="text-align: center;">
+                <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Escudos</span>
+                <strong style="font-size: 16px; color: #38bdf8;" id="miniWidgetCongeladores">❄️ 0</strong>
             </div>
-
-            <div style="display: flex; gap: 10px; background: #0f172a; padding: 8px; border-radius: 8px; justify-content: space-around;">
-    <div style="text-align: center;">
-        <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Racha</span>
-        <strong style="font-size: 16px; color: #f97316;" id="widgetRachaActual">🔥 0</strong>
-    </div>
-    
-    <div style="border-left: 1px solid #334155;"></div>
-    
-    <div style="text-align: center;">
-        <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Escudos</span>
-        <strong style="font-size: 16px; color: #38bdf8;" id="miniWidgetCongeladores">❄️ 0</strong> </div>
-    
-    <div style="border-left: 1px solid #334155;"></div>
-    
-    <div style="text-align: center;">
-        <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Récord</span>
-        <strong style="font-size: 16px; color: #eab308;" id="widgetRangoMaximo">🏆 0</strong>
-    </div>
-</div>
+            <div style="border-left: 1px solid #334155;"></div>
+            <div style="text-align: center;">
+                <span style="font-size: 10px; color: #64748b; display: block; text-transform: uppercase;">Récord</span>
+                <strong style="font-size: 16px; color: rgb(234, 179, 8); display: none;" id="widgetRangoMaximo">🏆 0</strong>
+            </div>
         </div>
+    </div>
 
         <div id="triggerTrivia" class="libro-parpadeante" onclick="abrirTrivia()">📖</div>
 
@@ -3575,6 +3663,44 @@ function aplicarColorUnico(el) { el.className = getStyleClass(el.value); }
             renderTable();
         }
 
+const frasesAlpromeh = [
+    // --- Proverbios Antiguos & Filosofía ---
+    "\"Si quieres ir rápido, ve solo. Si quieres llegar lejos, vamos juntos.\" — Proverbio Africano",
+    "\"Detrás de un hombre hábil siempre hay otros hombres hábiles.\" — Proverbio Chino",
+    "\"Los grandes logros de cualquier organización son el resultado del esfuerzo combinado de cada individuo.\" — Vince Lombardi",
+    "\"Ninguno de nosotros es tan inteligente como todos nosotros juntos.\" — Ken Blanchard",
+    "\"Del compromiso individual al esfuerzo de un equipo: eso es lo que hace que funcione una empresa.\" — Vince Lombardi",
+
+    // --- La Biblia & Sabiduría Clásica ---
+    "\"Mejor son dos que uno, porque tienen mejor paga por su trabajo.\" — Eclesiastés 4:9",
+    "\"Como el hierro se afila con el hierro, así un hombre agudiza a otro.\" — Proverbios 27:17",
+    "\"La unión en las cosas necesarias, la libertad en las dudosas, la caridad en todas.\" — San Agustín",
+    "\"La fuerza de la manada es el lobo, y la fuerza del lobo es la manada.\" — Rudyard Kipling",
+
+    // --- Mentes Famosas, Ciencia & Historia ---
+    "\"Llegar juntos es el principio, mantenerse juntos es el progreso, trabajar juntos es el éxito.\" — Henry Ford",
+    "\"En la historia de la humanidad, quienes han aprendido a colaborar e improvisar más efectivamente son los que han prevalecido.\" — Charles Darwin",
+    "\"Cosas grandes en el negocios nunca son hechas por una sola persona; son hechas por un grupo de personas.\" — Steve Jobs",
+    "\"El talento gana juegos, pero el trabajo en equipo y la inteligencia ganan campeonatos.\" — Michael Jordan",
+    "\"Si he visto más lejos que otros, es de pie sobre los hombros de gigantes.\" — Isaac Newton",
+
+    // --- Literatura, Arte & Liderazgo ---
+    "\"La fuerza de un equipo proviene de la capacidad de cada uno para apoyarse en los demás.\" — Phil Jackson",
+    "\"Ningún hombre es una isla entera por sí mismo; cada uno es un pedazo del continente.\" — John Donne",
+    "\"Solo podemos hacer poco; juntos podemos hacer mucho.\" — Helen Keller",
+    "\"Unidos nos mantenemos en pie, divididos nos caemos.\" — Esopo",
+    "\"La excelencia no es un acto, es un hábito. Somos lo que hacemos repetidamente.\" — Aristóteles",
+    "\"No busques fallas, busca remedios; cualquiera puede quejarse.\" — Henry Ford"
+];
+
+function cargarFraseMotivacional() {
+    const elem = document.getElementById('fraseMotivacional');
+    if (elem) {
+        const randomIndex = Math.floor(Math.random() * frasesAlpromeh.length);
+        elem.innerText = frasesAlpromeh[randomIndex];
+    }
+}
+
         function actualizarBotones() {
             const btnHoy = document.getElementById('filtroHoy');
             const btnPrep = document.getElementById('filtroPreparando');
@@ -3599,30 +3725,59 @@ function toggleTheme() {
     const body = document.documentElement;
     const nuevoTema = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     
-    // 1. Cambia el atributo data-theme en el HTML
+    // 1. Cambiar tema
     body.setAttribute('data-theme', nuevoTema);
     
-    // 2. Sincroniza el checkbox del botón animado
+    // 2. Sincronizar checkbox
     const checkbox = document.getElementById('themeCheckbox');
     if (checkbox) {
         checkbox.checked = (nuevoTema === 'dark');
     }
 
-    // 3. 🎭 Tu Easter Egg de Caritas
+    // 3. 🎭 EASTER EGG: REEMPLAZO EXACTO DEL LOGO POR EMOJI
     clicsRapidos++;
-    const mood = document.getElementById('moodFace');
+    const logoWrapper = document.getElementById('logoWrapper');
+    const logoImg = document.getElementById('appLogo');
+    
     const emojisRaros = ["👽", "🤖", "🤠", "👻", "🎃", "🐶", "🙈", "🦄", "🥨", "🍕", "🧨", "🚀", "🦖", "🎭", "🐱", "🦆", "🍩", "🍭", "🎮", "💖", "🐣", "🤑"];
-    if (clicsRapidos > 5 && mood) {
+    
+    if (clicsRapidos > 5 && logoWrapper && logoImg) {
+        let emojiEasterEgg = document.getElementById('emojiEasterEgg');
         const randomEmoji = emojisRaros[Math.floor(Math.random() * emojisRaros.length)];
-        mood.innerText = randomEmoji;
-        mood.style.transform = "scale(1.7) rotate(20deg)";
-        setTimeout(() => { mood.style.transform = "scale(1) rotate(0deg)"; }, 150);
+        
+        // Ocultar imagen del logo
+        logoImg.style.display = 'none';
+        
+        // Crear o actualizar el span del emoji gigante
+        if (!emojiEasterEgg) {
+            emojiEasterEgg = document.createElement('span');
+            emojiEasterEgg.id = 'emojiEasterEgg';
+            emojiEasterEgg.style.fontSize = '65px'; /* Tamaño proporcional */
+            emojiEasterEgg.style.lineHeight = '85px'; /* Muestra la misma altura de la caja */
+            emojiEasterEgg.style.display = 'inline-block';
+            emojiEasterEgg.style.transition = 'transform 0.15s ease';
+            logoWrapper.appendChild(emojiEasterEgg);
+        }
+        
+        emojiEasterEgg.innerText = randomEmoji;
+        emojiEasterEgg.style.transform = 'scale(1.2) rotate(10deg)';
+        setTimeout(() => { emojiEasterEgg.style.transform = 'scale(1) rotate(0deg)'; }, 150);
     }
 
-    // 4. Temporizador de clics y actualización de la barra
+    // 4. Temporizador: al parar los clics, vuelve el logo original
     clearTimeout(timerClics);
     timerClics = setTimeout(() => {
         clicsRapidos = 0;
+        
+        const emojiEasterEgg = document.getElementById('emojiEasterEgg');
+        if (emojiEasterEgg) {
+            emojiEasterEgg.remove(); // Quitamos el emoji
+        }
+        
+        if (logoImg) {
+            logoImg.style.display = 'block'; // Regresa el logo original
+        }
+
         const hoyFull = new Date();
         const offset = hoyFull.getTimezoneOffset() * 60000;
         const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
@@ -3645,9 +3800,18 @@ function toggleTheme() {
             return dias;
         }
 
+
+
 window.onload = () => {
     setFechaHoy();
-    aplicarColorUnico(document.getElementById('responsableSelect'));
+    
+    // 💡 ¡AQUÍ ESTÁ EL DETALLE QUE FALTA!
+    cargarFraseMotivacional();
+
+    if (document.getElementById('responsableSelect')) {
+        aplicarColorUnico(document.getElementById('responsableSelect'));
+    }
+    
     renderTable();
     sincronizar(); // Primera carga
 
@@ -4018,15 +4182,11 @@ window.iniciarMaquinaEscribir = function() {
 // Se ejecuta automáticamente al cargar el HTML básico
 document.addEventListener('DOMContentLoaded', window.iniciarMaquinaEscribir);
 
-        function actualizarBarra(hoyStr) {
-            const hoyAxel = datosLocales.filter(d => d.fecha === hoyStr && d.responsable === "Axel");
-            const despachadas = hoyAxel.filter(d => d.despachado).length;
-            const pct = hoyAxel.length ? (despachadas / hoyAxel.length) * 100 : 0;
-            document.getElementById('barraProgreso').style.width = pct + "%";
-            if(clicsRapidos <= 5) {
-                document.getElementById('moodFace').innerText = pct === 100 ? "🥳" : pct >= 66 ? "😀" : pct >= 33 ? "😊" : "🙂";
-            }
-        }
+        // La dejamos neutra sin alterar el DOM viejo
+function actualizarBarra(hoyStr) {
+    // Ya no hace cálculos de barra ni de carita
+    return;
+}
 
 document.getElementById('formOrdenes').onsubmit = async function(e) {
     e.preventDefault();
