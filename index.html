@@ -6462,9 +6462,14 @@ function validarRachaPorInactividad() {
 
             pintarWidgetRacha();
         } else {
-            // ❌ Si no tiene congeladores, se destruye la racha como siempre
+            // ❌ Si no tiene congeladores, guardamos respaldo y reiniciamos a 0
+            let rachaPerdida = parseInt(localStorage.getItem('rachaActual')) || 0;
+            if (rachaPerdida > 0) {
+                localStorage.setItem('alpro_racha_anterior', rachaPerdida);
+            }
+            
             localStorage.setItem('rachaActual', 0);
-            console.log("❌ Racha reiniciada a 0 por inactividad.");
+            console.log(`❌ Racha de ${rachaPerdida} días guardada en respaldo y reiniciada por inactividad.`);
         }
     }
 }
@@ -8008,19 +8013,30 @@ async function canjearAlproPin() {
 
         // 🔄 LÓGICA SEGÚN EL TIPO DE CÓDIGO
         if (prefijo === 'RACHA') {
-            // Extraer año, mes y día del PIN (Ejemplo: "20260801" -> "2026-08-01")
             const anio = valorParametro.substring(0, 4);
             const mes = valorParametro.substring(4, 6);
             const dia = valorParametro.substring(6, 8);
             const fechaFormateada = `${anio}-${mes}-${dia}`;
 
-            // 1. Guardar la fecha exacta recuperada en localStorage
+            // 1. Restaurar la fecha seleccionada en el PIN
             localStorage.setItem('alpro_ultima_fecha', fechaFormateada);
-
-            // 2. Limpiar el estado de racha perdida
             localStorage.setItem('alpro_racha_perdida', 'false');
 
-            alert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio}. ¡Ya puedes hacer la trivia de hoy sin perder tu conteo!`);
+            // 2. 🧠 OBTENER LA RACHA ANTERIOR DE MANERA DINÁMICA
+            // Busca la racha que llevaba la persona antes de perderla.
+            // Si Nata llevaba 4 días, recuperará 4. Si alguien llevaba 50, recuperará 50.
+            let rachaAnterior = parseInt(localStorage.getItem('alpro_racha_anterior')) || 1;
+
+            // 3. Guardar el valor recuperado en la racha activa
+            localStorage.setItem('alpro_racha_conteo', rachaAnterior);
+
+            // 4. Pintar en el botón exactamente los días que le correspondían a la persona
+            const elementoRacha = document.getElementById('rachaTextoBoton');
+            if (elementoRacha) {
+                elementoRacha.innerText = rachaAnterior;
+            }
+
+            alert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio} y recuperaste tus ${rachaAnterior} días de racha.`);
         } else {
             // Acreditar Alprocoins
             const monedas = parseInt(valorParametro);
