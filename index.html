@@ -2725,13 +2725,14 @@ body.dark-mode .themeToggle-container {
 .btn-validar-pin-uiverse:active {
   transform: scale(0.96);
 }
+
 /* 🚀 BOTÓN REGRESAR AJUSTADO Y SIN SOLAPAMIENTO */
 .btn-volver-uiverse {
   position: relative;
   background-color: #f8fafc;
   border: 1px solid #e2e8f0;
   height: 34px;               /* Altura igualada con badges */
-  padding-left: 38px;         /* Espacio reservado para que el cuadro NO traslape el texto */
+  padding-left: 38px;          /* Espacio reservado para que el cuadro NO traslape el texto */
   padding-right: 14px;
   border-radius: 10px;
   cursor: pointer;
@@ -2809,89 +2810,118 @@ body.dark-mode .themeToggle-container {
   animation: fadeOutScale 0.20s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* 1. ELIMINAR ESPACIO SUPERIOR (Pegar bien arriba) */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutScale {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* 1. ELIMINAR ESPACIO SUPERIOR (En compu queda idéntico a tu original) */
 .banner-central-welcome {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 0;
-    margin-top: -10px; /* Sube todo el bloque para eliminar el espacio de la tarjeta */
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0;
+  margin-top: -10px; /* Sube todo el bloque para eliminar el espacio de la tarjeta */
+  width: 100%;
 }
 
 .logo-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 85px;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85px;
+  width: 100%;
 }
 
 .logo-alpromeh {
-    max-height: 85px;
-    width: auto;
-    object-fit: contain;
-    transition: filter 0.3s ease, transform 0.3s ease;
+  max-height: 85px;
+  width: auto;
+  object-fit: contain;
+  transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 /* 2. LOGO EN MODO OSCURO (Se vuelve blanco/luminoso) */
 [data-theme="dark"] .logo-alpromeh {
-    filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
 }
 
 /* EFECTO SHINE CORREGIDO */
 .frase-inspiradora {
-    margin: 6px 0 10px 0;
-    padding: 0;
-    font-weight: 600;
-    font-size: 15px;
-    font-family: "Poppins", sans-serif;
-    font-style: normal;
-    text-align: center;
-    line-height: 1.4;
-    max-width: 95%;
-    
-    /* MODO CLARO: Base gris oscuro, brillo en AZUL INTENSO */
-    background: linear-gradient(
-        to right, 
-        #64748b 0%, 
-        #64748b 35%, 
-        #1e40af 50%,  /* Azul oscuro fuerte para el destello */
-        #64748b 65%, 
-        #64748b 100%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shineLento 6s infinite linear;
+  margin: 6px 0 10px 0;
+  padding: 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 95%;
+
+  /* MODO CLARO: Base gris oscuro, brillo en AZUL INTENSO */
+  background: linear-gradient(
+    to right,
+    #64748b 0%,
+    #64748b 35%,
+    #1e40af 50%, /* Azul oscuro fuerte para el destello */
+    #64748b 65%,
+    #64748b 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shineLento 6s infinite linear;
 }
 
 /* MODO OSCURO: Base gris claro, brillo BLANCO PURO (Se mantiene intacto) */
 [data-theme="dark"] .frase-inspiradora {
-    background: linear-gradient(
-        to right, 
-        #94a3b8 0%, 
-        #94a3b8 35%, 
-        #ffffff 50%,  /* Blanco brillante para el destello */
-        #94a3b8 65%, 
-        #94a3b8 100%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+  background: linear-gradient(
+    to right,
+    #94a3b8 0%,
+    #94a3b8 35%,
+    #ffffff 50%, /* Blanco brillante para el destello */
+    #94a3b8 65%,
+    #94a3b8 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 /* ANIMACIÓN SUAVE Y COMPLETA */
 @keyframes shineLento {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 📱 SEPARACIÓN EXCLUSIVA PARA CELULARES (No toca computadora) */
+@media (max-width: 480px) {
+  .banner-central-welcome {
+    margin-top: 6px !important;
+  }
 }
 </style>
 </head>
