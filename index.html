@@ -3680,7 +3680,7 @@ const frasesAlpromeh = [
     // --- Mentes Famosas, Ciencia & Historia ---
     "\"Llegar juntos es el principio, mantenerse juntos es el progreso, trabajar juntos es el éxito.\" — Henry Ford",
     "\"En la historia de la humanidad, quienes han aprendido a colaborar e improvisar más efectivamente son los que han prevalecido.\" — Charles Darwin",
-    "\"Cosas grandes en el negocios nunca son hechas por una sola persona; son hechas por un grupo de personas.\" — Steve Jobs",
+    "\"Las cosas grandes en los negocios nunca son hechas por una sola persona; son hechas por un grupo de personas.\" — Steve Jobs",
     "\"El talento gana juegos, pero el trabajo en equipo y la inteligencia ganan campeonatos.\" — Michael Jordan",
     "\"Si he visto más lejos que otros, es de pie sobre los hombros de gigantes.\" — Isaac Newton",
 
@@ -3690,7 +3690,35 @@ const frasesAlpromeh = [
     "\"Solo podemos hacer poco; juntos podemos hacer mucho.\" — Helen Keller",
     "\"Unidos nos mantenemos en pie, divididos nos caemos.\" — Esopo",
     "\"La excelencia no es un acto, es un hábito. Somos lo que hacemos repetidamente.\" — Aristóteles",
-    "\"No busques fallas, busca remedios; cualquiera puede quejarse.\" — Henry Ford"
+    "\"No busques fallas, busca remedios; cualquiera puede quejarse.\" — Henry Ford",
+
+    // --- Liderazgo, Esfuerzo & Excelencia ---
+    "\"El trabajo duro vence al talento cuando el talento no se esfuerza.\" — Tim Notke",
+    "\"No cuentes los días, haz que los días cuenten.\" — Muhammad Ali",
+    "\"La disciplina es el puente entre las metas y los logros.\" — Jim Rohn",
+    "\"El éxito no es la clave de la felicidad. La felicidad es la clave del éxito.\" — Albert Schweitzer",
+    "\"La única forma de hacer un gran trabajo es amar lo que haces.\" — Steve Jobs",
+
+    // --- Persistencia & Superación ---
+    "\"No he fracasado. Simplemente he encontrado 10,000 formas que no funcionan.\" — Thomas Edison",
+    "\"Los obstáculos no tienen que detenerte. Si te topas con una pared, no te rindas.\" — Michael Jordan",
+    "\"No se trata de la fuerza del cuerpo, sino de la fuerza del espíritu.\" — Menandro",
+    "\"Un barco en el puerto está seguro, pero no es para eso que se construyen los barcos.\" — John A. Shedd",
+    "\"La suerte es lo que sucede cuando la preparación se encuentra con la oportunidad.\" — Séneca",
+
+    // --- Sinergia & Trabajo en Equipo ---
+    "\"Si quieres construir un barco, no empieces por buscar madera o cortar tablas; evoca en los hombres el anhelo del mar infinito.\" — Antoine de Saint-Exupéry",
+    "\"No preguntes qué puede hacer tu equipo por ti. Pregunta qué puedes hacer tú por tu equipo.\" — Magic Johnson",
+    "\"Polvo solo es polvo; pero con agua se convierte en barro firme.\" — Proverbio Chino",
+    "\"El valor de una idea radica en el uso de la misma.\" — Thomas Edison",
+    "\"La piedra no se mueve si no se unen las manos de muchos.\" — Proverbio Africano",
+
+    // --- Visión, Estrategia & Impacto ---
+    "\"El conocimiento es poder, pero la ejecución es la clave del éxito.\" — Francis Bacon",
+    "\"Hacer lo ordinario de manera extraordinaria es lo que marca la diferencia.\" — John D. Rockefeller",
+    "\"El trabajo en equipo empieza por construir confianza.\" — Patrick Lencioni",
+    "\"Todo parece imposible hasta que se hace.\" — Nelson Mandela",
+    "\"La preparación de hoy determina el éxito del mañana.\" — Confucio"
 ];
 
 function cargarFraseMotivacional() {
@@ -7913,16 +7941,14 @@ function cerrarBannerInstrucciones() {
     if (banner) banner.style.display = 'none';
 }
 
-function generarFirmaSencilla(monedas, textoAleatorio, claveSecreta) {
+function generarFirmaSencilla(valor, textoAleatorio, claveSecreta) {
     let hash = 0;
-    const cadenaCombinada = monedas.toString() + textoAleatorio + claveSecreta;
-    
+    const cadenaCombinada = valor.toString() + textoAleatorio + claveSecreta;
     for (let i = 0; i < cadenaCombinada.length; i++) {
         const char = cadenaCombinada.charCodeAt(i);
         hash = (hash << 5) - hash + char;
         hash = hash & hash;
     }
-    
     return Math.abs(hash).toString(16).substring(0, 4).toUpperCase();
 }
 
@@ -7933,24 +7959,19 @@ async function canjearAlproPin() {
     const pinIngresado = inputPin.value.trim().toUpperCase();
     const partes = pinIngresado.split('-');
     
-    // 🛡️ Soporta prefijos ALPRO y RACHA
+    // 🛡️ Validar prefijo y formato
     const prefijo = partes[0];
     if (partes.length !== 4 || (prefijo !== 'ALPRO' && prefijo !== 'RACHA')) {
-        alert("⚠️ Formato de PIN incorrecto. Debe ser como: ALPRO-1000-XXXX-XXXX o RACHA-0-XXXX-XXXX");
+        alert("⚠️ Formato de PIN incorrecto.");
         return;
     }
 
-    const monedas = parseInt(partes[1]);
+    const valorParametro = partes[1]; // Monedas (ej. 1000) o Fecha (ej. 20260801)
     const textoAleatorio = partes[2];
     const firmaRecibida = partes[3];
 
-    if (isNaN(monedas) || monedas < 0) {
-        alert("⚠️ El código contiene un valor inválido.");
-        return;
-    }
-
-    // Firma de validación
-    const firmaCorrecta = generarFirmaSencilla(monedas, textoAleatorio, PALABRA_SECRETA);
+    // Firma de validación dinámica
+    const firmaCorrecta = generarFirmaSencilla(valorParametro, textoAleatorio, PALABRA_SECRETA);
 
     if (firmaRecibida !== firmaCorrecta) {
         alert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
@@ -7971,7 +7992,7 @@ async function canjearAlproPin() {
         const estadoPin = await responseCheck.text();
 
         if (estadoPin === "USADO") {
-            alert("🚫 Este código ya fue canjeado en otra computadora. No se puede reutilizar.");
+            alert("🚫 Este código ya fue canjeado en otra computadora.");
             if (btn) btn.disabled = false;
             return;
         }
@@ -7987,16 +8008,22 @@ async function canjearAlproPin() {
 
         // 🔄 LÓGICA SEGÚN EL TIPO DE CÓDIGO
         if (prefijo === 'RACHA') {
-            // 1. Forzar la fecha de la última trivia al 12 de agosto de 2026
-            // (Reemplaza 'alpro_ultima_fecha' por el nombre exacto de tu clave si usas otro)
-            localStorage.setItem('alpro_ultima_fecha', '2026-08-12');
+            // Extraer año, mes y día del PIN (Ejemplo: "20260801" -> "2026-08-01")
+            const anio = valorParametro.substring(0, 4);
+            const mes = valorParametro.substring(4, 6);
+            const dia = valorParametro.substring(6, 8);
+            const fechaFormateada = `${anio}-${mes}-${dia}`;
 
-            // 2. Quitar el estado de racha perdida
+            // 1. Guardar la fecha exacta recuperada en localStorage
+            localStorage.setItem('alpro_ultima_fecha', fechaFormateada);
+
+            // 2. Limpiar el estado de racha perdida
             localStorage.setItem('alpro_racha_perdida', 'false');
 
-            alert("🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al 12 de agosto de 2026. ¡Ya puedes hacer la trivia de hoy sin perder tu conteo!");
+            alert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio}. ¡Ya puedes hacer la trivia de hoy sin perder tu conteo!`);
         } else {
             // Acreditar Alprocoins
+            const monedas = parseInt(valorParametro);
             let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
             let nuevoTotal = saldoActual + monedas;
             localStorage.setItem('alprocoins', nuevoTotal);
