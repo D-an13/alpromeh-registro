@@ -8018,25 +8018,35 @@ async function canjearAlproPin() {
             const dia = valorParametro.substring(6, 8);
             const fechaFormateada = `${anio}-${mes}-${dia}`;
 
-            // 1. Restaurar la fecha seleccionada en el PIN
+            // 1. Restablecer la fecha del sistema
+            localStorage.setItem('ultimaFechaRespuesta', fechaFormateada);
             localStorage.setItem('alpro_ultima_fecha', fechaFormateada);
             localStorage.setItem('alpro_racha_perdida', 'false');
 
-            // 2. 🧠 OBTENER LA RACHA ANTERIOR DE MANERA DINÁMICA
-            // Busca la racha que llevaba la persona antes de perderla.
-            // Si Nata llevaba 4 días, recuperará 4. Si alguien llevaba 50, recuperará 50.
-            let rachaAnterior = parseInt(localStorage.getItem('alpro_racha_anterior')) || 1;
+            // 2. 🧠 RECUPERACIÓN INTELIGENTE DE DÍAS:
+            // Busca primero en el respaldo ('alpro_racha_anterior').
+            // Si no existe, toma el récord histórico guardado ('rangoMaximo').
+            let rachaPrevia = parseInt(localStorage.getItem('alpro_racha_anterior')) || 0;
+            let recordMaximo = parseInt(localStorage.getItem('rangoMaximo')) || 0;
 
-            // 3. Guardar el valor recuperado en la racha activa
-            localStorage.setItem('alpro_racha_conteo', rachaAnterior);
+            let rachaRestaurada = rachaPrevia > 0 ? rachaPrevia : (recordMaximo > 0 ? recordMaximo : 1);
 
-            // 4. Pintar en el botón exactamente los días que le correspondían a la persona
+            // 3. Guardar la racha restaurada en las llaves que lee tu dashboard
+            localStorage.setItem('rachaActual', rachaRestaurada);
+            localStorage.setItem('alpro_racha_conteo', rachaRestaurada);
+
+            // 4. Actualizar la interfaz gráfica al instante
+            const txtRachaWidget = document.getElementById('widgetRachaActual');
             const elementoRacha = document.getElementById('rachaTextoBoton');
-            if (elementoRacha) {
-                elementoRacha.innerText = rachaAnterior;
+
+            if (txtRachaWidget) txtRachaWidget.innerText = `🔥 ${rachaRestaurada}`;
+            if (elementoRacha) elementoRacha.innerText = rachaRestaurada;
+
+            if (typeof pintarWidgetRacha === "function") {
+                pintarWidgetRacha();
             }
 
-            alert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio} y recuperaste tus ${rachaAnterior} días de racha.`);
+            alert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio} y recuperaste tus ${rachaRestaurada} días de racha.`);
         } else {
             // Acreditar Alprocoins
             const monedas = parseInt(valorParametro);
