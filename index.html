@@ -2725,14 +2725,13 @@ body.dark-mode .themeToggle-container {
 .btn-validar-pin-uiverse:active {
   transform: scale(0.96);
 }
-
 /* 🚀 BOTÓN REGRESAR AJUSTADO Y SIN SOLAPAMIENTO */
 .btn-volver-uiverse {
   position: relative;
   background-color: #f8fafc;
   border: 1px solid #e2e8f0;
   height: 34px;               /* Altura igualada con badges */
-  padding-left: 38px;          /* Espacio reservado para que el cuadro NO traslape el texto */
+  padding-left: 38px;         /* Espacio reservado para que el cuadro NO traslape el texto */
   padding-right: 14px;
   border-radius: 10px;
   cursor: pointer;
@@ -2810,118 +2809,89 @@ body.dark-mode .themeToggle-container {
   animation: fadeOutScale 0.20s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes fadeOutScale {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-}
-
-/* 1. ELIMINAR ESPACIO SUPERIOR (En compu queda idéntico a tu original) */
+/* 1. ELIMINAR ESPACIO SUPERIOR (Pegar bien arriba) */
 .banner-central-welcome {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 0;
-  margin-top: -10px; /* Sube todo el bloque para eliminar el espacio de la tarjeta */
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+    margin-top: -10px; /* Sube todo el bloque para eliminar el espacio de la tarjeta */
+    width: 100%;
 }
 
 .logo-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 85px;
-  width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85px;
+    width: 100%;
 }
 
 .logo-alpromeh {
-  max-height: 85px;
-  width: auto;
-  object-fit: contain;
-  transition: filter 0.3s ease, transform 0.3s ease;
+    max-height: 85px;
+    width: auto;
+    object-fit: contain;
+    transition: filter 0.3s ease, transform 0.3s ease;
 }
 
 /* 2. LOGO EN MODO OSCURO (Se vuelve blanco/luminoso) */
 [data-theme="dark"] .logo-alpromeh {
-  filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
 }
 
 /* EFECTO SHINE CORREGIDO */
 .frase-inspiradora {
-  margin: 6px 0 10px 0;
-  padding: 0;
-  font-weight: 600;
-  font-size: 15px;
-  font-family: "Poppins", sans-serif;
-  font-style: normal;
-  text-align: center;
-  line-height: 1.4;
-  max-width: 95%;
-
-  /* MODO CLARO: Base gris oscuro, brillo en AZUL INTENSO */
-  background: linear-gradient(
-    to right,
-    #64748b 0%,
-    #64748b 35%,
-    #1e40af 50%, /* Azul oscuro fuerte para el destello */
-    #64748b 65%,
-    #64748b 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shineLento 6s infinite linear;
+    margin: 6px 0 10px 0;
+    padding: 0;
+    font-weight: 600;
+    font-size: 15px;
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    text-align: center;
+    line-height: 1.4;
+    max-width: 95%;
+    
+    /* MODO CLARO: Base gris oscuro, brillo en AZUL INTENSO */
+    background: linear-gradient(
+        to right, 
+        #64748b 0%, 
+        #64748b 35%, 
+        #1e40af 50%,  /* Azul oscuro fuerte para el destello */
+        #64748b 65%, 
+        #64748b 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shineLento 6s infinite linear;
 }
 
 /* MODO OSCURO: Base gris claro, brillo BLANCO PURO (Se mantiene intacto) */
 [data-theme="dark"] .frase-inspiradora {
-  background: linear-gradient(
-    to right,
-    #94a3b8 0%,
-    #94a3b8 35%,
-    #ffffff 50%, /* Blanco brillante para el destello */
-    #94a3b8 65%,
-    #94a3b8 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+    background: linear-gradient(
+        to right, 
+        #94a3b8 0%, 
+        #94a3b8 35%, 
+        #ffffff 50%,  /* Blanco brillante para el destello */
+        #94a3b8 65%, 
+        #94a3b8 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
 }
 
 /* ANIMACIÓN SUAVE Y COMPLETA */
 @keyframes shineLento {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* 📱 SEPARACIÓN EXCLUSIVA PARA CELULARES (No toca computadora) */
-@media (max-width: 480px) {
-  .banner-central-welcome {
-    margin-top: 6px !important;
-  }
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 </style>
 </head>
@@ -7946,11 +7916,13 @@ function cerrarBannerInstrucciones() {
 function generarFirmaSencilla(monedas, textoAleatorio, claveSecreta) {
     let hash = 0;
     const cadenaCombinada = monedas.toString() + textoAleatorio + claveSecreta;
+    
     for (let i = 0; i < cadenaCombinada.length; i++) {
         const char = cadenaCombinada.charCodeAt(i);
         hash = (hash << 5) - hash + char;
         hash = hash & hash;
     }
+    
     return Math.abs(hash).toString(16).substring(0, 4).toUpperCase();
 }
 
@@ -7961,8 +7933,10 @@ async function canjearAlproPin() {
     const pinIngresado = inputPin.value.trim().toUpperCase();
     const partes = pinIngresado.split('-');
     
-    if (partes.length !== 4 || partes[0] !== 'ALPRO') {
-        alert("⚠️ Formato de PIN incorrecto o antiguo. Debe ser como: ALPRO-1500-XXXX-XXXX");
+    // 🛡️ Soporta prefijos ALPRO y RACHA
+    const prefijo = partes[0];
+    if (partes.length !== 4 || (prefijo !== 'ALPRO' && prefijo !== 'RACHA')) {
+        alert("⚠️ Formato de PIN incorrecto. Debe ser como: ALPRO-1000-XXXX-XXXX o RACHA-0-XXXX-XXXX");
         return;
     }
 
@@ -7970,11 +7944,12 @@ async function canjearAlproPin() {
     const textoAleatorio = partes[2];
     const firmaRecibida = partes[3];
 
-    if (isNaN(monedas) || monedas <= 0) {
-        alert("⚠️ El código contiene un valor de monedas inválido.");
+    if (isNaN(monedas) || monedas < 0) {
+        alert("⚠️ El código contiene un valor inválido.");
         return;
     }
 
+    // Firma de validación
     const firmaCorrecta = generarFirmaSencilla(monedas, textoAleatorio, PALABRA_SECRETA);
 
     if (firmaRecibida !== firmaCorrecta) {
@@ -8001,36 +7976,50 @@ async function canjearAlproPin() {
             return;
         }
 
+        // Marcar como usado en la nube
         await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, {
             method: 'POST',
             body: 'USADO'
         });
 
-        let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
-        let nuevoTotal = saldoActual + monedas;
-        localStorage.setItem('alprocoins', nuevoTotal);
-
         pinesUsados.push(pinIngresado);
         localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados));
 
-        let inter = setInterval(() => {
-            saldoActual += Math.ceil(monedas / 25);
-            if (saldoActual >= nuevoTotal) {
-                saldoActual = nuevoTotal;
-                clearInterval(inter);
-            }
-            const numeroMarcador = document.getElementById('numero-alprocoins');
-            if (numeroMarcador) {
-                numeroMarcador.innerText = saldoActual.toLocaleString('en-US');
-            }
-        }, 30);
+        // 🔄 LÓGICA SEGÚN EL TIPO DE CÓDIGO
+        if (prefijo === 'RACHA') {
+            // 1. Forzar la fecha de la última trivia al 12 de agosto de 2026
+            // (Reemplaza 'alpro_ultima_fecha' por el nombre exacto de tu clave si usas otro)
+            localStorage.setItem('alpro_ultima_fecha', '2026-08-12');
 
-        if (typeof crearTextoFlotanteMonedas === "function") {
-            crearTextoFlotanteMonedas(monedas);
+            // 2. Quitar el estado de racha perdida
+            localStorage.setItem('alpro_racha_perdida', 'false');
+
+            alert("🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al 12 de agosto de 2026. ¡Ya puedes hacer la trivia de hoy sin perder tu conteo!");
+        } else {
+            // Acreditar Alprocoins
+            let saldoActual = parseInt(localStorage.getItem('alprocoins')) || 0;
+            let nuevoTotal = saldoActual + monedas;
+            localStorage.setItem('alprocoins', nuevoTotal);
+
+            let inter = setInterval(() => {
+                saldoActual += Math.ceil(monedas / 25);
+                if (saldoActual >= nuevoTotal) {
+                    saldoActual = nuevoTotal;
+                    clearInterval(inter);
+                }
+                const numeroMarcador = document.getElementById('numero-alprocoins');
+                if (numeroMarcador) {
+                    numeroMarcador.innerText = saldoActual.toLocaleString('en-US');
+                }
+            }, 30);
+
+            if (typeof crearTextoFlotanteMonedas === "function") {
+                crearTextoFlotanteMonedas(monedas);
+            }
+
+            alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
         }
 
-        alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
-        
         actualizarMarcadoresVisuales();
         inputPin.value = "";
         cerrarModalRecarga();
