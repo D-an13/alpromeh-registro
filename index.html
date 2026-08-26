@@ -777,8 +777,18 @@ input::-webkit-outer-spin-button,
     color: #991b1b;
 }
 
-/* Clase base para los botones que se van a animar */
-.btn-filtro, #txtContadorReporte {
+/* 📌 ALINEACIÓN Y TRANSICIONES SUAVES (COMPUTADORA Y GENERAL) */
+#bloqueReporteDerecha {
+    align-items: center !important;
+}
+
+#bloqueReporteDerecha > * {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Clase base para los botones y controles que se animan al alternar reporte */
+.btn-filtro, #txtContadorReporte, #btnFiltrarFechas {
     transition: opacity 0.4s ease, transform 0.4s ease, background 0.2s ease !important;
     opacity: 1;
     transform: translateY(0);
@@ -788,19 +798,18 @@ input::-webkit-outer-spin-button,
 .control-oculto {
     opacity: 0 !important;
     transform: translateY(4px) !important;
-    pointer-events: none; /* Evita que se les pueda dar clic mientras se desvanecen */
+    visibility: hidden !important; 
+    pointer-events: none; 
 }
 
-/*REGULARIZACIÓN CELULARES: Esconde el Módulo de Reportes en pantallas chicas */
+/* 📱 REGULARIZACIÓN CELULARES: Esconde el Módulo de Reportes en pantallas chicas */
 @media (max-width: 767px) {
-    
-    /* 1. Escondemos el bloque derecho por completo en el celular.
-          Al no existir en móvil, ya no empuja el ancho de la pantalla. */
+    /* Escondemos el bloque derecho por completo en el celular */
     #bloqueReporteDerecha {
         display: none !important;
     }
 
-    /* 2. Aseguramos que el contenedor de la tabla sea elástico y no se salga */
+    /* Aseguramos que el contenedor de la tabla sea elástico y no se salga */
     .busqueda-container + div, 
     div[style*="overflow-x: auto"] {
         width: 100% !important;
@@ -813,7 +822,7 @@ input::-webkit-outer-spin-button,
     }
 }
 
-/*EFECTO SHAKE MODAL PRODUCTO */
+/* 💥 EFECTO SHAKE MODAL PRODUCTO */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     20%, 60% { transform: translateX(-8px); }
@@ -824,15 +833,16 @@ input::-webkit-outer-spin-button,
     animation: shake 0.4s ease-in-out;
 }
 
-/* 1. Estado Base y Salida: Cuando dejas de escribir, el color se derrite LENTAMENTE (0.8 segundos) */
+/* 🔍 BUSCADOR INTELIGENTE */
+/* 1. Estado Base y Salida */
 #inputBuscar {
     transition: border-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* 2. Al dar CLICK (Focus): Borde GRIS OSCURO firme y elevación limpia */
+/* 2. Al dar CLICK (Focus) */
 #inputBuscar:focus {
     outline: none !important;
-    border-color: #334155 !important; /* Tu gris oscuro con presencia */
+    border-color: #334155 !important;
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04) !important;
 }
 
@@ -2836,12 +2846,12 @@ body.dark-mode .themeToggle-container {
     transition: filter 0.3s ease, transform 0.3s ease;
 }
 
-/* 2. LOGO EN MODO OSCURO (Se vuelve blanco/luminoso) */
+/* 2. LOGO EN MODO OSCURO */
 [data-theme="dark"] .logo-alpromeh {
     filter: brightness(0) invert(1);
 }
 
-/* EFECTO SHINE CORREGIDO */
+/* EFECTO SHINE */
 .frase-inspiradora {
     margin: 6px 0 10px 0;
     padding: 0;
@@ -2852,13 +2862,11 @@ body.dark-mode .themeToggle-container {
     text-align: center;
     line-height: 1.4;
     max-width: 95%;
-    
-    /* MODO CLARO: Base gris oscuro, brillo en AZUL INTENSO */
     background: linear-gradient(
         to right, 
         #64748b 0%, 
         #64748b 35%, 
-        #1e40af 50%,  /* Azul oscuro fuerte para el destello */
+        #1e40af 50%, 
         #64748b 65%, 
         #64748b 100%
     );
@@ -2868,13 +2876,12 @@ body.dark-mode .themeToggle-container {
     animation: shineLento 6s infinite linear;
 }
 
-/* MODO OSCURO: Base gris claro, brillo BLANCO PURO (Se mantiene intacto) */
 [data-theme="dark"] .frase-inspiradora {
     background: linear-gradient(
         to right, 
         #94a3b8 0%, 
         #94a3b8 35%, 
-        #ffffff 50%,  /* Blanco brillante para el destello */
+        #ffffff 50%, 
         #94a3b8 65%, 
         #94a3b8 100%
     );
@@ -2884,14 +2891,253 @@ body.dark-mode .themeToggle-container {
     filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
 }
 
-/* ANIMACIÓN SUAVE Y COMPLETA */
 @keyframes shineLento {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 🎨 1. ESTRUCTURA BASE Y EFECTO ONDA */
+.btn-filtro, .btn-excel, .btn-sync {
+    position: relative !important;
+    overflow: hidden !important;
+    z-index: 1 !important;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px 8px 38px !important;
+    font-size: 0.875rem !important;
+    font-weight: 700 !important;
+    border-radius: 8px;
+    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+.btn-filtro::before, .btn-excel::before, .btn-sync::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    scale: 0;
+    z-index: -1;
+    transition: scale 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+.btn-filtro:hover, .btn-excel:hover, .btn-sync:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+.btn-filtro:hover::before, .btn-excel:hover::before, .btn-sync:hover::before {
+    scale: 28 !important;
+}
+
+.btn-filtro:active, .btn-excel:active, .btn-sync:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* -----------------------------------------------------------------
+   🛠️ 2. DIBUJOS VECTORIALES (SVG MASK)
+----------------------------------------------------------------- */
+.btn-filtro::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #ffffff;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+
+/* 📅 Calendario para "Hoy" */
+#filtroHoy::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5zm2 4h5v5H7v-5z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10zM5 7V5h14v2H5zm2 4h5v5H7v-5z"/></svg>');
+}
+
+/* 🛠️ Tuerca para "Preparando" */
+#filtroPreparando::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm6 10h-3v3h-2v-3H8v-2h3V9h2v3h3v2z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm6 10h-3v3h-2v-3H8v-2h3V9h2v3h3v2z"/></svg>');
+}
+
+/* ⚠️ Alerta para "En Atraso" */
+#filtroAtraso::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>');
+}
+
+/* 📊 Reporte */
+#btnModoReporte::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>');
+}
+
+/* 🖨️ Impresora */
+#btnImprimirReporte::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>');
+}
+
+/* 📌 BOTÓN SOLO ÍCONO (Fechas) */
+#btnFiltrarFechas { 
+    width: 38px !important; 
+    height: 35px !important; 
+    min-width: 38px !important;
+    padding: 0 !important; /* Quita el padding de los botones con texto */
+}
+#btnFiltrarFechas::after {
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 18px !important;
+    height: 18px !important;
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v10z"/></svg>');
+}
+
+/* -----------------------------------------------------------------
+   🎨 3. PALETA DE COLORES Y ESTADOS
+----------------------------------------------------------------- */
+.btn-excel { background-color: #15803d !important; padding-left: 16px !important; color: #fff !important; }
+.btn-excel::before { background-color: #22c55e !important; }
+
+.btn-sync { background-color: #4f46e5 !important; padding-left: 16px !important; color: #fff !important; }
+.btn-sync::before { background-color: #818cf8 !important; }
+
+#filtroHoy, #filtroPreparando { background-color: #475569 !important; color: #ffffff !important; }
+#filtroHoy::before, #filtroPreparando::before { background-color: #334155 !important; }
+
+#filtroAtraso { background-color: #9f1239 !important; color: #ffffff !important; }
+#filtroAtraso::before { background-color: #be123c !important; }
+
+#btnFiltrarFechas { background-color: #2563eb !important; color: #ffffff !important; }
+#btnFiltrarFechas::before { background-color: #3b82f6 !important; }
+
+#btnModoReporte { background-color: #ca8a04 !important; color: #ffffff !important; }
+#btnModoReporte::before { background-color: #eab308 !important; }
+
+#btnImprimirReporte { 
+    display: none; /* Oculto al entrar */
+    background-color: #1e40af !important; 
+    color: #ffffff !important; 
+}
+#btnImprimirReporte::before { background-color: #3b82f6 !important; }
+
+#btnImprimirReporte:disabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* -----------------------------------------------------------------
+   🔥 4. ESTADOS ACTIVOS Y MODO CANCELAR (DISEÑO CLEAN & HIGHLIGHT)
+----------------------------------------------------------------- */
+
+/* 1. Botón "Órdenes de Hoy" / Filtros Normales Activos */
+.btn-filtro.activo-hoy,
+.btn-filtro.activo-preparando {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #60a5fa !important;
+    animation: pulsoAzul 2s infinite ease-in-out;
+}
+
+/* Hover manteniéndose activo sin volverse gris */
+.btn-filtro.activo-hoy:hover,
+.btn-filtro.activo-preparando:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+    color: #ffffff !important;
+}
+
+/* 2. Botón "En Atraso (+2d)" Activo */
+.btn-filtro.activo-atraso {
+    background: linear-gradient(135deg, #9f1239 0%, #881337 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #fecdd3 !important;
+    animation: pulsoAtraso 2s infinite ease-in-out;
+}
+
+.btn-filtro.activo-atraso:hover {
+    background: linear-gradient(135deg, #881337 0%, #4c0519 100%) !important;
+}
+
+/* Icono de 'X' al estar activo */
+.btn-filtro.activo-hoy::after,
+.btn-filtro.activo-preparando::after,
+.btn-filtro.activo-atraso::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') !important;
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') !important;
+}
+
+/* Animaciones de pulso neón por color */
+@keyframes pulsoAzul {
+    0% { box-shadow: 0 0 6px rgba(37, 99, 235, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1); }
+    50% { box-shadow: 0 0 16px rgba(59, 130, 246, 0.8), 0 4px 10px rgba(37, 99, 235, 0.3); }
+    100% { box-shadow: 0 0 6px rgba(37, 99, 235, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1); }
+}
+
+@keyframes pulsoAtraso {
+    0% { box-shadow: 0 0 6px rgba(225, 29, 72, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1); }
+    50% { box-shadow: 0 0 16px rgba(244, 63, 94, 0.8), 0 4px 10px rgba(225, 29, 72, 0.3); }
+    100% { box-shadow: 0 0 6px rgba(225, 29, 72, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1); }
+}
+
+/* 3. Botón Reporte transmutado a Cancelar */
+#btnModoReporte.modo-cancelar {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(220, 38, 38, 0.5) !important;
+}
+
+#btnModoReporte.modo-cancelar:hover {
+    background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%) !important;
+}
+
+#btnModoReporte.modo-cancelar::after {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') !important;
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>') !important;
+}
+
+/* Previene scrolls fantasma */
+.tabla-container, table {
+    overflow: hidden !important;
+}
+
+/* 1. KEYFRAME (El blur se limpia rápido en el primer 30% del movimiento) */
+@keyframes entradaTablaPro {
     0% {
-        background-position: 200% 0;
+        opacity: 0;
+        filter: blur(4px);
+        transform: translateY(-12px) scale(0.985);
+    }
+    30% {
+        filter: blur(0px); /* ⚡ A los 135ms la tabla ya está 100% nítida */
     }
     100% {
-        background-position: -200% 0;
+        opacity: 1;
+        filter: blur(0px);
+        transform: translateY(0) scale(1);
     }
+}
+
+/* 2. DURACIÓN ÁGIL (0.45s con frenado suave estilo iOS) */
+tbody.animar-entrada {
+    animation: entradaTablaPro 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity, filter;
+    transform-origin: top center;
 }
 </style>
 </head>
@@ -3235,9 +3481,9 @@ body.dark-mode .themeToggle-container {
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; width: 100%;">
         
         <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">📅 Ordenes de Hoy</button>
-            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">🛠️ Preparando</button>
-            <button id="filtroAtraso" class="btn-filtro" style="background: #a35f5f;" onclick="toggleFiltroAtraso()">⚠️ En Atraso (+2d)</button>
+            <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">Ordenes de Hoy</button>
+            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">Preparando</button>
+            <button id="filtroAtraso" class="btn-filtro" style="background: #a35f5f;" onclick="toggleFiltroAtraso()">En Atraso (+2d)</button>
         </div>
 
         <div id="bloqueReporteDerecha" style="display: flex; align-items: center; gap: 10px; margin-left: auto; position: relative;">
@@ -3256,24 +3502,22 @@ body.dark-mode .themeToggle-container {
             </div>
 
             <span id="txtContadorReporte" style="display: none; font-weight: bold; color: #1e293b; font-size: 0.85rem; background: #e2e8f0; padding: 6px 12px; border-radius: 20px; transition: all 0.3s ease;">
-                Órdenes seleccionadas: <span id="numContador" style="color: #1e40af;">0</span>
+                Seleccionadas: <span id="numContador" style="color: #1e40af;">0</span>
             </span>
             
-            <button id="btnImprimirReporte" onclick="ejecutarImpresionReporte()" class="btn-filtro" disabled style="display: none; background: #94a3b8; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: not-allowed; transition: all 0.3s ease;">
-                📋 Imprimir
-            </button>
+            <button id="btnImprimirReporte" onclick="ejecutarImpresionReporte()" class="btn-filtro control-oculto" disabled>
+    Imprimir
+</button>
 
            <!-- 📅 BOTÓN FILTRAR FECHAS HISTÓRICAS -->
 <button id="btnFiltrarFechas" 
         class="btn-filtro" 
         onclick="abrirModalFechas()" 
-        title="Filtrar por rango de fechas" 
-        style="padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; background-color: #2563eb;">
-    📅
+        title="Filtrar por rango de fechas">
 </button>
 
             <button id="btnModoReporte" class="btn-filtro" onclick="toggleModoReporte()" style="background: #c79f00; color: white; font-weight: bold; padding: 8px 16px; border-radius: 8px;">
-                📊 Reporte
+                Reporte
             </button>
         </div>
 
@@ -3421,21 +3665,19 @@ function procesarToggleModoReporte() {
     const btnModo = document.getElementById('btnModoReporte');
     const btnImprimir = document.getElementById('btnImprimirReporte');
     const txtContador = document.getElementById('txtContadorReporte');
-    
-    // ⏱️ Capturamos el contenedor de tus tres puntitos
+    const btnFechas = document.getElementById('btnFiltrarFechas');
     const menuPuntos = document.getElementById('menuHistorialReportes');
 
     if (modoReporteActivo) {
-        // 1. Desvanecer filtros tradicionales
-        [btnHoy, btnPrep, btnAtr].forEach(btn => {
+        // Ocultar botones de la izquierda y el calendario manteniendo su lugar reservado
+        [btnHoy, btnPrep, btnAtr, btnFechas].forEach(btn => {
             if (btn) btn.classList.add('control-oculto');
         });
 
-        // 2. Transmutar el botón principal a modo cancelar
-        btnModo.innerText = "❌ Cancelar";
+        btnModo.innerText = "Cancelar";
+        btnModo.classList.add('modo-cancelar');
         btnModo.style.background = "#dc2626"; 
 
-        // 3. Mostrar arsenal de impresión con retraso para que entren suavemente
         if (txtContador) {
             txtContador.style.display = 'inline-block';
             txtContador.classList.add('control-oculto'); 
@@ -3450,44 +3692,41 @@ function procesarToggleModoReporte() {
             setTimeout(() => btnImprimir.classList.remove('control-oculto'), 50);
         }
 
-        // ⏱️ TRUCO PREMIUM AL ABRIR: Espera 410ms a que el terreno se limpie antes de nacer
         setTimeout(() => {
             if(!modoReporteActivo) return; 
             if(menuPuntos) {
-                menuPuntos.style.display = 'inline-flex'; // Se inserta al flujo
-                setTimeout(() => menuPuntos.classList.add('mostrar-puntos-activos'), 10); // Transición de opacidad suave
+                menuPuntos.style.display = 'inline-flex';
+                setTimeout(() => menuPuntos.classList.add('mostrar-puntos-activos'), 10);
             }
             if(btnHoy) btnHoy.style.display = 'none';
             if(btnPrep) btnPrep.style.display = 'none';
             if(btnAtr) btnAtr.style.display = 'none';
+            // NOTA: Se remueve btnFechas.style.display = 'none' para que no rompa la alineación
         }, 410);
 
     } else {
-        // 🚨 AL CERRAR (DE VOLADA): Se esfuma en el milisegundo cero para no interrumpir nada
         if (menuPuntos) {
             menuPuntos.classList.remove('mostrar-puntos-activos');
             menuPuntos.style.display = 'none';
         }
 
-        // 1. Desvanecer arsenal de impresión
         [txtContador, btnImprimir].forEach(el => {
             if (el) el.classList.add('control-oculto');
         });
 
-        // 2. El botón principal regresa a su estado base estético
-        btnModo.innerText = "📊 Reporte";
+        btnModo.innerText = "Reporte";
+        btnModo.classList.remove('modo-cancelar');
         btnModo.style.background = "#c79f00"; 
 
-        // 3. Regresar los filtros tradicionales a la vida suavemente
-        [btnHoy, btnPrep, btnAtr].forEach(btn => {
+        // Mostrar de nuevo los botones
+        [btnHoy, btnPrep, btnAtr, btnFechas].forEach(btn => {
             if (btn) {
-                btn.style.display = 'inline-block';
+                if(btn !== btnFechas) btn.style.display = 'inline-block';
                 btn.classList.add('control-oculto'); 
                 setTimeout(() => btn.classList.remove('control-oculto'), 50);
             }
         });
 
-        // Limpieza del flujo de impresión tras terminar la animación
         setTimeout(() => {
             if(modoReporteActivo) return;
             if(txtContador) txtContador.style.display = 'none';
@@ -3730,18 +3969,20 @@ function cargarFraseMotivacional() {
 }
 
         function actualizarBotones() {
-            const btnHoy = document.getElementById('filtroHoy');
-            const btnPrep = document.getElementById('filtroPreparando');
-            const btnAtraso = document.getElementById('filtroAtraso');
-            
-            btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
-            btnPrep.className = "btn-filtro" + (modoFiltro === "preparando" ? " activo-preparando" : "");
-            btnAtraso.className = "btn-filtro" + (modoFiltro === "atraso" ? " activo-atraso" : "");
+    const btnHoy = document.getElementById('filtroHoy');
+    const btnPrep = document.getElementById('filtroPreparando');
+    const btnAtraso = document.getElementById('filtroAtraso');
+    
+    // Asigna las clases CSS de filtro activo
+    btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
+    btnPrep.className = "btn-filtro" + (modoFiltro === "preparando" ? " activo-preparando" : "");
+    btnAtraso.className = "btn-filtro" + (modoFiltro === "atraso" ? " activo-atraso" : "");
 
-            btnHoy.innerText = (modoFiltro === "hoy") ? "❌ Quitar Filtro" : "📅 Ordenes de Hoy";
-            btnPrep.innerText = (modoFiltro === "preparando") ? "❌ Quitar Filtro" : "🛠️ Preparando";
-            btnAtraso.innerText = (modoFiltro === "atraso") ? "❌ Quitar Filtro" : "⚠️ En Atraso (+2d)";
-        }
+    // Textos limpios (el icono de la X lo pondrá el CSS automáticamente)
+    btnHoy.innerText = (modoFiltro === "hoy") ? "Quitar Filtro" : "Ordenes de Hoy";
+    btnPrep.innerText = (modoFiltro === "preparando") ? "Quitar Filtro" : "Preparando";
+    btnAtraso.innerText = (modoFiltro === "atraso") ? "Quitar Filtro" : "En Atraso (+2d)";
+}
 
         function setFechaHoy() {
             const hoy = new Date();
@@ -3989,6 +4230,25 @@ window.onload = () => {
 window.bordeTimeout = null;
 
 function renderTable() {
+    const tbody = document.getElementById('tablaBody');
+
+    // ⚡ PASO 1: Si ya hay filas visibles en pantalla, aplicamos desvanecimiento de salida primero
+    if (tbody && tbody.children.length > 0 && !tbody.classList.contains('animar-salida')) {
+        tbody.className = 'animar-salida';
+        
+        // Esperamos 120ms a que la tabla vieja se disuelva antes de renderizar los nuevos datos
+        setTimeout(() => {
+            ejecutarRenderTabla();
+        }, 120);
+        return;
+    }
+
+    // Si la tabla estaba vacía (ej. primera carga), renderizamos directo
+    ejecutarRenderTabla();
+}
+
+// ⚡ PASO 2: Función interna con toda tu lógica original de filtrado y creación de filas
+function ejecutarRenderTabla() {
     const inputBuscar = document.getElementById('inputBuscar');
     
     // 🟢 1. ¡ENCENDEMOS EL BORDE AZULITO AL 50%!
@@ -3997,8 +4257,11 @@ function renderTable() {
     }
 
     const tbody = document.getElementById('tablaBody');
+
     const busqueda = inputBuscar ? inputBuscar.value.toLowerCase() : '';
+    tbody.className = ''; // Limpiamos la clase de salida
     tbody.innerHTML = '';
+    
     const hoyFull = new Date();
     const hoyMedianoche = new Date(hoyFull.getFullYear(), hoyFull.getMonth(), hoyFull.getDate());
     const offset = hoyFull.getTimezoneOffset() * 60000;
@@ -4135,6 +4398,12 @@ function renderTable() {
         `;
         tbody.appendChild(tr);
     });
+
+    // ⚡ PASO 3: Activamos la animación de ENTRADA en bloque para toda la tabla
+    if (tbody) {
+        void tbody.offsetWidth; // Refresco de Render
+        tbody.classList.add('animar-entrada');
+    }
 
     if (typeof actualizarBarra === 'function') actualizarBarra(hoyStr);
     if (typeof actualizarContadores === 'function') actualizarContadores();
