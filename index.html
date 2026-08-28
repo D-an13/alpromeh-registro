@@ -2225,11 +2225,11 @@ body.dark-mode .themeToggle-container {
   to { transform: rotate(-1turn); }
 }
 
-/* 👑 CORONA JUSTO ENTRE EL OJO Y LA OREJA */
+/* 👑 CORONA (Jefa - Amarillo) */
 .hamster__crown {
   position: absolute;
   top: -0.75em;
-  left: 1.4em;        /* Ajustado al punto medio perfecto */
+  left: 1.4em;
   width: 0.85em;
   height: 0.5em;
   background: #f59e0b;
@@ -2238,8 +2238,6 @@ body.dark-mode .themeToggle-container {
   z-index: 5;
   display: none;
 }
-
-/* Base dorada de la corona */
 .hamster__crown::after {
   content: '';
   position: absolute;
@@ -2247,7 +2245,223 @@ body.dark-mode .themeToggle-container {
   left: 0;
   width: 100%;
   height: 0.12em;
-  background: #d97706; /* Dorado oscuro para la base */
+  background: #d97706;
+}
+
+/* 📦 CAJA (Bodega - Verde) */
+.hamster__box {
+  position: absolute;
+  top: -1.1em;
+  left: 1.2em;
+  width: 1.8em;
+  height: 1.4em;
+  background: #d97706;
+  border: 0.1em solid #b45309;
+  border-radius: 0.15em;
+  box-shadow: -0.2em 0 0 #f59e0b inset, 0 0.2em 0 rgba(255, 255, 255, 0.2) inset;
+  z-index: 4;
+  display: none;
+}
+.hamster__box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.35em;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 📱 ROSA: Teléfono Móvil ajustado en la mejilla/oído (Servicio al Cliente) */
+.hamster__phone {
+  position: absolute;
+  top: 0.6em;
+  left: 2.1em;             /* Desplazado a la derecha, lejos del ojo */
+  width: 0.4em;
+  height: 0.8em;
+  background: #1e293b;
+  border: 0.05em solid #475569;
+  border-radius: 0.08em;
+  transform: rotate(15deg); /* Inclinación hacia la oreja */
+  z-index: 2;              /* Pasa por detrás de la mejilla/cabeza */
+  display: none;
+}
+.hamster__phone::before {
+  content: '';
+  position: absolute;
+  top: 0.06em;
+  left: 0.06em;
+  width: 0.1em;
+  height: 0.1em;
+  background: #0f172a;
+  border: 0.03em solid #94a3b8;
+  border-radius: 50%;
+}
+
+/* 💜 2. MORADO: Gorro de Muestras Médicas */
+.hamster__cap {
+  position: absolute;
+  top: -0.6em;
+  left: 0.6em;              /* Posición exacta entre ojo y oreja */
+  width: 1.3em;
+  height: 0.7em;
+  background: rgba(186, 230, 253, 0.9);
+  border: 0.08em solid rgba(56, 189, 248, 0.95);
+  border-radius: 50% 50% 0 0;
+  box-shadow: 0 0.1em 0 rgba(255, 255, 255, 0.6) inset;
+  z-index: 8;
+  display: none;
+}
+.hamster__cap::before {
+  content: '+';
+  position: absolute;
+  top: 0.05em;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ef4444;
+  font-size: 0.55em;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 💼 3. AZUL: Maletín (Guatecompras) */
+.hamster__briefcase {
+  position: absolute;
+  top: -0.9em;
+  left: 1.3em;
+  width: 1.5em;
+  height: 1.1em;
+  background: #78350f;
+  border: 0.08em solid #451a03;
+  border-radius: 0.2em;
+  box-shadow: 0 0.15em 0 #b45309 inset;
+  z-index: 4;
+  display: none;
+}
+.hamster__briefcase::before {
+  content: '';
+  position: absolute;
+  top: -0.3em;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.5em;
+  height: 0.3em;
+  border: 0.08em solid #451a03;
+  border-bottom: none;
+  border-radius: 0.1em 0.1em 0 0;
+}
+
+/* 💻 4. ANARANJADO: Laptop abierta en el lomo (Facturación) */
+.hamster__invoices {
+  position: absolute;
+  top: -0.45em;                /* Asentada directamente en la espalda */
+  left: 1.35em;
+  width: 1.55em;
+  height: 0.45em;
+  background: #f97316;          /* Base/bandeja naranja */
+  border: 0.05em solid #c2410c;
+  border-radius: 0.05em;
+  box-shadow: 0 0.05em 0.1em rgba(0,0,0,0.25);
+  z-index: 4;
+  display: none;
+}
+
+/* Pila alta de hojas apiladas */
+.hamster__invoices::before {
+  content: '';
+  position: absolute;
+  top: -0.45em;
+  left: 0.08em;
+  width: 1.35em;
+  height: 0.6em;
+  background: #ffffff;
+  border: 0.04em solid #94a3b8;
+  border-radius: 0.03em;
+  background-image: repeating-linear-gradient(
+    0deg,
+    #ffffff,
+    #ffffff 0.07em,
+    #cbd5e1 0.07em,
+    #cbd5e1 0.12em
+  );
+  box-shadow: 0 0.04em 0.06em rgba(0,0,0,0.15);
+}
+
+/* Hoja superior desprendida estilo Foto 2 (con 2 renglones escritos) */
+.hamster__invoices::after {
+  content: '';
+  position: absolute;
+  top: -0.68em;
+  left: 0.15em;
+  width: 1.05em;
+  height: 0.35em;
+  background: #ffffff;
+  border: 0.04em solid #64748b;
+  border-radius: 0.03em 0.08em 0.03em 0.03em;
+  transform: rotate(-10deg);
+  box-shadow: 0 0.05em 0.08em rgba(0,0,0,0.12);
+}
+
+/* Las dos líneas grises exactas de la Foto 2 */
+.hamster__invoices::after {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 0.08em,
+    #94a3b8 0.08em,
+    #94a3b8 0.13em,
+    transparent 0.13em,
+    transparent 0.2em,
+    #94a3b8 0.2em,
+    #94a3b8 0.25em,
+    transparent 0.25em
+  );
+}
+
+/* 🎀 5. GRIS: Moño en la cabeza con lazos bien definidos (Recepción) */
+.hamster__bow {
+  position: absolute;
+  top: -0.3em;
+  left: 1.2em;
+  width: 0.35em;
+  height: 0.35em;
+  background: #be185d; /* Nudo central del moño */
+  border-radius: 50%;
+  z-index: 6;
+  display: none;
+}
+/* Lazos marcados a los lados */
+.hamster__bow::before,
+.hamster__bow::after {
+  content: '';
+  position: absolute;
+  top: -0.08em;
+  width: 0.45em;
+  height: 0.5em;
+  background: #ec4899;
+}
+.hamster__bow::before {
+  left: -0.4em;
+  border-radius: 50% 10% 50% 10%;
+  transform: rotate(-15deg);
+}
+.hamster__bow::after {
+  right: -0.4em;
+  border-radius: 10% 50% 10% 50%;
+  transform: rotate(15deg);
+}
+
+/* 👓 LENTES (Accesorio secundario/opcional) */
+.hamster__glasses {
+  position: absolute;
+  top: 0.3em;
+  left: 1em;
+  width: 0.8em;
+  height: 0.5em;
+  border: 0.12em solid #1e293b;
+  border-radius: 0.15em;
+  z-index: 5;
+  display: none;
 }
 
 /* 🛍️ GRID DE LA TIENDA */
@@ -3119,19 +3333,19 @@ body.dark-mode .themeToggle-container {
 
 /* 1. KEYFRAME (El blur se limpia rápido en el primer 30% del movimiento) */
 @keyframes entradaTablaPro {
-    0% {
-        opacity: 0;
-        filter: blur(4px);
-        transform: translateY(-12px) scale(0.985);
-    }
-    30% {
-        filter: blur(0px); /* ⚡ A los 135ms la tabla ya está 100% nítida */
-    }
-    100% {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0) scale(1);
-    }
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: scale(0.97); /* Inicia un 3% más pequeña */
+  }
+  40% {
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: scale(1); /* Expande a su tamaño real */
+  }
 }
 
 /* 2. DURACIÓN ÁGIL (0.45s con frenado suave estilo iOS) */
@@ -3304,7 +3518,7 @@ tbody.animar-entrada {
 
         </div>
 
-        <div id="indicadorPasos" class="stepper-container" style="display: none;">
+       <div id="indicadorPasos" class="stepper-container" style="display: none;">
             <div id="dot1" class="step-dot active">1</div>
             <div id="line1" class="step-line"></div>
             <div id="dot2" class="step-dot">2</div>
@@ -3316,7 +3530,7 @@ tbody.animar-entrada {
             
             <div id="seccionPaso1">
                 <div class="form-grid">
-                    <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" min="0" required></div>
+                    <div><label>NO. DE ORDEN:</label><input type="number" id="orden" placeholder="Ej: 15646" min="0" onwheel="this.blur()" required></div>
                     <div><label>FECHA DE IMPRESIÓN:</label><input type="date" id="fecha" required></div>
                     <div><label>INSTITUCIÓN:</label><input type="text" id="institucion" placeholder="Nombre de la entidad" required></div>
                     <div>
@@ -3343,12 +3557,12 @@ tbody.animar-entrada {
                 </div>
                 
                 <button type="button" id="btnSiguiente1" class="btn-navegacion-pasos btn-azul animacion-paso" style="display: none; width: 100%; margin-top: 15px;" onclick="validarYPasarAlPaso2()">
-  <span class="btn-texto">SIGUIENTE</span>
-  <svg class="flecha-svg flecha-derecha" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M5 12h14M12 5l7 7-7 7"/>
-  </svg>
-</button>
-</div>
+                    <span class="btn-texto">SIGUIENTE</span>
+                    <svg class="flecha-svg flecha-derecha" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
 
            <div id="seccionPaso2" style="display: none;">
                 <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
@@ -5786,203 +6000,9 @@ function registrarRespaldoReporteHistorial(arregloOrdenes) {
 // 🔄 Asegurar que carguen los reportes al abrir la app por primera vez
 document.addEventListener("DOMContentLoaded", () => {
     actualizarDropdownReportesUI();
-    actualizarDropdownReportesUI();
 });
 
 // AQUÍ TERMINA TU BLOQUE DE JAVASCRIPT PRINCIPAL. NO DEBEN HABER MÁS SCRIPTS CAÍDOS ABAJO.
-</script>
-<!-- =========================================================================
-     🚀 PAQUETE TODO-EN-UNO: MODAL DE BIENVENIDA CON TEXTOS SÚPER CLAROS Y EFECTO PREMIUM
-     ========================================================================= -->
-<!-- 🎨 1. ESTRUCTURA INTERFAZ (HTML) -->
-<div id="modalBienvenidaAlpro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; justify-content: center; align-items: center;">
-    
-    <div id="cuerpoBienvenida" style="background: #ffffff; width: 460px; max-width: 92%; border-radius: 28px; box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.5); font-family: system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 400px; transform: scale(0.95); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
-        
-        <!-- Contenedor Dinámico de Diapositivas -->
-        <div style="padding: 30px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-            
-           <!-- 🛝 DIAPOSITIVA 1: ¡Lanzamiento Oficial! (Versión Ultra Limpia y Grande) -->
-            <div class="alpro-slide" style="display: block; width: 100%; padding: 10px 0;">
-                <span style="font-size: 70px; display: block; margin-bottom: 20px; filter: drop-shadow(0 4px 8px rgba(234,88,12,0.2));">✨🎁✨</span>
-                
-                <h2 style="margin: 0 auto 24px auto; font-size: 28px; font-weight: 950; color: #0f172a; letter-spacing: -0.8px; line-height: 1.25; max-width: 95%;">
-                    ¡La Tienda de Recompensas<br>ya está aquí!
-                </h2>
-                
-                <p style="margin: 0; font-size: 15.5px; color: #475569; line-height: 1.6; font-weight: 600; padding: 0 20px;">
-                    ¡Disfruta al máximo esta temporada especial y descubre todo lo que tenemos preparado para ti!
-                </p>
-            </div>
-
-            <!-- 🛝 DIAPOSITIVA 2: Generar Órdenes -->
-            <div class="alpro-slide" style="display: none;">
-                <span style="font-size: 60px; display: block; margin-bottom: 16px;">📝</span>
-                <h2 style="margin: 0 0 10px 0; font-size: 21px; font-weight: 900; color: #ea580c;">Gana Monedas al Guardar</h2>
-                <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">Cada vez que guardes una nueva <b>Orden de Compra</b>, el sistema te regalará monedas automáticamente. La tómbola de la suerte te dará entre <b>3 y 7 Alprocoins</b> al instante.</p>
-            </div>
-
-            <!-- 🛝 DIAPOSITIVA 3: Artículos Únicos -->
-            <div class="alpro-slide" style="display: none;">
-                <span style="font-size: 60px; display: block; margin-bottom: 16px;">🛍️</span>
-                <h2 style="margin: 0 0 10px 0; font-size: 21px; font-weight: 900; color: #059669;">Junta y Cambia tus Monedas</h2>
-                <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">Ve acumulando todas tus monedas para comprar tus antojos favoritos en el catálogo. ¡Ojo! Algunos premios son súper especiales y <b>solo se pueden comprar una sola vez</b>.</p>
-            </div>
-
-            <!-- 🛝 DIAPOSITIVA 4: Recargas Premium (EFECTO ARCOÍRIS) -->
-            <div class="alpro-slide" style="display: none; width: 100%;">
-                <style>
-                    @keyframes arcoirisFondoOnboarding {
-                        0% { background-position: 0% 50%; }
-                        50% { background-position: 100% 50%; }
-                        100% { background-position: 0% 50%; }
-                    }
-                    .tarjeta-premium-onboarding {
-                        background: linear-gradient(45deg, rgba(255,42,95,0.08), rgba(255,126,64,0.08), rgba(42,245,152,0.08), rgba(0,158,253,0.08), rgba(155,81,224,0.08));
-                        background-size: 300% 300%;
-                        animation: arcoirisFondoOnboarding 6s ease infinite;
-                        border: 2px solid #3b82f6 !important;
-                    }
-                    .btn-arcoiris-onboarding {
-                        background: linear-gradient(45deg, #ff2a5f, #ff7e40, #ffeb3b, #2af598, #009efd, #9b51e0, #ff2a5f);
-                        background-size: 400% 400%;
-                        animation: arcoirisFondoOnboarding 6s ease infinite;
-                        color: white;
-                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-                    }
-                </style>
-                
-                <div class="tarjeta-premium-onboarding" style="padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(59,130,246,0.15);">
-                    <span style="font-size: 65px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));">💎</span>
-                    <h2 style="margin: 0 0 10px 0; font-size: 21px; font-weight: 950; color: #1d4ed8; letter-spacing: -0.5px;">¿No quieres esperar?</h2>
-                    <p style="margin: 0 0 15px 0; font-size: 14px; color: #1e293b; line-height: 1.5; font-weight: 500;">Si te urge un premio o una tarjeta de regalo y no quieres esperar, ¡puedes comprar Alprocoins con dinero real directamente con Dan para canjear lo que quieras hoy mismo!</p>
-                    <div class="btn-arcoiris-onboarding" style="display: inline-block; padding: 6px 16px; border-radius: 9999px; font-size: 11px; font-weight: 900; letter-spacing: 1px;">OPCIÓN DIAMANTE DISPONIBLE</div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- 🕹️ BARRA INFERIOR DE NAVEGACIÓN Y CONTROLES -->
-        <div style="background: #f8fafc; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0;">
-            
-            <!-- Indicadores de bolitas de progreso -->
-            <div style="display: flex; gap: 6px;">
-                <span class="alpro-dot" style="width: 18px; height: 6px; border-radius: 3px; background: #ea580c; transition: all 0.3s;"></span>
-                <span class="alpro-dot" style="width: 6px; height: 6px; border-radius: 3px; background: #cbd5e1; transition: all 0.3s;"></span>
-                <span class="alpro-dot" style="width: 6px; height: 6px; border-radius: 3px; background: #cbd5e1; transition: all 0.3s;"></span>
-                <span class="alpro-dot" style="width: 6px; height: 6px; border-radius: 3px; background: #cbd5e1; transition: all 0.3s;"></span>
-            </div>
-
-            <!-- Botones interactivos de acción -->
-            <div style="display: flex; gap: 10px;">
-                <button id="btnAtrasSlide" onclick="cambiarSlideTutorial(-1)" style="background: transparent; color: #64748b; border: none; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: none; transition: color 0.2s;" onmouseenter="this.style.color='#0f172a'" onmouseleave="this.style.color='#64748b'">Atrás</button>
-                
-                <button id="btnSiguienteSlide" onclick="cambiarSlideTutorial(1)" style="background: #0f172a; color: #ffffff; border: none; padding: 9px 18px; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 10px rgba(15,23,42,0.15); transition: background 0.2s;" onmouseenter="this.style.background='#1e293b'" onmouseleave="this.style.background='#0f172a'">Siguiente</button>
-            </div>
-
-        </div>
-
-    </div>
-</div>
-
-<!-- ⚙️ 2. LÓGICA DE CONTROL AUTO-EJECUTABLE (JAVASCRIPT INDEPENDIENTE CON HOVER CORREGIDO) -->
-<script>
-(function() {
-    let slideActual = 0;
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const yaVisto = localStorage.getItem('alpro_tutorial_visto');
-        
-        if (!yaVisto) {
-            const modal = document.getElementById('modalBienvenidaAlpro');
-            const cuerpo = document.getElementById('cuerpoBienvenida');
-            if (modal && cuerpo) {
-                modal.style.display = 'flex';
-                setTimeout(() => {
-                    cuerpo.style.transform = 'scale(1)';
-                    cuerpo.style.opacity = '1';
-                }, 50);
-                slideActual = 0;
-                actualizarInterfazSlides();
-            }
-        }
-    });
-
-    window.cambiarSlideTutorial = function(direccion) {
-        const slides = document.getElementsByClassName('alpro-slide');
-        slideActual += direccion;
-        
-        if (slideActual >= slides.length) {
-            finalizarTutorialAlpro();
-            return;
-        }
-        
-        if (slideActual < 0) slideActual = 0;
-        actualizarInterfazSlides();
-    };
-
-    function actualizarInterfazSlides() {
-        const slides = document.getElementsByClassName('alpro-slide');
-        const dots = document.getElementsByClassName('alpro-dot');
-        const btnAtras = document.getElementById('btnAtrasSlide');
-        const btnSiguiente = document.getElementById('btnSiguienteSlide');
-
-        for (let i = 0; i < slides.length; i++) {
-            slides[i].style.display = 'none';
-            dots[i].style.width = '6px';
-            dots[i].style.background = '#cbd5e1';
-        }
-
-        slides[slideActual].style.display = 'block';
-        dots[slideActual].style.width = '18px';
-        
-        // Colores temáticos de las bolitas de progreso
-        dots[slideActual].style.background = slideActual === 1 ? '#ea580c' : (slideActual === 2 ? '#059669' : (slideActual === 3 ? '#2563eb' : '#0f172a'));
-
-        btnAtras.style.display = slideActual === 0 ? 'none' : 'block';
-
-        // 🎯 AQUÍ SE HIZO EL CAMBIO: Control dinámico y limpio de los hovers
-        if (slideActual === slides.length - 1) {
-            btnSiguiente.innerText = "¡Empezar a Ganar! 🚀";
-            btnSiguiente.style.background = "#0f172a"; // Color gris oscuro por defecto
-            
-            // Cuando el mouse entra en la última diapositiva
-            btnSiguiente.onmouseenter = () => {
-                btnSiguiente.style.background = "linear-gradient(45deg, #ff2a5f, #ff7e40)";
-            };
-            
-            // Cuando el mouse sale en la última diapositiva
-            btnSiguiente.onmouseleave = () => {
-                btnSiguiente.style.background = "#0f172a";
-            };
-        } else {
-            btnSiguiente.innerText = "Siguiente";
-            btnSiguiente.style.background = "#0f172a";
-            
-            // Hover normal para los botones de las diapositivas anteriores
-            btnSiguiente.onmouseenter = () => { 
-                btnSiguiente.style.background = "#1e293b"; 
-            };
-            btnSiguiente.onmouseleave = () => { 
-                btnSiguiente.style.background = "#0f172a"; 
-            };
-        }
-    }
-
-    function finalizarTutorialAlpro() {
-        const modal = document.getElementById('modalBienvenidaAlpro');
-        const cuerpo = document.getElementById('cuerpoBienvenida');
-        if (modal && cuerpo) {
-            cuerpo.style.transform = 'scale(0.95)';
-            cuerpo.style.opacity = '0';
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-        // 🔒 Guardado definitivo de por vida
-        localStorage.setItem('alpro_tutorial_visto', 'true');
-    }
-})();
 </script>
 
 <div id="modalConfirmDuplicado" class="alpro-modal" style="display:none; align-items:center; justify-content:center; z-index: 10000;">
@@ -9006,10 +9026,11 @@ function ocultarBannerHistorico() {
   }
 }
 
-// 🎨 LISTA DE COLORES ACTUALIZADA CON CORONA CSS
+// 🎨 1. LISTA DE COLORES Y ACCESORIOS SEGÚN EL ROL
 function cambiarColorHamsterAleatorio() {
-  // 30 = Anaranjado | 210 = Azul suave | 270 = Morado | 350 = Rosa pastel | 45 = Amarillo | 'gris' = Gris Ceniza
-  const tonosDisponibles = [30, 210, 270, 350, 45, 'gris'];
+  // 30 = Anaranjado (Facturación) | 210 = Azul (Guatecompras) | 270 = Morado (Muestras Médicas)
+  // 350 = Rosa (Servicio al Cliente) | 45 = Amarillo (Jefa) | 85 = Verde Lima (Bodega) | 'gris' = Gris (Recepción)
+  const tonosDisponibles = [30, 210, 270, 350, 45, 85, 'gris'];
   
   // Elige una opción al azar
   const seleccion = tonosDisponibles[Math.floor(Math.random() * tonosDisponibles.length)];
@@ -9030,23 +9051,20 @@ function cambiarColorHamsterAleatorio() {
   } else {
     const hue = seleccion;
     const esRosaPastel = (hue === 350);
-    const saturacion = esRosaPastel ? '70%' : '80%';
-    const luzOscuro   = esRosaPastel ? '70%' : '55%';
+    const esVerdeLima  = (hue === 85);
+    
+    const saturacion = esRosaPastel ? '70%' : (esVerdeLima ? '75%' : '80%');
+    const luzOscuro   = esRosaPastel ? '70%' : (esVerdeLima ? '48%' : '55%');
 
     colorOscuro = `hsl(${hue}, ${saturacion}, ${luzOscuro})`;  
-    colorMedio  = `hsl(${hue}, 85%, 85%)`;  
-    colorClaro  = `hsl(${hue}, 85%, 93%)`;  
+    colorMedio  = `hsl(${hue}, 75%, 80%)`;  
+    colorClaro  = `hsl(${hue}, 80%, 90%)`;  
   }
 
+  // Aplicar colores a las partes del hámster
   if (head) {
     head.style.background = colorOscuro;
     head.style.boxShadow = `0 -0.25em 0 ${colorMedio} inset, 0.75em -1.55em 0 ${colorClaro} inset`;
-
-    // 👑 AQUÍ SE ENCIENDE / APAGA LA CORONA CSS
-    const corona = document.getElementById('coronaHamster');
-    if (corona) {
-      corona.style.display = (seleccion === 45) ? 'block' : 'none';
-    }
   }
 
   if (body) {
@@ -9058,11 +9076,42 @@ function cambiarColorHamsterAleatorio() {
   if (limbFl) limbFl.style.background = `linear-gradient(${colorClaro} 80%, hsl(0, 90%, 85%) 80%)`;
   if (limbBr) limbBr.style.background = `linear-gradient(${colorMedio} 90%, hsl(0, 90%, 75%) 90%)`;
   if (limbBl) limbBl.style.background = `linear-gradient(${colorClaro} 90%, hsl(0, 90%, 85%) 90%)`;
+
+  // 👑 / 📦 MOSTRAR U OCULTAR ACCESORIO SEGÚN EL ROL
+  const accesorios = {
+    45: ['coronaHamster'],                                // Jefa (Amarillo)
+    85: ['cajaHamster'],                                  // Bodega (Verde)
+    350: ['telefonoHamster', 'lentesHamster'],            // Servicio al Cliente (Rosa -> Celular + Lentes fijos)
+    30: ['facturasHamster'],                              // Facturación (Anaranjado -> Laptop)
+    270: ['gorroHamster'],                                // Muestras Médicas (Morado -> Gorro detrás de oreja)
+    'gris': ['monoHamster'],                              // Recepción (Gris -> Moño)
+    210: ['maletinHamster', 'lentesHamster']              // Guatecompras (Azul -> Maletín + Lentes fijos)
+  };
+
+  // 1. Ocultar todos los accesorios primero
+  ['coronaHamster', 'cajaHamster', 'telefonoHamster', 'facturasHamster', 'gorroHamster', 'monoHamster', 'maletinHamster', 'lentesHamster'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+
+  // 2. Mostrar accesorios principales asignados
+  const listaAccesorios = accesorios[seleccion];
+  if (listaAccesorios) {
+    listaAccesorios.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'block';
+    });
+  }
+
+  // 3. Lógica aleatoria para el Anaranjado (Facturación): Lentes opcionales (50% probabilidad)
+  if (seleccion === 30 && Math.random() > 0.5) {
+    const lentes = document.getElementById('lentesHamster');
+    if (lentes) lentes.style.display = 'block';
+  }
 }
 
 // 🐹 2. MOSTRAR Y OCULTAR EL HÁMSTER
 function mostrarCargandoHamster() {
-  // Cambia de color antes de mostrarse
   cambiarColorHamsterAleatorio();
 
   const overlay = document.querySelector('.overlay-hamster');
@@ -9104,7 +9153,6 @@ async function validarYPasarAlPaso2() {
     btnSiguiente.disabled = true;
   }
 
-  // 🐹 MOSTRAR EL HÁMSTER EN PANTALLA
   mostrarCargandoHamster();
 
   try {
@@ -9120,16 +9168,13 @@ async function validarYPasarAlPaso2() {
       data = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
     }
 
-    // 🔓 RESTAURAR BOTÓN A SU ESTADO ORIGINAL
     if (btnSiguiente) {
       btnSiguiente.disabled = false;
       btnSiguiente.innerHTML = textoOriginal;
     }
 
-    // 🐹 OCULTAR HÁMSTER
     ocultarCargandoHamster();
 
-    // EVALUACIÓN DE ORDEN EXISTENTE
     if (data && (data.existe === true || data.existe === "true")) {
       console.log("🚨 Orden duplicada detectada:", data);
 
@@ -9181,7 +9226,6 @@ async function validarYPasarAlPaso2() {
   } catch (error) {
     console.error("❌ Error en la verificación:", error);
 
-    // 🐹 OCULTAR HÁMSTER SI HAY ERROR
     ocultarCargandoHamster();
 
     if (btnSiguiente) {
@@ -9263,11 +9307,22 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="hamster">
         <div class="hamster__body">
           <div class="hamster__head">
-            <div class="hamster__crown" id="coronaHamster"></div>
+            <div class="hamster__crown" id="coronaHamster"></div>             <!-- Jefa (Amarillo) -->
+            <div class="hamster__phone" id="telefonoHamster"></div>           <!-- Servicio al Cliente (Rosa: Celular) -->
+            <div class="hamster__glasses" id="lentesHamster"></div>           <!-- Lentes (Opcional/Secundario) -->
+            <div class="hamster__cap" id="gorroHamster"></div>                <!-- Muestras Médicas (Morado: Gorrito con cruz) -->
+            <div class="hamster__bow" id="monoHamster"></div>                 <!-- Recepción (Gris: Moño) -->
+
             <div class="hamster__ear"></div>
             <div class="hamster__eye"></div>
             <div class="hamster__nose"></div>
           </div>
+
+          <!-- ACCESORIOS DE ESPALDA / CUERPO -->
+          <div class="hamster__box" id="cajaHamster"></div>                  <!-- Bodega (Verde) -->
+          <div class="hamster__briefcase" id="maletinHamster"></div>          <!-- Guatecompras (Azul) -->
+          <div class="hamster__invoices" id="facturasHamster"></div>          <!-- Facturación (Anaranjado: Facturas) -->
+
           <div class="hamster__limb hamster__limb--fr"></div>
           <div class="hamster__limb hamster__limb--fl"></div>
           <div class="hamster__limb hamster__limb--br"></div>
