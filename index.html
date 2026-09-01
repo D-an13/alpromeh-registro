@@ -146,8 +146,112 @@ table { width: 100%; border-collapse: collapse; margin-top: 15px; }
 th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.85em; }
 th { background: var(--primary); color: white; text-transform: uppercase; }
 
-#toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none; z-index: 3000; font-weight: bold; }
-#toast.warning { background-color: #ffc400; color: #000; visibility: visible; display: block; }
+#toast { position: fixed; top: 20px; right: 20px; color: white; padding: 12px 20px; border-radius: 8px; display: none !important; z-index: 3000; font-weight: bold; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+#toast.warning { background-color: #ffc400; color: #000; visibility: hidden !important; display: none !important; }
+
+/* ========== MASCOTA HÁMSTER ALPROMEH (NOTIFICACIONES) ========== */
+.hamster-widget {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  z-index: 10000;
+  user-select: none;
+}
+/* Globito minimalista (diseño demo ALPROMEH) */
+.hamster-bubble {
+  background: #ffffff;
+  color: #1e293b;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border-bottom-right-radius: 2px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e2e8f0;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  max-width: 200px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.35;
+}
+[data-theme="dark"] .hamster-bubble {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
+}
+.hamster-bubble.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.hamster-bubble.tipo-error { border-color: #fecaca; }
+.hamster-bubble.tipo-warning { border-color: #fde68a; }
+.hamster-bubble.tipo-ok { border-color: #e2e8f0; }
+.hamster-bubble.tipo-trivia { border-color: #ddd6fe; }
+#bubbleIcon { font-size: 0.95rem; flex-shrink: 0; line-height: 1; }
+#bubbleText { flex: 1; min-width: 0; }
+.hamster-svg {
+  width: 78px;
+  height: 78px;
+  cursor: pointer;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+  transition: transform 0.2s ease;
+}
+.hamster-svg:hover { transform: scale(1.08); }
+@keyframes hamsterFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes hamsterBlink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+@keyframes hamsterPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.18) rotate(5deg); }
+  100% { transform: scale(1); }
+}
+.idle-animation { animation: hamsterFloat 3s ease-in-out infinite; }
+.eye-blink { transform-origin: center; animation: hamsterBlink 4s infinite; }
+.pop-anim { animation: hamsterPop 0.35s ease-out; }
+.hamster-hat { display: none; }
+.hamster-eyes-closed { display: none; }
+.hamster-mood-sleep .hamster-hat { display: block; }
+.hamster-mood-sleep .eye-blink,
+.hamster-mood-happy-closed .eye-blink,
+.hamster-mood-secret .eye-blink { display: none; }
+.hamster-mood-sleep .hamster-eyes-closed,
+.hamster-mood-happy-closed .hamster-eyes-closed,
+.hamster-mood-secret .hamster-eyes-closed { display: block; }
+/* Confetti */
+.hamster-confetti-piece {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 10050;
+  animation: hamsterConfettiFall 1.1s ease-out forwards;
+}
+@keyframes hamsterConfettiFall {
+  0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--cx), var(--cy)) rotate(220deg); opacity: 0; }
+}
+/* Ocultar el toggle grande original (el hámster ocupa su lugar) */
+.themeToggle-container { display: none !important; }
+/* Burbuja trivia antigua: la dejamos en DOM pero no la mostramos (el hámster habla) */
+.burbuja-oculta.mostrar { bottom: -200px !important; opacity: 0 !important; pointer-events: none !important; }
+
 
         .resaltar-actualizacion {
             background-color: #fff9c4 !important;
@@ -3531,7 +3635,7 @@ tbody.animar-entrada {
     <span style="color: #ea580c; margin-right: 8px; font-size: 1rem; vertical-align: middle;">●</span>
     <strong style="vertical-align: middle;">Nueva versión detectada • Actualizar aquí</strong>
 </div>
-<!-- ☀️/🌙 BOTÓN ANIMADO TEMA OSCURO/CLARO -->
+<!-- ☀️/🌙 BOTÓN ANIMADO TEMA OSCURO/CLARO (oculto visualmente; el hámster ocupa su lugar) -->
 <div class="themeToggle-container">
   <label class="st-sunMoonThemeToggleBtn" title="Cambiar tema">
     <input type="checkbox" id="themeCheckbox" class="themeToggleInput" onchange="toggleTheme()">
@@ -3555,6 +3659,50 @@ tbody.animar-entrada {
   </label>
 </div>
     <div id="toast"></div>
+
+<!-- ========== MASCOTA HÁMSTER (centro de notificaciones) ========== -->
+<div class="hamster-widget" id="hamsterWidgetRoot">
+  <div class="hamster-bubble" id="hamsterBubble">
+    <span id="bubbleIcon">🐹</span>
+    <span id="bubbleText">¡Hola! Listo para registrar órdenes.</span>
+  </div>
+
+  <!-- Clic = tips | Doble clic = tema claro/oscuro -->
+  <svg class="hamster-svg idle-animation" id="hamsterAvatar" viewBox="0 0 120 120" title="Clic: tip · Doble clic: tema">
+    <!-- Gorrito de dormir (modo oscuro) -->
+    <g class="hamster-hat">
+      <path d="M28 40 Q60 8 92 40 L88 46 Q60 22 32 46 Z" fill="#6366f1" />
+      <circle cx="92" cy="38" r="7" fill="#f8fafc" />
+      <circle cx="92" cy="38" r="4" fill="#e2e8f0" />
+    </g>
+    <ellipse cx="38" cy="34" rx="10" ry="12" fill="#E59866" />
+    <ellipse cx="38" cy="34" rx="6" ry="8" fill="#FADBD8" />
+    <ellipse cx="82" cy="34" rx="10" ry="12" fill="#E59866" />
+    <ellipse cx="82" cy="34" rx="6" ry="8" fill="#FADBD8" />
+    <ellipse cx="60" cy="68" rx="42" ry="38" fill="#DC7633" />
+    <ellipse cx="60" cy="64" rx="38" ry="32" fill="#E59866" />
+    <ellipse cx="60" cy="76" rx="26" ry="22" fill="#FFFFFF" />
+    <ellipse cx="38" cy="68" rx="12" ry="10" fill="#FADBD8" opacity="0.7" />
+    <ellipse cx="82" cy="68" rx="12" ry="10" fill="#FADBD8" opacity="0.7" />
+    <!-- Ojos abiertos -->
+    <g class="eye-blink" id="hamsterEyesOpen">
+      <circle cx="46" cy="56" r="6" fill="#2C3E50" />
+      <circle cx="44" cy="54" r="2" fill="#FFFFFF" />
+      <circle cx="74" cy="56" r="6" fill="#2C3E50" />
+      <circle cx="72" cy="54" r="2" fill="#FFFFFF" />
+    </g>
+    <!-- Ojos cerrados (feliz / dormir / secreto) -->
+    <g class="hamster-eyes-closed" id="hamsterEyesClosed">
+      <path d="M40 56 Q46 62 52 56" stroke="#2C3E50" stroke-width="2.5" fill="none" stroke-linecap="round" />
+      <path d="M68 56 Q74 62 80 56" stroke="#2C3E50" stroke-width="2.5" fill="none" stroke-linecap="round" />
+    </g>
+    <polygon points="60,63 56,60 64,60" fill="#E74C3C" />
+    <path id="hamsterMouth" d="M 54 66 Q 60 70 66 66" stroke="#2C3E50" stroke-width="2" stroke-linecap="round" fill="none" />
+    <ellipse cx="44" cy="80" rx="6" ry="5" fill="#E59866" />
+    <ellipse cx="76" cy="80" rx="6" ry="5" fill="#E59866" />
+  </svg>
+</div>
+
 
    <div id="modalConfirm" class="modal-overlay" style="display: none;">
         <div class="modal-content" id="modalFrame" style="transition: all 0.2s ease;">
@@ -3684,7 +3832,7 @@ tbody.animar-entrada {
             <div id="dot3" class="step-dot">3</div>
         </div>
 
-        <form id="formOrdenes">
+        <form id="formOrdenes" novalidate>
             
             <div id="seccionPaso1">
                 <div class="form-grid">
@@ -4012,7 +4160,7 @@ let ordenesSeleccionadas = [];
 function toggleModoReporte() {
     // 🔒 Escudo protector: Si detecta que es celular por el ancho, no hace nada
     if (window.innerWidth < 768) {
-        alert("⚠️ El módulo de reportes e impresión solo está disponible en computadora, mi rey.");
+        alproAlert("⚠️ El módulo de reportes e impresión solo está disponible en computadora, mi rey.");
         return;
     }
 
@@ -4473,7 +4621,7 @@ window.onload = () => {
 
     // 🛒 DIBUJAR LA TIENDA DE TEMPORADA AUTOMÁTICAMENTE
     if (typeof renderizarTiendaAlpro === "function") {
-        renderizarTiendaAlpro();
+        if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
     }
 
     // 🌙 Sincronizar estado inicial del botón animado de Sol/Luna
@@ -4530,7 +4678,7 @@ window.onload = () => {
                 btnSi.onclick = function() { 
                     const motivoTexto = inputMotivo.value.trim();
                     if (motivoTexto === "") {
-                        alert("❌ Debes escribir un motivo para poder anular la orden.");
+                        alproAlert("❌ Debes escribir un motivo para poder anular la orden.");
                         inputMotivo.focus();
                         return;
                     }
@@ -4640,12 +4788,15 @@ function ejecutarRenderTabla() {
     const offset = hoyFull.getTimezoneOffset() * 60000;
     const hoyStr = new Date(hoyFull.getTime() - offset).toISOString().split('T')[0];
 
-    let filtrados = datosLocales.filter(item => {
-        const prodNormal = (item.producto || "").toLowerCase();
-        const detallesJSON = (item.detallesPedido || "").toLowerCase();
+    let filtrados = (Array.isArray(datosLocales) ? datosLocales : []).filter(item => {
+        if (!item) return false;
+        const prodNormal = String(item.producto != null ? item.producto : "").toLowerCase();
+        const detallesJSON = String(item.detallesPedido != null ? item.detallesPedido : "").toLowerCase();
+        const instSafe = String(item.inst != null ? item.inst : "").toLowerCase();
+        const ordenSafe = (item.orden != null ? String(item.orden) : "");
 
-        const coincideBusqueda = item.orden.toString().includes(busqueda) || 
-                                 item.inst.toLowerCase().includes(busqueda) ||
+        const coincideBusqueda = ordenSafe.includes(busqueda) || 
+                                 instSafe.includes(busqueda) ||
                                  prodNormal.includes(busqueda) || 
                                  detallesJSON.includes(busqueda);
                                  
@@ -4659,10 +4810,12 @@ function ejecutarRenderTabla() {
     });
 
     filtrados.sort((a, b) => {
-        const fechaA = new Date(a.fecha + "T00:00:00");
-        const fechaB = new Date(b.fecha + "T00:00:00");
+        const fechaA = new Date((a.fecha || "1970-01-01") + "T00:00:00");
+        const fechaB = new Date((b.fecha || "1970-01-01") + "T00:00:00");
         if (fechaB - fechaA !== 0) return fechaB - fechaA;
-        return b.hora.localeCompare(a.hora);
+        const ha = (a.hora != null ? String(a.hora) : "");
+        const hb = (b.hora != null ? String(b.hora) : "");
+        return hb.localeCompare(ha);
     });
 
     filtrados.forEach((item, index) => {
@@ -4864,11 +5017,37 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
     const btnGuardar = document.getElementById('btnGuardarRegistro'); 
     const formCard = document.getElementById('contenedorForm');
     
+    // 🛡️ Limpieza preventiva: campos ocultos NUNCA deben bloquear el submit
+    const nogTmp = document.getElementById('nogInput');
+    if (nogTmp && !modoPedidoActivo) nogTmp.removeAttribute('required');
+    if (typeof ajustarValidacionesInputs === 'function') ajustarValidacionesInputs();
+    
     // --- ESCUDO ANTI-DUPLICADOS ---
-    if (btnGuardar.disabled) return; 
+    if (btnGuardar && btnGuardar.disabled) return; 
 
     // 🔥 BLINDAJE INMEDIATO
     guardandoAhora = true;
+
+    // --- Validación manual (form tiene novalidate para no trabar por campos ocultos) ---
+    if (!modoPedidoActivo) {
+        const camposVisibles = [
+            { id: 'orden', label: 'No. de Orden' },
+            { id: 'fecha', label: 'Fecha' },
+            { id: 'institucion', label: 'Institución' },
+            { id: 'persona', label: 'Persona que recibió' }
+        ];
+        for (const c of camposVisibles) {
+            const el = document.getElementById(c.id);
+            if (el && !String(el.value || '').trim()) {
+                el.classList.add('campo-vacio-azul');
+                el.focus();
+                setTimeout(() => el.classList.remove('campo-vacio-azul'), 1500);
+                if (typeof showToast === 'function') showToast('⚠️ Completa el campo: ' + c.label, true);
+                guardandoAhora = false;
+                return;
+            }
+        }
+    }
 
     // --- EL FRENO DE MANO AQUÍ ---    
     const num = document.getElementById('orden').value;
@@ -5047,31 +5226,65 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         const inputProd = document.getElementById('inputProducto');
         if (inputProd) inputProd.value = ""; 
 
-        document.getElementById('btnProducto').classList.remove('lleno');
-        document.getElementById('btnProducto').innerText = "📝";
-        aplicarColorUnico(document.getElementById('responsableSelect'));
+        const btnProd = document.getElementById('btnProducto');
+        if (btnProd) {
+            btnProd.classList.remove('lleno');
+            btnProd.innerText = "📝";
+        }
+        if (typeof aplicarColorUnico === "function") {
+            aplicarColorUnico(document.getElementById('responsableSelect'));
+        }
         
         articulosPedidoActual = [];
         if (typeof renderizarTablaArticulos === "function") renderizarTablaArticulos();
 
+        // 🛡️ Quitar required fantasma del NOG (evita bloqueo silencioso del siguiente guardado)
+        const nogClear = document.getElementById('nogInput');
+        if (nogClear) {
+            nogClear.removeAttribute('required');
+            nogClear.value = '';
+        }
+
         if (modoPedidoActivo) {
-            document.getElementById('switchModoPedido').checked = false;
+            const sw = document.getElementById('switchModoPedido');
+            if (sw) sw.checked = false;
             modoPedidoActivo = false; 
             if (typeof alternarModoPedido === "function") alternarModoPedido();
+        } else {
+            // Asegurar Paso 1 visible y botón listo para la siguiente OC
+            pasoActual = 1;
+            const p1 = document.getElementById('seccionPaso1');
+            if (p1) p1.style.display = 'block';
+            for (let i = 2; i <= 3; i++) {
+                const s = document.getElementById('seccionPaso' + i);
+                if (s) s.style.display = 'none';
+            }
+            if (btnGuardar) btnGuardar.style.display = 'block';
+            if (typeof validarBloqueoBotonVerde === "function") validarBloqueoBotonVerde();
+            if (typeof ajustarValidacionesInputs === "function") ajustarValidacionesInputs();
         }
 
     } catch (err) {
         console.error("Error crítico en la interfaz:", err);
     } finally {
-        // El freno de 2 segundos para reactivar el botón se queda aquí firme
-        setTimeout(() => {
+        // Reactivar botón: un intento inmediato + refuerzo a los 2s
+        const reactivarBoton = () => {
             if (formCard) formCard.classList.remove('resaltar-actualizacion');
-            btnGuardar.disabled = false;
-            btnGuardar.innerText = "GUARDAR REGISTRO";
-            btnGuardar.style.opacity = "1";
-            btnGuardar.style.cursor = "pointer";
-            guardandoAhora = false; 
-        }, 2000); 
+            if (btnGuardar) {
+                btnGuardar.disabled = false;
+                btnGuardar.innerText = "GUARDAR REGISTRO";
+                btnGuardar.style.opacity = "1";
+                btnGuardar.style.cursor = "pointer";
+                btnGuardar.style.display = "block";
+            }
+            guardandoAhora = false;
+            if (typeof validarBloqueoBotonVerde === "function" && !modoPedidoActivo) {
+                validarBloqueoBotonVerde();
+            }
+        };
+        // Libre casi de inmediato para la siguiente orden (anti doble-clic corto)
+        setTimeout(reactivarBoton, 600);
+        setTimeout(reactivarBoton, 2000);
     }
 };
 
@@ -5115,6 +5328,47 @@ function save() {
     }
 }
 
+async function traerDatosDesdeNube(opciones) {
+    const opts = opciones || {};
+    const forzar = !!opts.forzar; // si true, acepta reemplazo aunque local tenga datos
+    const r = await fetch(URL_SCRIPT, { method: 'GET', redirect: 'follow', cache: 'no-store' });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+
+    const texto = await r.text();
+    let d;
+    try {
+        d = JSON.parse(texto);
+    } catch (parseErr) {
+        // A veces Apps Script envuelve JSON; intentar extraer
+        const m = texto && texto.match(/\[[\s\S]*\]/);
+        if (m) d = JSON.parse(m[0]);
+        else throw new Error("Respuesta no es JSON válido");
+    }
+
+    if (!Array.isArray(d)) throw new Error("La nube no devolvió un array");
+
+    if (d.length === 0 && !forzar && Array.isArray(datosLocales) && datosLocales.length > 0) {
+        return { ok: true, datos: datosLocales, conservado: true, mensaje: "Nube vacía: se conservan datos locales" };
+    }
+
+    let datosMezclados = d.map(ordenGoogle => {
+        const local = (datosLocales || []).find(l => String(l.orden) === String(ordenGoogle.orden));
+        if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) return local;
+        return ordenGoogle;
+    });
+
+    if (!forzar) {
+        (datosLocales || []).forEach(local => {
+            const existe = datosMezclados.some(g => String(g.orden) === String(local.orden));
+            if (!existe && local.miCambioReciente && (Date.now() - local.miCambioReciente < 300000)) {
+                datosMezclados.unshift(local);
+            }
+        });
+    }
+
+    return { ok: true, datos: datosMezclados, conservado: false, mensaje: "OK " + datosMezclados.length };
+}
+
 async function sincronizar() {
     if (filtroHistoricoActivo) {
         mostrarBannerHistorico();
@@ -5123,36 +5377,65 @@ async function sincronizar() {
 
     const btn = document.getElementById('btnSync');
     if (!btn) return;
+    // 🛡️ Anti multi-clic: si ya está trabajando, ignorar
+    if (btn.disabled || btn.dataset.syncing === '1') return;
+    btn.dataset.syncing = '1';
     btn.innerText = "Sincronizando...";
     btn.disabled = true;
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.7';
     try {
-        const r = await fetch(URL_SCRIPT);
-        const d = await r.json();
-        if(Array.isArray(d)) { 
-            const datosMezclados = d.map(ordenGoogle => {
-                const local = datosLocales.find(l => l.orden.toString() === ordenGoogle.orden.toString());
-                if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
-                    return local; 
-                }
-                return ordenGoogle;
-            });
+        // Si la tabla está vacía, forzar recarga limpia desde la nube
+        const localVacio = !Array.isArray(datosLocales) || datosLocales.length === 0;
+        const resultado = await traerDatosDesdeNube({ forzar: localVacio });
 
-            datosLocales = datosMezclados; 
-            save();
+        datosLocales = resultado.datos;
+        localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
+        if (typeof renderTable === 'function') renderTable();
+        if (typeof actualizarContadores === 'function') actualizarContadores();
 
-            btn.classList.add('animar-pulso');
-            setTimeout(() => {
-                btn.classList.remove('animar-pulso');
-                btn.innerText = "Sincronizar";
-                btn.disabled = false;
-            }, 1000);
+        if (resultado.conservado) {
+            showToast("⚠️ " + resultado.mensaje, "warning");
+        } else {
+            showToast("✅ Sincronizado: " + datosLocales.length + " órdenes", false);
         }
+        btn.classList.add('animar-pulso');
+        setTimeout(() => btn.classList.remove('animar-pulso'), 1000);
     } catch(e) { 
-        showToast("Error de conexión", true); 
+        console.error("Error sincronizar:", e);
+        const localCount = Array.isArray(datosLocales) ? datosLocales.length : 0;
+        if (localCount === 0) {
+            showToast("📡 Sin conexión y sin datos locales. Revisa internet o abre la app por HTTP (no file://).", true);
+        } else {
+            showToast("📡 Error de conexión. Se mantienen " + localCount + " órdenes locales.", true);
+        }
+    } finally {
         btn.innerText = "Sincronizar";
         btn.disabled = false;
+        btn.dataset.syncing = '0';
+        btn.style.pointerEvents = '';
+        btn.style.opacity = '';
     }
 }
+
+// Recuperación manual: borra caché local vacía/corrupta y baja todo de Sheets
+async function forzarRecargaDesdeSheets() {
+    try {
+        showToast("🔄 Forzando recarga desde Sheets...", "warning");
+        const resultado = await traerDatosDesdeNube({ forzar: true });
+        datosLocales = resultado.datos || [];
+        localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
+        if (typeof renderTable === 'function') renderTable();
+        if (typeof actualizarContadores === 'function') actualizarContadores();
+        showToast("✅ Recargadas " + datosLocales.length + " órdenes desde Sheets", false);
+        return true;
+    } catch (e) {
+        console.error(e);
+        showToast("📡 No se pudo hablar con Sheets. ¿Internet / bloqueo de Google?", true);
+        return false;
+    }
+}
+window.forzarRecargaDesdeSheets = forzarRecargaDesdeSheets;
 // --- SINCRONIZACION SILENCIOSA INTELIGENTE ---
 async function sincronizarSilencioso() {
 if (filtroHistoricoActivo) return;
@@ -5164,59 +5447,353 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     console.log("⏸️ Sincronización pausada: El usuario tiene el modal de advertencia abierto.");
     return;
 }
-    // Quitamos el bloqueo global para que los cambios de Danna sigan entrando
     try {
         const r = await fetch(URL_SCRIPT);
+        if (!r.ok) throw new Error("HTTP " + r.status);
         const d = await r.json();
         
-        if(Array.isArray(d)) { 
-            // 🛡️ REGLA DE MEZCLA: Comparamos lo que viene de Google vs lo que tengo yo
-            const datosMezclados = d.map(ordenGoogle => {
-                const local = datosLocales.find(l => l.orden === ordenGoogle.orden);
-                
-                // Si yo toqué esta orden hace menos de 15 segundos (15000 ms), 
-                // mi cel manda y se queda con la versión local.
-                if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
-                    return local; 
-                }
-                // Si no la he tocado, acepto lo que diga Google (cambios de Danna o Axel)
-                return ordenGoogle;
-            });
+        if(!Array.isArray(d)) {
+            console.log("Auto-sync: respuesta no es array, se ignora.");
+            return;
+        }
 
-            // Solo renderizamos si de verdad hay algo nuevo que mostrar
-            if (JSON.stringify(datosMezclados) !== JSON.stringify(datosLocales)) {
-                datosLocales = datosMezclados; 
-                localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
-                renderTable(); 
-                console.log("Sincronización inteligente completada.");
+        // 🛡️ NUNCA sobrescribir con vacío si hay datos locales
+        if (d.length === 0 && Array.isArray(datosLocales) && datosLocales.length > 0) {
+            console.log("Auto-sync: nube vacía, se conservan datos locales (" + datosLocales.length + ").");
+            return;
+        }
+
+        const datosMezclados = d.map(ordenGoogle => {
+            const local = datosLocales.find(l => String(l.orden) === String(ordenGoogle.orden));
+            if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
+                return local; 
             }
+            return ordenGoogle;
+        });
+
+        // Conservar órdenes locales muy recientes que aún no aparecen en la nube
+        datosLocales.forEach(local => {
+            const existe = datosMezclados.some(g => String(g.orden) === String(local.orden));
+            if (!existe && local.miCambioReciente && (Date.now() - local.miCambioReciente < 300000)) {
+                datosMezclados.unshift(local);
+            }
+        });
+
+        if (JSON.stringify(datosMezclados) !== JSON.stringify(datosLocales)) {
+            datosLocales = datosMezclados; 
+            localStorage.setItem('alpromeh_vFinal_v10', JSON.stringify(datosLocales));
+            renderTable(); 
+            console.log("Sincronización inteligente completada.");
         }
     } catch(e) { 
-        console.log("Auto-sync falló o no hay internet");
+        console.log("Auto-sync falló o no hay internet (datos locales intactos)");
     }
 }
         function showToast(msj, tipo) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msj;
-toast.style.background = ""; // Resetea el color inline anterior
-    toast.className = '';        // Limpia las clases previas
-    
-    if (tipo === true) {
-        toast.style.background = "#dc2626"; // Rojo error
-        toast.style.display = "block";
-    } else if (tipo === "warning") {
-        toast.className = "warning"; // Aplica el amarillo del CSS
-        toast.style.display = "block"; // Asegura que se vea
-    } else {
-                toast.style.background = "#10b981"; // Verde éxito
-                toast.style.display = "block";
+            // Centro de notificaciones: el hámster habla (ya no el cuadro verde/rojo)
+            let icon = "🐹";
+            let kind = "ok";
+            let mood = "normal";
+            let duration = 4000;
+            let confetti = false;
+            let msg = (msj == null ? "" : String(msj));
+
+            if (tipo === true) {
+                icon = "⚠️";
+                kind = "error";
+                mood = "worried";
+                duration = 5000;
+            } else if (tipo === "warning") {
+                icon = "⚙️";
+                kind = "warning";
+                mood = "worried";
+                duration = 4500;
+            } else {
+                if (/shhh/i.test(msg)) { icon = "🤫"; kind = "ok"; mood = "secret"; }
+                else if (/anulad/i.test(msg)) { icon = "🚫"; kind = "error"; mood = "worried"; }
+                else if (/recuperad/i.test(msg)) { icon = "✅"; kind = "ok"; mood = "happy"; }
+                else if (/\blista\b/i.test(msg)) { icon = "📦"; kind = "ok"; mood = "happy"; }
+                else if (/guardad/i.test(msg)) { icon = "🎉"; kind = "ok"; mood = "happy"; confetti = true; duration = 5200; }
+                else if (/actualizad|correctamente/i.test(msg)) { icon = "✅"; kind = "ok"; mood = "happy"; }
+                else if (/error|conexión|conexion/i.test(msg)) { icon = "📡"; kind = "error"; mood = "worried"; duration = 5000; }
+                else if (/institución|institucion/i.test(msg)) { icon = "✏️"; kind = "ok"; mood = "thinking"; }
+                else if (/artículo|articulo|producto/i.test(msg)) { icon = "📋"; kind = "warning"; mood = "worried"; duration = 4500; }
+                else if (/modo claro/i.test(msg)) { icon = "☀️"; kind = "ok"; mood = "normal"; }
+                else if (/modo oscuro/i.test(msg)) { icon = "🌙"; kind = "ok"; mood = "sleep"; }
+                else if (/compra|gracias por tu/i.test(msg)) { icon = "🛍️"; kind = "ok"; mood = "happy-closed"; duration = 5000; }
             }
-            
-            setTimeout(() => { 
-                toast.style.display = "none"; 
-                toast.className = "";
-            }, 3000);
+
+            // Evitar emoji duplicado: el icono va aparte, el texto limpio
+            msg = msg.replace(/^(?:\s*(?:[\u{1F300}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|\uFE0F|\u200D|⚠️|✅|❌|🚫|📡|⚙️|📋|✏️|🎉|📦|🤫|☀️|🌙|🚀|🔥|💪|🔍|⚡|📖|💡|🔔|🛍️|●))+\s*/gu, '').trim();
+            // También quitar emojis sueltos al final tipo "☀️ texto ☀️"
+            msg = msg.replace(/(?:\s*(?:☀️|🌙|🎉|✅|⚠️))+\s*$/g, '').trim() || msg;
+
+            if (typeof window.petNotify === "function") {
+                window.petNotify(msg, icon, duration, kind, { mood: mood, confetti: confetti });
+            } else if (typeof notify === "function") {
+                notify(msg, icon, duration, kind);
+            }
         }
+
+        // Reemplazo amable de alproAlert() nativo → hámster (sin modal feo de Chrome)
+        function alproAlert(msg) {
+            const t = String(msg == null ? "" : msg).replace(/\n+/g, " ").trim();
+            if (typeof showToast === "function") showToast(t, true);
+            else alert(t);
+        }
+        window.alproAlert = alproAlert;
+
+
+/* =========================================================
+   🐹 MASCOTA HÁMSTER — Centro de notificaciones ALPROMEH
+   ========================================================= */
+(function initHamsterMascota() {
+  const tips = [
+    { icon: "⚡", text: "Prioriza las órdenes en rojo: van con atraso de 2+ días." },
+    { icon: "🔥", text: "¡Buena racha! Sigue al día con los despachos." },
+    { icon: "🔍", text: "En el buscador puedes filtrar por orden, institución o producto." },
+    { icon: "📋", text: "Antes de guardar, confirma que el No. de Orden sea el correcto." },
+    { icon: "📝", text: "Modo normal: usa el lápiz 📝 para cargar el producto." },
+    { icon: "📄", text: "Hoja de pedido: activa el switch y completa los 3 pasos." },
+    { icon: "👤", text: "Cambia el responsable desde el select de cada fila del historial." },
+    { icon: "📦", text: "Marca LISTO solo cuando Axel ya despachó el pedido." },
+    { icon: "🚫", text: "Clic derecho en una fila para anular (pide motivo)." },
+    { icon: "📅", text: "El filtro de fechas es para consultar historial, no borra nada." },
+    { icon: "🔄", text: "Si la tabla se ve rara, un solo clic en Sincronizar basta." },
+    { icon: "🪙", text: "Cada orden nueva te suma Alprocoins para la tienda." },
+    { icon: "🌙", text: "Doble clic en mí: cambio entre modo claro y oscuro." },
+    { icon: "💪", text: "Revisa 'En Atraso' al iniciar el día: ahí está lo urgente." }
+  ];
+
+  let hideTimeout = null;
+  let moodTimeout = null;
+  let triviaClickHandler = null;
+  let clickTimer = null;
+  let clickCount = 0;
+
+  function getEls() {
+    return {
+      bubble: document.getElementById('hamsterBubble'),
+      bubbleText: document.getElementById('bubbleText'),
+      bubbleIcon: document.getElementById('bubbleIcon'),
+      avatar: document.getElementById('hamsterAvatar'),
+      mouth: document.getElementById('hamsterMouth')
+    };
+  }
+
+  function isDarkTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ||
+           document.body.classList.contains('dark-mode');
+  }
+
+  function setHamsterMood(mood) {
+    const els = getEls();
+    if (!els.avatar) return;
+    els.avatar.classList.remove(
+      'hamster-mood-happy', 'hamster-mood-happy-closed', 'hamster-mood-worried',
+      'hamster-mood-thinking', 'hamster-mood-sleep', 'hamster-mood-secret'
+    );
+    const map = {
+      'happy': 'hamster-mood-happy',
+      'happy-closed': 'hamster-mood-happy-closed',
+      'worried': 'hamster-mood-worried',
+      'thinking': 'hamster-mood-thinking',
+      'sleep': 'hamster-mood-sleep',
+      'secret': 'hamster-mood-secret'
+    };
+    if (map[mood]) els.avatar.classList.add(map[mood]);
+
+    // Boca según humor
+    if (els.mouth) {
+      if (mood === 'happy' || mood === 'happy-closed') {
+        els.mouth.setAttribute('d', 'M 52 65 Q 60 74 68 65');
+      } else if (mood === 'worried') {
+        els.mouth.setAttribute('d', 'M 52 70 Q 60 66 68 70');
+      } else if (mood === 'thinking') {
+        els.mouth.setAttribute('d', 'M 54 68 Q 60 68 66 68');
+      } else if (mood === 'sleep' || mood === 'secret') {
+        els.mouth.setAttribute('d', 'M 54 67 Q 60 71 66 67');
+      } else {
+        els.mouth.setAttribute('d', 'M 54 66 Q 60 70 66 66');
+      }
+    }
+
+    clearTimeout(moodTimeout);
+    // Mantener gorrito si el tema es oscuro
+    if (mood !== 'sleep' && isDarkTheme()) {
+      moodTimeout = setTimeout(function() {
+        setHamsterMood('sleep');
+      }, 2800);
+    } else if (mood !== 'normal' && mood !== 'sleep') {
+      moodTimeout = setTimeout(function() {
+        setHamsterMood(isDarkTheme() ? 'sleep' : 'normal');
+      }, 2800);
+    }
+  }
+
+  function lanzarConfetti() {
+    const els = getEls();
+    if (!els.avatar) return;
+    const rect = els.avatar.getBoundingClientRect();
+    const colores = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#eab308', '#8b5cf6'];
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('div');
+      p.className = 'hamster-confetti-piece';
+      p.style.left = (rect.left + rect.width / 2) + 'px';
+      p.style.top = (rect.top + 10) + 'px';
+      p.style.background = colores[i % colores.length];
+      const ang = (Math.PI * 2 * i) / 14;
+      const dist = 40 + Math.random() * 50;
+      p.style.setProperty('--cx', (Math.cos(ang) * dist) + 'px');
+      p.style.setProperty('--cy', (-30 - Math.random() * 50) + 'px');
+      document.body.appendChild(p);
+      setTimeout(function() { p.remove(); }, 1200);
+    }
+  }
+
+  function notify(text, icon, duration, kind, extras) {
+    const els = getEls();
+    if (!els.bubble || !els.bubbleText) return;
+
+    extras = extras || {};
+    icon = icon || "🐹";
+    duration = typeof duration === "number" ? duration : 4000;
+    kind = kind || "ok";
+    const mood = extras.mood || "normal";
+
+    // Texto limpio: un solo emoji en #bubbleIcon, nunca duplicado en el texto
+    let clean = String(text == null ? "" : text);
+    clean = clean.replace(/[\u{1F300}-\u{1FAFF}]|[\u{2600}-\u{27BF}]|\uFE0F|\u200D/gu, '');
+    clean = clean.replace(/[⚠️✅❌🚫📡⚙️📋✏️🎉📦🤫☀️🌙🚀🔥💪🔍⚡📖💡🔔🛍️😴●]+/g, '');
+    clean = clean.replace(/\s{2,}/g, ' ').trim();
+    if (!clean) clean = String(text || "").replace(/^[\s\S]*?([A-Za-zÁÉÍÓÚáéíóú¡¿0-9].*)$/u, '$1').trim() || 'Listo';
+
+    els.bubbleText.textContent = clean;
+    if (els.bubbleIcon) els.bubbleIcon.textContent = icon;
+
+    els.bubble.classList.remove('tipo-error', 'tipo-warning', 'tipo-ok', 'tipo-trivia');
+    if (kind === 'error') els.bubble.classList.add('tipo-error');
+    else if (kind === 'warning') els.bubble.classList.add('tipo-warning');
+    else if (kind === 'trivia') els.bubble.classList.add('tipo-trivia');
+    else els.bubble.classList.add('tipo-ok');
+
+    els.bubble.classList.add('visible');
+
+    if (els.avatar) {
+      els.avatar.classList.remove('pop-anim');
+      void els.avatar.offsetWidth;
+      els.avatar.classList.add('pop-anim');
+    }
+
+    setHamsterMood(mood);
+    if (extras.confetti) lanzarConfetti();
+
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(function() {
+      els.bubble.classList.remove('visible');
+      if (triviaClickHandler) {
+        els.bubble.removeEventListener('click', triviaClickHandler);
+        triviaClickHandler = null;
+        els.bubble.style.cursor = '';
+      }
+    }, duration);
+  }
+
+  window.petNotify = function(text, icon, duration, kind, extras) {
+    notify(text, icon, duration, kind, extras);
+  };
+  window.notify = window.petNotify;
+
+  window.petSuccess = function(numOrden) {
+    const n = numOrden != null ? String(numOrden) : "";
+    notify(n ? "¡Excelente! Orden #" + n + " registrada correctamente." : "¡Listo! Guardado con éxito.", "🎉", 5200, "ok", { mood: "happy", confetti: true });
+  };
+
+  window.petWarning = function(msg) {
+    notify(msg || "¡Ojo! Te falta llenar un campo obligatorio.", "⚠️", 4500, "warning", { mood: "worried" });
+  };
+
+  window.petCompra = function() {
+    notify("¡Gracias por tu compra!", "🛍️", 5000, "ok", { mood: "happy-closed", confetti: true });
+  };
+
+  window.petTriviaInvite = function(titulo, texto) {
+    const els = getEls();
+    const t = titulo || "¡Reto del Día!";
+    const body = texto || "Pon a prueba tu conocimiento en 1 minuto. ¡Toca aquí!";
+    notify(t + " — " + body, "📖", 12000, "trivia", { mood: "thinking" });
+
+    if (els.bubble) {
+      if (triviaClickHandler) els.bubble.removeEventListener('click', triviaClickHandler);
+      triviaClickHandler = function() {
+        if (typeof irATrivia === "function") irATrivia();
+        else if (typeof abrirTrivia === "function") abrirTrivia();
+      };
+      els.bubble.addEventListener('click', triviaClickHandler);
+      els.bubble.style.cursor = "pointer";
+    }
+  };
+
+  function handleSingleClick() {
+    const tip = tips[Math.floor(Math.random() * tips.length)];
+    notify(tip.text, tip.icon, 4500, "ok", { mood: "happy" });
+  }
+
+  function handleDoubleClickTheme() {
+    if (typeof toggleTheme === "function") {
+      toggleTheme();
+    } else {
+      const body = document.documentElement;
+      const nuevo = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', nuevo);
+    }
+    // Esperar un tick a que data-theme se aplique
+    setTimeout(function() {
+      if (isDarkTheme()) {
+        notify("Modo Oscuro activado", "😴", 3500, "ok", { mood: "sleep" });
+        setHamsterMood('sleep');
+      } else {
+        notify("Modo Claro activado", "☀️", 3500, "ok", { mood: "happy" });
+        setHamsterMood('normal');
+      }
+    }, 30);
+  }
+
+  function bindAvatarClicks() {
+    const els = getEls();
+    if (!els.avatar) return;
+    els.avatar.addEventListener('click', function(e) {
+      clickCount++;
+      if (clickCount === 1) {
+        clickTimer = setTimeout(function() {
+          clickCount = 0;
+          handleSingleClick();
+        }, 260);
+      } else if (clickCount === 2) {
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        handleDoubleClickTheme();
+      }
+    });
+  }
+
+  window.onHamsterClick = handleSingleClick; // por si algo externo lo llama
+
+  document.addEventListener('DOMContentLoaded', function() {
+    bindAvatarClicks();
+    // Gorrito si arranca en oscuro
+    if (isDarkTheme()) setHamsterMood('sleep');
+    setTimeout(function() {
+      notify("¡Sistema listo! Registremos las órdenes de hoy.", "🚀", 4200, "ok", { mood: "happy" });
+    }, 1300);
+  });
+
+  if (document.readyState !== 'loading') {
+    bindAvatarClicks();
+    if (isDarkTheme()) setHamsterMood('sleep');
+  }
+})();
+
 
 // --- LÓGICA DE ALPROGAMES (Doble Clic) ---
 document.getElementById('triggerHuevo').addEventListener('dblclick', () => {
@@ -5336,7 +5913,7 @@ setInterval(chequearActualizacionAutomatica, 120000);
 // Primera ejecución al cargar para tener la huella inicial
 chequearActualizacionAutomatica();
 
-renderizarTiendaAlpro();
+if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
 
 // --- FUNCIÓN PARA MOSTRAR/OCULTAR FORMULARIO CON EFECTOS ---
 function toggleForm() {
@@ -5373,7 +5950,7 @@ function toggleForm() {
 // === MOTOR DE COMPILACIÓN E IMPRESIÓN LIMPIA (VERSIÓN HORIZONTAL PREMIUM) ===
 function ejecutarImpresionReporte() {
     if (ordenesSeleccionadas.length === 0) {
-        alert("⚠️ Por favor, selecciona al menos una orden para generar el reporte.");
+        alproAlert("⚠️ Por favor, selecciona al menos una orden para generar el reporte.");
         return;
     }
 
@@ -6524,7 +7101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function abrirTrivia() {
     if (typeof bancoDePreguntas === 'undefined' || bancoDePreguntas.length === 0) {
-        alert("Error: No se pudieron cargar las preguntas.");
+        alproAlert("Error: No se pudieron cargar las preguntas.");
         return;
     }
 
@@ -6532,7 +7109,7 @@ function abrirTrivia() {
     const diaSemana = hoy.getDay();
     
     if (diaSemana === 0 || diaSemana === 6) {
-        alert("¡Es fin de semana, bro! A descansar, el bootcamp regresa el lunes.");
+        alproAlert("¡Es fin de semana, bro! A descansar, el bootcamp regresa el lunes.");
         return;
     }
 
@@ -6541,7 +7118,7 @@ function abrirTrivia() {
     const fechaHoyStr = hoy.toLocaleDateString();
 
     if (yaRespondioHoy === fechaHoyStr) {
-        alert("¡Ya respondiste el reto de hoy, mi bro! Guarda energías para mañana. 🔥");
+        alproAlert("¡Ya respondiste el reto de hoy, mi bro! Guarda energías para mañana. 🔥");
         return; 
     }
 
@@ -7071,8 +7648,22 @@ function cerrarCertificado() {
 window.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 ALPROMEH Iniciando blindaje de arranque...");
     
-    // Sincroniza silenciosamente en el milisegundo que se abre la app
-    await sincronizarSilencioso(); 
+    // Si localStorage quedó vacío/corrupto, intentar recuperar de la nube de inmediato
+    try {
+        if (!Array.isArray(datosLocales) || datosLocales.length === 0) {
+            console.log("Local vacío → recarga forzada desde Sheets");
+            if (typeof forzarRecargaDesdeSheets === 'function') {
+                await forzarRecargaDesdeSheets();
+            } else {
+                await sincronizarSilencioso();
+            }
+        } else {
+            await sincronizarSilencioso();
+        }
+    } catch (e) {
+        console.warn("Arranque: no se pudo sincronizar", e);
+        if (typeof renderTable === 'function') renderTable();
+    }
     
     // Inicializa tus contadores del día
     if (typeof actualizarContadores === 'function') {
@@ -7111,38 +7702,19 @@ window.addEventListener('DOMContentLoaded', async () => {
             const tituloGancho = document.getElementById('titulo-gancho');
             if (tituloGancho) tituloGancho.innerText = ganchoDeHoy;
 
-            let burbuja = document.getElementById('burbuja-chisme');
-            if (burbuja) {
-                burbuja.classList.add('mostrar'); 
-
-                //SENSOR DE MOUSE (Detecta si estás encima)
-                let mouseEncima = false;
-                
-                burbuja.onmouseenter = function() {
-                    mouseEncima = true; 
-                };
-                
-                burbuja.onmouseleave = function() {
-                    mouseEncima = false; 
-                };
-
-                // TEMPORIZADOR INTELIGENTE A LOS 7 SEGUNDOS
-                setTimeout(function() {
-    if (mouseEncima) {
-        burbuja.onmouseleave = function() {
-            if (typeof removerBurbuja === 'function') removerBurbuja(); 
-            // 🛡️ Se ocultó sola tras quitar el mouse, renovamos el colchón de 3 días
-            let hoy = new Date();
-            localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
-        };
-    } else {
-        if (typeof removerBurbuja === 'function') removerBurbuja();
-        // 🛡️ El usuario la ignoró por completo, renovamos el colchón de 3 días
-        let hoy = new Date();
-        localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
-    }
-}, 7000);
+            // 🐹 La invitación de trivia ahora la dice el hámster (más tiempo, mismo trigger de 3 días hábiles)
+            if (typeof window.petTriviaInvite === "function") {
+                window.petTriviaInvite("¡Reto del Día! 💡", "Llevas varios días sin jugar. ¡Toca el mensaje o el libro 📖!");
+            } else {
+                // Fallback por si el hámster aún no cargó
+                let burbuja = document.getElementById('burbuja-chisme');
+                if (burbuja) burbuja.classList.add('mostrar');
             }
+            // Renovar colchón de fecha igual que antes (para no spamear)
+            setTimeout(function() {
+                let hoy = new Date();
+                localStorage.setItem('ultima_trivia_fecha', hoy.toISOString());
+            }, 12000);
         }
     }
 
@@ -7322,10 +7894,22 @@ function alternarModoPedido() {
             // 🚀 EL ARREGLO CLAVE: Forzamos a que el botón de Guardar reaparezca en el formulario clásico
             if (btnGuardar) {
                 btnGuardar.style.display = 'block';
+                btnGuardar.disabled = false;
+                btnGuardar.style.opacity = '1';
+                btnGuardar.style.cursor = 'pointer';
+            }
+            
+            // 🛡️ Limpiar required fantasma del NOG al salir de hoja de pedido
+            const nogOff = document.getElementById('nogInput');
+            if (nogOff) {
+                nogOff.removeAttribute('required');
+                nogOff.value = '';
             }
             
             pasoActual = 1;
+            guardandoAhora = false;
             validarBloqueoBotonVerde();
+            if (typeof ajustarValidacionesInputs === 'function') ajustarValidacionesInputs();
         }, 200);
     }
 }
@@ -7446,6 +8030,12 @@ function ajustarValidacionesInputs() {
             }
         }
     });
+    // 🛡️ CRÍTICO: si NO estamos en hoja de pedido, el NOG no puede quedar required
+    // (si está oculto con required, el navegador bloquea el submit ¡sin mensaje!)
+    const inputNog = document.getElementById('nogInput');
+    if (inputNog && !modoPedidoActivo) {
+        inputNog.removeAttribute('required');
+    }
 }
 
 // 📑 FUNCIÓN DE FORMATEO ESTÉTICO DE PRODUCTOS PARA LA LISTA (ALPROMEH - EDICIÓN PREMIUM)
@@ -7554,7 +8144,7 @@ function agregarArticuloATabla() {
 
     // Validación premium para que no metan datos vacíos o rotos
     if (!desc || isNaN(cant) || cant <= 0 || isNaN(precio) || precio < 0) {
-        alert("⚠️ Por favor, ingresa al menos Descripción, Cantidad y Precio válidos.");
+        alproAlert("⚠️ Por favor, ingresa al menos Descripción, Cantidad y Precio válidos.");
         return;
     }
 
@@ -7690,8 +8280,8 @@ function obtenerProductosDesdeTablas() {
         datosLocales.forEach(item => {
             
             // 1. Caso Producto Normal (Formato clásico de texto)
-            if (item.producto && item.producto.trim()) {
-                let prodLimpio = item.producto.trim();
+            if (item.producto != null && String(item.producto).trim()) {
+                let prodLimpio = String(item.producto).trim();
                 if (!productosEncontrados.includes(prodLimpio)) {
                     productosEncontrados.push(prodLimpio);
                 }
@@ -8317,7 +8907,7 @@ function toggleTiendaAlpro() {
 
         tiendaCargadaPorPrimeraVez = true;
         actualizarMarcadoresVisuales();
-        renderizarTiendaAlpro();
+        if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
     } else {
         cuerpo.classList.remove('tienda-unfold');
         cuerpo.classList.add('tienda-fold');
@@ -8415,7 +9005,7 @@ async function canjearAlproPin() {
     // 🛡️ Validar prefijo y formato
     const prefijo = partes[0];
     if (partes.length !== 4 || (prefijo !== 'ALPRO' && prefijo !== 'RACHA')) {
-        alert("⚠️ Formato de PIN incorrecto.");
+        alproAlert("⚠️ Formato de PIN incorrecto.");
         return;
     }
 
@@ -8427,13 +9017,13 @@ async function canjearAlproPin() {
     const firmaCorrecta = generarFirmaSencilla(valorParametro, textoAleatorio, PALABRA_SECRETA);
 
     if (firmaRecibida !== firmaCorrecta) {
-        alert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
+        alproAlert("❌ ¡Código inválido o alterado! Intenta de nuevo.");
         return;
     }
 
     let pinesUsados = JSON.parse(localStorage.getItem('alpro_pines_usados')) || [];
     if (pinesUsados.includes(pinIngresado)) {
-        alert("🚫 Este código ya fue canjeado en este equipo.");
+        alproAlert("🚫 Este código ya fue canjeado en este equipo.");
         return;
     }
 
@@ -8445,7 +9035,7 @@ async function canjearAlproPin() {
         const estadoPin = await responseCheck.text();
 
         if (estadoPin === "USADO") {
-            alert("🚫 Este código ya fue canjeado en otra computadora.");
+            alproAlert("🚫 Este código ya fue canjeado en otra computadora.");
             if (btn) btn.disabled = false;
             return;
         }
@@ -8494,7 +9084,7 @@ async function canjearAlproPin() {
                 pintarWidgetRacha();
             }
 
-            alert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio} y recuperaste tus ${rachaRestaurada} días de racha.`);
+            alproAlert(`🔥 ¡Racha Restaurada Con Éxito!\n\nSe restableció la fecha al ${dia}/${mes}/${anio} y recuperaste tus ${rachaRestaurada} días de racha.`);
         } else {
             // Acreditar Alprocoins
             const monedas = parseInt(valorParametro);
@@ -8518,7 +9108,7 @@ async function canjearAlproPin() {
                 crearTextoFlotanteMonedas(monedas);
             }
 
-            alert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
+            alproAlert(`🎉 ¡Canje Exitoso!\n\nSe han acreditado 🪙 ${monedas.toLocaleString('en-US')} Alprocoins a tu balance.`);
         }
 
         actualizarMarcadoresVisuales();
@@ -8527,7 +9117,7 @@ async function canjearAlproPin() {
 
     } catch (error) {
         console.error("Error de conexión:", error);
-        alert("⚠️ Error de red. Asegúrate de tener conexión a internet para validar tu PIN.");
+        alproAlert("⚠️ Error de red. Asegúrate de tener conexión a internet para validar tu PIN.");
     } finally {
         if (btn) btn.disabled = false;
     }
@@ -8539,12 +9129,12 @@ function agregarAlCarrito(item) {
     if (item.esUnico && reclamados.includes(item.id)) return;
 
     if (item.esUnico && carrito[item.id] >= 1) {
-        alert("Este artículo es único. No puedes agregar más de uno.");
+        alproAlert("Este artículo es único. No puedes agregar más de uno.");
         return;
     }
 
     carrito[item.id] = (carrito[item.id] || 0) + 1;
-    renderizarTiendaAlpro();
+    if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
 }
 
 function restarDelCarrito(id) {
@@ -8554,12 +9144,12 @@ function restarDelCarrito(id) {
             delete carrito[id];
         }
     }
-    renderizarTiendaAlpro();
+    if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
 }
 
 function vaciarCarrito() {
     carrito = {};
-    renderizarTiendaAlpro();
+    if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
 }
 
 function actualizarResumenBarraCarrito() {
@@ -8900,6 +9490,8 @@ function procesarCarrito() {
     actualizarMarcadoresVisuales();
     const capaTicket = document.getElementById('capaFondoTicket');
     if (capaTicket) capaTicket.style.display = 'flex';
+    // UX mascota (solo mensaje, no altera la compra)
+    if (typeof window.petCompra === "function") window.petCompra();
 }
 
 function imprimirTicketClonado() {
@@ -9085,7 +9677,7 @@ function restablecerFiltroDefault() {
         })
         .catch(error => {
             console.error("Error al restablecer rango por defecto:", error);
-            alert("❌ Hubo un error al restablecer el rango por defecto.");
+            alproAlert("❌ Hubo un error al restablecer el rango por defecto.");
 
             if (btnRestablecer) {
                 btnRestablecer.disabled = false;
@@ -9103,7 +9695,7 @@ function aplicarFiltroFechas() {
     const fechaHasta = document.getElementById('filtroFechaHasta').value;
 
     if (!fechaDesde || !fechaHasta) {
-        alert("⚠️ Por favor selecciona ambas fechas para filtrar.");
+        alproAlert("⚠️ Por favor selecciona ambas fechas para filtrar.");
         return;
     }
 
@@ -9158,7 +9750,7 @@ function aplicarFiltroFechas() {
         })
         .catch(error => {
             console.error("Error al consultar el historial por fecha:", error);
-            alert("❌ Hubo un error al consultar las fechas en Apps Script.");
+            alproAlert("❌ Hubo un error al consultar las fechas en Apps Script.");
 
             if (btnConsultar) {
                 btnConsultar.disabled = false;
@@ -9341,7 +9933,7 @@ async function validarYPasarAlPaso2() {
   const numOrden = inputOrden ? inputOrden.value.trim() : '';
   
   if (!numOrden) {
-    alert("Por favor ingresa un número de orden para continuar.");
+    alproAlert("Por favor ingresa un número de orden para continuar.");
     return;
   }
 
@@ -9415,7 +10007,7 @@ async function validarYPasarAlPaso2() {
         document.body.appendChild(modal);
         modal.style.setProperty('display', 'flex', 'important');
       } else {
-        alert("❌ No se encontró en el HTML el div id='modalOrdenExistente'");
+        alproAlert("❌ No se encontró en el HTML el div id='modalOrdenExistente'");
       }
 
     } else {
@@ -9432,7 +10024,7 @@ async function validarYPasarAlPaso2() {
       btnSiguiente.disabled = false;
       btnSiguiente.innerHTML = textoOriginal;
     }
-    alert("⚠️ Ocurrió un detalle al consultar la orden: " + error.message);
+    alproAlert("⚠️ Ocurrió un detalle al consultar la orden: " + error.message);
   }
 }
 
