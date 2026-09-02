@@ -5604,21 +5604,78 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
    ========================================================= */
 (function initHamsterMascota() {
   const tips = [
-    { icon: "⚡", text: "Prioriza las órdenes en rojo: van con atraso de 2+ días." },
-    { icon: "🔥", text: "¡Buena racha! Sigue al día con los despachos." },
-    { icon: "🔍", text: "En el buscador puedes filtrar por orden, institución o producto." },
-    { icon: "📋", text: "Antes de guardar, confirma que el No. de Orden sea el correcto." },
-    { icon: "📝", text: "Modo normal: usa el lápiz 📝 para cargar el producto." },
-    { icon: "📄", text: "Hoja de pedido: activa el switch y completa los 3 pasos." },
-    { icon: "👤", text: "Cambia el responsable desde el select de cada fila del historial." },
-    { icon: "📦", text: "Marca LISTO solo cuando Axel ya despachó el pedido." },
-    { icon: "🚫", text: "Clic derecho en una fila para anular (pide motivo)." },
-    { icon: "📅", text: "El filtro de fechas es para consultar historial, no borra nada." },
-    { icon: "🔄", text: "Si la tabla se ve rara, un solo clic en Sincronizar basta." },
-    { icon: "🪙", text: "Cada orden nueva te suma Alprocoins para la tienda." },
-    { icon: "🌙", text: "Doble clic en mí: cambio entre modo claro y oscuro." },
-    { icon: "💪", text: "Revisa 'En Atraso' al iniciar el día: ahí está lo urgente." }
-  ];
+  // Día a día
+  { icon: "⚡", text: "Ojo con las rojas: esas ya llevan más de 2 días." },
+  { icon: "☕", text: "Un café y revisamos lo urgente ¿si?" },
+  { icon: "🌅", text: "Buenos días. Hoy priorizamos lo que ya espera." },
+  { icon: "🎯", text: "Una orden a la vez. Tú puedes." },
+
+  // Registro
+  { icon: "📋", text: "Antes de guardar, échale un ojito al No. de Orden." },
+  { icon: "✏️", text: "Modo normal: el lápiz 📝 es para el producto." },
+  { icon: "📄", text: "Hoja de pedido: prende el switch y vamos paso a paso." },
+  { icon: "🛒", text: "En hoja de pedido, el sistema guarda lo que vas metiendo." },
+  { icon: "⚠️", text: "Si no guarda, casi seguro falta un campo." },
+  { icon: "🔢", text: "Sin número de orden no avanzamos." },
+  { icon: "✅", text: "¿Todo listo? Dale a guardar con confianza." },
+
+  // Historial / filas
+  { icon: "🔍", text: "El buscador te encuentra orden, institución o producto." },
+  { icon: "👤", text: "El responsable lo cambias en el select de cada fila." },
+  { icon: "📦", text: "LISTO solo cuando ya salió de bodega, ¿ok?" },
+  { icon: "🚫", text: "Clic derecho en la fila si hay que anular (con motivo)." },
+  { icon: "📅", text: "El filtro de fechas solo mira historial; no borra nada." },
+  { icon: "🧭", text: "¿Se te perdió una orden? Prueba usar el  buscador." },
+  { icon: "🏷️", text: "Los colores de fila te dicen quién la está llevando." },
+
+  // Sync / pantalla
+  { icon: "🔄", text: "Si la tabla se ve rara, un toque a Sincronizar y listo." },
+  { icon: "🖥️", text: "¿Pantalla en blanco? Respira… y sincroniza una vez." },
+  { icon: "✨", text: "Cuando la tabla se actualiza, yo también me alegro." },
+
+  // Mascota / tema / skins
+  { icon: "🌙", text: "Doble clic en mí y cambio el modo claro/oscuro." },
+  { icon: "🎨", text: "Clic derecho en mí: ahí están tus skins." },
+  { icon: "😴", text: "Modo oscuro = me pongo el gorrito. No es siesta, juro." },
+  { icon: "📎", text: "Clic en mí cuando quieras un tip rapidito." },
+  { icon: "👋", text: "Hola de nuevo. ¿En qué te ayudo hoy?" },
+
+  // Coins / tienda
+  { icon: "🪙", text: "Cada orden nueva te suma Alprocoins." },
+  { icon: "🛍️", text: "En la tienda hay antojos… y caritas nuevas para mí." },
+  { icon: "🎁", text: "50 alprocoins por una skin. Tu estilo, tu decisión." },
+  { icon: "🍱", text: "¿Tupper o gomitas? La tienda te espera." },
+
+  // Ánimo / tono amigo
+  { icon: "😊", text: "Vas bien. Si te trabas, aquí estoy." },
+  { icon: "🤗", text: "Gracias por lo que haces hoy. En serio, se aprecia." },
+  { icon: "🫶", text: "No tienes que recordarlo todo: para eso estoy yo." },
+  { icon: "📌", text: "Si me ignoras, igual te tiro un tip. Es mi hobby." },
+  { icon: "😄", text: "No soy un cartelito verde. Soy tu compa tierno." },
+  { icon: "🧠", text: "Duda rápida: clic en mí. Resolvemos al toque." },
+  { icon: "🚀", text: "Orden guardada, siguiente. Tú marcas el ritmo." },
+  { icon: "🧘", text: "Si el día se pone denso, prioriza y respira." },
+  { icon: "🎧", text: "Pon tu playlist y vamos orden por orden." },
+  { icon: "🛠️", text: "¿Algo falló? Revisa el campo en rojo y reintentamos." },
+  { icon: "📬", text: "Cuando haya aviso importante, te lo digo aquí." },
+  { icon: "🤫", text: "Tip secreto: el buscador también cacha texto del producto." },
+  { icon: "🎢", text: "Días pesados pasan. Las rojas, una por una." },
+  { icon: "🌟", text: "Haces un buen trabajo." },
+  { icon: "🤝", text: "Tú registras, yo recuerdo los atajos." },
+  { icon: "🪄", text: "Paso 1, 2 y 3 en hoja de pedido. Fácil si vas con calma." },
+  { icon: "🍀", text: "Hoy puede ser un día limpio de pendientes." },
+  { icon: "🏅", text: "Tu constancia se nota. De verdad." },
+  { icon: "🌈", text: "Hoy también estás sacando el trabajo adelante." },
+  { icon: "👏", text: "Buen ritmo. Cada registro cuenta." },
+  { icon: "🪴", text: "Poco a poco dejas todo más en orden." },
+  { icon: "🧡", text: "Se valora el cuidado que pones en cada orden." },
+  { icon: "🎈", text: "Otro pendiente menos. Bien hecho." },
+  { icon: "🛡️", text: "Gracias por mantener el control del día." },
+  { icon: "🎵", text: "Vas con buen paso. Sigue así." },
+  { icon: "🕊️", text: "Tu trabajo ordena el caos. Eso importa." },
+  { icon: "🥇", text: "Lo que haces hoy facilita el de todos mañana." },
+  { icon: "💬", text: "¿Otro tip? Clic otra vez. Tengo varios guardados." }
+];
 
   let hideTimeout = null;
   let moodTimeout = null;
