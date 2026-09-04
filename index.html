@@ -301,6 +301,145 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
   color: #94a3b8;
   line-height: 1.35;
 }
+/* ========== PERSONALIZACIÓN UX (tienda · inventario clic derecho) ========== */
+html.alpro-pref-on .contenedor { border-top-color: var(--primary) !important; }
+/* Solo en pantalla: no teñir encabezados al imprimir hoja de pedido */
+@media screen {
+  html.alpro-pref-on th { background: var(--primary) !important; }
+}
+html.alpro-pref-on .btn-producto { background: var(--primary) !important; }
+html.alpro-pref-on .btn-navegacion-pasos.btn-azul {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+html.alpro-pref-on .btn-filtro.activo-hoy,
+html.alpro-pref-on .btn-filtro.activo-preparando {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep, var(--primary)) 100%) !important;
+  border-color: var(--primary) !important;
+  animation: none !important;
+}
+html.alpro-pref-on .input-busqueda { border-color: var(--primary) !important; }
+html[data-radius="round"] .contenedor { border-radius: 22px !important; }
+html[data-radius="round"] input,
+html[data-radius="round"] select,
+html[data-radius="round"] .btn-filtro,
+html[data-radius="round"] .btn-producto { border-radius: 14px !important; }
+html[data-radius="square"] .contenedor { border-radius: 6px !important; }
+html[data-radius="square"] input,
+html[data-radius="square"] select,
+html[data-radius="square"] .btn-filtro,
+html[data-radius="square"] .btn-producto { border-radius: 4px !important; }
+html[data-density="compact"] th,
+html[data-density="compact"] td { padding: 7px 10px !important; font-size: 0.78em !important; }
+html[data-density="comfy"] th,
+html[data-density="comfy"] td { padding: 16px 14px !important; font-size: 0.9em !important; }
+/* Solo el FONDO de la página (detrás). No toca tarjetas ni tabla */
+html[data-bg="menta"] body { background-color: #e8f8f2 !important; background-image: none !important; }
+html[data-bg="lavanda"] body { background-color: #f3eefc !important; background-image: none !important; }
+html[data-bg="durazno"] body { background-color: #fff1e8 !important; background-image: none !important; }
+html[data-bg="cielo"] body { background-color: #e8f3ff !important; background-image: none !important; }
+html[data-bg="arena"] body { background-color: #f6f1e7 !important; background-image: none !important; }
+html[data-bg="rosado"] body { background-color: #fce7f3 !important; background-image: none !important; }
+html[data-bg="limon"] body { background-color: #f7fee7 !important; background-image: none !important; }
+html[data-bg="grafito"] body { background-color: #e2e8f0 !important; background-image: none !important; }
+html[data-bg="puntos"] body {
+  background-color: var(--bg-body) !important;
+  background-image: radial-gradient(rgba(15,23,42,0.07) 1.2px, transparent 1.2px) !important;
+  background-size: 14px 14px !important;
+}
+html[data-bg="rayas"] body {
+  background-color: var(--bg-body) !important;
+  background-image: repeating-linear-gradient(-12deg, transparent, transparent 10px, rgba(15,23,42,0.03) 10px, rgba(15,23,42,0.03) 11px) !important;
+}
+html[data-bg="cuadricula"] body {
+  background-color: var(--bg-body) !important;
+  background-image:
+    linear-gradient(rgba(15,23,42,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,23,42,0.04) 1px, transparent 1px) !important;
+  background-size: 22px 22px !important;
+}
+html[data-bg="diagonal"] body {
+  background-color: var(--bg-body) !important;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(15,23,42,0.035) 8px, rgba(15,23,42,0.035) 9px) !important;
+}
+/* Premium ligeros: solo CSS gradients fijos (sin animación, sin JS) */
+html[data-bg="aurora"] body {
+  background-color: #1e1b4b !important;
+  background-image:
+    radial-gradient(1000px 520px at 12% -8%, rgba(99,102,241,0.55), transparent 58%),
+    radial-gradient(900px 480px at 95% 5%, rgba(168,85,247,0.40), transparent 52%),
+    radial-gradient(800px 420px at 40% 105%, rgba(34,211,238,0.28), transparent 55%),
+    linear-gradient(180deg, rgba(15,23,42,0.15), rgba(15,23,42,0.05)) !important;
+  background-attachment: fixed !important;
+}
+html[data-bg="atardecer"] body {
+  background-color: #7c2d12 !important;
+  background-image:
+    radial-gradient(1000px 540px at 5% 0%, rgba(234,88,12,0.55), transparent 58%),
+    radial-gradient(900px 480px at 100% 8%, rgba(190,24,93,0.35), transparent 52%),
+    radial-gradient(820px 440px at 50% 110%, rgba(245,158,11,0.30), transparent 55%),
+    linear-gradient(180deg, rgba(28,15,8,0.2), rgba(28,15,8,0.05)) !important;
+  background-attachment: fixed !important;
+}
+html[data-bg="oceano"] body {
+  background-color: #0c4a6e !important;
+  background-image:
+    radial-gradient(1000px 520px at 8% -5%, rgba(14,165,233,0.50), transparent 58%),
+    radial-gradient(920px 480px at 100% 0%, rgba(37,99,235,0.38), transparent 52%),
+    radial-gradient(800px 420px at 45% 110%, rgba(20,184,166,0.28), transparent 55%),
+    linear-gradient(180deg, rgba(8,20,35,0.22), rgba(8,20,35,0.05)) !important;
+  background-attachment: fixed !important;
+}
+html[data-theme="dark"][data-bg="menta"] body { background-color: #0f1f1a !important; }
+html[data-theme="dark"][data-bg="lavanda"] body { background-color: #1a1428 !important; }
+html[data-theme="dark"][data-bg="durazno"] body { background-color: #1f1612 !important; }
+html[data-theme="dark"][data-bg="cielo"] body { background-color: #0f1724 !important; }
+html[data-theme="dark"][data-bg="arena"] body { background-color: #1c1914 !important; }
+html[data-theme="dark"][data-bg="rosado"] body { background-color: #1f121a !important; }
+html[data-theme="dark"][data-bg="limon"] body { background-color: #141a10 !important; }
+html[data-theme="dark"][data-bg="grafito"] body { background-color: #0b1220 !important; }
+html[data-theme="dark"][data-bg="aurora"] body {
+  background-color: #120f2a !important;
+  background-image:
+    radial-gradient(1000px 520px at 12% -8%, rgba(99,102,241,0.35), transparent 58%),
+    radial-gradient(900px 480px at 95% 5%, rgba(168,85,247,0.28), transparent 52%),
+    radial-gradient(800px 420px at 40% 105%, rgba(34,211,238,0.16), transparent 55%) !important;
+}
+html[data-theme="dark"][data-bg="atardecer"] body {
+  background-color: #1c0f0a !important;
+  background-image:
+    radial-gradient(1000px 540px at 5% 0%, rgba(234,88,12,0.32), transparent 58%),
+    radial-gradient(900px 480px at 100% 8%, rgba(190,24,93,0.22), transparent 52%),
+    radial-gradient(820px 440px at 50% 110%, rgba(245,158,11,0.16), transparent 55%) !important;
+}
+html[data-theme="dark"][data-bg="oceano"] body {
+  background-color: #071825 !important;
+  background-image:
+    radial-gradient(1000px 520px at 8% -5%, rgba(14,165,233,0.28), transparent 58%),
+    radial-gradient(920px 480px at 100% 0%, rgba(37,99,235,0.22), transparent 52%),
+    radial-gradient(800px 420px at 45% 110%, rgba(20,184,166,0.14), transparent 55%) !important;
+}
+.hamster-skin-menu { max-height: 420px; min-width: 210px; max-width: 250px; }
+.hamster-pref-sep { height: 1px; background: #e2e8f0; margin: 6px 4px; }
+[data-theme="dark"] .hamster-pref-sep { background: #334155; }
+.hamster-pref-hint { font-size: 10px; color: #94a3b8; padding: 2px 8px 6px; line-height: 1.3; }
+.hamster-pref-group {
+  display: flex; flex-wrap: wrap; gap: 4px; padding: 2px 6px 8px;
+}
+.hamster-pref-chip {
+  border: 1px solid #e2e8f0; background: #f8fafc; color: inherit;
+  border-radius: 999px; padding: 5px 9px; font-size: 11px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+[data-theme="dark"] .hamster-pref-chip { background: #0f172a; border-color: #334155; }
+.hamster-pref-chip.active {
+  background: rgba(16,185,129,.15); border-color: rgba(16,185,129,.45); outline: 1px solid rgba(16,185,129,.25);
+}
+.hamster-pref-chip.color-dot::before {
+  content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  margin-right: 5px; vertical-align: middle; background: var(--dot, #94a3b8);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.12);
+}
 /* Ocultar el toggle grande original (el hámster ocupa su lugar) */
 .themeToggle-container { display: none !important; }
 /* Burbuja trivia antigua: la dejamos en DOM pero no la mostramos (el hámster habla) */
@@ -4513,6 +4652,28 @@ const frasesAlpromeh = [
     "\"La disciplina es el puente entre las metas y los logros.\" — Jim Rohn",
     "\"El éxito no es la clave de la felicidad. La felicidad es la clave del éxito.\" — Albert Schweitzer",
     "\"La única forma de hacer un gran trabajo es amar lo que haces.\" — Steve Jobs",
+    "\"Quien tiene un porqué para vivir, puede soportar casi cualquier cómo.\" — Friedrich Nietzsche",
+    "\"El servicio a los demás es el alquiler que pagamos por nuestro espacio aquí en la Tierra.\" — Muhammad Ali",
+    "\"Cuidar la calidad en nuestro trabajo es cuidar a las personas que dependen de nuestros productos.\" — Compromiso Médico",
+    "\"La atención al detalle no es un detalle, lo es todo.\" — René Redzepi",
+    "\"La salud es la riqueza real, no las piezas de oro y plata.\" — Mahatma Gandhi",
+    "\"La diferencia entre lo ordinario y lo extraordinario es ese pequeño 'extra'.\" — Jimmy Johnson",
+    "\"Servir es la forma más noble de liderar.\" — John C. Maxwell",
+    "\"Si no cuidas a tu cliente, alguien más lo hará.\" — Constance Berry Newman",
+    "\"La calidad nunca es un accidente; siempre es el resultado de un esfuerzo inteligente.\" — John Ruskin",
+    "\"Hazlo bien la primera vez, hazlo mejor la segunda.\" — Proverbio de Gestión",
+    "\"Lo que se mide, se mejora.\" — Peter Drucker",
+    "\"Cualquier tarea que valga la pena hacer, vale la pena hacerla bien.\" — Lord Chesterfield",
+    "\"No busques ser el más grande, busca ser el más confiable.\" — Principio de Negocios",
+    "\"El entusiasmo es el motor de la ejecución.\" — Ralph Waldo Emerson",
+    "\"Todo trabajo noble es al principio imposible.\" — Thomas Carlyle",
+    "\"Tu actitud, no tu aptitud, determinará tu altitud.\" — Zig Ziglar",
+    "\"No hay atajos para llegar a los lugares que realmente valen la pena.\" — Beverly Sills",
+    "\"Todo lo que vale la pena requiere tiempo, enfoque y disciplina.\" — B. C. Forbes",
+    "\"El éxito es la suma de pequeños esfuerzos repetidos día tras día.\" — Robert Collier",
+    "\"No esperes el momento perfecto; toma el momento y hazlo perfecto.\" — George Bernard Shaw",
+    "\"Cada problema resuelto es un paso más hacia la maestría de tu área.\" — Filosofía de Crecimiento",
+    "\"La constancia convierte el trabajo diario en resultados extraordinarios.\" — Marcus Aurelius",
 
     // --- Persistencia & Superación ---
     "\"No he fracasado. Simplemente he encontrado 10,000 formas que no funcionan.\" — Thomas Edison",
@@ -5848,7 +6009,38 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
 
   function handleSingleClick() {
     const tip = tips[Math.floor(Math.random() * tips.length)];
-    notify(tip.text, tip.icon, 4500, "ok", { mood: "happy" });
+    let text = tip.text;
+    const nom = (typeof window.alproNombreUsuario === 'function') ? window.alproNombreUsuario() : '';
+    if (nom) {
+      const extraNamed = [
+        { icon: "👋", text: "Hola, " + nom + ". ¿En qué te ayudo hoy?" },
+        { icon: "☕", text: nom + ", un café y revisamos lo urgente ¿va?" },
+        { icon: "⚡", text: nom + ", ojo con las rojas: esas ya llevan más de 2 días." },
+        { icon: "💪", text: "Vas bien, " + nom + ". Una orden a la vez." },
+        { icon: "🌟", text: nom + ", se nota tu constancia. De verdad." },
+        { icon: "🫶", text: nom + ", no tienes que recordarlo todo: para eso estoy yo." },
+        { icon: "🚀", text: "Orden guardada, " + nom + ". Tú marcas el ritmo." },
+        { icon: "🧘", text: nom + ", si el día se pone denso: prioriza y respira." },
+        { icon: "😊", text: "Qué gusto verte, " + nom + ". Aquí estoy." },
+        { icon: "🎯", text: nom + ", prioriza y el resto fluye." },
+        { icon: "🧡", text: "Gracias por tu cuidado en cada orden, " + nom + "." },
+        { icon: "📌", text: nom + ", si te trabas, clic en mí otra vez." },
+        { icon: "🔍", text: nom + ", el buscador te saca de apuros." },
+        { icon: "🌙", text: nom + ", doble clic en mí si quieres cambiar el tema." },
+        { icon: "🪙", text: nom + ", cada orden suma Alprocoins para la tienda." },
+        { icon: "🤝", text: "Tú registras, " + nom + ". Yo recuerdo los atajos." }
+      ];
+      // ~70% frases con nombre (más cercanía)
+      if (Math.random() < 0.70) {
+        const ntip = extraNamed[Math.floor(Math.random() * extraNamed.length)];
+        notify(ntip.text, ntip.icon, 4500, "ok", { mood: "happy" });
+        return;
+      }
+      if (!text.includes(nom)) {
+        text = nom + ", " + text.charAt(0).toLowerCase() + text.slice(1);
+      }
+    }
+    notify(text, tip.icon, 4500, "ok", { mood: "happy" });
   }
 
   function handleDoubleClickTheme() {
@@ -5917,7 +6109,10 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     if (typeof window.cargarSkinHamsterGuardada === 'function') window.cargarSkinHamsterGuardada();
     if (isDarkTheme()) setHamsterMood('sleep');
     setTimeout(function() {
-      notify("¡Sistema listo! Registremos las órdenes de hoy.", "🚀", 4200, "ok", { mood: "happy" });
+      var msg = (typeof window.mensajeBienvenidaPersonalizado === 'function')
+        ? window.mensajeBienvenidaPersonalizado()
+        : "¡Sistema listo! Registremos las órdenes de hoy.";
+      notify(msg, "🚀", 4200, "ok", { mood: "happy" });
     }, 1300);
   });
 
@@ -5933,17 +6128,17 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
    ========================================================= */
 (function initHamsterSkins() {
   var SKIN_META = {
-    hamster: { nombre: 'Hámster ALPRO', emoji: '🐹' },
-    gato: { nombre: 'Gato Travesura', emoji: '🐱' },
+    hamster: { nombre: 'Hámster Pro', emoji: '🐹' },
+    gato: { nombre: 'Gato Travieso', emoji: '🐱' },
     ajolote: { nombre: 'Ajolote', emoji: '🦎' },
     buho: { nombre: 'Búho Mentor', emoji: '🦉' },
-    panda: { nombre: 'Panda', emoji: '🐼' },
+    panda: { nombre: 'Panda Eyes', emoji: '🐼' },
     conejo: { nombre: 'Conejo', emoji: '🐰' },
-    robot: { nombre: 'Bot Sync', emoji: '🤖' },
+    robot: { nombre: 'Bot-Bip', emoji: '🤖' },
     mapache: { nombre: 'Mapache', emoji: '🦝' },
     pollito: { nombre: 'Pollito', emoji: '🐤' },
     pinguino: { nombre: 'Pingüino', emoji: '🐧' },
-    lobo: { nombre: 'Lobito', emoji: '🐺' },
+    lobo: { nombre: 'Lobo Ban', emoji: '🐺' },
     koala: { nombre: 'Koala', emoji: '🐨' },
     shiba: { nombre: 'Shiba', emoji: '🐶' },
     fantasma: { nombre: 'Fantasma', emoji: '👻' },
@@ -6022,7 +6217,7 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     var compradas = skinIdsComprados();
     var activa = localStorage.getItem('alpro_skin_activa') || 'hamster';
     var html = '<div class="hamster-skin-menu-title">Tu mascota</div>';
-    html += '<button type="button" class="hamster-skin-item' + (activa === 'hamster' ? ' active' : '') + '" data-skin="hamster"><span class="sk-emoji">🐹</span> Hámster ALPRO</button>';
+    html += '<button type="button" class="hamster-skin-item' + (activa === 'hamster' ? ' active' : '') + '" data-skin="hamster"><span class="sk-emoji">🐹</span> Hámster</button>';
     var alguna = false;
     Object.keys(SKIN_META).forEach(function(k) {
       if (k === 'hamster') return;
@@ -6062,6 +6257,323 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
 })();
 
 
+
+/* =========================================================
+   🎛️ PERSONALIZACIÓN UX (tienda · inventario clic derecho)
+   ========================================================= */
+(function initAlproPersonalizacion() {
+  var LS = {
+    color: 'alpro_pref_color',
+    colorDeep: 'alpro_pref_color_deep',
+    saludo: 'alpro_pref_saludo',
+    nombre: 'alpro_pref_nombre',
+    resp: 'alpro_pref_resp',
+    radius: 'alpro_pref_radius',
+    density: 'alpro_pref_density',
+    bg: 'alpro_pref_bg'
+  };
+
+  function reclamados() {
+    try { return JSON.parse(localStorage.getItem('alpro_reclamados') || '[]'); } catch (e) { return []; }
+  }
+
+  function prefsCompradas() {
+    var rec = reclamados();
+    var out = [];
+    if (typeof premios === 'undefined' || !Array.isArray(premios)) return out;
+    premios.forEach(function(p) {
+      if (p.tipo === 'pref' && rec.indexOf(p.id) !== -1) out.push(p);
+    });
+    return out;
+  }
+
+  function tieneKey(key) {
+    return prefsCompradas().some(function(p) { return p.prefKey === key; });
+  }
+
+  function notifyPref(msg, icon) {
+    if (typeof window.petNotify === 'function') window.petNotify(msg, icon || '✨', 3200, 'ok');
+  }
+
+  function aplicarColor(hex, deep) {
+    if (!hex) {
+      document.documentElement.classList.remove('alpro-pref-on');
+      document.documentElement.style.removeProperty('--primary');
+      document.documentElement.style.removeProperty('--primary-deep');
+      localStorage.removeItem(LS.color);
+      localStorage.removeItem(LS.colorDeep);
+      return;
+    }
+    document.documentElement.classList.add('alpro-pref-on');
+    document.documentElement.style.setProperty('--primary', hex);
+    if (deep) document.documentElement.style.setProperty('--primary-deep', deep);
+    localStorage.setItem(LS.color, hex);
+    if (deep) localStorage.setItem(LS.colorDeep, deep);
+  }
+
+  function aplicarAttr(name, value, lsKey) {
+    if (!value || value === 'default' || value === 'original') {
+      document.documentElement.removeAttribute(name);
+      if (lsKey) localStorage.removeItem(lsKey);
+      return;
+    }
+    document.documentElement.setAttribute(name, value);
+    if (lsKey) localStorage.setItem(lsKey, value);
+  }
+
+  function aplicarRespDefault(nombre) {
+    if (!nombre) return;
+    localStorage.setItem(LS.resp, nombre);
+    var sel = document.getElementById('responsableSelect');
+    if (sel) {
+      for (var i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === nombre) {
+          sel.selectedIndex = i;
+          if (typeof aplicarColorUnico === 'function') aplicarColorUnico(sel);
+          break;
+        }
+      }
+    }
+  }
+
+  function pedirTexto(titulo, valor) {
+    var v = window.prompt(titulo, valor || '');
+    if (v == null) return null;
+    v = String(v).trim();
+    return v || null;
+  }
+
+
+  window.aplicarPreferenciaAlpro = function(pref) {
+    if (!pref || !pref.prefKey) return;
+    var key = pref.prefKey;
+    var val = pref.prefValue;
+
+    if (key === 'color') {
+      aplicarColor(val, pref.prefDeep || val);
+      notifyPref('Color aplicado', '🎨');
+      return;
+    }
+    if (key === 'radius' || key === 'radius_pack') {
+      // radius_pack alone just unlocks; actual value via menu chips
+      if (key === 'radius_pack') {
+        notifyPref('Pack de bordes listo. Elige Original / Redondo / Cuadrado en el menú.', '⬜');
+        return;
+      }
+      aplicarAttr('data-radius', val, LS.radius);
+      notifyPref(val === 'round' ? 'Bordes redondos' : (val === 'square' ? 'Bordes cuadrados' : 'Bordes originales'), '✨');
+      return;
+    }
+    if (key === 'density' || key === 'density_pack') {
+      if (key === 'density_pack') {
+        notifyPref('Pack de tabla listo. Elige Original / Compacta / Cómoda en el menú.', '📋');
+        return;
+      }
+      aplicarAttr('data-density', val, LS.density);
+      notifyPref(val === 'compact' ? 'Tabla compacta' : (val === 'comfy' ? 'Tabla cómoda' : 'Tabla original'), '📋');
+      return;
+    }
+    if (key === 'bg') {
+      if (val === 'default' || val === 'original') aplicarAttr('data-bg', 'default', LS.bg);
+      else aplicarAttr('data-bg', val, LS.bg);
+      notifyPref(val === 'default' || val === 'original' ? 'Fondo original' : ('Fondo: ' + (pref.nombre || val)), '🖼️');
+      return;
+    }
+    if (key === 'saludo') {
+      localStorage.setItem(LS.saludo, 'on');
+      var nom = pedirTexto('¿Cómo te llama la mascota?', localStorage.getItem(LS.nombre) || '');
+      if (nom) {
+        localStorage.setItem(LS.nombre, nom);
+        notifyPref('¡Listo, ' + nom + '! Ya te hablo por tu nombre.', '👋');
+      } else {
+        notifyPref('Saludo listo. Vuelve a tocar para poner tu nombre.', '👋');
+      }
+      return;
+    }
+    if (key === 'resp') {
+      localStorage.setItem(LS.resp + '_on', '1');
+      var opciones = ['Yanet','Danna','Carmen','Daniela','Nata','Claudia','Dan','Susan','Axel'];
+      var cur = localStorage.getItem(LS.resp) || 'Dan';
+      var elegido = pedirTexto('Responsable por defecto (' + opciones.join(', ') + '):', cur);
+      if (elegido && opciones.indexOf(elegido) !== -1) {
+        aplicarRespDefault(elegido);
+        notifyPref('Responsable por defecto: ' + elegido, '👤');
+      } else if (elegido) {
+        notifyPref('Usa un nombre de la lista de responsables.', '⚠️');
+      }
+      return;
+    }
+  };
+
+  // API para chips del menú (valores directos)
+  window.alproSetPrefValue = function(kind, value) {
+    if (kind === 'radius') {
+      aplicarAttr('data-radius', value, LS.radius);
+      notifyPref(value === 'round' ? 'Bordes redondos' : (value === 'square' ? 'Bordes cuadrados' : 'Bordes originales'), '✨');
+    } else if (kind === 'density') {
+      aplicarAttr('data-density', value, LS.density);
+      notifyPref(value === 'compact' ? 'Tabla compacta' : (value === 'comfy' ? 'Tabla cómoda' : 'Tabla original'), '📋');
+    } else if (kind === 'bg') {
+      aplicarAttr('data-bg', value, LS.bg);
+      notifyPref(value === 'default' ? 'Fondo original' : 'Fondo aplicado', '🖼️');
+    }
+  };
+
+  window.petPrefUnlock = function(item) {
+    if (typeof window.petCompra === 'function') window.petCompra();
+    setTimeout(function() {
+      if (item) window.aplicarPreferenciaAlpro(item);
+      notifyPref('Listo. Clic derecho en mí → Personalización.', '🎛️');
+    }, 450);
+  };
+
+  window.cargarPreferenciasAlpro = function() {
+    var c = localStorage.getItem(LS.color);
+    var d = localStorage.getItem(LS.colorDeep);
+    if (c) aplicarColor(c, d || c);
+    var r = localStorage.getItem(LS.radius); if (r) aplicarAttr('data-radius', r, null);
+    var dens = localStorage.getItem(LS.density); if (dens) aplicarAttr('data-density', dens, null);
+    var bg = localStorage.getItem(LS.bg); if (bg) aplicarAttr('data-bg', bg, null);
+    if (localStorage.getItem(LS.resp + '_on') === '1') {
+      var rn = localStorage.getItem(LS.resp);
+      if (rn) setTimeout(function(){ aplicarRespDefault(rn); }, 250);
+    }
+  };
+
+  window.mensajeBienvenidaPersonalizado = function() {
+    if (localStorage.getItem(LS.saludo) === 'on') {
+      var nom = localStorage.getItem(LS.nombre);
+      if (nom) return '¡Hola, ' + nom + '! Sistema listo. ¿Registramos órdenes?';
+    }
+    return '¡Sistema listo! Registremos las órdenes de hoy.';
+  };
+
+  window.alproNombreUsuario = function() {
+    if (localStorage.getItem(LS.saludo) === 'on') {
+      return localStorage.getItem(LS.nombre) || '';
+    }
+    return '';
+  };
+
+  function chip(label, kind, value, active, color) {
+    var style = color ? ' style="--dot:' + color + '"' : '';
+    var cls = 'hamster-pref-chip' + (active ? ' active' : '') + (color ? ' color-dot' : '');
+    return '<button type="button" class="' + cls + '" data-kind="' + kind + '" data-val="' + value + '"' + style + '>' + label + '</button>';
+  }
+
+  var _abrirOriginal = window.abrirMenuSkinsHamster;
+  window.abrirMenuSkinsHamster = function(x, y) {
+    if (typeof _abrirOriginal === 'function') _abrirOriginal(x, y);
+    var menu = document.getElementById('hamsterSkinMenu');
+    if (!menu) return;
+
+    var prefs = prefsCompradas();
+    if (!prefs.length) return;
+
+    var byKey = {};
+    prefs.forEach(function(p) {
+      if (!byKey[p.prefKey]) byKey[p.prefKey] = [];
+      byKey[p.prefKey].push(p);
+    });
+
+    var activaColor = localStorage.getItem(LS.color) || '';
+    var activaRadius = localStorage.getItem(LS.radius) || 'default';
+    var activaDensity = localStorage.getItem(LS.density) || 'default';
+    var activaBg = localStorage.getItem(LS.bg) || 'default';
+    var activaNombre = localStorage.getItem(LS.nombre) || '';
+    var activaResp = localStorage.getItem(LS.resp) || '';
+
+    var extra = '<div class="hamster-pref-sep"></div>';
+    extra += '<div class="hamster-skin-menu-title">Personalización</div>';
+    extra += '<div class="hamster-pref-hint">Elegí una opción. “Original” vuelve al diseño base.</div>';
+
+    // Colores
+    if (byKey.color && byKey.color.length) {
+      extra += '<div class="hamster-skin-menu-title">Color</div><div class="hamster-pref-group">';
+      byKey.color.forEach(function(p) {
+        extra += chip(p.nombre.replace('Color: ', ''), 'color', p.prefValue, p.prefValue === activaColor, p.prefValue);
+      });
+      extra += '</div>';
+    }
+
+    // Bordes (pack)
+    if (byKey.radius_pack || byKey.radius) {
+      extra += '<div class="hamster-skin-menu-title">Bordes</div><div class="hamster-pref-group">';
+      extra += chip('Original', 'radius', 'default', activaRadius === 'default');
+      extra += chip('Redondo', 'radius', 'round', activaRadius === 'round');
+      extra += chip('Cuadrado', 'radius', 'square', activaRadius === 'square');
+      extra += '</div>';
+    }
+
+    // Tabla
+    if (byKey.density_pack || byKey.density) {
+      extra += '<div class="hamster-skin-menu-title">Tabla</div><div class="hamster-pref-group">';
+      extra += chip('Original', 'density', 'default', activaDensity === 'default');
+      extra += chip('Compacta', 'density', 'compact', activaDensity === 'compact');
+      extra += chip('Cómoda', 'density', 'comfy', activaDensity === 'comfy');
+      extra += '</div>';
+    }
+
+
+    // Fondo
+    if (byKey.bg && byKey.bg.length) {
+      extra += '<div class="hamster-skin-menu-title">Fondo (solo atrás)</div><div class="hamster-pref-group">';
+      extra += chip('Original', 'bg', 'default', activaBg === 'default');
+      byKey.bg.forEach(function(p) {
+        var short = (p.nombre || '').replace('Fondo ', '');
+        extra += chip(short, 'bg', p.prefValue, p.prefValue === activaBg);
+      });
+      extra += '</div>';
+    }
+
+
+    // Cuenta
+    if (byKey.saludo || byKey.resp) {
+      extra += '<div class="hamster-skin-menu-title">Cuenta</div>';
+      if (byKey.saludo) {
+        var lab = activaNombre ? ('Saludo: ' + activaNombre) : 'Configurar saludo';
+        extra += '<button type="button" class="hamster-skin-item" data-pref-id="' + byKey.saludo[0].id + '"><span class="sk-emoji">👋</span> ' + lab + '</button>';
+      }
+      if (byKey.resp) {
+        var lab2 = activaResp ? ('Resp: ' + activaResp) : 'Responsable favorito';
+        extra += '<button type="button" class="hamster-skin-item" data-pref-id="' + byKey.resp[0].id + '"><span class="sk-emoji">👤</span> ' + lab2 + '</button>';
+      }
+    }
+
+    menu.insertAdjacentHTML('beforeend', extra);
+
+    var w = menu.offsetWidth || 220;
+    var h = menu.offsetHeight || 120;
+    menu.style.left = Math.max(8, Math.min(x, window.innerWidth - w - 8)) + 'px';
+    menu.style.top = Math.max(8, Math.min(y, window.innerHeight - h - 8)) + 'px';
+
+    menu.querySelectorAll('[data-kind]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var kind = btn.getAttribute('data-kind');
+        var val = btn.getAttribute('data-val');
+        if (kind === 'color') {
+          var item = prefs.find(function(p){ return p.prefKey === 'color' && p.prefValue === val; });
+          if (item) window.aplicarPreferenciaAlpro(item);
+        } else {
+          window.alproSetPrefValue(kind, val);
+        }
+        menu.classList.remove('visible');
+      });
+    });
+    menu.querySelectorAll('[data-pref-id]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = parseInt(btn.getAttribute('data-pref-id'), 10);
+        var item = prefs.find(function(p){ return p.id === id; });
+        if (item) window.aplicarPreferenciaAlpro(item);
+        menu.classList.remove('visible');
+      });
+    });
+  };
+
+  function boot() { window.cargarPreferenciasAlpro(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
 
 // --- LÓGICA DE ALPROGAMES (Doble Clic) ---
 document.getElementById('triggerHuevo').addEventListener('dblclick', () => {
@@ -6651,8 +7163,19 @@ function ejecutarImpresionPedidoFisico(datos) {
                 font-weight: bold;
                 text-align: center;
                 text-transform: uppercase;
-                color: #000000;
+                color: #000000 !important;
                 background: #ffffff !important;
+                background-color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            @media print {
+                html.alpro-pref-on .tabla-pedido-fisica th,
+                .tabla-pedido-fisica th {
+                    color: #000000 !important;
+                    background: #ffffff !important;
+                    background-color: #ffffff !important;
+                }
             }
             .fake-box-print {
                 display: inline-block;
@@ -9125,47 +9648,75 @@ let tiendaCargadaPorPrimeraVez = false;
 
 // Premios oficiales con descripciones integradas
 const premios = [
-    // Mezcla: chucherías + skins (surtido)
-    { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM", desc: "Disfruta tu dosis de dulce diaria" },
+    // —— Personalización ——
+    { id: 210, nombre: "Saludo con nombre", precio: 60, emoji: "👋", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "saludo", prefValue: "on", desc: "La mascota te saluda por tu nombre" },
+    { id: 211, nombre: "Responsable favorito", precio: 45, emoji: "👤", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "resp", prefValue: "on", desc: "Elige quién aparece por defecto al registrar" },
+    { id: 201, nombre: "Color: Esmeralda", precio: 40, emoji: "🟢", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#047857", prefDeep: "#065f46", desc: "Verde sobrio para franja y botones" },
+    { id: 202, nombre: "Color: Violeta", precio: 40, emoji: "🟣", colorBadge: "#ede9fe", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#6d28d9", prefDeep: "#5b21b6", desc: "Violeta contenido, tono corporativo" },
+    { id: 203, nombre: "Color: Coral", precio: 40, emoji: "🟠", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#c2410c", prefDeep: "#9a3412", desc: "Coral profundo, menos chillante" },
+    { id: 204, nombre: "Color: Índigo", precio: 40, emoji: "🟦", colorBadge: "#e0e7ff", colorTexto: "#312e81", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#4338ca", prefDeep: "#3730a3", desc: "Índigo serio, cerca del clásico" },
+    { id: 205, nombre: "Color: Rosa", precio: 40, emoji: "💗", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#be185d", prefDeep: "#9d174d", desc: "Rosa sobrio para la interfaz" },
+    { id: 207, nombre: "Color: Ámbar", precio: 40, emoji: "🟡", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#b45309", prefDeep: "#92400e", desc: "Ámbar cálido y contenido" },
+    { id: 208, nombre: "Color: Fucsia", precio: 40, emoji: "💖", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#a21caf", prefDeep: "#86198f", desc: "Fucsia elegante, no neón" },
+    { id: 209, nombre: "Color: Gris", precio: 40, emoji: "⬜", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#475569", prefDeep: "#334155", desc: "Gris elegante neutro" },
+    { id: 206, nombre: "Color: Clásico", precio: 30, emoji: "🔵", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1e3a8a", prefDeep: "#1e40af", desc: "Azul original del sistema" },
+    { id: 212, nombre: "Color Premium Borgoña", precio: 80, emoji: "🍷", colorBadge: "#ffe4e6", colorTexto: "#9f1239", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#9f1239", prefDeep: "#881337", desc: "Rojo vino premium, sobrio y marcado" },
+    { id: 213, nombre: "Color Premium Bosque", precio: 80, emoji: "🌲", colorBadge: "#dcfce7", colorTexto: "#14532d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#166534", prefDeep: "#14532d", desc: "Verde bosque premium, profundo" },
+    { id: 214, nombre: "Color Premium Zafiro", precio: 80, emoji: "💎", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1d4ed8", prefDeep: "#1e3a8a", desc: "Azul zafiro premium, más vivo que el clásico" },
+    { id: 220, nombre: "Pack de bordes", precio: 45, emoji: "⬜", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "radius_pack", prefValue: "on", desc: "Elige en el menú: original, redondo o cuadrado" },
+    { id: 230, nombre: "Pack de tabla", precio: 45, emoji: "📋", colorBadge: "#ecfdf5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "density_pack", prefValue: "on", desc: "Elige en el menú: original, compacta o cómoda" },
+    { id: 250, nombre: "Fondo Menta", precio: 35, emoji: "🌿", colorBadge: "#d1fae5", colorTexto: "#047857", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "menta", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 251, nombre: "Fondo Lavanda", precio: 35, emoji: "💜", colorBadge: "#f3e8ff", colorTexto: "#6b21a8", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "lavanda", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 252, nombre: "Fondo Durazno", precio: 35, emoji: "🍑", colorBadge: "#ffedd5", colorTexto: "#c2410c", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "durazno", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 253, nombre: "Fondo Cielo", precio: 35, emoji: "🌤️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "cielo", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 254, nombre: "Fondo Arena", precio: 35, emoji: "🏜️", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "arena", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 257, nombre: "Fondo Rosado", precio: 35, emoji: "🌸", colorBadge: "#fce7f3", colorTexto: "#be185d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "rosado", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 258, nombre: "Fondo Limón", precio: 35, emoji: "🍋", colorBadge: "#f7fee7", colorTexto: "#3f6212", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "limon", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 259, nombre: "Fondo Grafito", precio: 35, emoji: "⬛", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "grafito", desc: "Solo el fondo de la página (no las tarjetas)" },
+    { id: 255, nombre: "Fondo Puntos", precio: 40, emoji: "⚪", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "puntos", desc: "Textura suave de puntos detrás de todo" },
+    { id: 256, nombre: "Fondo Rayas", precio: 40, emoji: "╱", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "rayas", desc: "Textura suave de rayas detrás de todo" },
+    { id: 260, nombre: "Fondo Cuadrícula", precio: 40, emoji: "▦", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "cuadricula", desc: "Cuadrícula suave detrás de todo" },
+    { id: 261, nombre: "Fondo Diagonal", precio: 40, emoji: "⤢", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "diagonal", desc: "Rayas diagonales suaves detrás de todo" },
+    { id: 270, nombre: "Fondo Premium Aurora", precio: 90, emoji: "🌌", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "aurora", desc: "Fondo premium con luces suaves (ligero, solo CSS)" },
+    { id: 271, nombre: "Fondo Premium Atardecer", precio: 90, emoji: "🌇", colorBadge: "#ffedd5", colorTexto: "#c2410c", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "atardecer", desc: "Fondo premium cálido (ligero, solo CSS)" },
+    { id: 272, nombre: "Fondo Premium Océano", precio: 90, emoji: "🌊", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "oceano", desc: "Fondo premium fresco (ligero, solo CSS)" },
+    // —— Mascotas (skins) ——
     { id: 101, nombre: "Skin: Gato Travesura", precio: 50, emoji: "🐱", colorBadge: "#ffedd5", colorTexto: "#c2410c", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "gato", desc: "Desbloquea la skin del gato travieso en tu mascota" },
-    { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN", desc: "El snack perfecto de media tarde" },
     { id: 102, nombre: "Skin: Ajolote", precio: 50, emoji: "🦎", colorBadge: "#fce7f3", colorTexto: "#be185d", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "ajolote", desc: "Desbloquea la skin del ajolote rosa" },
+    { id: 103, nombre: "Skin: Búho Mentor", precio: 50, emoji: "🦉", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "buho", desc: "Desbloquea la skin del búho mentor" },
+    { id: 104, nombre: "Skin: Panda Eyes", precio: 50, emoji: "🐼", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "panda", desc: "Desbloquea la skin del panda amable" },
+    { id: 105, nombre: "Skin: Conejo", precio: 50, emoji: "🐰", colorBadge: "#fdf2f8", colorTexto: "#9d174d", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "conejo", desc: "Desbloquea la skin del conejo rápido" },
+    { id: 106, nombre: "Skin: Bot-Bip", precio: 50, emoji: "🤖", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "robot", desc: "Desbloquea la skin del robot de sincronización" },
+    { id: 107, nombre: "Skin: Mapache", precio: 50, emoji: "🦝", colorBadge: "#f5f5f4", colorTexto: "#57534e", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "mapache", desc: "Desbloquea la skin del mapache detective" },
+    { id: 108, nombre: "Skin: Pollito", precio: 50, emoji: "🐤", colorBadge: "#fef9c3", colorTexto: "#a16207", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "pollito", desc: "Desbloquea la skin del pollito matutino" },
+    { id: 109, nombre: "Skin: Pingüino", precio: 50, emoji: "🐧", colorBadge: "#e2e8f0", colorTexto: "#0f172a", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "pinguino", desc: "Desbloquea la skin del pingüino elegante" },
+    { id: 110, nombre: "Skin: Lobo Ban", precio: 50, emoji: "🐺", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "lobo", desc: "Desbloquea la skin del lobito de equipo" },
+    { id: 111, nombre: "Skin: Koala", precio: 50, emoji: "🐨", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "koala", desc: "Desbloquea la skin del koala modo noche" },
+    { id: 112, nombre: "Skin: Shiba", precio: 50, emoji: "🐶", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "shiba", desc: "Desbloquea la skin del shiba energético" },
+    { id: 113, nombre: "Skin: Fantasma", precio: 50, emoji: "👻", colorBadge: "#f8fafc", colorTexto: "#64748b", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "fantasma", desc: "Desbloquea la skin del fantasma secreto" },
+    { id: 114, nombre: "Skin: Pulpo", precio: 50, emoji: "🐙", colorBadge: "#f3e8ff", colorTexto: "#6b21a8", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "pulpo", desc: "Desbloquea la skin del pulpo multitarea" },
+    { id: 115, nombre: "Skin: Slime", precio: 50, emoji: "🟢", colorBadge: "#ccfbf1", colorTexto: "#0f766e", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "slime", desc: "Desbloquea la skin rara del slime" },
+    // —— Antojos (se pueden volver a comprar) ——
+    { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM", desc: "Disfruta tu dosis de dulce diaria" },
+    { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN", desc: "El snack perfecto de media tarde" },
     { id: 3, nombre: "Chicles", precio: 160, emoji: "🫧", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH", desc: "Refresca tu aliento con unos Stick de larga duración" },
     { id: 4, nombre: "Ricito XL", precio: 360, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX", desc: "Nada mejor que un antojo XL" },
-    { id: 103, nombre: "Skin: Búho Mentor", precio: 50, emoji: "🦉", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "buho", desc: "Desbloquea la skin del búho mentor" },
     { id: 5, nombre: "Galletas", precio: 370, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL", desc: "Acompáñalas con tu café" },
-    { id: 104, nombre: "Skin: Panda", precio: 50, emoji: "🐼", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "panda", desc: "Desbloquea la skin del panda amable" },
-
-    // Oficina + skins
-    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
-    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: true, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
-    { id: 105, nombre: "Skin: Conejo", precio: 50, emoji: "🐰", colorBadge: "#fdf2f8", colorTexto: "#9d174d", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "conejo", desc: "Desbloquea la skin del conejo rápido" },
     { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC", desc: "Disfruta de un buen chocolate premium JacQuot francés" },
     { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP", desc: "El pack perfecto para que nunca falte tinta" },
-    { id: 106, nombre: "Skin: Bot Sync", precio: 50, emoji: "🤖", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "robot", desc: "Desbloquea la skin del robot de sincronización" },
+    // —— Productos únicos (una sola vez) ——
+    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
+    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: true, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
     { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
-    { id: 107, nombre: "Skin: Mapache", precio: 50, emoji: "🦝", colorBadge: "#f5f5f4", colorTexto: "#57534e", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "mapache", desc: "Desbloquea la skin del mapache detective" },
     { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
-    { id: 108, nombre: "Skin: Pollito", precio: 50, emoji: "🐤", colorBadge: "#fef9c3", colorTexto: "#a16207", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "pollito", desc: "Desbloquea la skin del pollito matutino" },
-
-    // Tech + skins
     { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV", desc: "Tu comida fresca y segura" },
-    { id: 109, nombre: "Skin: Pingüino", precio: 50, emoji: "🐧", colorBadge: "#e2e8f0", colorTexto: "#0f172a", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "pinguino", desc: "Desbloquea la skin del pingüino elegante" },
     { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
     { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
-    { id: 110, nombre: "Skin: Lobito", precio: 50, emoji: "🐺", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "lobo", desc: "Desbloquea la skin del lobito de equipo" },
     { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
-    { id: 111, nombre: "Skin: Koala", precio: 50, emoji: "🐨", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "koala", desc: "Desbloquea la skin del koala modo noche" },
     { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
-    { id: 112, nombre: "Skin: Shiba", precio: 50, emoji: "🐶", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "shiba", desc: "Desbloquea la skin del shiba energético" },
-
-    // Premium + skins restantes
     { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 1600, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
-    { id: 113, nombre: "Skin: Fantasma", precio: 50, emoji: "👻", colorBadge: "#f8fafc", colorTexto: "#64748b", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "fantasma", desc: "Desbloquea la skin del fantasma secreto" },
     { id: 18, nombre: "Tarjeta de Regalo Pro", precio: 2400, emoji: "💳", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "TP", efectoEmoji: "filter: grayscale(1) contrast(1.2) brightness(1.3); display: inline-block;", desc: "Q120.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
-    { id: 114, nombre: "Skin: Pulpo", precio: 50, emoji: "🐙", colorBadge: "#f3e8ff", colorTexto: "#6b21a8", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "pulpo", desc: "Desbloquea la skin del pulpo multitarea" },
-    { id: 19, nombre: "Tarjeta de Regalo Max", precio: 3200, emoji: "💳", colorBadge: "#fef9c3", colorTexto: "#451a03", esUnico: true, prefijo: "TM", efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;", desc: "Q160.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
-    { id: 115, nombre: "Skin: Slime", precio: 50, emoji: "🟢", colorBadge: "#ccfbf1", colorTexto: "#0f766e", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "slime", desc: "Desbloquea la skin rara del slime" }
+    { id: 19, nombre: "Tarjeta de Regalo Max", precio: 3200, emoji: "💳", colorBadge: "#fef9c3", colorTexto: "#451a03", esUnico: true, prefijo: "TM", efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;", desc: "Q160.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" }
 ];
 
 // 🔑 CONFIGURACIÓN SEGURA PARA TUS PINES
@@ -9556,7 +10107,38 @@ function renderizarTiendaAlpro() {
     const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
     const reclamados = JSON.parse(localStorage.getItem('alpro_reclamados')) || [];
 
+    function categoriaPremio(item) {
+        if (item.tipo === 'pref') return 'personalizacion';
+        if (item.tipo === 'skin') return 'mascotas';
+        if (!item.esUnico) return 'consumibles';
+        return 'unicos';
+    }
+    const titulosCat = {
+        personalizacion: '🎛️ Personalización',
+        mascotas: '🐹 Mascotas',
+        consumibles: '🍬 Antojos (se pueden volver a comprar)',
+        unicos: '🎁 Productos únicos (una sola vez)'
+    };
+    let catAnterior = null;
+
     premios.forEach((item, index) => {
+        const cat = categoriaPremio(item);
+        if (cat !== catAnterior) {
+            catAnterior = cat;
+            const head = document.createElement('div');
+            head.style.gridColumn = '1 / -1';
+            head.style.margin = index === 0 ? '4px 0 2px' : '14px 0 4px';
+            head.style.padding = '8px 10px';
+            head.style.borderRadius = '12px';
+            head.style.background = '#f8fafc';
+            head.style.border = '1px solid #e2e8f0';
+            head.style.fontSize = '12px';
+            head.style.fontWeight = '800';
+            head.style.color = '#334155';
+            head.style.letterSpacing = '0.02em';
+            head.textContent = titulosCat[cat] || cat;
+            contenedor.appendChild(head);
+        }
         const divItem = document.createElement('div');
         const yaCanjeadoPermanente = item.esUnico && reclamados.includes(item.id);
         const cantidadEnCarrito = carrito[item.id] || 0;
@@ -9744,6 +10326,10 @@ function procesarCarrito() {
                 window.__alproComproSkin = true;
                 window.__alproUltimaSkin = item.skinId || item.nombre;
             }
+            if (item.tipo === 'pref') {
+                window.__alproComproPref = true;
+                window.__alproUltimaPref = item;
+            }
 
             if (listadoContenedor) {
                 const fila = document.createElement('div');
@@ -9782,6 +10368,10 @@ function procesarCarrito() {
     if (window.__alproComproSkin) {
         window.__alproComproSkin = false;
         if (typeof window.petSkinUnlock === "function") window.petSkinUnlock(window.__alproUltimaSkin);
+        else if (typeof window.petCompra === "function") window.petCompra();
+    } else if (window.__alproComproPref) {
+        window.__alproComproPref = false;
+        if (typeof window.petPrefUnlock === "function") window.petPrefUnlock(window.__alproUltimaPref);
         else if (typeof window.petCompra === "function") window.petCompra();
     } else if (typeof window.petCompra === "function") {
         window.petCompra();
