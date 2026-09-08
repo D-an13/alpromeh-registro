@@ -10160,15 +10160,23 @@ function vaciarCarrito() {
     if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
 }
 
+// Digital = skins / personalización (sin mínimo). Físico = antojos y objetos (mín. 350).
+function esItemDigital(producto) {
+    return !!(producto && (producto.tipo === 'pref' || producto.tipo === 'skin'));
+}
+
 function actualizarResumenBarraCarrito() {
     let totalMonedasItem = 0;
+    let totalMonedasFisico = 0;
     let cantidadTotalUnidades = 0;
 
     for (const id in carrito) {
         const producto = premios.find(p => p.id == id);
         if (producto) {
-            totalMonedasItem += producto.precio * carrito[id];
+            const sub = producto.precio * carrito[id];
+            totalMonedasItem += sub;
             cantidadTotalUnidades += carrito[id];
+            if (!esItemDigital(producto)) totalMonedasFisico += sub;
         }
     }
 
@@ -10182,6 +10190,7 @@ function actualizarResumenBarraCarrito() {
 
     const monedasActuales = parseInt(localStorage.getItem('alprocoins')) || 0;
     const MINIMO_CANJE = 350;
+    const fisicoBajoMinimo = totalMonedasFisico > 0 && totalMonedasFisico < MINIMO_CANJE;
 
     let tooltip = document.getElementById('cart-tooltip-alerta');
     if (!tooltip) {
@@ -10193,17 +10202,21 @@ function actualizarResumenBarraCarrito() {
         tooltip.style.transform = 'translateX(-50%)';
         tooltip.style.background = '#1e293b';
         tooltip.style.color = '#ffffff';
-        tooltip.style.padding = '6px 12px';
-        tooltip.style.fontSize = '12px';
+        tooltip.style.padding = '8px 12px';
+        tooltip.style.fontSize = '11px';
         tooltip.style.fontWeight = '600';
-        tooltip.style.borderRadius = '6px';
+        tooltip.style.borderRadius = '8px';
         tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-        tooltip.style.whiteSpace = 'nowrap';
+        tooltip.style.whiteSpace = 'normal';
+        tooltip.style.maxWidth = '260px';
+        tooltip.style.textAlign = 'center';
+        tooltip.style.lineHeight = '1.35';
         tooltip.style.zIndex = '9999';
         tooltip.style.display = 'none';
         tooltip.style.pointerEvents = 'none';
         tooltip.style.transition = 'opacity 0.15s ease';
-        
+        tooltip.style.opacity = '0';
+
         const flecha = document.createElement('div');
         flecha.style.position = 'absolute';
         flecha.style.top = '100%';
@@ -10220,9 +10233,10 @@ function actualizarResumenBarraCarrito() {
         }
     }
 
-    tooltip.innerHTML = `El mínimo de Canje Requerido es de ${MINIMO_CANJE} 🪙`;
+    // Texto del tooltip (solo se muestra si el físico no llega al mínimo)
+    tooltip.innerHTML = 'Físicos: mínimo ' + MINIMO_CANJE + ' 🪙<br>Digitales (skins / personalización): sin mínimo<br>Entrega de físicos: <b>lunes</b>';
 
-    if (cantidadTotalUnidades === 0 || totalMonedasItem > monedasActuales || totalMonedasItem < MINIMO_CANJE) {
+    if (cantidadTotalUnidades === 0 || totalMonedasItem > monedasActuales || fisicoBajoMinimo) {
         btnProcesar.style.background = "#cbd5e1";
         btnProcesar.style.color = "#94a3b8";
         btnProcesar.style.boxShadow = "none";
@@ -10231,27 +10245,27 @@ function actualizarResumenBarraCarrito() {
 
         if (totalMonedasItem > monedasActuales) {
             btnProcesar.innerText = "FONDOS INSUFICIENTES 🔒";
-            btnProcesar.onclick = (e) => e.preventDefault();
+            btnProcesar.onclick = function(e) { e.preventDefault(); };
             btnProcesar.onmouseenter = null;
             btnProcesar.onmouseleave = null;
-        } else if (cantidadTotalUnidades > 0 && totalMonedasItem < MINIMO_CANJE) {
+            tooltip.style.display = 'none';
+        } else if (fisicoBajoMinimo) {
             btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
-            btnProcesar.onclick = (e) => e.preventDefault();
-
-            btnProcesar.onmouseenter = () => {
+            btnProcesar.onclick = function(e) { e.preventDefault(); };
+            btnProcesar.onmouseenter = function() {
                 tooltip.style.display = 'block';
-                setTimeout(() => tooltip.style.opacity = '1', 10);
+                setTimeout(function() { tooltip.style.opacity = '1'; }, 10);
             };
-
-            btnProcesar.onmouseleave = () => {
+            btnProcesar.onmouseleave = function() {
                 tooltip.style.opacity = '0';
-                setTimeout(() => tooltip.style.display = 'none', 150);
+                setTimeout(function() { tooltip.style.display = 'none'; }, 150);
             };
         } else {
             btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
-            btnProcesar.onclick = (e) => e.preventDefault();
+            btnProcesar.onclick = function(e) { e.preventDefault(); };
             btnProcesar.onmouseenter = null;
             btnProcesar.onmouseleave = null;
+            tooltip.style.display = 'none';
         }
     } else {
         btnProcesar.disabled = false;
@@ -10260,13 +10274,11 @@ function actualizarResumenBarraCarrito() {
         btnProcesar.style.cursor = "pointer";
         btnProcesar.style.boxShadow = "0 4px 10px rgba(16, 185, 129, 0.2)";
         btnProcesar.innerText = "PROCESAR PEDIDO 🧾";
-        
         btnProcesar.onmouseenter = null;
         btnProcesar.onmouseleave = null;
         tooltip.style.display = 'none';
-
-        btnProcesar.onclick = function() { 
-            procesarCarrito(); 
+        btnProcesar.onclick = function() {
+            procesarCarrito();
         };
     }
 }
