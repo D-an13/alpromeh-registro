@@ -10485,12 +10485,14 @@ function procesarCarrito() {
     if (listadoContenedor) listadoContenedor.innerHTML = "";
 
     let tieneItems = false;
+    let totalFisico = 0;
     for (const id in carrito) {
         const item = premios.find(p => p.id == id);
         if (item) {
             tieneItems = true;
             const sub = item.precio * carrito[id];
             totalCosto += sub;
+            if (!esItemDigital(item)) totalFisico += sub;
 
             if (item.esUnico) {
                 reclamados.push(item.id);
@@ -10516,6 +10518,13 @@ function procesarCarrito() {
     }
 
     if (totalCosto > monedasActuales || !tieneItems) return;
+    // Mínimo 350 solo aplica a productos físicos (snacks / objetos)
+    if (totalFisico > 0 && totalFisico < 350) {
+        if (typeof alproAlert === 'function') {
+            alproAlert('Los productos físicos requieren un mínimo de 350 🪙.\nSkins y personalización no tienen mínimo.\nEntrega de físicos: los lunes.');
+        }
+        return;
+    }
 
     let nuevoSaldo = monedasActuales - totalCosto;
     localStorage.setItem('alprocoins', nuevoSaldo);
