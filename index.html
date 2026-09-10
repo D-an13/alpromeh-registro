@@ -174,6 +174,8 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
   font-weight: 600;
   margin-bottom: 8px;
   max-width: 200px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   opacity: 0;
   transform: translateY(10px) scale(0.9);
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -3663,9 +3665,18 @@ html[data-frase="glitch"] .frase-inspiradora::after {
 }
 
 html[data-frase="rainbow"] .frase-inspiradora {
-    background: linear-gradient(90deg, #ef4444, #f59e0b, #eab308, #22c55e, #3b82f6, #a855f7, #ef4444);
-    background-size: 300% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    animation: shineLento 4s infinite linear; filter: none;
+    background: linear-gradient(90deg,
+      #ef4444, #f59e0b, #eab308, #22c55e, #3b82f6, #a855f7, #ec4899, #ef4444);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fraseRainbowFlow 5.5s ease-in-out infinite alternate;
+    filter: none;
+}
+@keyframes fraseRainbowFlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
 
 /* Partículas: lunares que salen de la frase (solo CSS, liviano) */
@@ -6271,13 +6282,7 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
    ========================================================= */
 (function initHamsterMascota() {
   const tips = [
-  // Día a día
-  { icon: "⚡", text: "Ojo con las rojas: esas ya llevan más de 2 días." },
-  { icon: "☕", text: "Un café y revisamos lo urgente ¿si?" },
-  { icon: "🌅", text: "Buenos días. Hoy priorizamos lo que ya espera." },
-  { icon: "🎯", text: "Una orden a la vez. Tú puedes." },
-
-  // Registro
+  // Registro / uso
   { icon: "📋", text: "Antes de guardar, échale un ojito al No. de Orden." },
   { icon: "✏️", text: "Modo normal: el lápiz 📝 es para el producto." },
   { icon: "📄", text: "Hoja de pedido: prende el switch y vamos paso a paso." },
@@ -6285,51 +6290,33 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "⚠️", text: "Si no guarda, casi seguro falta un campo." },
   { icon: "🔢", text: "Sin número de orden no avanzamos." },
   { icon: "✅", text: "¿Todo listo? Dale a guardar con confianza." },
-
-  // Historial / filas
   { icon: "🔍", text: "El buscador te encuentra orden, institución o producto." },
   { icon: "👤", text: "El responsable lo cambias en el select de cada fila." },
   { icon: "📦", text: "LISTO solo cuando ya salió de bodega, ¿ok?" },
   { icon: "🚫", text: "Clic derecho en la fila si hay que anular (con motivo)." },
   { icon: "📅", text: "El filtro de fechas solo mira historial; no borra nada." },
-  { icon: "🧭", text: "¿Se te perdió una orden? Prueba usar el  buscador." },
-  { icon: "🏷️", text: "Los colores de fila te dicen quién la está llevando." },
-
-  // Sync / pantalla
-  { icon: "🔄", text: "Si la tabla se ve rara, un toque a Sincronizar y listo." },
-  { icon: "🖥️", text: "¿Pantalla en blanco? Respira… y sincroniza una vez." },
-  { icon: "✨", text: "Cuando la tabla se actualiza, yo también me alegro." },
-
-  // Mascota / tema / skins
-  { icon: "🌙", text: "Doble clic en mí y cambio el modo claro/oscuro." },
-  { icon: "🎨", text: "Clic derecho en mí: ahí están tus skins." },
-  { icon: "😴", text: "Modo oscuro = me pongo el gorrito. No es siesta, juro." },
-  { icon: "📎", text: "Clic en mí cuando quieras un tip rapidito." },
-  { icon: "👋", text: "Hola de nuevo. ¿En qué te ayudo hoy?" },
-
-  // Coins / tienda
-  { icon: "🪙", text: "Cada orden nueva te suma Alprocoins." },
-  { icon: "🛍️", text: "En la tienda hay antojos… y caritas nuevas para mí." },
+  { icon: "🔄", text: "Si la tabla se ve rara, un solo clic en Sincronizar basta." },
+  { icon: "🌙", text: "Doble clic en mí: cambio entre modo claro y oscuro." },
+  { icon: "🎨", text: "Clic derecho en mí: skins y personalización." },
+  { icon: "🛍️", text: "En la tienda hay snacks… y caritas nuevas para mí." },
   { icon: "🎁", text: "50 alprocoins por una skin. Tu estilo, tu decisión." },
   { icon: "🍱", text: "¿Tupper o gomitas? La tienda te espera." },
-
-  // Ánimo / tono amigo
+  { icon: "🪄", text: "Paso 1, 2 y 3 en hoja de pedido. Fácil si vas con calma." },
+  { icon: "🤫", text: "Tip secreto: el buscador también cacha texto del producto." },
+  { icon: "🛠️", text: "¿Algo falló? Revisa el campo en rojo y reintentamos." },
+  { icon: "📬", text: "Cuando haya aviso importante, te lo digo aquí." },
+  { icon: "🧠", text: "Duda rápida: clic en mí. Resolvemos al toque." },
+  { icon: "📌", text: "Si me ignoras, igual te tiro un tip. Es mi hobby." },
+  // Motivación / amigo
   { icon: "😊", text: "Vas bien. Si te trabas, aquí estoy." },
   { icon: "🤗", text: "Gracias por lo que haces hoy. En serio, se aprecia." },
   { icon: "🫶", text: "No tienes que recordarlo todo: para eso estoy yo." },
-  { icon: "📌", text: "Si me ignoras, igual te tiro un tip. Es mi hobby." },
   { icon: "😄", text: "No soy un cartelito verde. Soy tu compa tierno." },
-  { icon: "🧠", text: "Duda rápida: clic en mí. Resolvemos al toque." },
   { icon: "🚀", text: "Orden guardada, siguiente. Tú marcas el ritmo." },
   { icon: "🧘", text: "Si el día se pone denso, prioriza y respira." },
   { icon: "🎧", text: "Pon tu playlist y vamos orden por orden." },
-  { icon: "🛠️", text: "¿Algo falló? Revisa el campo en rojo y reintentamos." },
-  { icon: "📬", text: "Cuando haya aviso importante, te lo digo aquí." },
-  { icon: "🤫", text: "Tip secreto: el buscador también cacha texto del producto." },
-  { icon: "🎢", text: "Días pesados pasan. Las rojas, una por una." },
   { icon: "🌟", text: "Haces un buen trabajo." },
   { icon: "🤝", text: "Tú registras, yo recuerdo los atajos." },
-  { icon: "🪄", text: "Paso 1, 2 y 3 en hoja de pedido. Fácil si vas con calma." },
   { icon: "🍀", text: "Hoy puede ser un día limpio de pendientes." },
   { icon: "🏅", text: "Tu constancia se nota. De verdad." },
   { icon: "🌈", text: "Hoy también estás sacando el trabajo adelante." },
@@ -6341,8 +6328,109 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "🎵", text: "Vas con buen paso. Sigue así." },
   { icon: "🕊️", text: "Tu trabajo ordena el caos. Eso importa." },
   { icon: "🥇", text: "Lo que haces hoy facilita el de todos mañana." },
-  { icon: "💬", text: "¿Otro tip? Clic otra vez. Tengo varios guardados." }
-];
+  { icon: "💬", text: "¿Otro tip? Clic otra vez. Tengo varios guardados." },
+  { icon: "☀️", text: "Buen día para dejar la lista más corta." },
+  { icon: "🎯", text: "Una orden a la vez. Tú puedes." },
+  { icon: "💡", text: "Si algo no cuadra, revisa institución y producto." },
+  { icon: "📎", text: "Los 3 puntitos del historial reimprimen pedidos recientes." },
+  { icon: "🪙", text: "Cada orden nueva te suma Alprocoins para la tienda." },
+  { icon: "😎", text: "Modo pro: guardar, sincronizar y a seguir." },
+  { icon: "🧩", text: "Hoja de pedido + productos = menos errores al despachar." },
+  { icon: "📘", text: "Si cambias de responsable, confírmalo en la fila." },
+  { icon: "✨", text: "Detalle que cuenta: un buen registro evita retrabajo." },
+  { icon: "🫶", text: "Respira. Yo sigo aquí cuando me necesites." },
+  { icon: "🎲", text: "Tip al azar: a veces lo simple es lo que más ayuda." }
+]
+
+  // Frases por skin (se mezclan con tips generales)
+  const tipsPorSkin = {
+    hamster: [
+      { icon: "🐹", text: "Tengo hambre… pero primero las órdenes." },
+      { icon: "🌻", text: "¿Semillitas después de sincronizar?" },
+      { icon: "💤", text: "Si bostezo, es de ternura. No de flojera." }
+    ],
+    gato: [
+      { icon: "🐱", text: "Miau. Yo mando aquí… con permiso." },
+      { icon: "🧶", text: "No toques mi ovillo. El buscador sí." },
+      { icon: "😼", text: "Te miro fijo hasta que guardes bien." }
+    ],
+    ajolote: [
+      { icon: "🦎", text: "Modo zen acuático activado." },
+      { icon: "💧", text: "Respira… como si estuvieras bajo el agua." }
+    ],
+    buho: [
+      { icon: "🦉", text: "Sabiduría de madrugada: revisa antes de guardar." },
+      { icon: "📚", text: "Yo sí leí el manual. Tú haz clic en mí." }
+    ],
+    panda: [
+      { icon: "🐼", text: "Bambú primero… nah, primero la orden." },
+      { icon: "😴", text: "Si parpadeo lento, es cariño." }
+    ],
+    conejo: [
+      { icon: "🐰", text: "¡Salto al siguiente registro!" },
+      { icon: "🥕", text: "Rápido pero sin equivocarte." }
+    ],
+    robot: [
+      { icon: "🤖", text: "Bip-bop. Sincronización recomendada." },
+      { icon: "📡", text: "Sistemas estables. Tú también." }
+    ],
+    mapache: [
+      { icon: "🦝", text: "Detective de campos vacíos a tu servicio." },
+      { icon: "🕵️", text: "Si falta algo, yo lo husmeo." }
+    ],
+    pollito: [
+      { icon: "🐤", text: "Pío pío… ¡nuevo día, nuevas órdenes!" },
+      { icon: "🌤️", text: "Mañana fresca, registro limpio." }
+    ],
+    pinguino: [
+      { icon: "🐧", text: "Deslizo por la tabla como en hielo." },
+      { icon: "❄️", text: "Frío por fuera, útil por dentro." }
+    ],
+    lobo: [
+      { icon: "🐺", text: "¡Auuuuuu! Aullido de motivación." },
+      { icon: "🌙", text: "La manada registra unida." }
+    ],
+    koala: [
+      { icon: "🐨", text: "Calma. Eucalipto mental y adelante." },
+      { icon: "😴", text: "Lento, pero no me pierdo ninguna." }
+    ],
+    shiba: [
+      { icon: "🐶", text: "¡Guau! Buen humano registrando." },
+      { icon: "🎾", text: "Si guardas bien, mereces premio." }
+    ],
+    fantasma: [
+      { icon: "👻", text: "Boo… solo vengo a recordar el atajo." },
+      { icon: "🌫️", text: "Aparezco, ayudo y desaparezco." }
+    ],
+    pulpo: [
+      { icon: "🐙", text: "Ocho brazos, cero campos olvidados." },
+      { icon: "🌊", text: "Multitarea nivel mar profundo." }
+    ],
+    slime: [
+      { icon: "🟢", text: "Blib blub. Todo flexible, nada se rompe." },
+      { icon: "✨", text: "Me estiro hasta el último tip." }
+    ]
+  };
+
+  function skinActivaId() {
+    try { return localStorage.getItem('alpro_skin_activa') || 'hamster'; } catch (e) { return 'hamster'; }
+  }
+
+  function poolTipsActual() {
+    const skin = skinActivaId();
+    const extra = tipsPorSkin[skin] || tipsPorSkin.hamster || [];
+    // ~1 de cada 3 veces prioriza frase de skin si hay
+    if (extra.length && Math.random() < 0.38) {
+      return extra.concat(tips);
+    }
+    return tips.concat(extra);
+  }
+
+  function pickRandomTip() {
+    const pool = poolTipsActual();
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+;
 
   let hideTimeout = null;
   let moodTimeout = null;
@@ -6519,14 +6607,14 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   };
 
   function handleSingleClick() {
-    const tip = tips[Math.floor(Math.random() * tips.length)];
+    const tip = (typeof pickRandomTip === 'function') ? pickRandomTip() : tips[Math.floor(Math.random() * tips.length)];
     let text = tip.text;
     const nom = (typeof window.alproNombreUsuario === 'function') ? window.alproNombreUsuario() : '';
     if (nom) {
       const extraNamed = [
         { icon: "👋", text: "Hola, " + nom + ". ¿En qué te ayudo hoy?" },
-        { icon: "☕", text: nom + ", un café y revisamos lo urgente ¿va?" },
-        { icon: "⚡", text: nom + ", ojo con las rojas: esas ya llevan más de 2 días." },
+        { icon: "☕", text: nom + ", un café y seguimos con calma ¿va?" },
+        { icon: "📋", text: nom + ", confirma el No. de Orden antes de guardar." },
         { icon: "💪", text: "Vas bien, " + nom + ". Una orden a la vez." },
         { icon: "🌟", text: nom + ", se nota tu constancia. De verdad." },
         { icon: "🫶", text: nom + ", no tienes que recordarlo todo: para eso estoy yo." },
@@ -6541,8 +6629,8 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
         { icon: "🪙", text: nom + ", cada orden suma Alprocoins para la tienda." },
         { icon: "🤝", text: "Tú registras, " + nom + ". Yo recuerdo los atajos." }
       ];
-      // ~70% frases con nombre (más cercanía)
-      if (Math.random() < 0.70) {
+      // Solo a veces frase con nombre (así salen más tips nuevos / de skin)
+      if (Math.random() < 0.28) {
         const ntip = extraNamed[Math.floor(Math.random() * extraNamed.length)];
         notify(ntip.text, ntip.icon, 4500, "ok", { mood: "happy" });
         return;
@@ -6625,6 +6713,38 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
         : "¡Sistema listo! Registremos las órdenes de hoy.";
       notify(msg, "🚀", 4200, "ok", { mood: "happy" });
     }, 1300);
+
+  // Mensajes espontáneos (personaje “vivo”)
+  function scheduleHamsterIdleChat() {
+    function nextDelay() {
+      // ~1 minuto (±15s) — frases cortas de skin / cariño
+      return (45 + Math.random() * 30) * 1000;
+    }
+    function tick() {
+      try {
+        var menu = document.getElementById('hamsterSkinMenu');
+        if (menu && menu.classList.contains('visible')) {
+          window.__hamsterIdleT = setTimeout(tick, nextDelay());
+          return;
+        }
+        if (document.hidden) {
+          window.__hamsterIdleT = setTimeout(tick, nextDelay());
+          return;
+        }
+        var tip = (typeof pickSkinOrFunnyTip === 'function')
+          ? pickSkinOrFunnyTip()
+          : (typeof pickRandomTip === 'function' ? pickRandomTip() : null);
+        if (tip && typeof notify === 'function') {
+          notify(tip.text, tip.icon || '💬', 3800, 'ok', { mood: 'happy' });
+        }
+      } catch (e) {}
+      window.__hamsterIdleT = setTimeout(tick, nextDelay());
+    }
+    clearTimeout(window.__hamsterIdleT);
+    window.__hamsterIdleT = setTimeout(tick, nextDelay());
+  }
+  scheduleHamsterIdleChat();
+
   });
 
   if (document.readyState !== 'loading') {
@@ -7042,8 +7162,9 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     }
     if (key === 'saludo') {
       localStorage.setItem(LS.saludo, 'on');
-      var nom = pedirTexto('¿Cómo te llama la mascota?', localStorage.getItem(LS.nombre) || '');
+      var nom = pedirTexto('¿Cómo te llama la mascota? (máx. 67 caracteres)', localStorage.getItem(LS.nombre) || '');
       if (nom) {
+        nom = String(nom).trim().slice(0, 67);
         localStorage.setItem(LS.nombre, nom);
         notifyPref('¡Listo, ' + nom + '! Ya te hablo por tu nombre.', '👋');
       } else {
@@ -7134,7 +7255,7 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
 
   window.alproNombreUsuario = function() {
     if (localStorage.getItem(LS.saludo) === 'on') {
-      return localStorage.getItem(LS.nombre) || '';
+      return String(localStorage.getItem(LS.nombre) || '').trim().slice(0, 67);
     }
     return '';
   };
