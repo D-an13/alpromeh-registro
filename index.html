@@ -4423,7 +4423,7 @@ tbody.animar-entrada {
                         <option value="Claudia" class="color-nata-claudia">Claudia</option>
                         <option value="Dan" class="color-especial-dan-susan" selected>Dan</option>
                         <option value="Susan" class="color-especial-dan-susan">Susan</option>
-                        <option value="Axel" class="color-axel">Axel</option>
+                        <option value="Richard" class="color-axel">Richard</option>
                     </select>
                 </div>
                 
@@ -5065,7 +5065,7 @@ function gestionarSeleccion(orden, filaId) {
             const map = { 
                 "Yanet": "color-yanet", "Danna": "color-danna", "Carmen": "color-carmen", 
                 "Daniela": "color-gris", "Nata": "color-nata-claudia", "Claudia": "color-nata-claudia", 
-                "Dan": "color-especial-dan-susan", "Susan": "color-especial-dan-susan", "Axel": "color-axel",
+                "Dan": "color-especial-dan-susan", "Susan": "color-especial-dan-susan", "Axel": "color-axel", "Richard": "color-axel",
                 "ANULADA": "color-anulada"
             };
             return map[nombre] || "";
@@ -5688,9 +5688,9 @@ function ejecutarRenderTabla() {
                                  
         const fechaOrden = new Date(item.fecha + "T00:00:00");
         const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
-        const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
+        const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "Richard" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
         if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
-        if (modoFiltro === "preparando") return coincideBusqueda && item.responsable === "Axel" && item.fecha === hoyStr;
+        if (modoFiltro === "preparando") return coincideBusqueda && (item.responsable === "Axel" || item.responsable === "Richard") && item.fecha === hoyStr;
         if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
         return coincideBusqueda;
     });
@@ -5706,7 +5706,7 @@ function ejecutarRenderTabla() {
 
     filtrados.forEach((item, index) => {
         const tr = document.createElement('tr');
-        const esAxel = item.responsable === "Axel";
+        const esAxel = (item.responsable === "Axel" || item.responsable === "Richard");
         const esAnulada = item.responsable === "ANULADA";
         const fechaOrden = new Date(item.fecha + "T00:00:00");
         const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
@@ -5737,7 +5737,7 @@ function ejecutarRenderTabla() {
         const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
         let contenidoColumnaListo = "";
         if (esAxel) {
-            contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"><span class="label-axel">Solo Axel</span></div>`;
+            contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"></div>`;
         } else if (esAntigua) {
             contenidoColumnaListo = `<span style="font-size: 1.4rem;">⚠️</span>`;
         }
@@ -5803,6 +5803,7 @@ function ejecutarRenderTabla() {
                     <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
                     <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
                     <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
+                    <option value="Richard" ${item.responsable==='Richard'?'selected':''}>Richard</option>
                 </select>
                 <br><small style="opacity:0.8; font-weight:normal;">${detalleMovimiento}</small>
             </td>
@@ -6502,6 +6503,20 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "☀️", text: "Buen día para dejar la lista más corta." },
   { icon: "🎯", text: "Una orden a la vez. Tú puedes." },
   { icon: "💡", text: "Si algo no cuadra, revisa institución y producto." },
+  // Cercanos / graciosos suaves
+  { icon: "🍪", text: "Tengo hambre… pero primero terminamos esta orden." },
+  { icon: "😴", text: "No te olvides de descansar un ratito." },
+  { icon: "👀", text: "Si parpadeo, es que estoy poniendo atención." },
+  { icon: "🛋️", text: "Estirar hombros cuenta como productividad." },
+  { icon: "🧃", text: "Hidratación nivel experto: un sorbito y seguimos." },
+  { icon: "🙈", text: "No juzgo typos… solo los campos vacíos." },
+  { icon: "🪄", text: "Si algo se siente trabado, un respiro y reintentamos." },
+  { icon: "📎", text: "Yo no muerdo. Solo recuerdo atajos." },
+  { icon: "🌤️", text: "Día pesado o ligero: aquí estoy igual." },
+  { icon: "🧸", text: "Compita de escritorio reportándose presente." },
+  { icon: "⏳", text: "Sin prisa, pero sin dejar la roja olvidada." },
+  { icon: "🧃", text: "Tip de sobrevivencia: agua, postura y guardar." },
+
   { icon: "📎", text: "Los 3 puntitos del historial reimprimen pedidos recientes." },
   { icon: "🪙", text: "Cada orden nueva te suma Alprocoins para la tienda." },
   { icon: "😎", text: "Modo pro: guardar, sincronizar y a seguir." },
@@ -6517,7 +6532,9 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     hamster: [
       { icon: "🐹", text: "Tengo hambre… pero primero las órdenes." },
       { icon: "🌻", text: "¿Semillitas después de sincronizar?" },
-      { icon: "💤", text: "Si bostezo, es de ternura. No de flojera." }
+      { icon: "💤", text: "Si bostezo, es de ternura. No de flojera." },
+      { icon: "🫶", text: "Venía a decirte que vas bien. Ya me voy… o no." },
+      { icon: "😴", text: "Descansa un poquito si puedes. Yo cuido el globito." }
     ],
     gato: [
       { icon: "🐱", text: "Miau. Yo mando aquí… con permiso." },
@@ -6781,33 +6798,35 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     let text = tip.text;
     const nom = (typeof window.alproNombreUsuario === 'function') ? window.alproNombreUsuario() : '';
     if (nom) {
+      // Frases ya naturales con el nombre (no forzar "Dan, ..." al inicio de todo)
       const extraNamed = [
         { icon: "👋", text: "Hola, " + nom + ". ¿En qué te ayudo hoy?" },
-        { icon: "☕", text: nom + ", un café y seguimos con calma ¿va?" },
-        { icon: "📋", text: nom + ", confirma el No. de Orden antes de guardar." },
+        { icon: "☕", text: "Un café y seguimos con calma, " + nom + " ¿va?" },
+        { icon: "📋", text: "Antes de guardar, " + nom + ", confírmale un ojito al No. de Orden." },
         { icon: "💪", text: "Vas bien, " + nom + ". Una orden a la vez." },
-        { icon: "🌟", text: nom + ", se nota tu constancia. De verdad." },
-        { icon: "🫶", text: nom + ", no tienes que recordarlo todo: para eso estoy yo." },
-        { icon: "🚀", text: "Orden guardada, " + nom + ". Tú marcas el ritmo." },
-        { icon: "🧘", text: nom + ", si el día se pone denso: prioriza y respira." },
+        { icon: "🌟", text: "Se nota tu constancia, " + nom + ". De verdad." },
+        { icon: "🫶", text: "No tienes que recordarlo todo, " + nom + ": para eso estoy yo." },
+        { icon: "🚀", text: "Orden guardada. Tú marcas el ritmo, " + nom + "." },
+        { icon: "🧘", text: "Si el día se pone denso, " + nom + ", prioriza y respira." },
         { icon: "😊", text: "Qué gusto verte, " + nom + ". Aquí estoy." },
-        { icon: "🎯", text: nom + ", prioriza y el resto fluye." },
-        { icon: "🧡", text: "Gracias por tu cuidado en cada orden, " + nom + "." },
-        { icon: "📌", text: nom + ", si te trabas, clic en mí otra vez." },
-        { icon: "🔍", text: nom + ", el buscador te saca de apuros." },
-        { icon: "🌙", text: nom + ", doble clic en mí si quieres cambiar el tema." },
-        { icon: "🪙", text: nom + ", cada orden suma Alprocoins para la tienda." },
-        { icon: "🤝", text: "Tú registras, " + nom + ". Yo recuerdo los atajos." }
+        { icon: "🎯", text: "Prioriza y el resto fluye, " + nom + "." },
+        { icon: "🧡", text: "Gracias por el cuidado en cada orden, " + nom + "." },
+        { icon: "📌", text: "Si te trabas, " + nom + ", clic en mí otra vez." },
+        { icon: "🔍", text: "El buscador te saca de apuros, " + nom + "." },
+        { icon: "🌙", text: "Doble clic en mí si quieres cambiar el tema, " + nom + "." },
+        { icon: "🪙", text: "Cada orden suma Alprocoins, " + nom + ". La tienda te espera." },
+        { icon: "🤝", text: "Tú registras; yo recuerdo los atajos. Equipo, " + nom + "." },
+        { icon: "🔄", text: "Si la tabla se ve rara, " + nom + ", un solo clic en Sincronizar basta." },
+        { icon: "📦", text: "Marca LISTO solo cuando ya salió de bodega, " + nom + "." },
+        { icon: "🎧", text: "Pon tu playlist y vamos orden por orden, " + nom + "." },
+        { icon: "🍀", text: "Hoy puede ser un día limpio de pendientes, " + nom + "." }
       ];
-      // Solo a veces frase con nombre (así salen más tips nuevos / de skin)
-      if (Math.random() < 0.28) {
+      if (Math.random() < 0.32) {
         const ntip = extraNamed[Math.floor(Math.random() * extraNamed.length)];
         notify(ntip.text, ntip.icon, 4500, "ok", { mood: "happy" });
         return;
       }
-      if (!text.includes(nom)) {
-        text = nom + ", " + text.charAt(0).toLowerCase() + text.slice(1);
-      }
+      // No anteponer el nombre a tips genéricos (suena robot)
     }
     notify(text, tip.icon, 4500, "ok", { mood: "happy" });
   }
@@ -7362,7 +7381,7 @@ setTimeout(function() {
     }
     if (key === 'resp') {
       localStorage.setItem(LS.resp + '_on', '1');
-      var opciones = ['Yanet','Danna','Carmen','Daniela','Nata','Claudia','Dan','Susan','Axel'];
+      var opciones = ['Yanet','Danna','Carmen','Daniela','Nata','Claudia','Dan','Susan','Richard'];
       var cur = localStorage.getItem(LS.resp) || 'Dan';
       var elegido = pedirTexto('Responsable por defecto (' + opciones.join(', ') + '):', cur);
       if (elegido && opciones.indexOf(elegido) !== -1) {
@@ -7636,7 +7655,7 @@ function actualizarContadores() {
 
     datosLocales.forEach(item => {
         // 1. Urgentes: No despachadas, no son de Axel/Anuladas y tienen fecha anterior a hoy
-        if (!item.despachado && item.responsable !== "Axel" && item.responsable !== "ANULADA" && item.fecha < hoyInput) {
+        if (!item.despachado && item.responsable !== "Axel" && item.responsable !== "Richard" && item.responsable !== "ANULADA" && item.fecha < hoyInput) {
             urgentes++;
         }
         // 2. Ingresadas Hoy: Todo lo que tiene la fecha del input
@@ -7991,7 +8010,7 @@ cuerpoHtml += `
         <div class="contenedor-firmas" style="margin-top: 40px;">
             <div class="bloque-firma">
                 <div class="linea-firma"></div>
-                <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Axel</strong><br>Preparación y Conteo</div>
+                <div class="cargo-firma"><strong style="font-size: 13px; color: #0f172a;">Richard</strong><br>Preparación y Conteo</div>
             </div>
             <div class="bloque-firma">
                 <div class="linea-firma"></div>
