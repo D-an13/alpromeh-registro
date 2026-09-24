@@ -106,6 +106,73 @@
         .color-especial-dan-susan { background-color: #e0f2fe !important; color: #0369a1 !important; }
         .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
 
+        /* Estilos de fila comprables (tienda) — se suman a la clase base del responsable */
+        .fila-estilo-aurora td, tr.fila-estilo-aurora td {
+            background: linear-gradient(90deg, #e0f2fe 0%, #fce7f3 50%, #ede9fe 100%) !important;
+            color: #1e3a5f !important;
+        }
+        .fila-estilo-neon td, tr.fila-estilo-neon td {
+            background: linear-gradient(90deg, #ecfeff 0%, #f0fdf4 100%) !important;
+            color: #0f766e !important;
+            box-shadow: inset 3px 0 0 #22d3ee;
+        }
+        .fila-estilo-galaxy td, tr.fila-estilo-galaxy td {
+            background: linear-gradient(90deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%) !important;
+            color: #e0e7ff !important;
+        }
+        .fila-estilo-galaxy td select, tr.fila-estilo-galaxy select {
+            color: #1e1b4b !important; background: #e0e7ff !important;
+        }
+        .fila-estilo-oro td, tr.fila-estilo-oro td {
+            background: linear-gradient(90deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%) !important;
+            color: #78350f !important;
+        }
+        .fila-estilo-sunset td, tr.fila-estilo-sunset td {
+            background: linear-gradient(90deg, #ffedd5 0%, #fecaca 50%, #fbcfe8 100%) !important;
+            color: #9a3412 !important;
+        }
+        .fila-estilo-menta td, tr.fila-estilo-menta td {
+            background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important;
+            color: #065f46 !important;
+        }
+        .fila-estilo-carbon td, tr.fila-estilo-carbon td {
+            background: linear-gradient(90deg, #334155 0%, #1e293b 100%) !important;
+            color: #f1f5f9 !important;
+        }
+        .fila-estilo-carbon td select, tr.fila-estilo-carbon select {
+            color: #0f172a !important; background: #e2e8f0 !important;
+        }
+        .fila-estilo-cristal td, tr.fila-estilo-cristal td {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, #e0f2fe 100%) !important;
+            color: #0c4a6e !important;
+            box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35);
+        }
+        [data-theme="dark"] .fila-estilo-aurora td, [data-theme="dark"] tr.fila-estilo-aurora td {
+            background: linear-gradient(90deg, #0c4a6e 0%, #831843 50%, #4c1d95 100%) !important;
+            color: #fce7f3 !important;
+        }
+        [data-theme="dark"] .fila-estilo-neon td, [data-theme="dark"] tr.fila-estilo-neon td {
+            background: linear-gradient(90deg, #134e4a 0%, #164e63 100%) !important;
+            color: #a5f3fc !important;
+        }
+        [data-theme="dark"] .fila-estilo-oro td, [data-theme="dark"] tr.fila-estilo-oro td {
+            background: linear-gradient(90deg, #78350f 0%, #a16207 100%) !important;
+            color: #fef3c7 !important;
+        }
+        [data-theme="dark"] .fila-estilo-sunset td, [data-theme="dark"] tr.fila-estilo-sunset td {
+            background: linear-gradient(90deg, #7c2d12 0%, #9d174d 100%) !important;
+            color: #ffedd5 !important;
+        }
+        [data-theme="dark"] .fila-estilo-menta td, [data-theme="dark"] tr.fila-estilo-menta td {
+            background: linear-gradient(90deg, #064e3b 0%, #065f46 100%) !important;
+            color: #a7f3d0 !important;
+        }
+        [data-theme="dark"] .fila-estilo-cristal td, [data-theme="dark"] tr.fila-estilo-cristal td {
+            background: linear-gradient(135deg, #0c4a6e 0%, #1e3a5f 100%) !important;
+            color: #e0f2fe !important;
+        }
+
+
 .fila-seleccionada-reporte td {
             background-color: #b1e2e6 !important;
             color: #0f172a !important;
@@ -5068,7 +5135,13 @@ function gestionarSeleccion(orden, filaId) {
                 "Dan": "color-especial-dan-susan", "Susan": "color-especial-dan-susan", "Axel": "color-axel", "Richard": "color-axel",
                 "ANULADA": "color-anulada"
             };
-            return map[nombre] || "";
+            var base = map[nombre] || "";
+            // Estilo de fila comprado (tienda) — no aplica a anuladas
+            if (nombre && nombre !== "ANULADA" && typeof window.getFilaEstiloClass === "function") {
+                var extra = window.getFilaEstiloClass(nombre);
+                if (extra) base = (base ? base + " " : "") + extra;
+            }
+            return base;
         }
 
 // Funciones para controlar la burbuja flotante de la trivia
@@ -7246,7 +7319,8 @@ setTimeout(function() {
     radius: 'alpro_pref_radius',
     density: 'alpro_pref_density',
     bg: 'alpro_pref_bg',
-    frase: 'alpro_pref_frase'
+    frase: 'alpro_pref_frase',
+    filaEstilos: 'alpro_pref_fila_estilos'
   };
 
   function reclamados() {
@@ -7320,6 +7394,76 @@ setTimeout(function() {
   }
 
 
+
+  // —— Estilos de fila por responsable (comprados en tienda) ——
+  function leerFilaEstilos() {
+    try { return JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function guardarFilaEstilos(map) {
+    try { localStorage.setItem(LS.filaEstilos, JSON.stringify(map || {})); } catch (e) {}
+  }
+  window.getFilaEstiloClass = function(nombre) {
+    if (!nombre) return '';
+    var map = leerFilaEstilos();
+    var est = map[nombre];
+    if (!est) return '';
+    return 'fila-estilo-' + est;
+  };
+  function refrescarClasesFilasEstilo() {
+    try {
+      document.querySelectorAll('table tbody tr').forEach(function(tr) {
+        var sel = tr.querySelector('select');
+        var nom = sel ? sel.value : null;
+        if (!nom) return;
+        Array.from(tr.classList).forEach(function(c) {
+          if (c.indexOf('fila-estilo-') === 0) tr.classList.remove(c);
+        });
+        var extra = window.getFilaEstiloClass(nom);
+        if (extra) tr.classList.add(extra);
+      });
+    } catch (e) {}
+  }
+  window.refrescarClasesFilasEstilo = refrescarClasesFilasEstilo;
+
+  (function initFilaEstilos() {
+    function mergeRemote(remote) {
+      if (!remote || typeof remote !== 'object') return;
+      var local = leerFilaEstilos();
+      var changed = false;
+      Object.keys(remote).forEach(function(k) {
+        if (remote[k]) { local[k] = remote[k]; changed = true; }
+      });
+      if (changed) guardarFilaEstilos(local);
+      refrescarClasesFilasEstilo();
+    }
+    try {
+      if (typeof URL_SCRIPT !== 'undefined' && URL_SCRIPT) {
+        fetch(URL_SCRIPT + '?estilosFila=1', { redirect: 'follow' })
+          .then(function(r) { return r.text(); })
+          .then(function(txt) {
+            try {
+              var data = JSON.parse(txt);
+              if (data && data.estilos) mergeRemote(data.estilos);
+            } catch (e) {}
+          }).catch(function() {});
+      }
+    } catch (e) {}
+    setTimeout(function() { refrescarClasesFilasEstilo(); }, 1500);
+  })();
+
+  window.syncFilaEstilosASheets = function(map) {
+    try {
+      if (typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) return;
+      fetch(URL_SCRIPT, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ accion: 'guardarEstilosFila', estilos: map || leerFilaEstilos() })
+      }).catch(function() {});
+    } catch (e) {}
+  };
+
   window.aplicarPreferenciaAlpro = function(pref) {
     if (!pref || !pref.prefKey) return;
     var key = pref.prefKey;
@@ -7331,6 +7475,41 @@ setTimeout(function() {
       notifyPref('Color aplicado', '🎨');
       return;
     }
+    if (key === 'fila_estilo') {
+      var estilo = val;
+      if (!estilo) return;
+      var personas = ['Dan','Susan','Yanet','Danna','Carmen','Nata','Claudia','Daniela','Richard'];
+      var quien = pedirTexto(
+        '¿A qué responsable aplica este estilo de fila?\n(' + personas.join(', ') + ')',
+        localStorage.getItem(LS.resp) || 'Dan'
+      );
+      if (!quien) {
+        notifyPref('Cancelado. El estilo sigue en tu inventario; actívalo otra vez.', '🎨');
+        return;
+      }
+      quien = String(quien).trim();
+      // normalizar capitalización
+      var found = personas.find(function(p) { return p.toLowerCase() === quien.toLowerCase(); });
+      if (found) quien = found;
+      var map = leerFilaEstilos();
+      map[quien] = estilo;
+      guardarFilaEstilos(map);
+      refrescarClasesFilasEstilo();
+      // re-pintar selects visibles
+      document.querySelectorAll('select').forEach(function(sel) {
+        if (sel.id === 'responsableSelect' || (sel.onchange && String(sel.onchange).indexOf('actualizarResponsable') !== -1)) {
+          if (typeof aplicarColorUnico === 'function' && sel.value) aplicarColorUnico(sel);
+        }
+      });
+      if (typeof window.playAlproFx === 'function') window.playAlproFx('color');
+      notifyPref('Fila de ' + quien + ' → estilo ' + (pref.nombre || estilo), '🎨');
+      // Sync opcional a Sheets (no bloquea si falla)
+      if (typeof window.syncFilaEstilosASheets === 'function') {
+        try { window.syncFilaEstilosASheets(map); } catch (e) {}
+      }
+      return;
+    }
+
     if (key === 'radius' || key === 'radius_pack') {
       // radius_pack alone just unlocks; actual value via menu chips
       if (key === 'radius_pack') {
@@ -10804,6 +10983,15 @@ const premios = [
     // —— Personalización ——
     { id: 210, nombre: "Saludo con nombre", precio: 50, emoji: "👋", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "saludo", prefValue: "on", desc: "La mascota te saluda por tu nombre" },
     { id: 211, nombre: "Responsable favorito", precio: 35, emoji: "👤", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "resp", prefValue: "on", desc: "Elige quién aparece por defecto al registrar" },
+    { id: 280, nombre: "Fila Aurora", precio: 20, emoji: "🌈", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "aurora", desc: "Degradado suave rosa-azul en tu fila" },
+    { id: 281, nombre: "Fila Neón", precio: 20, emoji: "💚", colorBadge: "#ecfeff", colorTexto: "#0f766e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "neon", desc: "Toque celeste/menta en la fila del responsable" },
+    { id: 282, nombre: "Fila Atardecer", precio: 20, emoji: "🌅", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "sunset", desc: "Naranja-rosa cálido en la fila" },
+    { id: 283, nombre: "Fila Menta", precio: 20, emoji: "🌿", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "menta", desc: "Verde menta limpio para tu fila" },
+    { id: 284, nombre: "Fila Cristal", precio: 20, emoji: "🧊", colorBadge: "#e0f2fe", colorTexto: "#0c4a6e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "cristal", desc: "Look cristal con borde suave" },
+    { id: 285, nombre: "Fila Galaxy", precio: 35, emoji: "🌌", colorBadge: "#ede9fe", colorTexto: "#4c1d95", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "galaxy", desc: "Premium: fila espacial oscura con brillo" },
+    { id: 286, nombre: "Fila Oro", precio: 35, emoji: "✨", colorBadge: "#fef3c7", colorTexto: "#78350f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "oro", desc: "Premium: degradado dorado en la fila" },
+    { id: 287, nombre: "Fila Carbón", precio: 35, emoji: "⬛", colorBadge: "#e2e8f0", colorTexto: "#0f172a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "carbon", desc: "Premium: fila oscura elegante" },
+
     { id: 201, nombre: "Color: Esmeralda", precio: 30, emoji: "🟢", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#047857", prefDeep: "#065f46", desc: "Verde sobrio para franja y botones" },
     { id: 202, nombre: "Color: Violeta", precio: 30, emoji: "🟣", colorBadge: "#ede9fe", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#6d28d9", prefDeep: "#5b21b6", desc: "Violeta contenido, tono corporativo" },
     { id: 203, nombre: "Color: Coral", precio: 30, emoji: "🟠", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#c2410c", prefDeep: "#9a3412", desc: "Coral profundo, menos chillante" },
