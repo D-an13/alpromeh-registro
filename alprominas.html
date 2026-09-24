@@ -26,19 +26,31 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+        html, body { margin: 0; height: 100%; overflow: hidden; }
         body {
             font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
-            margin: 0; color: #f8fafc;
-            min-height: 100vh; width: 100vw;
-            display: flex; justify-content: center; align-items: flex-start;
-            padding: 16px 0 24px;
+            color: #f8fafc;
+            display: flex; justify-content: center; align-items: center;
+            background: var(--bg0);
+            transition: background 0.45s ease;
+        }
+        body.mode-facil {
             background:
-                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.22), transparent 50%),
-                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(16,185,129,0.12), transparent 45%),
-                radial-gradient(ellipse 50% 40% at 0% 80%, rgba(167,139,250,0.1), transparent 40%),
-                linear-gradient(165deg, var(--bg1) 0%, var(--bg0) 100%);
-            overflow-x: hidden;
-            overflow-y: auto;
+                radial-gradient(ellipse 70% 50% at 50% 0%, rgba(59,130,246,0.28), transparent 55%),
+                radial-gradient(ellipse 40% 40% at 90% 90%, rgba(239,68,68,0.1), transparent 50%),
+                linear-gradient(165deg, #0f172a, #070b14);
+        }
+        body.mode-medio {
+            background:
+                radial-gradient(ellipse 70% 50% at 50% 0%, rgba(16,185,129,0.25), transparent 55%),
+                radial-gradient(ellipse 40% 40% at 10% 90%, rgba(251,191,36,0.1), transparent 50%),
+                linear-gradient(165deg, #0a1f18, #070b14);
+        }
+        body.mode-dificil {
+            background:
+                radial-gradient(ellipse 70% 50% at 50% 0%, rgba(251,191,36,0.22), transparent 55%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(167,139,250,0.1), transparent 50%),
+                linear-gradient(165deg, #1a1408, #070b14);
         }
 
         /* partículas de fondo decorativas */
@@ -76,12 +88,13 @@
             position: fixed; left: 10px; top: 50%; transform: translateY(-50%);
             z-index: 5;
             transition: opacity 0.3s, transform 0.3s;
-            max-height: 92vh;
-            overflow-y: auto;
+            max-height: none;
+            overflow: hidden;
         }
         #shop-container.hidden {
             opacity: 0; pointer-events: none;
             transform: translateY(-50%) translateX(-12px) scale(0.96);
+            width: 0; padding: 0; border: none; overflow: hidden;
         }
         .shop-title {
             font-size: 0.62rem; font-weight: 800; letter-spacing: 1.5px;
@@ -132,7 +145,8 @@
             border: 1px solid var(--panel-border);
             text-align: center; position: relative;
             display: flex; flex-direction: column; justify-content: center;
-            max-height: none; margin-left: 120px; min-width: 310px;
+            max-height: calc(100vh - 20px); margin-left: 120px; min-width: 310px;
+            overflow: hidden;
             backdrop-filter: blur(20px);
             animation: panelIn 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
         }
@@ -225,18 +239,41 @@
         .btn-nivel.active { color: #fff; transform: scale(1.04); }
 
         .tablero-scroll-area {
-            width: 100%; max-width: 92vw;
-            overflow: visible;
-            margin: 4px 0 6px; display: flex; justify-content: center;
-            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+            margin: 4px 0 6px; display: flex; justify-content: center; align-items: center;
         }
         #tablero {
-            display: grid; gap: 4px; margin: 0 auto; padding: 12px;
+            display: grid; gap: 3px; margin: 0 auto; padding: 10px;
             background: rgba(0,0,0,0.35);
             border-radius: 18px; width: max-content;
             border: 1px solid rgba(255,255,255,0.05);
             box-shadow: inset 0 2px 12px rgba(0,0,0,0.3);
+            transform-origin: center center;
         }
+        .celda.roca {
+            background: linear-gradient(160deg, #64748b, #475569) !important;
+            cursor: not-allowed;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .celda.roca.golpe { animation: rockHit 0.35s ease; }
+        @keyframes rockHit {
+            0%,100%{transform:scale(1)} 40%{transform:scale(0.9)} 70%{transform:scale(1.05)}
+        }
+        .celda.hint-glow {
+            box-shadow: 0 0 0 2px #22d3ee, 0 0 14px rgba(34,211,238,0.55) !important;
+        }
+        .btn-accion-luces {
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: #e2e8f0; font-weight: 800; font-size: 0.68rem;
+            padding: 5px 12px; border-radius: 99px; cursor: pointer;
+            font-family: inherit; margin-bottom: 6px;
+        }
+        .btn-accion-luces:hover { border-color: #fbbf24; color: #fbbf24; }
+        .btn-accion-luces.hidden { display: none; }
 
         .celda {
             display: flex; align-items: center; justify-content: center;
@@ -474,15 +511,16 @@
         }
 
         @media (max-width: 800px) {
+            html, body { overflow: auto; height: auto; }
             #main-layout { flex-direction: column; padding: 8px; }
             #shop-container {
                 position: relative; left: 0; top: 0; transform: none;
                 flex-direction: row; flex-wrap: wrap; order: 2; margin-top: 12px;
-                max-height: none; justify-content: center;
+                max-height: none; justify-content: center; width: auto;
             }
-            #shop-container.hidden { transform: none; }
-            #game-container { order: 1; width: 98%; margin-left: 0; max-height: none; }
-            body { overflow-y: auto; align-items: flex-start; padding: 8px 0; }
+            #shop-container.hidden { transform: none; width: 0; }
+            #game-container { order: 1; width: 98%; margin-left: 0; max-height: none; overflow: visible; }
+            body { align-items: flex-start; padding: 8px 0; }
         }
     </style>
 </head>
@@ -552,6 +590,7 @@
             <button class="btn-nivel" id="btn-dificil" onclick="seleccionarModo('dificil', this)">💡 Luces</button>
         </div>
 
+        <button type="button" id="btn-pista-luces" class="btn-accion-luces hidden" onclick="pistaLuces()">💡 Pista (te marca una casilla clave)</button>
         <div class="tablero-scroll-area">
             <div id="tablero"></div>
         </div>
@@ -597,7 +636,7 @@ const MODOS = {
     medio: {
         nombre: 'BUSCATESORO',
         titulo: 'TESORO OCULTO',
-        desc: 'Encuentra el 💎 en pocos movimientos. El número es la distancia. Rojo = muy cerca.',
+        desc: 'Encuentra el 💎. Las 🪨 rocas restan 2 movimientos. El número es la distancia. Rojo = cerca.',
         icon: '💎',
         colorBtn: '#10b981',
         colorTitulo: '#6ee7b7',
@@ -607,7 +646,7 @@ const MODOS = {
     dificil: {
         nombre: 'LUCES FUERA',
         titulo: 'LUCES FUERA',
-        desc: 'Apaga todas las luces. Cada toque cambia esa casilla y sus vecinas en cruz.',
+        desc: 'Apaga todas. Cada toque cambia esa casilla y sus vecinas. Si te trabas, usa Pista.',
         icon: '💡',
         colorBtn: '#fbbf24',
         colorTitulo: '#fcd34d',
@@ -635,6 +674,21 @@ let partidaActiva = false;
 let multiplicadorActivo = false;
 let timerMulti = null;
 let tesoroF = 0, tesoroC = 0;
+let lucesSolucion = null;
+
+
+function ajustarEscalaTablero() {
+    const wrap = document.querySelector('.tablero-scroll-area');
+    const tab = document.getElementById('tablero');
+    if (!wrap || !tab || !tab.children.length) return;
+    tab.style.transform = 'scale(1)';
+    const aw = wrap.clientWidth - 4, ah = wrap.clientHeight - 4;
+    const nw = tab.scrollWidth, nh = tab.scrollHeight;
+    if (nw < 1 || nh < 1) return;
+    const s = Math.min(1, aw / nw, ah / nh);
+    tab.style.transform = 'scale(' + s + ')';
+}
+window.addEventListener('resize', () => ajustarEscalaTablero());
 
 /* ---------- Confetti ---------- */
 function lanzarConfeti() {
@@ -724,6 +778,8 @@ function seleccionarModo(modo, btn) {
 
     modoActual = modo;
     const cfg = MODOS[modo];
+    document.body.classList.remove('mode-facil','mode-medio','mode-dificil');
+    document.body.classList.add('mode-'+modo);
 
     document.querySelectorAll('.btn-nivel').forEach(b => {
         b.classList.remove('active');
@@ -755,6 +811,8 @@ function seleccionarModo(modo, btn) {
     }
     document.getElementById('shop-container').classList.add('hidden');
     document.getElementById('multi-wrapper').classList.add('hidden');
+    const bp = document.getElementById('btn-pista-luces');
+    if (bp) bp.classList.add('hidden');
     document.getElementById('tablero').innerHTML = '';
 }
 
@@ -818,6 +876,8 @@ function iniciarBuscaminas() {
 
     crearTableroDOM(filas, cols, 32);
     colocarMinas();
+    requestAnimationFrame(() => ajustarEscalaTablero());
+    requestAnimationFrame(() => ajustarEscalaTablero());
 
     if (st.itemsPendientes.revelar) {
         st.itemsPendientes.revelar = false;
@@ -1040,73 +1100,116 @@ function reclamarRegalo(tipo) {
 
 /* ========== TESORO ========== */
 function iniciarTesoro() {
-    filas = 12; cols = 12;
-    estado.medio.movimientos = 10;
+    filas = 14; cols = 14;
+    estado.medio.movimientos = 12;
     document.getElementById('shop-container').classList.add('hidden');
     document.getElementById('multi-wrapper').classList.add('hidden');
     document.getElementById('regalos-seccion').style.display = 'none';
+    const bp = document.getElementById('btn-pista-luces');
+    if (bp) bp.classList.add('hidden');
     clearInterval(timerMulti);
     setPuntosUI(estado.medio.movimientos, MODOS.medio.label, '⚡', 'mode-energy');
     tesoroF = Math.floor(Math.random() * filas);
     tesoroC = Math.floor(Math.random() * cols);
-    crearTableroDOM(filas, cols, 28);
+    crearTableroDOM(filas, cols, 26);
+    let rocas = Math.floor(filas * cols * 0.18);
+    while (rocas > 0) {
+        const f = Math.floor(Math.random() * filas), c = Math.floor(Math.random() * cols);
+        if ((f === tesoroF && c === tesoroC) || tableroLogico[f][c].roca) continue;
+        tableroLogico[f][c].roca = true;
+        const el = document.getElementById('c-' + f + '-' + c);
+        el.classList.add('roca');
+        el.textContent = '🪨';
+        rocas--;
+    }
+    requestAnimationFrame(() => ajustarEscalaTablero());
 }
 
 function revelarTesoro(f, c) {
     if (juegoTerminado || tableroLogico[f][c].revelada) return;
+    const el = document.getElementById('c-' + f + '-' + c);
+    if (tableroLogico[f][c].roca) {
+        el.classList.add('golpe');
+        setTimeout(() => el.classList.remove('golpe'), 350);
+        estado.medio.movimientos = Math.max(0, estado.medio.movimientos - 2);
+        document.getElementById('puntos-val').textContent = estado.medio.movimientos;
+        popScore();
+        toast('🪨 ¡Roca! −2 movimientos');
+        if (estado.medio.movimientos <= 0) {
+            document.getElementById('c-' + tesoroF + '-' + tesoroC).textContent = '💎';
+            document.getElementById('boom-text').textContent = '¡SIN TURNOS!';
+            finalizar(false);
+        }
+        return;
+    }
     tableroLogico[f][c].revelada = true;
-    const el = document.getElementById(`c-${f}-${c}`);
     estado.medio.movimientos--;
     document.getElementById('puntos-val').textContent = estado.medio.movimientos;
     popScore();
-
     if (f === tesoroF && c === tesoroC) {
-        el.classList.add('tesoro');
-        el.textContent = '💎';
-        finalizar(true);
-        return;
+        el.classList.add('tesoro'); el.textContent = '💎';
+        finalizar(true); return;
     }
-
     const dist = Math.abs(f - tesoroF) + Math.abs(c - tesoroC);
     el.classList.add('revelada');
     el.textContent = dist;
-    if (dist <= 2) {
-        el.style.color = '#ff3b4a';
-        el.style.textShadow = '0 0 10px rgba(255,59,74,0.9)';
-    } else if (dist <= 5) {
-        el.style.color = '#fbbf24';
-    } else {
-        el.style.color = '#22d3ee';
-    }
-
+    if (dist <= 2) { el.style.color = '#ff3b4a'; el.style.textShadow = '0 0 10px rgba(255,59,74,0.9)'; }
+    else if (dist <= 5) el.style.color = '#fbbf24';
+    else el.style.color = '#22d3ee';
     if (estado.medio.movimientos <= 0) {
-        const tEl = document.getElementById(`c-${tesoroF}-${tesoroC}`);
-        if (tEl) { tEl.textContent = '💎'; tEl.style.opacity = '0.75'; }
+        document.getElementById('c-' + tesoroF + '-' + tesoroC).textContent = '💎';
         document.getElementById('boom-text').textContent = '¡SIN TURNOS!';
         finalizar(false);
     }
 }
 
-/* ========== LUCES FUERA ========== */
 function iniciarLuces() {
     filas = 5; cols = 5;
     document.getElementById('shop-container').classList.add('hidden');
     document.getElementById('multi-wrapper').classList.add('hidden');
     document.getElementById('regalos-seccion').style.display = 'none';
+    const bp = document.getElementById('btn-pista-luces');
+    if (bp) bp.classList.remove('hidden');
     clearInterval(timerMulti);
     setPuntosUI('ON', MODOS.dificil.label, '💡', 'mode-lights');
-    crearTableroDOM(filas, cols, 50);
-
-    const clics = 8 + Math.floor(Math.random() * 5);
+    crearTableroDOM(filas, cols, 48);
+    // Siempre resoluble: OFF + clics aleatorios. Solución = repetir esos clics (mod 2).
+    const presses = Array.from({length: filas}, () => Array(cols).fill(0));
+    const clics = 7 + Math.floor(Math.random() * 6);
     for (let n = 0; n < clics; n++) {
-        aplicarCruce(Math.floor(Math.random() * filas), Math.floor(Math.random() * cols), false);
+        const f = Math.floor(Math.random() * filas);
+        const c = Math.floor(Math.random() * cols);
+        presses[f][c] ^= 1;
+        aplicarCruce(f, c, false);
     }
+    lucesSolucion = presses.map(r => r.slice());
+    let on = 0;
+    for (let f = 0; f < filas; f++) for (let c = 0; c < cols; c++) if (tableroLogico[f][c].encendida) on++;
+    if (on === 0) { aplicarCruce(2, 2, false); lucesSolucion[2][2] ^= 1; }
     actualizarContadorLuces();
+    requestAnimationFrame(() => ajustarEscalaTablero());
 }
 
 function clickLuces(f, c) {
     if (juegoTerminado) return;
     aplicarCruce(f, c, true);
+    if (lucesSolucion) lucesSolucion[f][c] ^= 1;
+    document.querySelectorAll('.hint-glow').forEach(e => e.classList.remove('hint-glow'));
+}
+
+function pistaLuces() {
+    if (juegoTerminado || modoActual !== 'dificil') return;
+    document.querySelectorAll('.hint-glow').forEach(e => e.classList.remove('hint-glow'));
+    if (lucesSolucion) {
+        for (let f = 0; f < filas; f++)
+            for (let c = 0; c < cols; c++)
+                if (lucesSolucion[f][c] === 1) {
+                    document.getElementById('c-' + f + '-' + c).classList.add('hint-glow');
+                    toast('💡 Prueba esta casilla (a veces no está encendida, y está bien)');
+                    return;
+                }
+    }
+    toast('¡Casi! Sigue apagando');
 }
 
 function aplicarCruce(f, c, chequear) {
@@ -1153,7 +1256,7 @@ function crearTableroDOM(fCount, cCount, sizePx) {
         tableroLogico[r] = [];
         for (let c = 0; c < cCount; c++) {
             tableroLogico[r][c] = {
-                esMina: false, revelada: false, vecinas: 0, bandera: false, encendida: false
+                esMina: false, revelada: false, vecinas: 0, bandera: false, encendida: false, roca: false
             };
             const btn = document.createElement('div');
             btn.className = 'celda';
