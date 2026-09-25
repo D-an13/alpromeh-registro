@@ -106,79 +106,307 @@
         .color-especial-dan-susan { background-color: #e0f2fe !important; color: #0369a1 !important; }
         .color-axel { background-color: #f7fee7 !important; color: #3f6212 !important; }
 
-        /* Estilos de fila comprables (tienda) — se suman a la clase base del responsable */
-        .fila-estilo-aurora td, tr.fila-estilo-aurora td {
-            background: linear-gradient(90deg, #e0f2fe 0%, #fce7f3 50%, #ede9fe 100%) !important;
-            color: #1e3a5f !important;
-        }
-        .fila-estilo-neon td, tr.fila-estilo-neon td {
-            background: linear-gradient(90deg, #ecfeff 0%, #f0fdf4 100%) !important;
-            color: #0f766e !important;
-            box-shadow: inset 3px 0 0 #22d3ee;
-        }
-        .fila-estilo-galaxy td, tr.fila-estilo-galaxy td {
-            background: linear-gradient(90deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%) !important;
-            color: #e0e7ff !important;
-        }
-        .fila-estilo-galaxy td select, tr.fila-estilo-galaxy select {
-            color: #1e1b4b !important; background: #e0e7ff !important;
-        }
-        .fila-estilo-oro td, tr.fila-estilo-oro td {
-            background: linear-gradient(90deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%) !important;
-            color: #78350f !important;
-        }
-        .fila-estilo-sunset td, tr.fila-estilo-sunset td {
-            background: linear-gradient(90deg, #ffedd5 0%, #fecaca 50%, #fbcfe8 100%) !important;
-            color: #9a3412 !important;
-        }
-        .fila-estilo-menta td, tr.fila-estilo-menta td {
-            background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important;
-            color: #065f46 !important;
-        }
-        .fila-estilo-carbon td, tr.fila-estilo-carbon td {
-            background: linear-gradient(90deg, #334155 0%, #1e293b 100%) !important;
-            color: #f1f5f9 !important;
-        }
-        .fila-estilo-carbon td select, tr.fila-estilo-carbon select {
-            color: #0f172a !important; background: #e2e8f0 !important;
-        }
-        .fila-estilo-cristal td, tr.fila-estilo-cristal td {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, #e0f2fe 100%) !important;
-            color: #0c4a6e !important;
-            box-shadow: inset 0 0 0 1px rgba(14,165,233,0.35);
-        }
-        [data-theme="dark"] .fila-estilo-aurora td, [data-theme="dark"] tr.fila-estilo-aurora td {
-            background: linear-gradient(90deg, #0c4a6e 0%, #831843 50%, #4c1d95 100%) !important;
-            color: #fce7f3 !important;
-        }
-        [data-theme="dark"] .fila-estilo-neon td, [data-theme="dark"] tr.fila-estilo-neon td {
-            background: linear-gradient(90deg, #134e4a 0%, #164e63 100%) !important;
-            color: #a5f3fc !important;
-        }
-        [data-theme="dark"] .fila-estilo-oro td, [data-theme="dark"] tr.fila-estilo-oro td {
-            background: linear-gradient(90deg, #78350f 0%, #a16207 100%) !important;
-            color: #fef3c7 !important;
-        }
-        [data-theme="dark"] .fila-estilo-sunset td, [data-theme="dark"] tr.fila-estilo-sunset td {
-            background: linear-gradient(90deg, #7c2d12 0%, #9d174d 100%) !important;
-            color: #ffedd5 !important;
-        }
-        [data-theme="dark"] .fila-estilo-menta td, [data-theme="dark"] tr.fila-estilo-menta td {
-            background: linear-gradient(90deg, #064e3b 0%, #065f46 100%) !important;
-            color: #a7f3d0 !important;
-        }
-        [data-theme="dark"] .fila-estilo-cristal td, [data-theme="dark"] tr.fila-estilo-cristal td {
-            background: linear-gradient(135deg, #0c4a6e 0%, #1e3a5f 100%) !important;
-            color: #e0f2fe !important;
-        }
+        
 
 
-.fila-seleccionada-reporte td {
-            background-color: #b1e2e6 !important;
-            color: #0f172a !important;
-        }
 
-        .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+/* ========== ESTILOS DE FILA — partículas continuas (estilo Cosmos) ========== */
+/* Misma base en todas las celdas + puntos con background-attachment:fixed
+   para que la fila se lea como UNA sola franja trabajada. */
+
+tr[class*="fila-estilo-"] td {
+  position: relative;
+  background-image: none !important;
+  transition: background-color 0.2s ease;
+}
+tr[class*="fila-estilo-"] td select {
+  border-radius: 6px;
+  position: relative;
+  z-index: 2;
+}
+tr[class*="fila-estilo-"] td::before,
+tr[class*="fila-estilo-"] td::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* —— 1 COSMOS —— */
+@keyframes filaTwA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes filaTwB { 0%, 100% { opacity: 1; } 40% { opacity: 0.15; } 75% { opacity: 0.9; } }
+tr.fila-estilo-cosmos td {
+  background-color: #1e1b4b !important;
+  color: #eef2ff !important;
+}
+tr.fila-estilo-cosmos td::before {
+  background-image:
+    radial-gradient(2.2px 2.2px at 10% 32%, #fff 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 26% 70%, #e0e7ff 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 48% 20%, #c4b5fd 0%, transparent 100%),
+    radial-gradient(1.7px 1.7px at 64% 58%, #fff 0%, transparent 100%),
+    radial-gradient(2.1px 2.1px at 80% 28%, #a5f3fc 0%, transparent 100%),
+    radial-gradient(1.6px 1.6px at 92% 76%, #fff 0%, transparent 100%);
+  animation: filaTwA 1.7s ease-in-out infinite;
+}
+tr.fila-estilo-cosmos td::after {
+  background-image:
+    radial-gradient(2px 2px at 16% 52%, #fff 0%, transparent 100%),
+    radial-gradient(1.9px 1.9px at 36% 14%, #ddd6fe 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 54% 80%, #fff 0%, transparent 100%),
+    radial-gradient(1.7px 1.7px at 72% 44%, #e0f2fe 0%, transparent 100%),
+    radial-gradient(2px 2px at 88% 16%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 6% 86%, #fce7f3 0%, transparent 100%);
+  animation: filaTwB 2.3s ease-in-out infinite 0.25s;
+}
+tr.fila-estilo-cosmos td select { background: #fff !important; color: #1e1b4b !important; }
+
+/* —— 2 NIEVE —— fondo frío + copos —— */
+@keyframes filaSnowA { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes filaSnowB { 0%, 100% { opacity: 0.9; } 45% { opacity: 0.2; } }
+tr.fila-estilo-nieve td {
+  background-color: #0c4a6e !important;
+  color: #f0f9ff !important;
+}
+tr.fila-estilo-nieve td::before {
+  background-image:
+    radial-gradient(2.5px 2.5px at 12% 25%, #fff 0%, transparent 100%),
+    radial-gradient(2px 2px at 30% 60%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(2.8px 2.8px at 52% 18%, #fff 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 70% 72%, rgba(255,255,255,0.85) 0%, transparent 100%),
+    radial-gradient(2px 2px at 88% 40%, #fff 0%, transparent 100%);
+  animation: filaSnowA 2s ease-in-out infinite;
+}
+tr.fila-estilo-nieve td::after {
+  background-image:
+    radial-gradient(2.2px 2.2px at 20% 80%, #e0f2fe 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 42% 35%, #fff 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 62% 55%, rgba(255,255,255,0.95) 0%, transparent 100%),
+    radial-gradient(2px 2px at 78% 15%, #fff 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 95% 68%, #bae6fd 0%, transparent 100%);
+  animation: filaSnowB 2.6s ease-in-out infinite 0.4s;
+}
+tr.fila-estilo-nieve td select { background: #f0f9ff !important; color: #0c4a6e !important; }
+
+/* —— 3 BRASAS —— fondo carbón + chispas naranja —— */
+@keyframes filaEmberA { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes filaEmberB { 0%, 100% { opacity: 1; } 40% { opacity: 0.2; } }
+tr.fila-estilo-brasas td {
+  background-color: #1c1917 !important;
+  color: #ffedd5 !important;
+}
+tr.fila-estilo-brasas td::before {
+  background-image:
+    radial-gradient(2.4px 2.4px at 14% 70%, #fb923c 0%, transparent 100%),
+    radial-gradient(2px 2px at 32% 40%, #fbbf24 0%, transparent 100%),
+    radial-gradient(2.6px 2.6px at 50% 78%, #f97316 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 68% 28%, #fdba74 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 86% 62%, #fb923c 0%, transparent 100%);
+  animation: filaEmberA 1.5s ease-in-out infinite;
+}
+tr.fila-estilo-brasas td::after {
+  background-image:
+    radial-gradient(2px 2px at 22% 22%, #fde68a 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 45% 55%, #fb923c 0%, transparent 100%),
+    radial-gradient(1.7px 1.7px at 60% 85%, #f59e0b 0%, transparent 100%),
+    radial-gradient(2.1px 2.1px at 78% 18%, #fdba74 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 92% 48%, #f97316 0%, transparent 100%);
+  animation: filaEmberB 2.1s ease-in-out infinite 0.2s;
+}
+tr.fila-estilo-brasas td select { background: #fff7ed !important; color: #7c2d12 !important; }
+
+/* —— 4 LUCIÉRNAGAS —— bosque oscuro + puntos lima —— */
+@keyframes filaFireA { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+@keyframes filaFireB { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.2; } }
+tr.fila-estilo-luciernagas td {
+  background-color: #14532d !important;
+  color: #ecfdf5 !important;
+}
+tr.fila-estilo-luciernagas td::before {
+  background-image:
+    radial-gradient(2.8px 2.8px at 15% 45%, #bef264 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 38% 20%, #a3e635 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 58% 68%, #d9f99d 0%, transparent 100%),
+    radial-gradient(2px 2px at 75% 35%, #bef264 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 90% 78%, #a3e635 0%, transparent 100%);
+  animation: filaFireA 1.9s ease-in-out infinite;
+}
+tr.fila-estilo-luciernagas td::after {
+  background-image:
+    radial-gradient(2.3px 2.3px at 8% 75%, #ecfccb 0%, transparent 100%),
+    radial-gradient(2px 2px at 28% 55%, #bef264 0%, transparent 100%),
+    radial-gradient(2.6px 2.6px at 48% 12%, #a3e635 0%, transparent 100%),
+    radial-gradient(1.9px 1.9px at 66% 88%, #d9f99d 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 84% 42%, #bef264 0%, transparent 100%);
+  animation: filaFireB 2.5s ease-in-out infinite 0.35s;
+}
+tr.fila-estilo-luciernagas td select { background: #ecfdf5 !important; color: #14532d !important; }
+
+/* —— 5 BURBUJAS —— azul profundo + círculos suaves —— */
+@keyframes filaBubA { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.85; } }
+@keyframes filaBubB { 0%, 100% { opacity: 0.7; } 50% { opacity: 0.15; } }
+tr.fila-estilo-burbujas td {
+  background-color: #1e3a5f !important;
+  color: #e0f2fe !important;
+}
+tr.fila-estilo-burbujas td::before {
+  background-image:
+    radial-gradient(circle 5px at 12% 50%, rgba(125,211,252,0.55) 0%, transparent 70%),
+    radial-gradient(circle 3.5px at 35% 25%, rgba(186,230,253,0.5) 0%, transparent 70%),
+    radial-gradient(circle 6px at 58% 70%, rgba(125,211,252,0.45) 0%, transparent 70%),
+    radial-gradient(circle 4px at 80% 35%, rgba(186,230,253,0.55) 0%, transparent 70%);
+  animation: filaBubA 2.4s ease-in-out infinite;
+}
+tr.fila-estilo-burbujas td::after {
+  background-image:
+    radial-gradient(circle 4.5px at 22% 75%, rgba(224,242,254,0.4) 0%, transparent 70%),
+    radial-gradient(circle 3px at 48% 40%, rgba(125,211,252,0.5) 0%, transparent 70%),
+    radial-gradient(circle 5.5px at 70% 15%, rgba(186,230,253,0.4) 0%, transparent 70%),
+    radial-gradient(circle 3.8px at 92% 60%, rgba(125,211,252,0.45) 0%, transparent 70%);
+  animation: filaBubB 3s ease-in-out infinite 0.5s;
+}
+tr.fila-estilo-burbujas td select { background: #e0f2fe !important; color: #0c4a6e !important; }
+
+/* —— 6 CONFETI —— morado fiesta + puntos de color —— */
+@keyframes filaConfA { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes filaConfB { 0%, 100% { opacity: 1; } 40% { opacity: 0.25; } }
+tr.fila-estilo-confeti td {
+  background-color: #4c1d95 !important;
+  color: #f5f3ff !important;
+}
+tr.fila-estilo-confeti td::before {
+  background-image:
+    radial-gradient(2.5px 2.5px at 10% 40%, #f472b6 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 28% 70%, #fbbf24 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 48% 22%, #34d399 0%, transparent 100%),
+    radial-gradient(2px 2px at 65% 55%, #60a5fa 0%, transparent 100%),
+    radial-gradient(2.6px 2.6px at 85% 35%, #f472b6 0%, transparent 100%);
+  animation: filaConfA 1.6s ease-in-out infinite;
+}
+tr.fila-estilo-confeti td::after {
+  background-image:
+    radial-gradient(2.1px 2.1px at 18% 18%, #a78bfa 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 40% 80%, #fb7185 0%, transparent 100%),
+    radial-gradient(2px 2px at 58% 48%, #fde047 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 75% 12%, #2dd4bf 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 92% 65%, #c084fc 0%, transparent 100%);
+  animation: filaConfB 2.2s ease-in-out infinite 0.3s;
+}
+tr.fila-estilo-confeti td select { background: #f5f3ff !important; color: #4c1d95 !important; }
+
+/* —— 7 ORO VIVO —— negro + chispas doradas (no mostaza plano) —— */
+@keyframes filaOroA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes filaOroB { 0%, 100% { opacity: 0.95; } 45% { opacity: 0.2; } }
+tr.fila-estilo-oro td {
+  background-color: #1c1917 !important;
+  color: #fef3c7 !important;
+}
+tr.fila-estilo-oro td::before {
+  background-image:
+    radial-gradient(2.5px 2.5px at 12% 35%, #fbbf24 0%, transparent 100%),
+    radial-gradient(2.1px 2.1px at 30% 68%, #fde68a 0%, transparent 100%),
+    radial-gradient(2.8px 2.8px at 52% 25%, #f59e0b 0%, transparent 100%),
+    radial-gradient(2px 2px at 70% 72%, #fbbf24 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 88% 40%, #fef08a 0%, transparent 100%);
+  animation: filaOroA 1.7s ease-in-out infinite;
+}
+tr.fila-estilo-oro td::after {
+  background-image:
+    radial-gradient(2.2px 2.2px at 8% 80%, #fcd34d 0%, transparent 100%),
+    radial-gradient(2.6px 2.6px at 42% 15%, #fbbf24 0%, transparent 100%),
+    radial-gradient(1.9px 1.9px at 60% 50%, #fef3c7 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 78% 22%, #f59e0b 0%, transparent 100%),
+    radial-gradient(2px 2px at 95% 70%, #fde68a 0%, transparent 100%);
+  animation: filaOroB 2.3s ease-in-out infinite 0.25s;
+}
+tr.fila-estilo-oro td select { background: #fef3c7 !important; color: #78350f !important; }
+
+/* —— 8 CEREZO —— rosa oscuro + pétalos —— */
+@keyframes filaSakA { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes filaSakB { 0%, 100% { opacity: 0.9; } 40% { opacity: 0.2; } }
+tr.fila-estilo-cerezo td {
+  background-color: #9d174d !important;
+  color: #fdf2f8 !important;
+}
+tr.fila-estilo-cerezo td::before {
+  background-image:
+    radial-gradient(2.6px 2.6px at 14% 40%, #fbcfe8 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 35% 70%, #f9a8d4 0%, transparent 100%),
+    radial-gradient(2.8px 2.8px at 55% 22%, #fff 0%, transparent 100%),
+    radial-gradient(2px 2px at 72% 58%, #fce7f3 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 90% 35%, #fbcfe8 0%, transparent 100%);
+  animation: filaSakA 1.8s ease-in-out infinite;
+}
+tr.fila-estilo-cerezo td::after {
+  background-image:
+    radial-gradient(2.1px 2.1px at 20% 18%, #f9a8d4 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 45% 82%, #fce7f3 0%, transparent 100%),
+    radial-gradient(2px 2px at 65% 45%, #fff 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 82% 75%, #fbcfe8 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 6% 60%, #f9a8d4 0%, transparent 100%);
+  animation: filaSakB 2.4s ease-in-out infinite 0.3s;
+}
+tr.fila-estilo-cerezo td select { background: #fdf2f8 !important; color: #9d174d !important; }
+
+/* —— 9 ELÉCTRICO —— negro + chispas cyan —— */
+@keyframes filaElecA { 0%, 100% { opacity: 0.15; } 30% { opacity: 1; } 60% { opacity: 0.3; } }
+@keyframes filaElecB { 0%, 100% { opacity: 0.9; } 25% { opacity: 0.1; } 55% { opacity: 1; } }
+tr.fila-estilo-electrico td {
+  background-color: #020617 !important;
+  color: #e0f2fe !important;
+}
+tr.fila-estilo-electrico td::before {
+  background-image:
+    radial-gradient(2.4px 2.4px at 16% 30%, #22d3ee 0%, transparent 100%),
+    radial-gradient(2px 2px at 40% 65%, #67e8f9 0%, transparent 100%),
+    radial-gradient(2.7px 2.7px at 62% 20%, #a5f3fc 0%, transparent 100%),
+    radial-gradient(1.9px 1.9px at 78% 55%, #22d3ee 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 92% 80%, #67e8f9 0%, transparent 100%);
+  animation: filaElecA 1.4s ease-in-out infinite;
+}
+tr.fila-estilo-electrico td::after {
+  background-image:
+    radial-gradient(2.1px 2.1px at 8% 70%, #cffafe 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 32% 15%, #22d3ee 0%, transparent 100%),
+    radial-gradient(2px 2px at 55% 45%, #67e8f9 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 70% 85%, #a5f3fc 0%, transparent 100%),
+    radial-gradient(2px 2px at 88% 28%, #22d3ee 0%, transparent 100%);
+  animation: filaElecB 1.9s ease-in-out infinite 0.2s;
+}
+tr.fila-estilo-electrico td select { background: #e0f2fe !important; color: #0e7490 !important; }
+
+/* —— 10 NEBULA —— vino + estrellas rosadas —— */
+@keyframes filaNebA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes filaNebB { 0%, 100% { opacity: 1; } 40% { opacity: 0.2; } }
+tr.fila-estilo-nebula td {
+  background-color: #4a044e !important;
+  color: #fce7f3 !important;
+}
+tr.fila-estilo-nebula td::before {
+  background-image:
+    radial-gradient(2.3px 2.3px at 11% 38%, #f5d0fe 0%, transparent 100%),
+    radial-gradient(2px 2px at 33% 72%, #e879f9 0%, transparent 100%),
+    radial-gradient(2.6px 2.6px at 51% 18%, #fff 0%, transparent 100%),
+    radial-gradient(1.9px 1.9px at 69% 52%, #f0abfc 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 87% 30%, #f5d0fe 0%, transparent 100%);
+  animation: filaNebA 1.8s ease-in-out infinite;
+}
+tr.fila-estilo-nebula td::after {
+  background-image:
+    radial-gradient(2.1px 2.1px at 20% 22%, #e879f9 0%, transparent 100%),
+    radial-gradient(2.4px 2.4px at 44% 60%, #fff 0%, transparent 100%),
+    radial-gradient(2px 2px at 63% 85%, #f0abfc 0%, transparent 100%),
+    radial-gradient(2.3px 2.3px at 80% 40%, #f5d0fe 0%, transparent 100%),
+    radial-gradient(1.8px 1.8px at 5% 78%, #e879f9 0%, transparent 100%);
+  animation: filaNebB 2.4s ease-in-out infinite 0.3s;
+}
+tr.fila-estilo-nebula td select { background: #fce7f3 !important; color: #86198f !important; }
+
+
+.busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
         
         .btn-filtro { background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
@@ -7721,6 +7949,26 @@ setTimeout(function() {
       extra += '</div>';
     }
 
+
+    // Estilos de fila (reutilizar los comprados)
+    if (byKey.fila_estilo && byKey.fila_estilo.length) {
+      var mapaFila = {};
+      try { mapaFila = JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {}; } catch (e) { mapaFila = {}; }
+      extra += '<div class="hamster-skin-menu-title">Estilos de fila</div>';
+      extra += '<div class="hamster-pref-hint">Tocá uno y elegí a quién aplica. Podés cambiar cuando quieras.</div>';
+      extra += '<div class="hamster-pref-group">';
+      byKey.fila_estilo.forEach(function(p) {
+        var short = (p.nombre || '').replace('Fila ', '');
+        extra += '<button type="button" class="hamster-skin-item" data-pref-id="' + p.id + '"><span class="sk-emoji">' + (p.emoji || '🎨') + '</span> ' + short + '</button>';
+      });
+      extra += '</div>';
+      var asignados = Object.keys(mapaFila);
+      if (asignados.length) {
+        extra += '<div class="hamster-pref-hint" style="margin-top:4px">Activos: ' + asignados.map(function(n){ return n + '→' + mapaFila[n]; }).join(', ') + '</div>';
+        extra += '<button type="button" class="hamster-skin-item" id="btnQuitarFilaEstilo"><span class="sk-emoji">↩️</span> Volver al color default de alguien</button>';
+      }
+    }
+
     // Cuenta
     if (byKey.saludo || byKey.resp) {
       extra += '<div class="hamster-skin-menu-title">Cuenta</div>';
@@ -7762,6 +8010,28 @@ setTimeout(function() {
         menu.classList.remove('visible');
       });
     });
+
+    var btnQ = menu.querySelector('#btnQuitarFilaEstilo');
+    if (btnQ) {
+      btnQ.addEventListener('click', function() {
+        var quien = window.prompt('¿A quién le quitamos el estilo de fila?', 'Dan');
+        if (!quien) { menu.classList.remove('visible'); return; }
+        quien = String(quien).trim();
+        var personas = ['Dan','Susan','Yanet','Danna','Carmen','Nata','Claudia','Daniela','Richard'];
+        var found = personas.find(function(p){ return p.toLowerCase() === quien.toLowerCase(); });
+        if (found) quien = found;
+        try {
+          var map = JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {};
+          delete map[quien];
+          localStorage.setItem(LS.filaEstilos, JSON.stringify(map));
+          if (typeof window.refrescarClasesFilasEstilo === 'function') window.refrescarClasesFilasEstilo();
+          if (typeof window.syncFilaEstilosASheets === 'function') window.syncFilaEstilosASheets(map);
+          if (typeof window.petNotify === 'function') window.petNotify('Estilo quitado de ' + quien, '↩️', 2800, 'ok');
+        } catch (e) {}
+        menu.classList.remove('visible');
+      });
+    }
+
   };
 
   function boot() { window.cargarPreferenciasAlpro(); }
@@ -10983,14 +11253,16 @@ const premios = [
     // —— Personalización ——
     { id: 210, nombre: "Saludo con nombre", precio: 50, emoji: "👋", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "saludo", prefValue: "on", desc: "La mascota te saluda por tu nombre" },
     { id: 211, nombre: "Responsable favorito", precio: 35, emoji: "👤", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "resp", prefValue: "on", desc: "Elige quién aparece por defecto al registrar" },
-    { id: 280, nombre: "Fila Aurora", precio: 20, emoji: "🌈", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "aurora", desc: "Degradado suave rosa-azul en tu fila" },
-    { id: 281, nombre: "Fila Neón", precio: 20, emoji: "💚", colorBadge: "#ecfeff", colorTexto: "#0f766e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "neon", desc: "Toque celeste/menta en la fila del responsable" },
-    { id: 282, nombre: "Fila Atardecer", precio: 20, emoji: "🌅", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "sunset", desc: "Naranja-rosa cálido en la fila" },
-    { id: 283, nombre: "Fila Menta", precio: 20, emoji: "🌿", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "menta", desc: "Verde menta limpio para tu fila" },
-    { id: 284, nombre: "Fila Cristal", precio: 20, emoji: "🧊", colorBadge: "#e0f2fe", colorTexto: "#0c4a6e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "cristal", desc: "Look cristal con borde suave" },
-    { id: 285, nombre: "Fila Galaxy", precio: 35, emoji: "🌌", colorBadge: "#ede9fe", colorTexto: "#4c1d95", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "galaxy", desc: "Premium: fila espacial oscura con brillo" },
-    { id: 286, nombre: "Fila Oro", precio: 35, emoji: "✨", colorBadge: "#fef3c7", colorTexto: "#78350f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "oro", desc: "Premium: degradado dorado en la fila" },
-    { id: 287, nombre: "Fila Carbón", precio: 35, emoji: "⬛", colorBadge: "#e2e8f0", colorTexto: "#0f172a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "carbon", desc: "Premium: fila oscura elegante" },
+        { id: 280, nombre: "Fila Cosmos", precio: 30, emoji: "🌌", colorBadge: "#ede9fe", colorTexto: "#4c1d95", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "cosmos", desc: "Universo con estrellas que parpadean" },
+    { id: 281, nombre: "Fila Nieve", precio: 30, emoji: "❄️", colorBadge: "#e0f2fe", colorTexto: "#0c4a6e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "nieve", desc: "Noche fría con copos brillantes" },
+    { id: 282, nombre: "Fila Brasas", precio: 30, emoji: "🔥", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "brasas", desc: "Carbón con chispas de fuego" },
+    { id: 283, nombre: "Fila Luciérnagas", precio: 30, emoji: "✨", colorBadge: "#dcfce7", colorTexto: "#14532d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "luciernagas", desc: "Bosque nocturno con luces verdes" },
+    { id: 284, nombre: "Fila Burbujas", precio: 30, emoji: "🫧", colorBadge: "#e0f2fe", colorTexto: "#1e3a5f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "burbujas", desc: "Profundidad con burbujas suaves" },
+    { id: 285, nombre: "Fila Confeti", precio: 30, emoji: "🎉", colorBadge: "#f3e8ff", colorTexto: "#6b21a8", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "confeti", desc: "Fiesta con puntos de color" },
+    { id: 286, nombre: "Fila Oro vivo", precio: 30, emoji: "⭐", colorBadge: "#fef3c7", colorTexto: "#78350f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "oro", desc: "Negro con chispas doradas" },
+    { id: 287, nombre: "Fila Cerezo", precio: 30, emoji: "🌸", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "cerezo", desc: "Rosa oscuro con pétalos" },
+    { id: 288, nombre: "Fila Eléctrico", precio: 30, emoji: "⚡", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "electrico", desc: "Negro con chispas cyan" },
+    { id: 289, nombre: "Fila Nebula", precio: 30, emoji: "💫", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "nebula", desc: "Vino con estrellas rosadas" },
 
     { id: 201, nombre: "Color: Esmeralda", precio: 30, emoji: "🟢", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#047857", prefDeep: "#065f46", desc: "Verde sobrio para franja y botones" },
     { id: 202, nombre: "Color: Violeta", precio: 30, emoji: "🟣", colorBadge: "#ede9fe", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#6d28d9", prefDeep: "#5b21b6", desc: "Violeta contenido, tono corporativo" },
