@@ -6256,7 +6256,7 @@ function ejecutarRenderTabla() {
                     <option value="Claudia" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
                     <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
                     <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
-                    <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
+                    ${item.responsable === 'Axel' ? '<option value="Axel" selected>Axel (histórico)</option>' : ''}
                     <option value="Richard" ${item.responsable==='Richard'?'selected':''}>Richard</option>
                 </select>
                 <br><small style="opacity:0.8; font-weight:normal;">${detalleMovimiento}</small>
@@ -6659,7 +6659,15 @@ function toggle(orden) {
     }
     item.miCambioReciente = Date.now();
     save();
-    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+    try {
+        fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) }).catch(function(){});
+        setTimeout(function() {
+            try {
+                item.miCambioReciente = Date.now();
+                fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) }).catch(function(){});
+            } catch (_e) {}
+        }, 2500);
+    } catch (_e) {}
 }
 
 function cambiarResp(orden, nuevo) {
@@ -6674,7 +6682,16 @@ function cambiarResp(orden, nuevo) {
     item.ultimaHora = horaActual; 
     item.miCambioReciente = Date.now();
     save();
-    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+    // Enviar ya + reintento (Sheets a veces tarda o el primer POST no-cors se pierde)
+    try {
+        fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) }).catch(function(){});
+        setTimeout(function() {
+            try {
+                item.miCambioReciente = Date.now();
+                fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) }).catch(function(){});
+            } catch (_e) {}
+        }, 2500);
+    } catch (_e) {}
 }
 
 function save() {
@@ -6708,10 +6725,30 @@ async function traerDatosDesdeNube(opciones) {
         return { ok: true, datos: datosLocales, conservado: true, mensaje: "Nube vacía: se conservan datos locales" };
     }
 
+    const PROTECCION_LOCAL_MS = 10 * 60 * 1000;
     let datosMezclados = d.map(ordenGoogle => {
         const local = (datosLocales || []).find(l => String(l.orden) === String(ordenGoogle.orden));
-        if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) return local;
-        return ordenGoogle;
+        if (!local) return ordenGoogle;
+        const reciente = local.miCambioReciente && (Date.now() - local.miCambioReciente < PROTECCION_LOCAL_MS);
+        if (!reciente) return ordenGoogle;
+        const mezclado = Object.assign({}, ordenGoogle, {
+            responsable: local.responsable,
+            despachado: local.despachado,
+            movimiento: local.movimiento,
+            ultimoMov: local.ultimoMov,
+            hora: local.hora,
+            ultimaHora: local.ultimaHora,
+            miCambioReciente: local.miCambioReciente
+        });
+        try {
+            const nubeDifere =
+                String(ordenGoogle.responsable || '') !== String(local.responsable || '') ||
+                !!ordenGoogle.despachado !== !!local.despachado;
+            if (nubeDifere && typeof URL_SCRIPT !== 'undefined') {
+                fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(local) }).catch(function(){});
+            }
+        } catch (_e) {}
+        return mezclado;
     });
 
     if (!forzar) {
@@ -6821,12 +6858,32 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
             return;
         }
 
+        const PROTECCION_LOCAL_MS = 10 * 60 * 1000; // 10 min: no pisar cambios de responsable/despachado
         const datosMezclados = d.map(ordenGoogle => {
             const local = datosLocales.find(l => String(l.orden) === String(ordenGoogle.orden));
-            if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
-                return local; 
-            }
-            return ordenGoogle;
+            if (!local) return ordenGoogle;
+            const reciente = local.miCambioReciente && (Date.now() - local.miCambioReciente < PROTECCION_LOCAL_MS);
+            if (!reciente) return ordenGoogle;
+            // Conservar campos que el usuario acaba de tocar en la app
+            const mezclado = Object.assign({}, ordenGoogle, {
+                responsable: local.responsable,
+                despachado: local.despachado,
+                movimiento: local.movimiento,
+                ultimoMov: local.ultimoMov,
+                hora: local.hora,
+                ultimaHora: local.ultimaHora,
+                miCambioReciente: local.miCambioReciente
+            });
+            // Si la nube aún no refleja el cambio, reintentar POST (no-cors)
+            try {
+                const nubeDifere =
+                    String(ordenGoogle.responsable || '') !== String(local.responsable || '') ||
+                    !!ordenGoogle.despachado !== !!local.despachado;
+                if (nubeDifere && typeof URL_SCRIPT !== 'undefined') {
+                    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(local) }).catch(function(){});
+                }
+            } catch (_e) {}
+            return mezclado;
         });
 
         // Conservar órdenes locales muy recientes que aún no aparecen en la nube
