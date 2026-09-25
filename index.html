@@ -110,10 +110,8 @@
 
 
 
-/* ========== ESTILOS DE FILA — partículas continuas (estilo Cosmos) ========== */
-/* Misma base en todas las celdas + puntos con background-attachment:fixed
-   para que la fila se lea como UNA sola franja trabajada. */
 
+/* ========== ESTILOS DE FILA — base sólida + detalle (estilo Cosmos) ========== */
 tr[class*="fila-estilo-"] td {
   position: relative;
   background-image: none !important;
@@ -135,13 +133,10 @@ tr[class*="fila-estilo-"] td::after {
   background-attachment: fixed;
 }
 
-/* —— 1 COSMOS —— */
+/* 1 COSMOS */
 @keyframes filaTwA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes filaTwB { 0%, 100% { opacity: 1; } 40% { opacity: 0.15; } 75% { opacity: 0.9; } }
-tr.fila-estilo-cosmos td {
-  background-color: #1e1b4b !important;
-  color: #eef2ff !important;
-}
+tr.fila-estilo-cosmos td { background-color: #1e1b4b !important; color: #eef2ff !important; }
 tr.fila-estilo-cosmos td::before {
   background-image:
     radial-gradient(2.2px 2.2px at 10% 32%, #fff 0%, transparent 100%),
@@ -164,40 +159,34 @@ tr.fila-estilo-cosmos td::after {
 }
 tr.fila-estilo-cosmos td select { background: #fff !important; color: #1e1b4b !important; }
 
-/* —— 2 NIEVE —— fondo frío + copos —— */
-@keyframes filaSnowA { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+/* 2 NIEVE — azul sólido + copos (parpadeo tipo cosmos) */
+@keyframes filaSnowA { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
 @keyframes filaSnowB { 0%, 100% { opacity: 0.9; } 45% { opacity: 0.2; } }
-tr.fila-estilo-nieve td {
-  background-color: #0c4a6e !important;
-  color: #f0f9ff !important;
-}
+tr.fila-estilo-nieve td { background-color: #0c4a6e !important; color: #f0f9ff !important; }
 tr.fila-estilo-nieve td::before {
   background-image:
     radial-gradient(2.5px 2.5px at 12% 25%, #fff 0%, transparent 100%),
-    radial-gradient(2px 2px at 30% 60%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(2px 2px at 30% 60%, #fff 0%, transparent 100%),
     radial-gradient(2.8px 2.8px at 52% 18%, #fff 0%, transparent 100%),
-    radial-gradient(2.2px 2.2px at 70% 72%, rgba(255,255,255,0.85) 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 70% 72%, #e0f2fe 0%, transparent 100%),
     radial-gradient(2px 2px at 88% 40%, #fff 0%, transparent 100%);
   animation: filaSnowA 2s ease-in-out infinite;
 }
 tr.fila-estilo-nieve td::after {
   background-image:
-    radial-gradient(2.2px 2.2px at 20% 80%, #e0f2fe 0%, transparent 100%),
+    radial-gradient(2.2px 2.2px at 20% 80%, #bae6fd 0%, transparent 100%),
     radial-gradient(1.8px 1.8px at 42% 35%, #fff 0%, transparent 100%),
-    radial-gradient(2.5px 2.5px at 62% 55%, rgba(255,255,255,0.95) 0%, transparent 100%),
+    radial-gradient(2.5px 2.5px at 62% 55%, #fff 0%, transparent 100%),
     radial-gradient(2px 2px at 78% 15%, #fff 0%, transparent 100%),
-    radial-gradient(2.3px 2.3px at 95% 68%, #bae6fd 0%, transparent 100%);
+    radial-gradient(2.3px 2.3px at 95% 68%, #e0f2fe 0%, transparent 100%);
   animation: filaSnowB 2.6s ease-in-out infinite 0.4s;
 }
 tr.fila-estilo-nieve td select { background: #f0f9ff !important; color: #0c4a6e !important; }
 
-/* —— 3 BRASAS —— fondo carbón + chispas naranja —— */
-@keyframes filaEmberA { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+/* 3 BRASAS */
+@keyframes filaEmberA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes filaEmberB { 0%, 100% { opacity: 1; } 40% { opacity: 0.2; } }
-tr.fila-estilo-brasas td {
-  background-color: #1c1917 !important;
-  color: #ffedd5 !important;
-}
+tr.fila-estilo-brasas td { background-color: #1c1917 !important; color: #ffedd5 !important; }
 tr.fila-estilo-brasas td::before {
   background-image:
     radial-gradient(2.4px 2.4px at 14% 70%, #fb923c 0%, transparent 100%),
@@ -218,13 +207,10 @@ tr.fila-estilo-brasas td::after {
 }
 tr.fila-estilo-brasas td select { background: #fff7ed !important; color: #7c2d12 !important; }
 
-/* —— 4 LUCIÉRNAGAS —— bosque oscuro + puntos lima —— */
+/* 4 LUCIÉRNAGAS */
 @keyframes filaFireA { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
 @keyframes filaFireB { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.2; } }
-tr.fila-estilo-luciernagas td {
-  background-color: #14532d !important;
-  color: #ecfdf5 !important;
-}
+tr.fila-estilo-luciernagas td { background-color: #14532d !important; color: #ecfdf5 !important; }
 tr.fila-estilo-luciernagas td::before {
   background-image:
     radial-gradient(2.8px 2.8px at 15% 45%, #bef264 0%, transparent 100%),
@@ -245,13 +231,10 @@ tr.fila-estilo-luciernagas td::after {
 }
 tr.fila-estilo-luciernagas td select { background: #ecfdf5 !important; color: #14532d !important; }
 
-/* —— 5 BURBUJAS —— azul profundo + círculos suaves —— */
-@keyframes filaBubA { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.85; } }
-@keyframes filaBubB { 0%, 100% { opacity: 0.7; } 50% { opacity: 0.15; } }
-tr.fila-estilo-burbujas td {
-  background-color: #1e3a5f !important;
-  color: #e0f2fe !important;
-}
+/* 5 BURBUJAS */
+@keyframes filaBubA { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.9; } }
+@keyframes filaBubB { 0%, 100% { opacity: 0.75; } 50% { opacity: 0.2; } }
+tr.fila-estilo-burbujas td { background-color: #1e3a5f !important; color: #e0f2fe !important; }
 tr.fila-estilo-burbujas td::before {
   background-image:
     radial-gradient(circle 5px at 12% 50%, rgba(125,211,252,0.55) 0%, transparent 70%),
@@ -270,13 +253,10 @@ tr.fila-estilo-burbujas td::after {
 }
 tr.fila-estilo-burbujas td select { background: #e0f2fe !important; color: #0c4a6e !important; }
 
-/* —— 6 CONFETI —— morado fiesta + puntos de color —— */
+/* 6 CONFETI */
 @keyframes filaConfA { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 @keyframes filaConfB { 0%, 100% { opacity: 1; } 40% { opacity: 0.25; } }
-tr.fila-estilo-confeti td {
-  background-color: #4c1d95 !important;
-  color: #f5f3ff !important;
-}
+tr.fila-estilo-confeti td { background-color: #4c1d95 !important; color: #f5f3ff !important; }
 tr.fila-estilo-confeti td::before {
   background-image:
     radial-gradient(2.5px 2.5px at 10% 40%, #f472b6 0%, transparent 100%),
@@ -297,13 +277,10 @@ tr.fila-estilo-confeti td::after {
 }
 tr.fila-estilo-confeti td select { background: #f5f3ff !important; color: #4c1d95 !important; }
 
-/* —— 7 ORO VIVO —— negro + chispas doradas (no mostaza plano) —— */
+/* 7 ORO VIVO */
 @keyframes filaOroA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes filaOroB { 0%, 100% { opacity: 0.95; } 45% { opacity: 0.2; } }
-tr.fila-estilo-oro td {
-  background-color: #1c1917 !important;
-  color: #fef3c7 !important;
-}
+tr.fila-estilo-oro td { background-color: #1c1917 !important; color: #fef3c7 !important; }
 tr.fila-estilo-oro td::before {
   background-image:
     radial-gradient(2.5px 2.5px at 12% 35%, #fbbf24 0%, transparent 100%),
@@ -324,13 +301,10 @@ tr.fila-estilo-oro td::after {
 }
 tr.fila-estilo-oro td select { background: #fef3c7 !important; color: #78350f !important; }
 
-/* —— 8 CEREZO —— rosa oscuro + pétalos —— */
+/* 8 CEREZO */
 @keyframes filaSakA { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
 @keyframes filaSakB { 0%, 100% { opacity: 0.9; } 40% { opacity: 0.2; } }
-tr.fila-estilo-cerezo td {
-  background-color: #9d174d !important;
-  color: #fdf2f8 !important;
-}
+tr.fila-estilo-cerezo td { background-color: #9d174d !important; color: #fdf2f8 !important; }
 tr.fila-estilo-cerezo td::before {
   background-image:
     radial-gradient(2.6px 2.6px at 14% 40%, #fbcfe8 0%, transparent 100%),
@@ -351,13 +325,10 @@ tr.fila-estilo-cerezo td::after {
 }
 tr.fila-estilo-cerezo td select { background: #fdf2f8 !important; color: #9d174d !important; }
 
-/* —— 9 ELÉCTRICO —— negro + chispas cyan —— */
+/* 9 ELÉCTRICO */
 @keyframes filaElecA { 0%, 100% { opacity: 0.15; } 30% { opacity: 1; } 60% { opacity: 0.3; } }
 @keyframes filaElecB { 0%, 100% { opacity: 0.9; } 25% { opacity: 0.1; } 55% { opacity: 1; } }
-tr.fila-estilo-electrico td {
-  background-color: #020617 !important;
-  color: #e0f2fe !important;
-}
+tr.fila-estilo-electrico td { background-color: #020617 !important; color: #e0f2fe !important; }
 tr.fila-estilo-electrico td::before {
   background-image:
     radial-gradient(2.4px 2.4px at 16% 30%, #22d3ee 0%, transparent 100%),
@@ -378,13 +349,10 @@ tr.fila-estilo-electrico td::after {
 }
 tr.fila-estilo-electrico td select { background: #e0f2fe !important; color: #0e7490 !important; }
 
-/* —— 10 NEBULA —— vino + estrellas rosadas —— */
+/* 10 NEBULA */
 @keyframes filaNebA { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes filaNebB { 0%, 100% { opacity: 1; } 40% { opacity: 0.2; } }
-tr.fila-estilo-nebula td {
-  background-color: #4a044e !important;
-  color: #fce7f3 !important;
-}
+tr.fila-estilo-nebula td { background-color: #4a044e !important; color: #fce7f3 !important; }
 tr.fila-estilo-nebula td::before {
   background-image:
     radial-gradient(2.3px 2.3px at 11% 38%, #f5d0fe 0%, transparent 100%),
@@ -405,6 +373,156 @@ tr.fila-estilo-nebula td::after {
 }
 tr.fila-estilo-nebula td select { background: #fce7f3 !important; color: #86198f !important; }
 
+.tienda-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 4px 10px;
+  margin: 0 0 2px;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  flex-shrink: 0;
+}
+.tienda-tab {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 7px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tienda-tab:hover { border-color: #f59e0b; color: #92400e; }
+.tienda-tab.activa {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: #f59e0b;
+  color: #92400e;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+}
+.tienda-tab .tab-count {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 10px;
+  opacity: 0.75;
+  font-weight: 600;
+}
+.tienda-cat-head {
+  grid-column: 1 / -1;
+  margin: 6px 0 2px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 11px;
+  font-weight: 800;
+  color: #334155;
+  letter-spacing: 0.02em;
+}
+.tienda-vacio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 28px 12px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+/* Menú mascota más legible */
+.hamster-skin-menu {
+  max-height: min(55vh, 340px) !important;
+  max-width: 220px !important;
+  min-width: 180px !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+.hamster-pref-sep {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 8px 4px;
+}
+[data-theme="dark"] .hamster-pref-sep { background: #334155; }
+.hamster-pref-hint {
+  font-size: 10px;
+  color: #64748b;
+  padding: 2px 8px 6px;
+  line-height: 1.35;
+}
+
+/* —— Scrollbars armoniosas (app + tienda + menú mascota) —— */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+[data-theme="dark"] * {
+  scrollbar-color: #475569 transparent;
+}
+[data-theme="dark"] *::-webkit-scrollbar-thumb {
+  background: #475569;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+[data-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+  background-clip: padding-box;
+}
+/* Tienda: acento naranja suave */
+#contenedorItemsTienda {
+  scrollbar-color: #fb923c #fff7ed !important;
+}
+#contenedorItemsTienda::-webkit-scrollbar {
+  width: 8px !important;
+}
+#contenedorItemsTienda::-webkit-scrollbar-track {
+  background: #fff7ed !important;
+  border-radius: 999px !important;
+  margin: 6px 0 !important;
+}
+#contenedorItemsTienda::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #fdba74, #f97316) !important;
+  border-radius: 999px !important;
+  border: 2px solid #fff7ed !important;
+  min-height: 36px !important;
+}
+/* Menú mascota */
+.hamster-skin-menu {
+  scrollbar-color: #cbd5e1 transparent;
+}
+.hamster-skin-menu::-webkit-scrollbar {
+  width: 6px;
+}
+.hamster-skin-menu::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+.hamster-pref-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px 4px 8px;
+}
 
 .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
@@ -2156,7 +2274,9 @@ input::-webkit-outer-spin-button,
 
 /* Asegura que las tarjetas permitan elementos flotantes sin cortarlos */
 #contenedorItemsTienda > div {
-    overflow: visible !important;
+    overflow: visible;
+    min-width: 0;
+    max-width: 100%;
 }
 
 /* 🎈 Container del Emoji preparado para el Globo Flotante */
@@ -7492,7 +7612,7 @@ setTimeout(function() {
     if (!menu) return;
     var compradas = skinIdsComprados();
     var activa = localStorage.getItem('alpro_skin_activa') || 'hamster';
-    var html = '<div class="hamster-skin-menu-title">Tu mascota</div>';
+    var html = '<div class="hamster-skin-menu-title">🐹 Mascota</div>';
     html += '<button type="button" class="hamster-skin-item' + (activa === 'hamster' ? ' active' : '') + '" data-skin="hamster"><span class="sk-emoji">🐹</span> Hámster</button>';
     var alguna = false;
     Object.keys(SKIN_META).forEach(function(k) {
@@ -7508,12 +7628,7 @@ setTimeout(function() {
     menu.innerHTML = html;
     menu.classList.add('visible');
     menu.setAttribute('aria-hidden', 'false');
-    var w = menu.offsetWidth || 200;
-    var h = menu.offsetHeight || 120;
-    var left = Math.min(x, window.innerWidth - w - 8);
-    var top = Math.min(y, window.innerHeight - h - 8);
-    menu.style.left = Math.max(8, left) + 'px';
-    menu.style.top = Math.max(8, top) + 'px';
+    /* posición final se calcula después de armar personalización */
 
     menu.querySelectorAll('[data-skin]').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -7879,7 +7994,26 @@ setTimeout(function() {
     if (!menu) return;
 
     var prefs = prefsCompradas();
-    if (!prefs.length) return;
+    if (!prefs.length) {
+      (function() {
+        var av = document.getElementById('hamsterAvatar') || document.querySelector('.hamster-widget');
+        var w = menu.offsetWidth || 180, h = menu.offsetHeight || 100;
+        var left, top;
+        if (av) {
+          var ar = av.getBoundingClientRect();
+          left = ar.left + ar.width / 2 - w / 2;
+          top = ar.top - h - 10;
+          if (top < 8) { top = Math.max(8, ar.top); left = ar.left - w - 12; }
+        } else {
+          left = x; top = y - h - 8;
+        }
+        if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
+        if (top + h > window.innerHeight - 10) top = window.innerHeight - h - 10;
+        menu.style.left = Math.max(8, left) + 'px';
+        menu.style.top = Math.max(8, top) + 'px';
+      })();
+      return;
+    }
 
     var byKey = {};
     prefs.forEach(function(p) {
@@ -7897,13 +8031,13 @@ setTimeout(function() {
 
     var extra = '<div class="hamster-pref-sep"></div>';
     extra += '<div class="hamster-skin-menu-title">Personalización</div>';
-    extra += '<div class="hamster-pref-hint">Elegí una opción. “Original” vuelve al diseño base.</div>';
+    extra += '<div class="hamster-pref-hint">Tocá para activar. “Original” vuelve al diseño base.</div>';
 
     // Colores
     if (byKey.color && byKey.color.length) {
       extra += '<div class="hamster-skin-menu-title">Color</div><div class="hamster-pref-group">';
       byKey.color.forEach(function(p) {
-        extra += chip(p.nombre.replace('Color: ', ''), 'color', p.prefValue, p.prefValue === activaColor, p.prefValue);
+        extra += chip((p.nombre || '').replace('Color Premium ', '★ ').replace('Color: ', ''), 'color', p.prefValue, p.prefValue === activaColor, p.prefValue);
       });
       extra += '</div>';
     }
@@ -7932,7 +8066,7 @@ setTimeout(function() {
       extra += '<div class="hamster-skin-menu-title">Fondo (solo atrás)</div><div class="hamster-pref-group">';
       extra += chip('Original', 'bg', 'default', activaBg === 'default');
       byKey.bg.forEach(function(p) {
-        var short = (p.nombre || '').replace('Fondo ', '');
+        var short = (p.nombre || '').replace('Fondo Premium ', '★ ').replace('Fondo ', '');
         extra += chip(short, 'bg', p.prefValue, p.prefValue === activaBg);
       });
       extra += '</div>';
@@ -7984,10 +8118,34 @@ setTimeout(function() {
 
     menu.insertAdjacentHTML('beforeend', extra);
 
-    var w = menu.offsetWidth || 220;
-    var h = menu.offsetHeight || 120;
-    menu.style.left = Math.max(8, Math.min(x, window.innerWidth - w - 8)) + 'px';
-    menu.style.top = Math.max(8, Math.min(y, window.innerHeight - h - 8)) + 'px';
+    function alproColocarMenuSkin() {
+      /* Preferir encima de la mascota (como si ella ofreciera el menú) */
+      var av = document.getElementById('hamsterAvatar') || document.querySelector('.hamster-widget') || document.querySelector('#hamsterPet');
+      var w = menu.offsetWidth || 200;
+      var h = menu.offsetHeight || 120;
+      var left, top;
+      if (av) {
+        var ar = av.getBoundingClientRect();
+        left = ar.left + ar.width / 2 - w / 2;
+        top = ar.top - h - 10;
+        /* Si no cabe arriba, a la izquierda del personaje */
+        if (top < 8) {
+          top = Math.max(8, ar.top);
+          left = ar.left - w - 12;
+        }
+      } else {
+        left = x;
+        top = y - h - 8;
+      }
+      if (left + w > window.innerWidth - 10) left = window.innerWidth - w - 10;
+      if (top + h > window.innerHeight - 10) top = window.innerHeight - h - 10;
+      if (left < 8) left = 8;
+      if (top < 8) top = 8;
+      menu.style.left = left + 'px';
+      menu.style.top = top + 'px';
+    }
+    alproColocarMenuSkin();
+    requestAnimationFrame(function() { alproColocarMenuSkin(); });
 
     menu.querySelectorAll('[data-kind]').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -11020,7 +11178,8 @@ function sumarAlprocoinsLocales(monedasGanadas) {
             </p>
         </div>
 
-        <div id="contenedorItemsTienda" style="max-height: 340px; overflow-y: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px;">
+        <div id="tiendaTabsBar" class="tienda-tabs" role="tablist" aria-label="Categorías de la tienda"></div>
+        <div id="contenedorItemsTienda" style="max-height: min(320px, 42vh); overflow-x: clip; overflow-y: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 8px 14px 14px 8px; box-sizing: border-box; width: 100%;">
         </div>
 
         <div id="barraCarrito" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
@@ -11737,6 +11896,7 @@ function actualizarResumenBarraCarrito() {
 // 🎨 RENDERIZADO CON GLOBO FLOTANTE SUTIL EN EL EMOJI
 function renderizarTiendaAlpro() {
     const contenedor = document.getElementById('contenedorItemsTienda');
+    const tabsBar = document.getElementById('tiendaTabsBar');
     if (!contenedor) return;
     contenedor.innerHTML = "";
 
@@ -11746,35 +11906,89 @@ function renderizarTiendaAlpro() {
     function categoriaPremio(item) {
         if (item.tipo === 'pref') return 'personalizacion';
         if (item.tipo === 'skin') return 'mascotas';
-        if (!item.esUnico) return 'consumibles';
+        if (!item.esUnico) return 'antojos';
         return 'unicos';
     }
-    const titulosCat = {
-        personalizacion: '🎛️ Personalización',
-        mascotas: '🐹 Mascotas',
-        consumibles: '🍬 Antojos (se pueden volver a comprar)',
-        unicos: '🎁 Productos únicos (una sola vez)'
-    };
-    let catAnterior = null;
 
-    premios.forEach((item, index) => {
-        const cat = categoriaPremio(item);
-        if (cat !== catAnterior) {
-            catAnterior = cat;
-            const head = document.createElement('div');
-            head.style.gridColumn = '1 / -1';
-            head.style.margin = index === 0 ? '4px 0 2px' : '14px 0 4px';
-            head.style.padding = '8px 10px';
-            head.style.borderRadius = '12px';
-            head.style.background = '#f8fafc';
-            head.style.border = '1px solid #e2e8f0';
-            head.style.fontSize = '12px';
-            head.style.fontWeight = '800';
-            head.style.color = '#334155';
-            head.style.letterSpacing = '0.02em';
-            head.textContent = titulosCat[cat] || cat;
-            contenedor.appendChild(head);
+    // Subgrupo dentro de personalización (solo para títulos)
+    function subcatPref(item) {
+        var k = item.prefKey || '';
+        var n = (item.nombre || '').toLowerCase();
+        if (k === 'saludo' || k === 'resp') return 'cuenta';
+        if (k === 'color' || n.indexOf('color') === 0) return 'colores';
+        if (k === 'radius' || k === 'radius_pack' || k === 'density' || k === 'density_pack' || n.indexOf('pack de') === 0) return 'layout';
+        if (k === 'bg' || n.indexOf('fondo') === 0) return 'fondos';
+        if (k === 'frase' || n.indexOf('frase') === 0) return 'frases';
+        if (k === 'fila_estilo' || n.indexOf('fila') === 0) return 'filas';
+        return 'otros';
+    }
+    const subTitulos = {
+        cuenta: '👤 Cuenta',
+        colores: '🎨 Color de la app',
+        layout: '📐 Bordes y tabla',
+        fondos: '🖼️ Fondo',
+        frases: '💬 Frase de arriba',
+        filas: '✨ Estilo de tu fila',
+        otros: '🧩 Otros'
+    };
+
+    if (typeof window._tiendaTabActiva === 'undefined') window._tiendaTabActiva = 'antojos';
+
+    const tabsMeta = [
+        { id: 'antojos', label: '🍬 Antojos', hint: 'Snacks y cosas que se pueden comprar varias veces' },
+        { id: 'unicos', label: '🎁 Únicos', hint: 'Productos físicos de una sola vez' },
+        { id: 'mascotas', label: '🐹 Mascotas', hint: 'Skins para tu compañero' },
+        { id: 'personalizacion', label: '🎛️ Personalización', hint: 'Colores, fondos, frases y más' }
+    ];
+
+    function countCat(id) {
+        return premios.filter(function(p) { return categoriaPremio(p) === id; }).length;
+    }
+
+    if (tabsBar) {
+        tabsBar.innerHTML = '';
+        tabsMeta.forEach(function(tab) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'tienda-tab' + (window._tiendaTabActiva === tab.id ? ' activa' : '');
+            btn.setAttribute('role', 'tab');
+            btn.setAttribute('aria-selected', window._tiendaTabActiva === tab.id ? 'true' : 'false');
+            btn.title = tab.hint;
+            btn.innerHTML = tab.label + '<span class="tab-count">(' + countCat(tab.id) + ')</span>';
+            btn.onclick = function() {
+                window._tiendaTabActiva = tab.id;
+                tiendaCargadaPorPrimeraVez = false;
+                renderizarTiendaAlpro();
+            };
+            tabsBar.appendChild(btn);
+        });
+    }
+
+    var lista = premios.filter(function(item) {
+        return categoriaPremio(item) === window._tiendaTabActiva;
+    });
+
+    if (!lista.length) {
+        var vacio = document.createElement('div');
+        vacio.className = 'tienda-vacio';
+        vacio.textContent = 'No hay productos en esta categoría.';
+        contenedor.appendChild(vacio);
+        return;
+    }
+
+    var subAnterior = null;
+    lista.forEach(function(item, index) {
+        if (window._tiendaTabActiva === 'personalizacion') {
+            var sub = subcatPref(item);
+            if (sub !== subAnterior) {
+                subAnterior = sub;
+                var head = document.createElement('div');
+                head.className = 'tienda-cat-head';
+                head.textContent = subTitulos[sub] || sub;
+                contenedor.appendChild(head);
+            }
         }
+
         const divItem = document.createElement('div');
         const yaCanjeadoPermanente = item.esUnico && reclamados.includes(item.id);
         const cantidadEnCarrito = carrito[item.id] || 0;
@@ -11793,18 +12007,18 @@ function renderizarTiendaAlpro() {
         if (tiendaCargadaPorPrimeraVez) {
             divItem.style.opacity = "0";
             divItem.style.animation = "entradaTarjeta 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards";
-            divItem.style.animationDelay = `${0.05 + (index * 0.03)}s`;
+            divItem.style.animationDelay = (0.05 + (index * 0.03)) + "s";
         } else {
             divItem.style.opacity = "1";
             divItem.style.transform = "translateY(0) scale(1)";
         }
 
         if (!yaCanjeadoPermanente) {
-            divItem.onmouseenter = () => {
+            divItem.onmouseenter = function() {
                 divItem.style.borderColor = "#f59e0b";
                 divItem.style.transform = "translateY(-3px)";
             };
-            divItem.onmouseleave = () => {
+            divItem.onmouseleave = function() {
                 divItem.style.borderColor = "#e2e8f0";
                 divItem.style.transform = "translateY(0)";
             };
@@ -11813,22 +12027,14 @@ function renderizarTiendaAlpro() {
         const precioFormateado = item.precio.toLocaleString('en-US');
         let estiloDelEmoji = item.efectoEmoji ? item.efectoEmoji : "";
 
-        // Renderizado con globo flotante sutil atado al emoji
         divItem.innerHTML = `
-            <!-- Contenedor del Emoji con el Globo Flotante -->
             <div class="contenedor-emoji-item" style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}; ${estiloDelEmoji}">
                 ${item.emoji}
-                
-                <!-- 🎈 Globo flotante (Solo si el ítem tiene descripción) -->
                 ${item.desc ? `<div class="tooltip-desc-sutil">${item.desc}</div>` : ''}
             </div>
-
-            <!-- Título del producto -->
             <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; text-align: center; line-height: 1.2; margin-bottom: 8px;">
                 ${item.nombre}
             </div>
-
-            <!-- Badge de Precio -->
             <div style="font-size: 11px; color: ${yaCanjeadoPermanente ? '#94a3b8' : item.colorTexto}; background: ${yaCanjeadoPermanente ? '#f1f5f9' : item.colorBadge}; font-weight: 800; padding: 2px 8px; border-radius: 9999px; margin-bottom: 8px;">
                 🪙 ${precioFormateado}
             </div>
@@ -11870,7 +12076,7 @@ function renderizarTiendaAlpro() {
             btnRestar.style.fontWeight = "bold";
             btnRestar.style.fontSize = "14px";
             btnRestar.style.color = "#ef4444";
-            btnRestar.onclick = () => restarDelCarrito(item.id);
+            btnRestar.onclick = function() { restarDelCarrito(item.id); };
 
             const spanCantidad = document.createElement('span');
             spanCantidad.innerText = cantidadEnCarrito;
@@ -11894,7 +12100,7 @@ function renderizarTiendaAlpro() {
                 btnSumar.style.color = "#94a3b8";
                 btnSumar.style.cursor = "not-allowed";
             } else {
-                btnSumar.onclick = () => agregarAlCarrito(item);
+                btnSumar.onclick = function() { agregarAlCarrito(item); };
             }
 
             contenedorAcciones.appendChild(btnRestar);
@@ -11913,7 +12119,7 @@ function renderizarTiendaAlpro() {
             btnAgregar.style.background = "linear-gradient(135deg, #f59e0b, #ea580c)";
             btnAgregar.style.color = "#ffffff";
             btnAgregar.innerText = "AGREGAR";
-            btnAgregar.onclick = () => agregarAlCarrito(item);
+            btnAgregar.onclick = function() { agregarAlCarrito(item); };
             contenedorAcciones.appendChild(btnAgregar);
         }
 
