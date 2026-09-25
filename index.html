@@ -433,9 +433,9 @@ tr.fila-estilo-nebula td select { background: #fce7f3 !important; color: #86198f
 }
 /* Menú mascota más legible */
 .hamster-skin-menu {
-  max-height: min(55vh, 340px) !important;
-  max-width: 220px !important;
-  min-width: 180px !important;
+  max-height: min(50vh, 300px) !important;
+  max-width: 178px !important;
+  min-width: 158px !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   box-sizing: border-box !important;
@@ -789,32 +789,51 @@ html[data-bg="diagonal"] body {
   background-image: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(15,23,42,0.035) 8px, rgba(15,23,42,0.035) 9px) !important;
 }
 /* Premium ligeros: solo CSS gradients fijos (sin animación, sin JS) */
+/* Fondos premium con movimiento suave */
+@keyframes alproBgAurora {
+  0%, 100% { background-position: 0% 0%, 100% 0%, 40% 100%, 0 0; }
+  50% { background-position: 18% 12%, 82% 18%, 55% 85%, 0 0; }
+}
+@keyframes alproBgSunset {
+  0%, 100% { background-position: 0% 0%, 100% 10%, 50% 100%, 0 0; }
+  50% { background-position: 15% 8%, 88% 0%, 45% 90%, 0 0; }
+}
+@keyframes alproBgOcean {
+  0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0; }
+  50% { background-position: 12% 10%, 90% 15%, 40% 88%, 0 0; }
+}
 html[data-bg="aurora"] body {
-  background-color: #1e1b4b !important;
+  background-color: #eef2ff !important;
   background-image:
-    radial-gradient(1000px 520px at 12% -8%, rgba(99,102,241,0.55), transparent 58%),
-    radial-gradient(900px 480px at 95% 5%, rgba(168,85,247,0.40), transparent 52%),
-    radial-gradient(800px 420px at 40% 105%, rgba(34,211,238,0.28), transparent 55%),
-    linear-gradient(180deg, rgba(15,23,42,0.15), rgba(15,23,42,0.05)) !important;
+    radial-gradient(900px 480px at 10% 0%, rgba(167,139,250,0.55), transparent 55%),
+    radial-gradient(800px 420px at 95% 10%, rgba(244,114,182,0.40), transparent 50%),
+    radial-gradient(700px 380px at 50% 100%, rgba(56,189,248,0.35), transparent 55%),
+    linear-gradient(165deg, #eef2ff 0%, #fce7f3 45%, #e0e7ff 100%) !important;
+  background-size: 140% 140%, 140% 140%, 140% 140%, 100% 100% !important;
   background-attachment: fixed !important;
+  animation: alproBgAurora 16s ease-in-out infinite;
 }
 html[data-bg="atardecer"] body {
-  background-color: #7c2d12 !important;
+  background-color: #fff7ed !important;
   background-image:
-    radial-gradient(1000px 540px at 5% 0%, rgba(234,88,12,0.55), transparent 58%),
-    radial-gradient(900px 480px at 100% 8%, rgba(190,24,93,0.35), transparent 52%),
-    radial-gradient(820px 440px at 50% 110%, rgba(245,158,11,0.30), transparent 55%),
-    linear-gradient(180deg, rgba(28,15,8,0.2), rgba(28,15,8,0.05)) !important;
+    radial-gradient(900px 500px at 5% 0%, rgba(251,146,60,0.50), transparent 55%),
+    radial-gradient(820px 440px at 100% 5%, rgba(244,114,182,0.38), transparent 50%),
+    radial-gradient(720px 400px at 50% 105%, rgba(250,204,21,0.32), transparent 55%),
+    linear-gradient(160deg, #fff7ed 0%, #ffedd5 40%, #fce7f3 100%) !important;
+  background-size: 140% 140%, 140% 140%, 140% 140%, 100% 100% !important;
   background-attachment: fixed !important;
+  animation: alproBgSunset 18s ease-in-out infinite;
 }
 html[data-bg="oceano"] body {
-  background-color: #0c4a6e !important;
+  background-color: #ecfeff !important;
   background-image:
-    radial-gradient(1000px 520px at 8% -5%, rgba(14,165,233,0.50), transparent 58%),
-    radial-gradient(920px 480px at 100% 0%, rgba(37,99,235,0.38), transparent 52%),
-    radial-gradient(800px 420px at 45% 110%, rgba(20,184,166,0.28), transparent 55%),
-    linear-gradient(180deg, rgba(8,20,35,0.22), rgba(8,20,35,0.05)) !important;
+    radial-gradient(900px 480px at 8% 0%, rgba(34,211,238,0.45), transparent 55%),
+    radial-gradient(820px 440px at 100% 8%, rgba(59,130,246,0.35), transparent 50%),
+    radial-gradient(700px 380px at 45% 100%, rgba(45,212,191,0.30), transparent 55%),
+    linear-gradient(165deg, #ecfeff 0%, #e0f2fe 50%, #cffafe 100%) !important;
+  background-size: 140% 140%, 140% 140%, 140% 140%, 100% 100% !important;
   background-attachment: fixed !important;
+  animation: alproBgOcean 17s ease-in-out infinite;
 }
 html[data-theme="dark"][data-bg="menta"] body { background-color: #0f1f1a !important; }
 html[data-theme="dark"][data-bg="lavanda"] body { background-color: #1a1428 !important; }
@@ -11424,16 +11443,16 @@ const premios = [
     { id: 289, nombre: "Fila Nebula", precio: 30, emoji: "💫", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "nebula", desc: "Vino con estrellas rosadas" },
 
     { id: 201, nombre: "Color: Esmeralda", precio: 30, emoji: "🟢", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#047857", prefDeep: "#065f46", desc: "Verde sobrio para franja y botones" },
-    { id: 202, nombre: "Color: Violeta", precio: 30, emoji: "🟣", colorBadge: "#ede9fe", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#6d28d9", prefDeep: "#5b21b6", desc: "Violeta contenido, tono corporativo" },
+    { id: 202, nombre: "Color: Violeta", precio: 30, emoji: "🟣", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#a21caf", prefDeep: "#86198f", desc: "Lila rosado para franja y botones" },
     { id: 203, nombre: "Color: Coral", precio: 30, emoji: "🟠", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#c2410c", prefDeep: "#9a3412", desc: "Coral profundo, menos chillante" },
-    { id: 204, nombre: "Color: Índigo", precio: 30, emoji: "🟦", colorBadge: "#e0e7ff", colorTexto: "#312e81", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#4338ca", prefDeep: "#3730a3", desc: "Índigo serio, cerca del clásico" },
+    { id: 204, nombre: "Color: Índigo", precio: 30, emoji: "🟦", colorBadge: "#e0e7ff", colorTexto: "#312e81", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#312e81", prefDeep: "#1e1b4b", desc: "Azul noche profundo para franja y botones" },
     { id: 205, nombre: "Color: Rosa", precio: 30, emoji: "💗", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#be185d", prefDeep: "#9d174d", desc: "Rosa sobrio para la interfaz" },
-    { id: 207, nombre: "Color: Ámbar", precio: 30, emoji: "🟡", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#b45309", prefDeep: "#92400e", desc: "Ámbar cálido y contenido" },
+    { id: 207, nombre: "Color: Cian", precio: 30, emoji: "🩵", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#0891b2", prefDeep: "#0e7490", desc: "Celeste fresco para franja y botones" },
     { id: 208, nombre: "Color: Fucsia", precio: 30, emoji: "💖", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#a21caf", prefDeep: "#86198f", desc: "Fucsia elegante, no neón" },
     { id: 209, nombre: "Color: Gris", precio: 30, emoji: "⬜", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#475569", prefDeep: "#334155", desc: "Gris elegante neutro" },
     { id: 206, nombre: "Color: Clásico", precio: 20, emoji: "🔵", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1e3a8a", prefDeep: "#1e40af", desc: "Azul original del sistema" },
     { id: 212, nombre: "Color Premium Borgoña", precio: 70, emoji: "🍷", colorBadge: "#ffe4e6", colorTexto: "#9f1239", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#9f1239", prefDeep: "#881337", desc: "Rojo vino premium, sobrio y marcado" },
-    { id: 213, nombre: "Color Premium Bosque", precio: 70, emoji: "🌲", colorBadge: "#dcfce7", colorTexto: "#14532d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#166534", prefDeep: "#14532d", desc: "Verde bosque premium, profundo" },
+    { id: 213, nombre: "Color Premium Rosa Antiguo", precio: 70, emoji: "🌹", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#be185d", prefDeep: "#9d174d", desc: "Rosa elegante premium para franja y botones" },
     { id: 214, nombre: "Color Premium Zafiro", precio: 70, emoji: "💎", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1d4ed8", prefDeep: "#1e3a8a", desc: "Azul zafiro premium, más vivo que el clásico" },
     { id: 220, nombre: "Pack de bordes", precio: 35, emoji: "⬜", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "radius_pack", prefValue: "on", desc: "Elige en el menú: original, redondo o cuadrado" },
     { id: 230, nombre: "Pack de tabla", precio: 35, emoji: "📋", colorBadge: "#ecfdf5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "density_pack", prefValue: "on", desc: "Elige en el menú: original, compacta o cómoda" },
@@ -11488,13 +11507,13 @@ const premios = [
     { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC", desc: "Disfruta de un buen chocolate premium JacQuot francés" },
     { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP", desc: "El pack perfecto para que nunca falte tinta" },
     // —— Productos únicos (una sola vez) ——
-    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
-    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: true, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
+    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: false, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
+    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: false, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
     { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
     { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
-    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV", desc: "Tu comida fresca y segura" },
+    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: false, prefijo: "HV", desc: "Tu comida fresca y segura" },
     { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
-    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
+    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: false, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
     { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
     { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
     { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 1600, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
@@ -11924,13 +11943,14 @@ function renderizarTiendaAlpro() {
     }
     const subTitulos = {
         cuenta: '👤 Cuenta',
-        colores: '🎨 Color de la app',
-        layout: '📐 Bordes y tabla',
-        fondos: '🖼️ Fondo',
         frases: '💬 Frase de arriba',
+        colores: '🎨 Color de la app',
+        fondos: '🖼️ Fondo',
         filas: '✨ Estilo de tu fila',
+        layout: '📐 Bordes y tabla',
         otros: '🧩 Otros'
     };
+    const subOrden = ['cuenta', 'frases', 'colores', 'fondos', 'filas', 'layout', 'otros'];
 
     if (typeof window._tiendaTabActiva === 'undefined') window._tiendaTabActiva = 'antojos';
 
@@ -11967,6 +11987,15 @@ function renderizarTiendaAlpro() {
     var lista = premios.filter(function(item) {
         return categoriaPremio(item) === window._tiendaTabActiva;
     });
+    if (window._tiendaTabActiva === 'personalizacion') {
+      lista = lista.slice().sort(function(a, b) {
+        var ia = subOrden.indexOf(subcatPref(a));
+        var ib = subOrden.indexOf(subcatPref(b));
+        if (ia < 0) ia = 99;
+        if (ib < 0) ib = 99;
+        return ia - ib;
+      });
+    }
 
     if (!lista.length) {
         var vacio = document.createElement('div');
