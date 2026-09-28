@@ -10876,7 +10876,81 @@ function sumarAlprocoinsLocales(monedasGanadas) {
 <div id="modalTiendaAlpro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); z-index: 9998; justify-content: center; align-items: center; overflow: hidden;">
     
     <style>
-        /* Scrollbar creativa de la tienda (visible y usable sin rueda) */
+        
+
+#contenedorItemsTienda {
+  overflow-x: clip !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+#modalTiendaAlpro,
+#cuerpoTienda {
+  overscroll-behavior: contain;
+}
+
+/* —— Pestañas tienda (organización) —— */
+.tienda-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 4px 10px;
+  margin: 0 0 2px;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  flex-shrink: 0;
+}
+.tienda-tab {
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 7px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.tienda-tab:hover { border-color: #f59e0b; color: #92400e; }
+.tienda-tab.activa {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-color: #f59e0b;
+  color: #92400e;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+}
+.tienda-tab .tab-count {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 10px;
+  opacity: 0.75;
+  font-weight: 600;
+}
+.tienda-cat-head {
+  grid-column: 1 / -1;
+  margin: 6px 0 2px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 11px;
+  font-weight: 800;
+  color: #334155;
+  letter-spacing: 0.02em;
+}
+.tienda-vacio {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 28px 12px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Scrollbar creativa de la tienda (visible y usable sin rueda) */
         #contenedorItemsTienda {
             scrollbar-width: thin;
             scrollbar-color: #fb923c #fff7ed;
@@ -10944,7 +11018,8 @@ function sumarAlprocoinsLocales(monedasGanadas) {
             </p>
         </div>
 
-        <div id="contenedorItemsTienda" style="max-height: 340px; overflow-y: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px;">
+        <div id="tiendaTabsBar" class="tienda-tabs" role="tablist" aria-label="Categorías de la tienda"></div>
+        <div id="contenedorItemsTienda" style="max-height: min(320px, 42vh); overflow-x: clip; overflow-y: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 8px 14px 14px 8px; box-sizing: border-box; width: 100%;">
         </div>
 
         <div id="barraCarrito" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
@@ -11253,13 +11328,13 @@ const premios = [
     { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC", desc: "Disfruta de un buen chocolate premium JacQuot francés" },
     { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP", desc: "El pack perfecto para que nunca falte tinta" },
     // —— Productos únicos (una sola vez) ——
-    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: true, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
-    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: true, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
+    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: false, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
+    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: false, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
     { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
     { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
-    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: true, prefijo: "HV", desc: "Tu comida fresca y segura" },
+    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: false, prefijo: "HV", desc: "Tu comida fresca y segura" },
     { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
-    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: true, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
+    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: false, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
     { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
     { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
     { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 1600, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
@@ -11281,6 +11356,10 @@ function toggleTiendaAlpro() {
         cuerpo.classList.remove('tienda-fold');
         cuerpo.classList.add('tienda-unfold');
         tiendaModal.style.display = 'flex';
+        // Bloquear scroll del fondo mientras la tienda está abierta
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
         
         setTimeout(() => {
             tiendaModal.style.backgroundColor = "rgba(15, 23, 42, 0.4)";
@@ -11301,6 +11380,10 @@ function toggleTiendaAlpro() {
         
         setTimeout(() => {
             tiendaModal.style.display = 'none';
+            // Restaurar scroll del fondo
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+            document.body.style.touchAction = '';
         }, 340);
     }
 }
@@ -11661,6 +11744,7 @@ function actualizarResumenBarraCarrito() {
 // 🎨 RENDERIZADO CON GLOBO FLOTANTE SUTIL EN EL EMOJI
 function renderizarTiendaAlpro() {
     const contenedor = document.getElementById('contenedorItemsTienda');
+    const tabsBar = document.getElementById('tiendaTabsBar');
     if (!contenedor) return;
     contenedor.innerHTML = "";
 
@@ -11670,35 +11754,99 @@ function renderizarTiendaAlpro() {
     function categoriaPremio(item) {
         if (item.tipo === 'pref') return 'personalizacion';
         if (item.tipo === 'skin') return 'mascotas';
-        if (!item.esUnico) return 'consumibles';
+        if (!item.esUnico) return 'antojos';
         return 'unicos';
     }
-    const titulosCat = {
-        personalizacion: '🎛️ Personalización',
-        mascotas: '🐹 Mascotas',
-        consumibles: '🍬 Antojos (se pueden volver a comprar)',
-        unicos: '🎁 Productos únicos (una sola vez)'
-    };
-    let catAnterior = null;
 
-    premios.forEach((item, index) => {
-        const cat = categoriaPremio(item);
-        if (cat !== catAnterior) {
-            catAnterior = cat;
-            const head = document.createElement('div');
-            head.style.gridColumn = '1 / -1';
-            head.style.margin = index === 0 ? '4px 0 2px' : '14px 0 4px';
-            head.style.padding = '8px 10px';
-            head.style.borderRadius = '12px';
-            head.style.background = '#f8fafc';
-            head.style.border = '1px solid #e2e8f0';
-            head.style.fontSize = '12px';
-            head.style.fontWeight = '800';
-            head.style.color = '#334155';
-            head.style.letterSpacing = '0.02em';
-            head.textContent = titulosCat[cat] || cat;
-            contenedor.appendChild(head);
+    // Subgrupo dentro de personalización (solo para títulos)
+    function subcatPref(item) {
+        var k = item.prefKey || '';
+        var n = (item.nombre || '').toLowerCase();
+        if (k === 'saludo' || k === 'resp') return 'cuenta';
+        if (k === 'color' || n.indexOf('color') === 0) return 'colores';
+        if (k === 'radius' || k === 'radius_pack' || k === 'density' || k === 'density_pack' || n.indexOf('pack de') === 0) return 'layout';
+        if (k === 'bg' || n.indexOf('fondo') === 0) return 'fondos';
+        if (k === 'frase' || n.indexOf('frase') === 0) return 'frases';
+        if (k === 'fila_estilo' || n.indexOf('fila') === 0) return 'filas';
+        return 'otros';
+    }
+    const subTitulos = {
+        cuenta: '👤 Cuenta',
+        frases: '💬 Frase de arriba',
+        colores: '🎨 Color de la app',
+        fondos: '🖼️ Fondo',
+        filas: '✨ Estilo de tu fila',
+        layout: '📐 Bordes y tabla',
+        otros: '🧩 Otros'
+    };
+    const subOrden = ['cuenta', 'frases', 'colores', 'fondos', 'filas', 'layout', 'otros'];
+
+    if (typeof window._tiendaTabActiva === 'undefined') window._tiendaTabActiva = 'antojos';
+
+    const tabsMeta = [
+        { id: 'antojos', label: '🍬 Antojos', hint: 'Snacks y cosas que se pueden comprar varias veces' },
+        { id: 'unicos', label: '🎁 Únicos', hint: 'Productos físicos de una sola vez' },
+        { id: 'mascotas', label: '🐹 Mascotas', hint: 'Skins para tu compañero' },
+        { id: 'personalizacion', label: '🎛️ Personalización', hint: 'Colores, fondos, frases y más' }
+    ];
+
+    function countCat(id) {
+        return premios.filter(function(p) { return categoriaPremio(p) === id; }).length;
+    }
+
+    if (tabsBar) {
+        tabsBar.innerHTML = '';
+        tabsMeta.forEach(function(tab) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'tienda-tab' + (window._tiendaTabActiva === tab.id ? ' activa' : '');
+            btn.setAttribute('role', 'tab');
+            btn.setAttribute('aria-selected', window._tiendaTabActiva === tab.id ? 'true' : 'false');
+            btn.title = tab.hint;
+            btn.innerHTML = tab.label + '<span class="tab-count">(' + countCat(tab.id) + ')</span>';
+            btn.onclick = function() {
+                window._tiendaTabActiva = tab.id;
+                tiendaCargadaPorPrimeraVez = false;
+                renderizarTiendaAlpro();
+            };
+            tabsBar.appendChild(btn);
+        });
+    }
+
+    var lista = premios.filter(function(item) {
+        return categoriaPremio(item) === window._tiendaTabActiva;
+    });
+    if (window._tiendaTabActiva === 'personalizacion') {
+      lista = lista.slice().sort(function(a, b) {
+        var ia = subOrden.indexOf(subcatPref(a));
+        var ib = subOrden.indexOf(subcatPref(b));
+        if (ia < 0) ia = 99;
+        if (ib < 0) ib = 99;
+        return ia - ib;
+      });
+    }
+
+    if (!lista.length) {
+        var vacio = document.createElement('div');
+        vacio.className = 'tienda-vacio';
+        vacio.textContent = 'No hay productos en esta categoría.';
+        contenedor.appendChild(vacio);
+        return;
+    }
+
+    var subAnterior = null;
+    lista.forEach(function(item, index) {
+        if (window._tiendaTabActiva === 'personalizacion') {
+            var sub = subcatPref(item);
+            if (sub !== subAnterior) {
+                subAnterior = sub;
+                var head = document.createElement('div');
+                head.className = 'tienda-cat-head';
+                head.textContent = subTitulos[sub] || sub;
+                contenedor.appendChild(head);
+            }
         }
+
         const divItem = document.createElement('div');
         const yaCanjeadoPermanente = item.esUnico && reclamados.includes(item.id);
         const cantidadEnCarrito = carrito[item.id] || 0;
@@ -11717,18 +11865,18 @@ function renderizarTiendaAlpro() {
         if (tiendaCargadaPorPrimeraVez) {
             divItem.style.opacity = "0";
             divItem.style.animation = "entradaTarjeta 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards";
-            divItem.style.animationDelay = `${0.05 + (index * 0.03)}s`;
+            divItem.style.animationDelay = (0.05 + (index * 0.03)) + "s";
         } else {
             divItem.style.opacity = "1";
             divItem.style.transform = "translateY(0) scale(1)";
         }
 
         if (!yaCanjeadoPermanente) {
-            divItem.onmouseenter = () => {
+            divItem.onmouseenter = function() {
                 divItem.style.borderColor = "#f59e0b";
                 divItem.style.transform = "translateY(-3px)";
             };
-            divItem.onmouseleave = () => {
+            divItem.onmouseleave = function() {
                 divItem.style.borderColor = "#e2e8f0";
                 divItem.style.transform = "translateY(0)";
             };
@@ -11737,22 +11885,14 @@ function renderizarTiendaAlpro() {
         const precioFormateado = item.precio.toLocaleString('en-US');
         let estiloDelEmoji = item.efectoEmoji ? item.efectoEmoji : "";
 
-        // Renderizado con globo flotante sutil atado al emoji
         divItem.innerHTML = `
-            <!-- Contenedor del Emoji con el Globo Flotante -->
             <div class="contenedor-emoji-item" style="font-size: 34px; margin-bottom: 4px; opacity: ${yaCanjeadoPermanente ? '0.4' : '1'}; ${estiloDelEmoji}">
                 ${item.emoji}
-                
-                <!-- 🎈 Globo flotante (Solo si el ítem tiene descripción) -->
                 ${item.desc ? `<div class="tooltip-desc-sutil">${item.desc}</div>` : ''}
             </div>
-
-            <!-- Título del producto -->
             <div style="font-size: 12px; font-weight: 700; color: ${yaCanjeadoPermanente ? '#94a3b8' : '#1e293b'}; text-align: center; line-height: 1.2; margin-bottom: 8px;">
                 ${item.nombre}
             </div>
-
-            <!-- Badge de Precio -->
             <div style="font-size: 11px; color: ${yaCanjeadoPermanente ? '#94a3b8' : item.colorTexto}; background: ${yaCanjeadoPermanente ? '#f1f5f9' : item.colorBadge}; font-weight: 800; padding: 2px 8px; border-radius: 9999px; margin-bottom: 8px;">
                 🪙 ${precioFormateado}
             </div>
@@ -11794,7 +11934,7 @@ function renderizarTiendaAlpro() {
             btnRestar.style.fontWeight = "bold";
             btnRestar.style.fontSize = "14px";
             btnRestar.style.color = "#ef4444";
-            btnRestar.onclick = () => restarDelCarrito(item.id);
+            btnRestar.onclick = function() { restarDelCarrito(item.id); };
 
             const spanCantidad = document.createElement('span');
             spanCantidad.innerText = cantidadEnCarrito;
@@ -11818,7 +11958,7 @@ function renderizarTiendaAlpro() {
                 btnSumar.style.color = "#94a3b8";
                 btnSumar.style.cursor = "not-allowed";
             } else {
-                btnSumar.onclick = () => agregarAlCarrito(item);
+                btnSumar.onclick = function() { agregarAlCarrito(item); };
             }
 
             contenedorAcciones.appendChild(btnRestar);
@@ -11837,7 +11977,7 @@ function renderizarTiendaAlpro() {
             btnAgregar.style.background = "linear-gradient(135deg, #f59e0b, #ea580c)";
             btnAgregar.style.color = "#ffffff";
             btnAgregar.innerText = "AGREGAR";
-            btnAgregar.onclick = () => agregarAlCarrito(item);
+            btnAgregar.onclick = function() { agregarAlCarrito(item); };
             contenedorAcciones.appendChild(btnAgregar);
         }
 
