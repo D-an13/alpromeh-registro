@@ -198,19 +198,25 @@ tr.fila-estilo-oro {
 tr.fila-estilo-oro > td { color: #451a03 !important; font-weight: 600; }
 tr.fila-estilo-oro > td select { background: #fef3c7 !important; color: #78350f !important; }
 
-/* 5 SAKURA */
-@keyframes filaSakura {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: 0 56px, 0 0; }
+/* 5 SAKURA — 2 capas (como 38), separación vertical, balanceo irregular seamless */
+@keyframes filaSakuraA {
+  0%   { background-position: 0 0, 0 0, 0 0; }
+  18%  { background-position: 7px 13px, -4px 13px, 0 0; }
+  35%  { background-position: 4px 25px, -7px 25px, 0 0; }
+  50%  { background-position: -2px 36px, 3px 36px, 0 0; }
+  67%  { background-position: -6px 48px, 6px 48px, 0 0; }
+  85%  { background-position: -3px 61px, 2px 61px, 0 0; }
+  100% { background-position: 0 72px, 0 72px, 0 0; }
 }
 tr.fila-estilo-cristal {
   background-color: #9d174d;
   background-image:
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27320%27%20height%3D%2756%27%20viewBox%3D%270%200%20320%2056%27%3E%0A%3Cellipse%20cx%3D%2228%22%20cy%3D%2210%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.55%22%20transform%3D%22rotate%28-25%2028%2010%29%22/%3E%0A%3Cellipse%20cx%3D%2278%22%20cy%3D%2226%22%20rx%3D%224%22%20ry%3D%222.5%22%20fill%3D%22%23f9a8d4%22%20opacity%3D%220.5%22%20transform%3D%22rotate%2815%2078%2026%29%22/%3E%0A%3Cellipse%20cx%3D%22128%22%20cy%3D%226%22%20rx%3D%225.5%22%20ry%3D%223%22%20fill%3D%22%23fce7f3%22%20opacity%3D%220.45%22%20transform%3D%22rotate%28-10%20128%206%29%22/%3E%0A%3Cellipse%20cx%3D%22168%22%20cy%3D%2232%22%20rx%3D%224%22%20ry%3D%222.5%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.5%22%20transform%3D%22rotate%2830%20168%2032%29%22/%3E%0A%3Cellipse%20cx%3D%22208%22%20cy%3D%2214%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23f9a8d4%22%20opacity%3D%220.48%22%20transform%3D%22rotate%28-20%20208%2014%29%22/%3E%0A%3Cellipse%20cx%3D%22248%22%20cy%3D%2238%22%20rx%3D%224.5%22%20ry%3D%222.5%22%20fill%3D%22%23fce7f3%22%20opacity%3D%220.42%22%20transform%3D%22rotate%2810%20248%2038%29%22/%3E%0A%3Cellipse%20cx%3D%22288%22%20cy%3D%2218%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.5%22%20transform%3D%22rotate%28-15%20288%2018%29%22/%3E%0A%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27320%27%20height%3D%2772%27%20viewBox%3D%270%200%20320%2072%27%3E%0A%3Cellipse%20cx%3D%2228%22%20cy%3D%228%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.55%22%20transform%3D%22rotate%28-25%2028%208%29%22/%3E%0A%3Cellipse%20cx%3D%22118%22%20cy%3D%224%22%20rx%3D%225.5%22%20ry%3D%223%22%20fill%3D%22%23fce7f3%22%20opacity%3D%220.45%22%20transform%3D%22rotate%28-10%20118%204%29%22/%3E%0A%3Cellipse%20cx%3D%22168%22%20cy%3D%2240%22%20rx%3D%224%22%20ry%3D%222.5%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.5%22%20transform%3D%22rotate%2830%20168%2040%29%22/%3E%0A%3Cellipse%20cx%3D%22248%22%20cy%3D%2250%22%20rx%3D%224.5%22%20ry%3D%222.5%22%20fill%3D%22%23fce7f3%22%20opacity%3D%220.42%22%20transform%3D%22rotate%2810%20248%2050%29%22/%3E%0A%3Cellipse%20cx%3D%22288%22%20cy%3D%2220%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.5%22%20transform%3D%22rotate%28-15%20288%2020%29%22/%3E%0A%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27320%27%20height%3D%2772%27%20viewBox%3D%270%200%20320%2072%27%3E%0A%3Cellipse%20cx%3D%2278%22%20cy%3D%2232%22%20rx%3D%224%22%20ry%3D%222.5%22%20fill%3D%22%23f9a8d4%22%20opacity%3D%220.5%22%20transform%3D%22rotate%2815%2078%2032%29%22/%3E%0A%3Cellipse%20cx%3D%22208%22%20cy%3D%2216%22%20rx%3D%225%22%20ry%3D%223%22%20fill%3D%22%23f9a8d4%22%20opacity%3D%220.48%22%20transform%3D%22rotate%28-20%20208%2016%29%22/%3E%0A%3Cellipse%20cx%3D%2248%22%20cy%3D%2254%22%20rx%3D%224.2%22%20ry%3D%222.6%22%20fill%3D%22%23fbcfe8%22%20opacity%3D%220.4%22%20transform%3D%22rotate%2820%2048%2054%29%22/%3E%0A%3Cellipse%20cx%3D%22198%22%20cy%3D%2256%22%20rx%3D%224.5%22%20ry%3D%222.7%22%20fill%3D%22%23f9a8d4%22%20opacity%3D%220.42%22%20transform%3D%22rotate%28-18%20198%2056%29%22/%3E%0A%3Cellipse%20cx%3D%22300%22%20cy%3D%2248%22%20rx%3D%224%22%20ry%3D%222.5%22%20fill%3D%22%23fce7f3%22%20opacity%3D%220.4%22%20transform%3D%22rotate%2812%20300%2048%29%22/%3E%0A%3C/svg%3E"),
     linear-gradient(120deg, #9d174d 0%, #db2777 45%, #be185d 100%);
-  background-size: 320px 56px, 100% 100%;
-  background-repeat: repeat, no-repeat;
-  animation: filaSakura 5.5s linear infinite;
+  background-size: 320px 72px, 320px 72px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  animation: filaSakuraA 6s linear infinite;
 }
 tr.fila-estilo-cristal > td { color: #fdf2f8 !important; font-weight: 600; }
 tr.fila-estilo-cristal > td select { background: #fdf2f8 !important; color: #9d174d !important; }
