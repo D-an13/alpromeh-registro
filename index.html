@@ -5676,7 +5676,8 @@ function cargarFraseMotivacional() {
   }
   window.alproMostrarFrasePrioritaria = function () {
     loadCache();
-    if (pool.length) {
+    // Prioridad suave: ~75% frases del equipo, ~25% del sistema (si hay equipo)
+    if (pool.length && Math.random() < 0.75) {
       var it = pool[Math.floor(Math.random() * pool.length)];
       setPantalla(it.texto, true, it.id);
     } else {
@@ -11513,7 +11514,7 @@ function sumarAlprocoinsLocales(monedasGanadas) {
                 <!-- 🥉 BRONCE -->
                 <div class="card-3d-container card-bronce-wrap">
                     <div class="card-3d">
-                        <div class="card-icon">🏛️</div>
+                        <div class="card-icon">🪙</div>
                         <h4 class="card-title">Pack Bronce</h4>
                         <div class="card-coins"><span class="coin-num">200</span><span class="coin-label">ALPROCOINS</span></div>
                         <button class="card-btn btn-bronce" onclick="seleccionarPack('Pack Bronce', 200, 25)">Q 25.00</button>
@@ -11523,7 +11524,7 @@ function sumarAlprocoinsLocales(monedasGanadas) {
                 <!-- 🥈 PLATA -->
                 <div class="card-3d-container card-plata-wrap">
                     <div class="card-3d">
-                        <div class="card-icon">🏛️</div>
+                        <div class="card-icon">💵</div>
                         <h4 class="card-title">Pack Plata</h4>
                         <div class="card-coins"><span class="coin-num">500</span><span class="coin-label">ALPROCOINS</span></div>
                         <button class="card-btn btn-plata" onclick="seleccionarPack('Pack Plata', 500, 50)">Q 50.00</button>
@@ -11533,7 +11534,7 @@ function sumarAlprocoinsLocales(monedasGanadas) {
                 <!-- 🥇 ORO -->
                 <div class="card-3d-container card-oro-wrap">
                     <div class="card-3d">
-                        <div class="card-icon">🏛️</div>
+                        <div class="card-icon">💰</div>
                         <h4 class="card-title">Pack Oro</h4>
                         <div class="card-coins"><span class="coin-num">1,200</span><span class="coin-label">ALPROCOINS</span></div>
                         <button class="card-btn btn-oro" onclick="seleccionarPack('Pack Oro', 1200, 100)">Q 100.00</button>
