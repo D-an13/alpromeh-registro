@@ -3759,6 +3759,152 @@ body.dark-mode .themeToggle-container {
     filter: brightness(0) invert(1);
 }
 
+
+/* ========== FRASE DEL EQUIPO (solo lápiz + modal) ========== */
+.frase-row-equipo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 95%;
+  margin: 6px auto 10px;
+}
+.frase-row-equipo .frase-inspiradora {
+  margin: 0 !important;
+  max-width: calc(100% - 40px);
+}
+#btnFraseEquipoLapiz {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.28;
+  z-index: 20;
+  pointer-events: auto !important;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .25s ease, transform .25s ease, background .2s ease;
+  color: #475569;
+}
+#btnFraseEquipoLapiz:hover {
+  opacity: 0.9;
+  transform: rotate(-12deg) scale(1.1);
+  background: rgba(59, 130, 246, 0.10);
+  color: #334155;
+}
+[data-theme="dark"] #btnFraseEquipoLapiz:hover {
+  background: rgba(147, 197, 253, 0.14);
+  color: #e2e8f0;
+}
+#btnFraseEquipoLapiz svg { width: 16px; height: 16px; display: block; pointer-events: none; }
+[data-theme="dark"] #btnFraseEquipoLapiz { color: #94a3b8; opacity: 0.35; }
+.frase-inspiradora[data-equipo="1"] { cursor: pointer; }
+
+#modalFraseEquipoAlpro {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 300000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(15, 23, 42, 0);
+  pointer-events: none;
+}
+#modalFraseEquipoAlpro.mfe-on {
+  display: flex;
+  pointer-events: auto;
+  animation: mfeBackdropIn .38s ease forwards;
+}
+#modalFraseEquipoAlpro.mfe-off {
+  display: flex;
+  pointer-events: none;
+  animation: mfeBackdropOut .32s ease forwards;
+}
+@keyframes mfeBackdropIn {
+  from { background: rgba(15,23,42,0); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); }
+  to   { background: rgba(15,23,42,.48); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+}
+@keyframes mfeBackdropOut {
+  from { background: rgba(15,23,42,.48); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  to   { background: rgba(15,23,42,0); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); }
+}
+#modalFraseEquipoAlpro .mfe-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 22px;
+  padding: 24px 22px 18px;
+  box-shadow: 0 28px 60px -16px rgba(0,0,0,.4);
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  transform-origin: 50% 120%;
+}
+#modalFraseEquipoAlpro.mfe-on .mfe-card {
+  animation: mfeCardIn .48s cubic-bezier(.22,1.15,.36,1) forwards;
+}
+#modalFraseEquipoAlpro.mfe-off .mfe-card {
+  animation: mfeCardOut .3s ease forwards;
+}
+@keyframes mfeCardIn {
+  0%   { opacity: 0; transform: translateY(40px) scale(.88) rotate(-2deg); filter: blur(8px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); filter: blur(0); }
+}
+@keyframes mfeCardOut {
+  0%   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(24px) scale(.9) rotate(1deg); filter: blur(4px); }
+}
+[data-theme="dark"] #modalFraseEquipoAlpro .mfe-card {
+  background: #1e293b; border-color: #334155; color: #f1f5f9;
+}
+#modalFraseEquipoAlpro .mfe-card h3 { margin: 0 0 6px; font-size: 1.08rem; font-weight: 800; }
+#modalFraseEquipoAlpro .mfe-hint { margin: 0 0 14px; font-size: 12px; color: #64748b; line-height: 1.4; }
+[data-theme="dark"] #modalFraseEquipoAlpro .mfe-hint { color: #94a3b8; }
+#modalFraseEquipoAlpro textarea {
+  width: 100%; min-height: 90px; resize: vertical;
+  border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px;
+  font-size: 14px; font-family: inherit; box-sizing: border-box;
+  background: #f8fafc; color: inherit;
+}
+[data-theme="dark"] #modalFraseEquipoAlpro textarea {
+  background: #0f172a; border-color: #475569; color: #f1f5f9;
+}
+#modalFraseEquipoAlpro textarea:focus {
+  outline: none; border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.22);
+}
+#modalFraseEquipoAlpro .mfe-meta {
+  display: flex; justify-content: space-between; margin-top: 6px;
+  font-size: 11px; color: #94a3b8;
+}
+#modalFraseEquipoAlpro .mfe-actions {
+  display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;
+}
+#modalFraseEquipoAlpro .mfe-actions button {
+  flex: 1; min-width: 88px; padding: 10px 12px; border-radius: 10px;
+  border: none; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit;
+}
+#modalFraseEquipoAlpro .mfe-cancel { background: #e2e8f0; color: #334155; }
+[data-theme="dark"] #modalFraseEquipoAlpro .mfe-cancel { background: #334155; color: #e2e8f0; }
+#modalFraseEquipoAlpro .mfe-save {
+  background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff;
+}
+#modalFraseEquipoAlpro .mfe-del {
+  flex: 0 0 auto; background: transparent; color: #dc2626;
+  border: 1px solid #fecaca; min-width: auto;
+}
+[data-theme="dark"] #modalFraseEquipoAlpro .mfe-del { border-color: #7f1d1d; color: #fca5a5; }
+
+
 /* EFECTO SHINE */
 .frase-inspiradora {
     margin: 6px 0 10px 0;
@@ -4535,9 +4681,17 @@ tbody.animar-entrada {
     <div class="logo-wrapper" id="logoWrapper">
         <img src="https://raw.githubusercontent.com/D-an13/alpromeh-registro/main/logo.png" alt="ALPROMEH" id="appLogo" class="logo-alpromeh">
     </div>
-    <p id="fraseMotivacional" class="frase-inspiradora">
+    <div class="frase-row-equipo">
+      <button type="button" id="btnFraseEquipoLapiz" title="Escribir frase del equipo" aria-label="Escribir frase del equipo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M14.5 4.5l5 5L8 21H3v-5L14.5 4.5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M12.5 6.5l5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p id="fraseMotivacional" class="frase-inspiradora" data-equipo="0">
         "El trabajo en equipo divide los esfuerzos y multiplica los resultados."
-    </p>
+      </p>
+    </div>
 </div>
 
     <!-- MANTENEMOS TUS PASTILLAS ORIGINALES -->
@@ -5469,13 +5623,273 @@ const frasesAlpromeh = [
 ];
 
 function cargarFraseMotivacional() {
+    if (typeof window.alproMostrarFrasePrioritaria === 'function') {
+        window.alproMostrarFrasePrioritaria();
+        return;
+    }
     const elem = document.getElementById('fraseMotivacional');
     if (elem) {
         const randomIndex = Math.floor(Math.random() * frasesAlpromeh.length);
         elem.innerText = frasesAlpromeh[randomIndex];
+        elem.setAttribute('data-equipo', '0');
+        elem.removeAttribute('data-frase-id');
         elem.setAttribute('data-glitch', elem.innerText || '');
     }
 }
+
+
+
+/* FRASES DEL EQUIPO — SOLO #btnFraseEquipoLapiz (no tienda) */
+(function () {
+  var MAX = 140, LS = 'alpro_frases_equipo_cache', pool = [], editId = null, closing = false;
+
+  function parseArr(s) {
+    try {
+      var a = JSON.parse(s || '[]');
+      return Array.isArray(a) ? a.filter(function (x) {
+        return x && typeof x.texto === 'string' && x.texto.trim();
+      }) : [];
+    } catch (e) { return []; }
+  }
+  function loadCache() { pool = parseArr(localStorage.getItem(LS)); return pool; }
+  function saveCache(arr) {
+    pool = arr || [];
+    try { localStorage.setItem(LS, JSON.stringify(pool)); } catch (e) {}
+  }
+  function uid() { return 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+  function setPantalla(texto, equipo, id) {
+    var el = document.getElementById('fraseMotivacional');
+    if (!el) return;
+    el.innerText = texto || '';
+    el.setAttribute('data-equipo', equipo ? '1' : '0');
+    if (equipo && id) el.setAttribute('data-frase-id', id);
+    else el.removeAttribute('data-frase-id');
+    if (typeof window.syncFraseGlitchData === 'function') window.syncFraseGlitchData();
+    else el.setAttribute('data-glitch', (el.innerText || '').trim());
+  }
+  function sistemaRandom() {
+    if (typeof frasesAlpromeh !== 'undefined' && frasesAlpromeh && frasesAlpromeh.length) {
+      return frasesAlpromeh[Math.floor(Math.random() * frasesAlpromeh.length)];
+    }
+    return '"El trabajo en equipo divide los esfuerzos y multiplica los resultados."';
+  }
+  window.alproMostrarFrasePrioritaria = function () {
+    loadCache();
+    if (pool.length) {
+      var it = pool[Math.floor(Math.random() * pool.length)];
+      setPantalla(it.texto, true, it.id);
+    } else {
+      setPantalla(sistemaRandom(), false, null);
+    }
+  };
+  function remoteSave(arr) {
+    if (typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) return;
+    try {
+      fetch(URL_SCRIPT, {
+        method: 'POST', redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ accion: 'guardarFrasesEquipo', frases: arr || [] })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function remoteLoad() {
+    if (typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) {
+      window.alproMostrarFrasePrioritaria();
+      return;
+    }
+    try {
+      fetch(URL_SCRIPT + '?frasesEquipo=1', { redirect: 'follow' })
+        .then(function (r) { return r.text(); })
+        .then(function (txt) {
+          try {
+            var d = JSON.parse(txt);
+            if (d && Array.isArray(d.frases)) saveCache(d.frases);
+          } catch (e) {}
+          window.alproMostrarFrasePrioritaria();
+        })
+        .catch(function () { window.alproMostrarFrasePrioritaria(); });
+    } catch (e) {
+      window.alproMostrarFrasePrioritaria();
+    }
+  }
+
+  function ensureModalOnBody() {
+    var modal = document.getElementById('modalFraseEquipoAlpro');
+    if (modal && modal.parentNode !== document.body) {
+      document.body.appendChild(modal);
+    }
+    return modal;
+  }
+
+  function openModal(opts) {
+    opts = opts || {};
+    editId = opts.id || null;
+    closing = false;
+    var modal = ensureModalOnBody();
+    var ta = document.getElementById('mfeTextoAlpro');
+    if (!modal || !ta) {
+      console.warn('[frase-equipo] no modal/textarea');
+      return;
+    }
+    ta.value = opts.texto || '';
+    var tit = document.getElementById('mfeTituloAlpro');
+    var save = document.getElementById('mfeSaveAlpro');
+    var del = document.getElementById('mfeDelAlpro');
+    if (tit) tit.textContent = editId ? 'Editar frase del equipo' : 'Una frase para el equipo';
+    if (save) save.textContent = editId ? 'Guardar' : 'Publicar';
+    if (del) del.style.display = editId ? '' : 'none';
+    tick();
+    modal.classList.remove('mfe-off');
+    modal.classList.add('mfe-on');
+    modal.style.display = 'flex';
+    modal.style.zIndex = '300000';
+    setTimeout(function () { try { ta.focus(); } catch (e) {} }, 40);
+  }
+
+  function closeModal() {
+    var modal = document.getElementById('modalFraseEquipoAlpro');
+    if (!modal || closing) return;
+    closing = true;
+    modal.classList.remove('mfe-on');
+    modal.classList.add('mfe-off');
+    setTimeout(function () {
+      modal.classList.remove('mfe-off');
+      modal.style.display = 'none';
+      closing = false;
+      editId = null;
+    }, 300);
+  }
+
+  function tick() {
+    var ta = document.getElementById('mfeTextoAlpro');
+    var c = document.getElementById('mfeCountAlpro');
+    if (!ta || !c) return;
+    var n = (ta.value || '').length;
+    c.textContent = n + ' / ' + MAX;
+    c.style.color = n > MAX - 15 ? '#dc2626' : '';
+  }
+
+  function publish() {
+    var ta = document.getElementById('mfeTextoAlpro');
+    if (!ta) return;
+    var texto = (ta.value || '').trim().replace(/\s+/g, ' ');
+    if (!texto) {
+      if (typeof alproAlert === 'function') alproAlert('Escribe una frase antes de publicar.');
+      else alert('Escribe una frase antes de publicar.');
+      return;
+    }
+    if (texto.length > MAX) texto = texto.slice(0, MAX);
+    loadCache();
+    if (editId) {
+      var ok = false;
+      pool = pool.map(function (x) {
+        if (x.id === editId) { ok = true; return { id: x.id, texto: texto }; }
+        return x;
+      });
+      if (!ok) pool.push({ id: editId, texto: texto });
+    } else {
+      pool.push({ id: uid(), texto: texto });
+    }
+    if (pool.length > 80) pool = pool.slice(-80);
+    saveCache(pool);
+    remoteSave(pool);
+    setPantalla(texto, true, editId || pool[pool.length - 1].id);
+    closeModal();
+  }
+
+  function remove() {
+    if (!editId) return;
+    if (!confirm('¿Borrar esta frase del equipo?')) return;
+    loadCache();
+    pool = pool.filter(function (x) { return x.id !== editId; });
+    saveCache(pool);
+    remoteSave(pool);
+    window.alproMostrarFrasePrioritaria();
+    closeModal();
+  }
+
+  // Clic del lápiz en fase CAPTURE: no se mezcla con tienda ni otros handlers
+  document.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('#btnFraseEquipoLapiz') : null;
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    openModal({ id: null, texto: '' });
+  }, true);
+
+  function bindRest() {
+    var frase = document.getElementById('fraseMotivacional');
+    if (frase && !frase.__mfeDbl) {
+      frase.__mfeDbl = true;
+      frase.addEventListener('dblclick', function (e) {
+        if (frase.getAttribute('data-equipo') !== '1') return;
+        e.preventDefault();
+        e.stopPropagation();
+        openModal({
+          id: frase.getAttribute('data-frase-id'),
+          texto: (frase.innerText || '').trim()
+        });
+      });
+    }
+    var ta = document.getElementById('mfeTextoAlpro');
+    if (ta && !ta.__mfeIn) {
+      ta.__mfeIn = true;
+      ta.addEventListener('input', tick);
+    }
+    var cancel = document.getElementById('mfeCancelAlpro');
+    if (cancel && !cancel.__mfe) {
+      cancel.__mfe = true;
+      cancel.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      });
+    }
+    var save = document.getElementById('mfeSaveAlpro');
+    if (save && !save.__mfe) {
+      save.__mfe = true;
+      save.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        publish();
+      });
+    }
+    var del = document.getElementById('mfeDelAlpro');
+    if (del && !del.__mfe) {
+      del.__mfe = true;
+      del.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        remove();
+      });
+    }
+    var modal = document.getElementById('modalFraseEquipoAlpro');
+    if (modal && !modal.__mfeBg) {
+      modal.__mfeBg = true;
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var m = document.getElementById('modalFraseEquipoAlpro');
+    if (m && m.classList.contains('mfe-on')) closeModal();
+  });
+
+  function boot() {
+    ensureModalOnBody();
+    bindRest();
+    loadCache();
+    remoteLoad();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+
 
 function syncFraseGlitchData() {
     var el = document.getElementById('fraseMotivacional');
@@ -6734,6 +7148,10 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "☀️", text: "Buen día para dejar la lista más corta." },
   { icon: "🎯", text: "Una orden a la vez. Tú puedes." },
   { icon: "💡", text: "Si algo no cuadra, revisa institución y producto." },
+  // Frase del equipo (lápiz de arriba)
+  { icon: "✏️", text: "Si quieres, deja una frase arriba para el equipo. Es anónima." },
+  { icon: "🖊️", text: "El lápiz de arriba es para motivar al equipo. ¡Úsalo!" },
+  { icon: "💬", text: "Una frase bonita arriba no cuesta nada y anima el día." },
   // Cercanos / graciosos suaves
   { icon: "🍪", text: "Tengo hambre… pero primero terminamos esta orden." },
   { icon: "😴", text: "No te olvides de descansar un ratito." },
@@ -6741,6 +7159,14 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "🛋️", text: "Estirar hombros cuenta como productividad." },
   { icon: "🧃", text: "Hidratación nivel experto: un sorbito y seguimos." },
   { icon: "🙈", text: "No juzgo typos… solo los campos vacíos." },
+  { icon: "🥱", text: "Bostezo de soporte técnico. Sigo aquí igual." },
+  { icon: "🫠", text: "Si el día se derrite, prioriza y seguimos." },
+  { icon: "🐾", text: "Estoy aquí. Solo dame un clic si te trabas." },
+  { icon: "🎵", text: "Modo playlist: orden por orden, sin prisa tonta." },
+  { icon: "🧸", text: "Compañía virtual nivel tierno activada." },
+  { icon: "🌤️", text: "Respira. La siguiente orden no se va a escapar." },
+  { icon: "🕹️", text: "Si abres los minijuegos, yo no te juzgo… mucho." },
+  { icon: "📦", text: "Otra cajita mental cerrada. Bien." },
   { icon: "🪄", text: "Si algo se siente trabado, un respiro y reintentamos." },
   { icon: "📎", text: "Yo no muerdo. Solo recuerdo atajos." },
   { icon: "🌤️", text: "Día pesado o ligero: aquí estoy igual." },
@@ -7050,7 +7476,15 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
         { icon: "🔄", text: "Si la tabla se ve rara, " + nom + ", un solo clic en Sincronizar basta." },
         { icon: "📦", text: "Marca LISTO solo cuando ya salió de bodega, " + nom + "." },
         { icon: "🎧", text: "Pon tu playlist y vamos orden por orden, " + nom + "." },
-        { icon: "🍀", text: "Hoy puede ser un día limpio de pendientes, " + nom + "." }
+        { icon: "🍀", text: "Hoy puede ser un día limpio de pendientes, " + nom + "." },
+        { icon: "✏️", text: "Si quieres, " + nom + ", deja una frase arriba para el equipo. Es anónima." },
+        { icon: "🍪", text: "Tengo hambre… pero primero te ayudo a ti, " + nom + "." },
+        { icon: "😴", text: "No te olvides de descansar un ratito, " + nom + "." },
+        { icon: "🎈", text: "Vas sacando el día con calma, " + nom + ". Se nota." },
+        { icon: "🧸", text: "Aquí sigo, " + nom + ". Compañía nivel tierno." },
+        { icon: "🌤️", text: "Respira, " + nom + ". La siguiente orden no se escapa." },
+        { icon: "🧃", text: "Un sorbito de agua y seguimos, " + nom + "." },
+        { icon: "🐾", text: "Si algo se traba, " + nom + ", aquí estoy un clic cerca." }
       ];
       if (Math.random() < 0.32) {
         const ntip = extraNamed[Math.floor(Math.random() * extraNamed.length)];
@@ -12792,5 +13226,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200);
   }
 </script>
+
+<!-- Modal Frase del Equipo (solo lápiz) -->
+<div id="modalFraseEquipoAlpro" aria-hidden="true">
+  <div class="mfe-card" role="dialog" aria-labelledby="mfeTituloAlpro">
+    <h3 id="mfeTituloAlpro">Una frase para el equipo</h3>
+    <p class="mfe-hint">Cualquiera puede dejar un mensaje anónimo. Sale arriba para todos, sin nombre ni fecha.</p>
+    <textarea id="mfeTextoAlpro" maxlength="140" placeholder="Escribe algo bonito para el equipo…"></textarea>
+    <div class="mfe-meta">
+      <span id="mfeCountAlpro">0 / 140</span>
+      <span>Sin nombre ni fecha</span>
+    </div>
+    <div class="mfe-actions">
+      <button type="button" class="mfe-del" id="mfeDelAlpro" style="display:none;">Borrar</button>
+      <button type="button" class="mfe-cancel" id="mfeCancelAlpro">Cancelar</button>
+      <button type="button" class="mfe-save" id="mfeSaveAlpro">Publicar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
