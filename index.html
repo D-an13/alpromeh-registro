@@ -336,6 +336,103 @@ tr.fila-estilo-prism > td { color: #1e1b4b !important; font-weight: 600; }
 [data-theme="dark"] tr.fila-estilo-prism > td { color: #e0e7ff !important; }
 tr.fila-estilo-prism > td select { background: rgba(255,255,255,0.95) !important; color: #1e1b4b !important; }
 
+
+/* 11 PIXEL */
+@keyframes filaPixel {
+  0%, 100% { filter: none; }
+  50% { filter: brightness(1.06); }
+}
+tr.fila-estilo-pixel {
+  background-color: #1e3a5f;
+  background-image:
+    linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,0.07) 1px, transparent 1px),
+    linear-gradient(135deg, #0f766e 0%, #1d4ed8 35%, #7c3aed 70%, #0f766e 100%);
+  background-size: 12px 12px, 12px 12px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  animation: filaPixel 4s ease-in-out infinite;
+}
+tr.fila-estilo-pixel > td { color: #ecfeff !important; font-weight: 600; }
+tr.fila-estilo-pixel > td select { background: #ecfeff !important; color: #134e4a !important; }
+
+/* 12 PARTITURA — centrada + arcoíris lento ida y vuelta (sin corte) */
+@keyframes filaPartituraMove {
+  0% { background-position: 0 0, 0% 50%; }
+  100% { background-position: 120px 0, 100% 50%; }
+}
+tr.fila-estilo-partitura {
+  background-color: #e0e7ff;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='56' viewBox='0 0 120 56'%3E%3Cline x1='0' y1='14' x2='120' y2='14' stroke='%234c1d95' stroke-width='1' opacity='0.3'/%3E%3Cline x1='0' y1='22' x2='120' y2='22' stroke='%234c1d95' stroke-width='1' opacity='0.3'/%3E%3Cline x1='0' y1='30' x2='120' y2='30' stroke='%234c1d95' stroke-width='1' opacity='0.3'/%3E%3Cline x1='0' y1='38' x2='120' y2='38' stroke='%234c1d95' stroke-width='1' opacity='0.3'/%3E%3Cline x1='0' y1='46' x2='120' y2='46' stroke='%234c1d95' stroke-width='1' opacity='0.3'/%3E%3Cellipse cx='22' cy='38' rx='4' ry='3' fill='%234c1d95' opacity='0.42'/%3E%3Cline x1='26' y1='38' x2='26' y2='18' stroke='%234c1d95' stroke-width='1.25' opacity='0.42'/%3E%3Cpath d='M26 18 C33 16 35 23 28 25' fill='none' stroke='%234c1d95' stroke-width='1.25' opacity='0.42'/%3E%3Cellipse cx='50' cy='30' rx='3.8' ry='2.9' fill='%234c1d95' opacity='0.38'/%3E%3Cline x1='53.8' y1='30' x2='53.8' y2='14' stroke='%234c1d95' stroke-width='1.2' opacity='0.38'/%3E%3Cpath d='M53.8 14 C60 12 62 19 56 21' fill='none' stroke='%234c1d95' stroke-width='1.2' opacity='0.38'/%3E%3Cellipse cx='76' cy='38' rx='3.8' ry='2.9' fill='%234c1d95' opacity='0.36'/%3E%3Cline x1='79.8' y1='38' x2='79.8' y2='20' stroke='%234c1d95' stroke-width='1.2' opacity='0.36'/%3E%3Cellipse cx='96' cy='22' rx='3.4' ry='2.6' fill='%234c1d95' opacity='0.34'/%3E%3Cellipse cx='106' cy='26' rx='3.4' ry='2.6' fill='%234c1d95' opacity='0.34'/%3E%3Cline x1='99.4' y1='22' x2='99.4' y2='12' stroke='%234c1d95' stroke-width='1.1' opacity='0.34'/%3E%3Cline x1='109.4' y1='26' x2='109.4' y2='12' stroke='%234c1d95' stroke-width='1.1' opacity='0.34'/%3E%3Cpath d='M99.4 12 C104 10 109.4 10 109.4 12' fill='none' stroke='%234c1d95' stroke-width='1.15' opacity='0.34'/%3E%3Cpath d='M99.4 15.5 C104 13.5 109.4 13.5 109.4 15.5' fill='none' stroke='%234c1d95' stroke-width='1' opacity='0.28'/%3E%3C/svg%3E"),
+    linear-gradient(90deg,
+      #fca5a5 0%, #fdba74 14%, #fde047 28%, #86efac 42%,
+      #7dd3fc 57%, #a5b4fc 71%, #e9d5ff 85%, #fca5a5 100%);
+  background-size: 120px 56px, 300% 100%;
+  background-repeat: repeat-x, no-repeat;
+  animation: filaPartituraMove 22s linear infinite alternate;
+}
+tr.fila-estilo-partitura > td { color: #1e1b4b !important; font-weight: 600; }
+tr.fila-estilo-partitura > td select { background: #ffffff !important; color: #4c1d95 !important; }
+
+/* 13 HEX — panal centrado en el medio de la fila */
+@keyframes filaHex {
+  0% { background-position: 0 center, 0% 50%; filter: brightness(1); }
+  50% { background-position: 0 center, 100% 50%; filter: brightness(1.08); }
+  100% { background-position: 0 center, 0% 50%; filter: brightness(1); }
+}
+tr.fila-estilo-hex {
+  background-color: #0f766e;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M14 13 L26 20 L26 34 L14 41 L2 34 L2 20 Z' fill='%2314b8a6' opacity='0.3' stroke='%2399f6e4' stroke-width='1'/%3E%3Cpath d='M42 13 L54 20 L54 34 L42 41 L30 34 L30 20 Z' fill='none' stroke='%235eead4' stroke-width='1' opacity='0.45'/%3E%3Cpath d='M28 27 L40 34 L40 48 L28 55 L16 48 L16 34 Z' fill='%230d9488' opacity='0.2' stroke='%2399f6e4' stroke-width='1'/%3E%3Cpath d='M28 1 L40 8 L40 22 L28 29 L16 22 L16 8 Z' fill='none' stroke='%2399f6e4' stroke-width='1' opacity='0.35'/%3E%3Ccircle cx='14' cy='27' r='2' fill='%23ccfbf1' opacity='0.4'/%3E%3Ccircle cx='42' cy='27' r='1.6' fill='%23f0fdfa' opacity='0.35'/%3E%3C/svg%3E"),
+    linear-gradient(125deg, #134e4a 0%, #0f766e 30%, #0d9488 55%, #115e59 80%, #134e4a 100%);
+  background-size: 56px 56px, 200% 100%;
+  background-position: 0 center, 0% 50%;
+  background-repeat: repeat, no-repeat;
+  animation: filaHex 7s ease-in-out infinite;
+}
+tr.fila-estilo-hex > td { color: #ccfbf1 !important; font-weight: 600; }
+tr.fila-estilo-hex > td select { background: #ccfbf1 !important; color: #134e4a !important; }
+
+/* 14 DAMAS */
+@keyframes filaChecker {
+  0%, 100% { filter: none; }
+  50% { filter: brightness(1.07); }
+}
+tr.fila-estilo-checker {
+  background-color: #44403c;
+  background-image:
+    linear-gradient(45deg, #57534e 25%, transparent 25%),
+    linear-gradient(-45deg, #57534e 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #57534e 75%),
+    linear-gradient(-45deg, transparent 75%, #57534e 75%),
+    linear-gradient(180deg, #292524 0%, #1c1917 100%);
+  background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0, 0 0;
+  animation: filaChecker 3.5s ease-in-out infinite;
+}
+tr.fila-estilo-checker > td { color: #fafaf9 !important; font-weight: 600; }
+tr.fila-estilo-checker > td select { background: #fafaf9 !important; color: #292524 !important; }
+
+/* 15 CRUCES — patrón denso en rejilla doble */
+@keyframes filaCross {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.1); }
+}
+tr.fila-estilo-cross {
+  background-color: #4c1d95;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M10.5 3.5 H13.5 V10.5 H20.5 V13.5 H13.5 V20.5 H10.5 V13.5 H3.5 V10.5 H10.5 Z' fill='%23e9d5ff' opacity='0.22'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M10.5 3.5 H13.5 V10.5 H20.5 V13.5 H13.5 V20.5 H10.5 V13.5 H3.5 V10.5 H10.5 Z' fill='%23c4b5fd' opacity='0.12'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, #5b21b6 0%, #7c3aed 40%, #4c1d95 70%, #6b21a8 100%);
+  background-size: 24px 24px, 24px 24px, 100% 100%;
+  background-position: 0 0, 12px 12px, 0 0;
+  background-repeat: repeat, repeat, no-repeat;
+  animation: filaCross 3.8s ease-in-out infinite;
+}
+tr.fila-estilo-cross > td { color: #f5f3ff !important; font-weight: 600; }
+tr.fila-estilo-cross > td select { background: #f5f3ff !important; color: #5b21b6 !important; }
+
+
 .busqueda-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .input-busqueda { flex-grow: 1; min-width: 200px; border: 2px solid var(--primary) !important; }
         
@@ -11703,6 +11800,11 @@ const premios = [
     { id: 287, nombre: "Fila Ember", precio: 35, emoji: "🔥", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "ember", desc: "Brasas cálidas con pulso de luz" },
     { id: 288, nombre: "Fila Holograma", precio: 35, emoji: "💿", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "holo", desc: "Irisado que cambia de tono" },
     { id: 289, nombre: "Fila Medianoche", precio: 35, emoji: "🌙", colorBadge: "#e2e8f0", colorTexto: "#0f172a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "midnight", desc: "Oscuro elegante con borde luminoso" },
+    { id: 290, nombre: "Fila Pixel", precio: 20, emoji: "🟦", colorBadge: "#ecfeff", colorTexto: "#134e4a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "pixel", desc: "Mosaico de cuadritos que respiran" },
+    { id: 291, nombre: "Fila Partitura", precio: 20, emoji: "🎼", colorBadge: "#f3e8ff", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "partitura", desc: "Pentagrama centrado; arcoíris lento ida y vuelta" },
+    { id: 292, nombre: "Fila Hex", precio: 20, emoji: "⬡", colorBadge: "#ccfbf1", colorTexto: "#134e4a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "hex", desc: "Panal centrado con brillo suave" },
+    { id: 293, nombre: "Fila Damas", precio: 20, emoji: "♟️", colorBadge: "#f5f5f4", colorTexto: "#292524", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "checker", desc: "Damero suave que late" },
+    { id: 294, nombre: "Fila Cruces", precio: 20, emoji: "✚", colorBadge: "#f3e8ff", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "fila_estilo", prefValue: "cross", desc: "Cruces en rejilla densa con pulso" },
 
     { id: 201, nombre: "Color: Esmeralda", precio: 30, emoji: "🟢", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#047857", prefDeep: "#065f46", desc: "Verde sobrio para franja y botones" },
     { id: 202, nombre: "Color: Violeta", precio: 30, emoji: "🟣", colorBadge: "#ede9fe", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#6d28d9", prefDeep: "#5b21b6", desc: "Violeta contenido, tono corporativo" },
