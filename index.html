@@ -7261,6 +7261,11 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "💬", text: "¿Otro tip? Clic otra vez. Tengo varios guardados." },
   { icon: "☀️", text: "Buen día para dejar la lista más corta." },
   { icon: "🎯", text: "Una orden a la vez. Tú puedes." },
+     { icon: "🖨️", text: "La impresora de la fila reimprime la hoja si la orden se armó con productos." },
+     { icon: "📝", text: "Si editas institución en la tabla, confirma que quedó como la necesitabas." },
+     { icon: "🗂️", text: "Los reportes de los 3 puntitos guardan las últimas impresiones recientes." },
+    { icon: "💾", text: "Puedes respaldar tu progreso desde el modal de localStorage, por si acaso." },
+  { icon: "🏷️", text: "En hoja de pedido, el tipo de compra y el NOG viajan con la orden." },
   { icon: "💡", text: "Si algo no cuadra, revisa institución y producto." },
   // Frase del equipo (lápiz de arriba)
   { icon: "✏️", text: "Si quieres, deja una frase arriba para el equipo. Es anónima." },
@@ -7284,8 +7289,23 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "🪄", text: "Si algo se siente trabado, un respiro y reintentamos." },
   { icon: "📎", text: "Yo no muerdo. Solo recuerdo atajos." },
   { icon: "🌤️", text: "Día pesado o ligero: aquí estoy igual." },
-  { icon: "🧸", text: "Compita de escritorio reportándose presente." },
-  { icon: "⏳", text: "Sin prisa, pero sin dejar la roja olvidada." },
+     { icon: "🌅", text: "Otro día, mismas ganas. Aquí vamos juntos." },
+     { icon: "💛", text: "Se nota cuando alguien registra con cuidado. Gracias." },
+     { icon: "🌱", text: "Hoy no tiene que ser perfecto. Solo un paso más." },
+     { icon: "🛎️", text: "Si necesitas un empujoncito, aquí estoy." },
+     { icon: "📖", text: "Cada orden bien hecha es una historia menos enredada." },
+     { icon: "🪞", text: "Estás haciendo más de lo que crees. En serio." },
+     { icon: "🧭", text: "No hace falta correr: con dirección basta." },
+     { icon: "🧵", text: "Vas cosiendo el día orden por orden. Bien." },
+     { icon: "💫", text: "Tu trabajo silencioso sostiene a medio equipo." },
+     { icon: "🙌", text: "Momento honesto: lo estás haciendo bien." },
+     { icon: "🧁", text: "Después de esta, te mereces un break chiquito." },
+     { icon: "🦊", text: "Listo, astuto y con calma. Ese combo gana." },
+     { icon: "🌙", text: "Si el día pesa, yo cargo un poquito del ánimo." },
+     { icon: "📎", text: "Pequeños registros, grandes ordenes. Tú lo sabes." },
+     { icon: "🤲", text: "Aquí no estás solo con la pantalla. Cuentas conmigo." },
+  { icon: "🧸", text: "Compa de escritorio reportándose." },
+  { icon: "⏳", text: "Sin prisa, pero sin dejar algo olvidado." },
   { icon: "🧃", text: "Tip de sobrevivencia: agua, postura y guardar." },
 
   { icon: "📎", text: "Los 3 puntitos del historial reimprimen pedidos recientes." },
@@ -7293,6 +7313,9 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "😎", text: "Modo pro: guardar, sincronizar y a seguir." },
   { icon: "🧩", text: "Hoja de pedido + productos = menos errores al despachar." },
   { icon: "📘", text: "Si cambias de responsable, confírmalo en la fila." },
+  { icon: "📄", text: "¿Se te perdió una hoja? Clic en la impresora y se reimprime." },
+  { icon: "😉", text: "Clic en la impresora: imprime de nuevo sin ganar monedas." },
+  { icon: "🖨️", text: "Reimprimir sirve si la orden se armó con hoja de pedido (con productos)" },
   { icon: "✨", text: "Detalle que cuenta: un buen registro evita retrabajo." },
   { icon: "🫶", text: "Respira. Yo sigo aquí cuando me necesites." },
   { icon: "🎲", text: "Tip al azar: a veces lo simple es lo que más ayuda." }
@@ -7305,68 +7328,192 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
       { icon: "🌻", text: "¿Semillitas después de sincronizar?" },
       { icon: "💤", text: "Si bostezo, es de ternura. No de flojera." },
       { icon: "🫶", text: "Venía a decirte que vas bien. Ya me voy… o no." },
-      { icon: "😴", text: "Descansa un poquito si puedes. Yo cuido el globito." }
+      { icon: "😴", text: "Descansa un poquito si puedes. Yo cuido el globito." },
+      { icon: "🏃", text: "Ruedo en mi rueda y tú en tus registros. Equipo." },
+      { icon: "🌰", text: "Guardé un tip como nuez para después." },
+      { icon: "💛", text: "Me hincho de orgullo cuando guardas bien." },
+      { icon: "🧺", text: "Carrillos llenos de tips. Pide uno." },
+      { icon: "✨", text: "Hamster de soporte: presente y esponjoso." }
     ],
-    gato: [
+gato: [
       { icon: "🐱", text: "Miau. Yo mando aquí… con permiso." },
       { icon: "🧶", text: "No toques mi ovillo. El buscador sí." },
-      { icon: "😼", text: "Te miro fijo hasta que guardes bien." }
+      { icon: "😼", text: "Te miro fijo hasta que guardes bien." },
+      { icon: "🛏️", text: "Si desaparezco, estoy en modo caja. Vuelvo." },
+      { icon: "🐾", text: "Aterrizo suave en tu siguiente orden." },
+      { icon: "😺", text: "Ronroneo de aprobación si el campo está completo." },
+      { icon: "🌙", text: "Vigilancia nocturna nivel gato activada." },
+      { icon: "🧀", text: "No soy perro. Pero sí te ayudo igual." },
+      { icon: "🪟", text: "Miro la tabla como si fuera ventana. Interesante." },
+      { icon: "👑", text: "Majestad felina: prioriza y guarda." }
     ],
     ajolote: [
       { icon: "🦎", text: "Modo zen acuático activado." },
-      { icon: "💧", text: "Respira… como si estuvieras bajo el agua." }
+      { icon: "💧", text: "Respira… como si estuvieras bajo el agua." },
+      { icon: "🌊", text: "Fluyamos: una orden, una onda." },
+      { icon: "🫧", text: "Burbujas de calma para el escritorio." },
+      { icon: "🧬", text: "Si algo se rompe, regeneramos el plan." },
+      { icon: "🙂", text: "Sonrisa permanente. Tip incluido." },
+      { icon: "🍃", text: "Agua fresca, mente clara, registro limpio." },
+      { icon: "🪄", text: "Magia suave: guardar sin estrés." },
+      { icon: "🔵", text: "Azulito de apoyo emocional." },
+      { icon: "🧘", text: "Inhala… exhala… siguiente campo." }
     ],
     buho: [
       { icon: "🦉", text: "Sabiduría de madrugada: revisa antes de guardar." },
-      { icon: "📚", text: "Yo sí leí el manual. Tú haz clic en mí." }
+      { icon: "📚", text: "Yo sí leí el manual. Tú haz clic en mí." },
+      { icon: "🔎", text: "Ojo clínico: ¿faltó un dato?" },
+      { icon: "🌙", text: "En la noche también se registra bien." },
+      { icon: "🎓", text: "Lección corta: calma + clic correcto." },
+      { icon: "🗺️", text: "Conozco cada rincón de esta app." },
+      { icon: "⏳", text: "Paciencia de búho. Sin prisa tonta." },
+      { icon: "🪶", text: "Un tip ligero, como pluma." },
+      { icon: "🧠", text: "Pensar 2 segundos ahorra 2 minutos." },
+      { icon: "✨", text: "Sabio consejo: tú puedes con esta." }
     ],
     panda: [
       { icon: "🐼", text: "Bambú primero… nah, primero la orden." },
-      { icon: "😴", text: "Si parpadeo lento, es cariño." }
+      { icon: "😴", text: "Si parpadeo lento, es cariño." },
+      { icon: "🎋", text: "Modo bambú: constante y tranquilo." },
+      { icon: "🤍", text: "Blanco, negro y tips grises útiles." },
+      { icon: "🪑", text: "Me siento bien cuando tú avanzas." },
+      { icon: "🍵", text: "Té mental: guarda y respira." },
+      { icon: "💤", text: "Siesta después… de esta orden." },
+      { icon: "🌿", text: "Naturaleza dice: sin presión." },
+      { icon: "🤗", text: "Abrazo panda digital enviado." },
+      { icon: "🎯", text: "Lento pero certero. Como yo." }
     ],
     conejo: [
       { icon: "🐰", text: "¡Salto al siguiente registro!" },
-      { icon: "🥕", text: "Rápido pero sin equivocarte." }
+      { icon: "🥕", text: "Rápido pero sin equivocarte." },
+      { icon: "🐇", text: "Orejas arriba: vamos con esta." },
+      { icon: "🌼", text: "Brinco de ánimo activado." },
+      { icon: "⏱️", text: "Ágil sí; descuidado no." },
+      { icon: "🎩", text: "Truco: un campo a la vez." },
+      { icon: "🌱", text: "Creciendo orden por orden." },
+      { icon: "💫", text: "Salto limpio al guardar." },
+      { icon: "🥳", text: "¡Otra más! Buen ritmo." },
+      { icon: "🎀", text: "Lazo de motivación amarrado." }
     ],
     robot: [
       { icon: "🤖", text: "Bip-bop. Sincronización recomendada." },
-      { icon: "📡", text: "Sistemas estables. Tú también." }
+      { icon: "📡", text: "Sistemas estables. Tú también." },
+      { icon: "⚙️", text: "Engranajes listos. ¿Guardamos?" },
+      { icon: "🔋", text: "Batería de ánimo al 100%." },
+      { icon: "💻", text: "Procesando apoyo… listo." },
+      { icon: "🛠️", text: "Diagnóstico: te falta un clic de confianza." },
+      { icon: "📊", text: "Datos claros = día más fácil." },
+      { icon: " unlocked", text: "Cifrado de estrés: desactivado." },
+      { icon: "🎛️", text: "Ajuste fino: prioriza y sigue." },
+      { icon: "✅", text: "Check de moral: aprobado." }
     ],
     mapache: [
       { icon: "🦝", text: "Detective de campos vacíos a tu servicio." },
-      { icon: "🕵️", text: "Si falta algo, yo lo husmeo." }
+      { icon: "🕵️", text: "Si falta algo, yo lo husmeo." },
+      { icon: "🔦", text: "Linterna en el historial." },
+      { icon: "🎒", text: "Llevo tips en la mochila." },
+      { icon: "🌙", text: "Operativo nocturno de apoyo." },
+      { icon: "🧼", text: "Limpio dudas en un clic." },
+      { icon: "🗂️", text: "Todo en su lugar… casi." },
+      { icon: "🍪", text: "Premio imaginario si guardas bien." },
+      { icon: "🧭", text: "Pista: el buscador no miente." },
+      { icon: "😼", text: "Astucia nivel mapache activada." }
     ],
     pollito: [
       { icon: "🐤", text: "Pío pío… ¡nuevo día, nuevas órdenes!" },
-      { icon: "🌤️", text: "Mañana fresca, registro limpio." }
+      { icon: "🌤️", text: "Mañana fresca, registro limpio." },
+      { icon: "🥚", text: "Cuidado con ese campo: es delicado." },
+      { icon: "🐣", text: "Naciendo un registro a la vez." },
+      { icon: "💛", text: "Ánimo pollito: tú puedes." },
+      { icon: "🌱", text: "Creciendo en práctica cada día." },
+      { icon: "☀️", text: "Solcito y un guardado confiado." },
+      { icon: "🎶", text: "Pío de motivación en bucle." },
+      { icon: "🪴", text: "Pequeño hoy, orden grande mañana." },
+      { icon: "✨", text: "Brillito de logro desbloqueado." }
     ],
     pinguino: [
       { icon: "🐧", text: "Deslizo por la tabla como en hielo." },
-      { icon: "❄️", text: "Frío por fuera, útil por dentro." }
+      { icon: "❄️", text: "Frío por fuera, útil por dentro." },
+      { icon: "🧊", text: "Calma glacial ante el apuro." },
+      { icon: "🐟", text: "Primero la orden, luego el pez." },
+      { icon: "🎩", text: "Elegante y puntual contigo." },
+      { icon: "🌊", text: "Nado entre filas sin ahogarme." },
+      { icon: "🧭", text: "Brújula antártica: hacia guardar." },
+      { icon: "💙", text: "Apoyo polar incondicional." },
+      { icon: "🛷", text: "Desliz suaves a la siguiente." },
+      { icon: "✅", text: "Aterrizaje perfecto al sincronizar." }
     ],
     lobo: [
       { icon: "🐺", text: "¡Auuuuuu! Aullido de motivación." },
-      { icon: "🌙", text: "La manada registra unida." }
+      { icon: "🌙", text: "La manada registra unida." },
+      { icon: "🏔️", text: "Firme como peña con esta orden." },
+      { icon: "🔥", text: "Fuego interno: vamos." },
+      { icon: "👣", text: "Huella limpia en cada registro." },
+      { icon: "🛡️", text: "Protejo tu ritmo de trabajo." },
+      { icon: "🌌", text: "Bajo la luna, igual te apoyo." },
+      { icon: "⚡", text: "Fuerza calmada, no prisa." },
+      { icon: "🤝", text: "Manada = tú + yo + la tabla." },
+      { icon: "🎯", text: "Foco de lobo: un objetivo claro." }
     ],
     koala: [
       { icon: "🐨", text: "Calma. Eucalipto mental y adelante." },
-      { icon: "😴", text: "Lento, pero no me pierdo ninguna." }
+      { icon: "😴", text: "Lento, pero no me pierdo ninguna." },
+      { icon: "🌿", text: "Abrazo al árbol… y al guardar." },
+      { icon: "💤", text: "Sueño ligero, tip profundo." },
+      { icon: "🤗", text: "Modo suave activado." },
+      { icon: "☁️", text: "Nube de paciencia para ti." },
+      { icon: "🍵", text: "Sorbo de calma, clic de confianza." },
+      { icon: "🌳", text: "Raíces firmes: un campo a la vez." },
+      { icon: "🤍", text: "Ternura laboral nivel koala." },
+      { icon: "✨", text: "Despacio se llega… y se guarda." }
     ],
     shiba: [
       { icon: "🐶", text: "¡Guau! Buen humano registrando." },
-      { icon: "🎾", text: "Si guardas bien, mereces premio." }
+      { icon: "🎾", text: "Si guardas bien, mereces premio." },
+      { icon: "🦴", text: "Hueso de tip: revisa y listo." },
+      { icon: "🐕", text: "Cola en movimiento = vas bien." },
+      { icon: "🏃", text: "Corro contigo a la siguiente orden." },
+      { icon: "💛", text: "Lealtad de escritorio activada." },
+      { icon: "📷", text: "Pose de logro al sincronizar." },
+      { icon: "🌈", text: "Doge aprueba este registro." },
+      { icon: "🥳", text: "¡Festejo mínimo por cada guardado!" },
+      { icon: "🫶", text: "Siempre de tu lado, en serio." }
     ],
     fantasma: [
       { icon: "👻", text: "Boo… solo vengo a recordar el atajo." },
-      { icon: "🌫️", text: "Aparezco, ayudo y desaparezco." }
+      { icon: "🌫️", text: "Aparezco, ayudo y desaparezco." },
+      { icon: "🕯️", text: "Luz suave para campos oscuros." },
+      { icon: "📜", text: "Susurro: no dejes vacío el obligatorio." },
+      { icon: "🫥", text: "Invisible, pero útil." },
+      { icon: "🌙", text: "Ronda fantasma de motivación." },
+      { icon: "🔮", text: "Veo… un guardado exitoso cerca." },
+      { icon: "💫", text: "Traspaso de ánimo completado." },
+      { icon: "🪟", text: "Atravesé la duda. Sigamos." },
+      { icon: "🫡", text: "Misión apoyo: en curso." }
     ],
     pulpo: [
       { icon: "🐙", text: "Ocho brazos, cero campos olvidados." },
-      { icon: "🌊", text: "Multitarea nivel mar profundo." }
+      { icon: "🌊", text: "Multitarea nivel mar profundo." },
+      { icon: "💙", text: "Tinta de tips a tu disposición." },
+      { icon: "🧲", text: "Atraigo soluciones, no problemas." },
+      { icon: "🌀", text: "Giro suave hacia el siguiente paso." },
+      { icon: "🪸", text: "Anclado en ayudarte." },
+      { icon: "🎯", text: "Un tentáculo por cada atajo." },
+      { icon: "🫧", text: "Burbuja de calma desplegada." },
+      { icon: "📦", text: "Envuelvo el caos y lo ordeno." },
+      { icon: "✅", text: "Ocho checks de ánimo: todos verdes." }
     ],
     slime: [
       { icon: "🟢", text: "Blib blub. Todo flexible, nada se rompe." },
-      { icon: "✨", text: "Me estiro hasta el último tip." }
+      { icon: "✨", text: "Me estiro hasta el último tip." },
+      { icon: "🧪", text: "Consistencia perfecta: tú + calma." },
+      { icon: "🟣", text: "Reboté y volví con un consejo." },
+      { icon: "🧽", text: "Absorbo el estrés del escritorio." },
+      { icon: "🌈", text: "Me adapto a tu ritmo." },
+      { icon: "🫧", text: "Gelatina de motivación servida." },
+      { icon: "🎮", text: "Suave al tacto, firme al guardar." },
+      { icon: "💫", text: "Forma libre, ayuda concreta." },
+      { icon: "😄", text: "Blib: vas genial." }
     ]
   };
 
@@ -7597,6 +7744,14 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
         { icon: "🎈", text: "Vas sacando el día con calma, " + nom + ". Se nota." },
         { icon: "🧸", text: "Aquí sigo, " + nom + ". Compañía nivel tierno." },
         { icon: "🌤️", text: "Respira, " + nom + ". La siguiente orden no se escapa." },
+{ icon: "🌅", text: "Buen día, " + nom + ". Vamos con calma." },
+        { icon: "💛", text: "Se agradece tu cuidado hoy, " + nom + "." },
+        { icon: "🌱", text: "Un paso más es suficiente, " + nom + "." },
+        { icon: "🖨️", text: "Si se te pierde una hoja, " + nom + ", la impresorita de la fila te salva." },
+        { icon: "🪞", text: "Estás haciendo más de lo que crees, " + nom + "." },
+        { icon: "🧁", text: "Después de esta, " + nom + ", un break chiquito no hace daño." },
+        { icon: "🧭", text: "Sin correr, " + nom + ". Con dirección basta." },
+        { icon: "🙌", text: "Lo estás haciendo bien, " + nom + ". Punto." },
         { icon: "🧃", text: "Un sorbito de agua y seguimos, " + nom + "." },
         { icon: "🐾", text: "Si algo se traba, " + nom + ", aquí estoy un clic cerca." }
       ];
