@@ -8083,9 +8083,78 @@ setTimeout(function() {
     return v || null;
   }
 
+  var ALPRO_PERSONAS_FILA = ['Dan','Susan','Yanet','Danna','Carmen','Nata','Claudia','Daniela','Richard'];
+
+  function elegirPersonaLista(titulo, preseleccion, soloConEstilo) {
+    return new Promise(function(resolve) {
+      var map = {};
+      try { map = leerFilaEstilos(); } catch (e) { map = {}; }
+      var opciones = ALPRO_PERSONAS_FILA.slice();
+      if (soloConEstilo) {
+        opciones = ALPRO_PERSONAS_FILA.filter(function(n) { return !!map[n]; });
+        if (!opciones.length) {
+          if (typeof window.petNotify === 'function') window.petNotify('Nadie tiene estilo de fila activo.', 'ℹ️', 2800, 'ok');
+          resolve(null);
+          return;
+        }
+      }
+      var prev = (preseleccion || '').trim();
+      var ov = document.createElement('div');
+      ov.setAttribute('style', 'position:fixed;inset:0;z-index:999999;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;padding:16px;');
+      var card = document.createElement('div');
+      card.setAttribute('style', 'background:#fff;color:#0f172a;border-radius:14px;padding:20px 18px;width:100%;max-width:320px;box-shadow:0 20px 40px rgba(0,0,0,0.25);font-family:system-ui,sans-serif;');
+      var h = document.createElement('div');
+      h.textContent = titulo || 'Elegir persona';
+      h.setAttribute('style', 'font-weight:800;font-size:15px;margin-bottom:12px;');
+      var sel = document.createElement('select');
+      sel.setAttribute('style', 'width:100%;padding:10px 12px;border-radius:8px;border:2px solid #cbd5e1;font-size:14px;margin-bottom:14px;background:#f8fafc;');
+      opciones.forEach(function(n) {
+        var opt = document.createElement('option');
+        opt.value = n;
+        opt.textContent = soloConEstilo ? (n + ' → ' + nombreEstiloFila(map[n])) : n;
+        if (n === prev) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      var row = document.createElement('div');
+      row.setAttribute('style', 'display:flex;gap:8px;');
+      var btnC = document.createElement('button');
+      btnC.type = 'button';
+      btnC.textContent = 'Cancelar';
+      btnC.setAttribute('style', 'flex:1;padding:10px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;font-weight:700;cursor:pointer;color:#475569;');
+      var btnO = document.createElement('button');
+      btnO.type = 'button';
+      btnO.textContent = 'Aceptar';
+      btnO.setAttribute('style', 'flex:1;padding:10px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:700;cursor:pointer;');
+      function cerrar(val) {
+        try { ov.remove(); } catch (e) {}
+        resolve(val);
+      }
+      btnC.onclick = function() { cerrar(null); };
+      btnO.onclick = function() { cerrar(sel.value || null); };
+      ov.onclick = function(e) { if (e.target === ov) cerrar(null); };
+      row.appendChild(btnC);
+      row.appendChild(btnO);
+      card.appendChild(h);
+      card.appendChild(sel);
+      card.appendChild(row);
+      ov.appendChild(card);
+      document.body.appendChild(ov);
+      try { sel.focus(); } catch (e) {}
+    });
+  }
+
 
 
   // —— Estilos de fila por responsable (comprados en tienda) ——
+  function nombreEstiloFila(code) {
+    var mapa = {
+      aurora: 'Aurora', neon: 'Bosque', cristal: 'Sakura', ocean: 'Océano',
+      prism: 'Prism', cosmos: 'Cosmos', oro: 'Oro', ember: 'Ember',
+      holo: 'Holograma', midnight: 'Medianoche', pixel: 'Pixel',
+      partitura: 'Partitura', hex: 'Hex', checker: 'Damas', cross: 'Cruces', iso: 'Iso'
+    };
+    return mapa[code] || code || '';
+  }
   function leerFilaEstilos() {
     try { return JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {}; }
     catch (e) { return {}; }
@@ -8168,35 +8237,43 @@ setTimeout(function() {
     if (key === 'fila_estilo') {
       var estilo = val;
       if (!estilo) return;
-      var personas = ['Dan','Susan','Yanet','Danna','Carmen','Nata','Claudia','Daniela','Richard'];
-      var quien = pedirTexto(
-        '¿A qué responsable aplica este estilo de fila?\n(' + personas.join(', ') + ')',
-        localStorage.getItem(LS.resp) || 'Dan'
-      );
-      if (!quien) {
-        notifyPref('Cancelado. El estilo sigue en tu inventario; actívalo otra vez.', '🎨');
-        return;
-      }
-      quien = String(quien).trim();
-      // normalizar capitalización
-      var found = personas.find(function(p) { return p.toLowerCase() === quien.toLowerCase(); });
-      if (found) quien = found;
-      var map = leerFilaEstilos();
-      map[quien] = estilo;
-      guardarFilaEstilos(map);
-      refrescarClasesFilasEstilo();
-      // re-pintar selects visibles
-      document.querySelectorAll('select').forEach(function(sel) {
-        if (sel.id === 'responsableSelect' || (sel.onchange && String(sel.onchange).indexOf('actualizarResponsable') !== -1)) {
-          if (typeof aplicarColorUnico === 'function' && sel.value) aplicarColorUnico(sel);
+      (async function() {
+        var quien = await elegirPersonaLista(
+          '¿A quién aplica este estilo de fila?',
+          localStorage.getItem(LS.resp) || 'Dan',
+          false
+        );
+        if (!quien) {
+          notifyPref('Cancelado. El estilo sigue en tu inventario.', '🎨');
+          return;
         }
-      });
-      if (typeof window.playAlproFx === 'function') window.playAlproFx('color');
-      notifyPref('Fila de ' + quien + ' → estilo ' + (pref.nombre || estilo), '🎨');
-      // Sync opcional a Sheets (no bloquea si falla)
-      if (typeof window.syncFilaEstilosASheets === 'function') {
-        try { window.syncFilaEstilosASheets(map); } catch (e) {}
-      }
+        var map = leerFilaEstilos();
+        // Un estilo = una sola persona a la vez
+        var ocupadoPor = null;
+        Object.keys(map).forEach(function(n) {
+          if (map[n] === estilo && n !== quien) ocupadoPor = n;
+        });
+        if (ocupadoPor) {
+          notifyPref(
+            'Ese estilo ya está en ' + ocupadoPor + '. Quítalo primero para usarlo en ' + quien + '.',
+            '⚠️'
+          );
+          return;
+        }
+        map[quien] = estilo;
+        guardarFilaEstilos(map);
+        refrescarClasesFilasEstilo();
+        document.querySelectorAll('select').forEach(function(sel) {
+          if (sel.id === 'responsableSelect' || (sel.onchange && String(sel.onchange).indexOf('actualizarResponsable') !== -1)) {
+            if (typeof aplicarColorUnico === 'function' && sel.value) aplicarColorUnico(sel);
+          }
+        });
+        if (typeof window.playAlproFx === 'function') window.playAlproFx('color');
+        notifyPref(quien + ' → ' + (pref.nombre || nombreEstiloFila(estilo)), '🎨');
+        if (typeof window.syncFilaEstilosASheets === 'function') {
+          try { window.syncFilaEstilosASheets(map); } catch (e) {}
+        }
+      })();
       return;
     }
 
@@ -8417,7 +8494,7 @@ setTimeout(function() {
       var mapaFila = {};
       try { mapaFila = JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {}; } catch (e) { mapaFila = {}; }
       extra += '<div class="hamster-skin-menu-title">Estilos de fila</div>';
-      extra += '<div class="hamster-pref-hint">Tocá uno y elegí a quién aplica. Podés cambiar cuando quieras.</div>';
+      extra += '<div class="hamster-pref-hint">Elegí el estilo y luego la persona de la lista. Un estilo = una persona a la vez.</div>';
       extra += '<div class="hamster-pref-group">';
       byKey.fila_estilo.forEach(function(p) {
         var short = (p.nombre || '').replace('Fila ', '');
@@ -8426,8 +8503,8 @@ setTimeout(function() {
       extra += '</div>';
       var asignados = Object.keys(mapaFila);
       if (asignados.length) {
-        extra += '<div class="hamster-pref-hint" style="margin-top:4px">Activos: ' + asignados.map(function(n){ return n + '→' + mapaFila[n]; }).join(', ') + '</div>';
-        extra += '<button type="button" class="hamster-skin-item" id="btnQuitarFilaEstilo"><span class="sk-emoji">↩️</span> Quitar estilo de alguien</button>';
+        extra += '<div class="hamster-pref-hint" style="margin-top:4px">Activos: ' + asignados.map(function(n){ return n + '→' + nombreEstiloFila(mapaFila[n]); }).join(', ') + '</div>';
+        extra += '<button type="button" class="hamster-skin-item" id="btnQuitarFilaEstilo"><span class="sk-emoji">↩️</span> Quitar estilo de fila</button>';
       }
     }
 
@@ -8476,21 +8553,27 @@ setTimeout(function() {
     var btnQ = menu.querySelector('#btnQuitarFilaEstilo');
     if (btnQ) {
       btnQ.addEventListener('click', function() {
-        var quien = window.prompt('¿A quién le quitamos el estilo de fila?', 'Dan');
-        if (!quien) { menu.classList.remove('visible'); return; }
-        quien = String(quien).trim();
-        var personas = ['Dan','Susan','Yanet','Danna','Carmen','Nata','Claudia','Daniela','Richard'];
-        var found = personas.find(function(p){ return p.toLowerCase() === quien.toLowerCase(); });
-        if (found) quien = found;
-        try {
-          var map = JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {};
-          delete map[quien];
-          localStorage.setItem(LS.filaEstilos, JSON.stringify(map));
-          if (typeof window.refrescarClasesFilasEstilo === 'function') window.refrescarClasesFilasEstilo();
-          if (typeof window.syncFilaEstilosASheets === 'function') window.syncFilaEstilosASheets(map);
-          if (typeof window.petNotify === 'function') window.petNotify('Estilo quitado de ' + quien, '↩️', 2800, 'ok');
-        } catch (e) {}
         menu.classList.remove('visible');
+        (async function() {
+          var quien = await elegirPersonaLista(
+            '¿A quién le quitamos el estilo de fila?',
+            localStorage.getItem(LS.resp) || '',
+            true
+          );
+          if (!quien) return;
+          try {
+            var map = JSON.parse(localStorage.getItem(LS.filaEstilos) || '{}') || {};
+            if (!map[quien]) {
+              if (typeof window.petNotify === 'function') window.petNotify(quien + ' no tiene estilo activo.', 'ℹ️', 2800, 'ok');
+              return;
+            }
+            delete map[quien];
+            localStorage.setItem(LS.filaEstilos, JSON.stringify(map));
+            if (typeof window.refrescarClasesFilasEstilo === 'function') window.refrescarClasesFilasEstilo();
+            if (typeof window.syncFilaEstilosASheets === 'function') window.syncFilaEstilosASheets(map);
+            if (typeof window.petNotify === 'function') window.petNotify('Estilo quitado de ' + quien, '↩️', 2800, 'ok');
+          } catch (e) {}
+        })();
       });
     }
 
@@ -12040,20 +12123,44 @@ async function canjearAlproPin() {
     if (btn) btn.disabled = true;
 
     try {
-        const responseCheck = await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`);
-        const estadoPin = await responseCheck.text();
+        let responseCheck;
+        try {
+            responseCheck = await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, { cache: 'no-store' });
+        } catch (netErr) {
+            alproAlert("⚠️ Sin conexión con el servidor de PIN.\nNo se puede canjear sin internet. Intenta de nuevo.");
+            if (btn) btn.disabled = false;
+            return;
+        }
+        const estadoPin = (await responseCheck.text()).trim();
 
         if (estadoPin === "USADO") {
-            alproAlert("🚫 Este código ya fue canjeado en otra computadora.");
+            alproAlert("🚫 Este código ya fue canjeado (otra computadora o antes).");
+            pinesUsados.push(pinIngresado);
+            try { localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados)); } catch (e) {}
             if (btn) btn.disabled = false;
             return;
         }
 
-        // Marcar como usado en la nube
-        await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, {
-            method: 'POST',
-            body: 'USADO'
-        });
+        try {
+            await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, {
+                method: 'POST',
+                body: 'USADO'
+            });
+        } catch (netErr2) {
+            alproAlert("⚠️ No se pudo reservar el PIN en la nube.\nNo se acreditó nada. Reintenta.");
+            if (btn) btn.disabled = false;
+            return;
+        }
+
+        try {
+            const recheck = await fetch(`${URL_NUBE_SECRETA}${pinIngresado}`, { cache: 'no-store' });
+            const estado2 = (await recheck.text()).trim();
+            if (estado2 !== "USADO") {
+                alproAlert("⚠️ No se confirmó el bloqueo del PIN. No se acreditó. Reintenta.");
+                if (btn) btn.disabled = false;
+                return;
+            }
+        } catch (e) { /* POST ok */ }
 
         pinesUsados.push(pinIngresado);
         localStorage.setItem('alpro_pines_usados', JSON.stringify(pinesUsados));
@@ -12065,9 +12172,14 @@ async function canjearAlproPin() {
             const dia = valorParametro.substring(6, 8);
             const fechaFormateada = `${anio}-${mes}-${dia}`;
 
-            // 1. Restablecer la fecha del sistema
-            localStorage.setItem('ultimaFechaRespuesta', fechaFormateada);
-            localStorage.setItem('alpro_ultima_fecha', fechaFormateada);
+            // 1. Fecha de actividad = AYER (no la del PIN).
+            // Evita que validarRachaPorInactividad vea un gap grande y ponga racha en 0.
+            const _ayerRacha = new Date();
+            _ayerRacha.setHours(12, 0, 0, 0);
+            _ayerRacha.setDate(_ayerRacha.getDate() - 1);
+            const _ayerStr = _ayerRacha.toISOString().split('T')[0];
+            localStorage.setItem('ultimaFechaRespuesta', _ayerStr);
+            localStorage.setItem('alpro_ultima_fecha', _ayerStr);
             localStorage.setItem('alpro_racha_perdida', 'false');
 
             // 2. 🧠 RECUPERACIÓN INTELIGENTE DE DÍAS:
