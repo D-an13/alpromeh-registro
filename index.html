@@ -6480,9 +6480,25 @@ function ejecutarRenderTabla() {
         const textoExtra = esDudaAxel ? " - <b style='color:#e65100; font-size:1.1em;'>¿YA SE DESPACHÓ?</b>" : "";
         let contenidoColumnaListo = "";
         if (esAxel) {
-            contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')"></div>`;
-        } else if (esAntigua) {
-            contenidoColumnaListo = `<span style="font-size: 1.4rem;">⚠️</span>`;
+            // Richard / Axel (histórico): checkbox de despachado
+            contenidoColumnaListo = `<div><input type="checkbox" class="check-axel" ${item.despachado ? 'checked' : ''} onclick="toggle('${item.orden}')" title="Marcar despachado"></div>`;
+        } else {
+            // Cualquier otra fila: reimprimir hoja de pedido (sin ganar monedas)
+            const warn = esAntigua ? `<span style="font-size:0.95rem;margin-left:2px;" title="Orden con atraso">⚠️</span>` : '';
+            contenidoColumnaListo = `<div style="display:flex;align-items:center;justify-content:center;gap:2px;">
+              <button type="button" class="btn-reimprimir-hoja" data-orden="${String(item.orden).replace(/"/g, '')}"
+                title="Reimprimir hoja de pedido" aria-label="Reimprimir hoja de pedido"
+                style="background:transparent;border:none;cursor:pointer;padding:4px;line-height:0;opacity:0.28;transition:opacity 0.15s;"
+onmouseover="this.style.opacity=0.6" onmouseout="this.style.opacity=0.28"
+                onclick="event.stopPropagation();reimprimirHojaPedidoOrden('${String(item.orden).replace(/'/g, "\'")}')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M6 9V3h12v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 17H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                  <rect x="6" y="13" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+                  <path d="M8 17h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+                </svg>
+              </button>${warn}
+            </div>`;
         }
 
         const selectBloqueado = esAnulada ? "disabled" : "";
@@ -6545,7 +6561,7 @@ function ejecutarRenderTabla() {
                     <option value="Claudia" ${item.responsable==='Claudia'?'selected':''}>Claudia</option>
                     <option value="Dan" ${item.responsable==='Dan'?'selected':''}>Dan</option>
                     <option value="Susan" ${item.responsable==='Susan'?'selected':''}>Susan</option>
-                    <option value="Axel" ${item.responsable==='Axel'?'selected':''}>Axel</option>
+                    ${item.responsable==='Axel' ? `<option value="Axel" selected>Axel</option>` : ''}
                     <option value="Richard" ${item.responsable==='Richard'?'selected':''}>Richard</option>
                 </select>
                 <br><small style="opacity:0.8; font-weight:normal;">${detalleMovimiento}</small>
@@ -9030,6 +9046,58 @@ ventanaImpresion.document.close();
 }
 
 // 🖨️ PASO 2: MÓDULO DE IMPRESIÓN QUIRÚRGICA PARA HOJA DE PEDIDO (ALPROMEH)
+
+// 🖨️ Reimprimir hoja de pedido desde el historial (sin Alprocoins)
+function reimprimirHojaPedidoOrden(numOrden) {
+    try {
+        const lista = (typeof datosLocales !== 'undefined' && Array.isArray(datosLocales)) ? datosLocales : [];
+        const item = lista.find(function(x) { return x && String(x.orden) === String(numOrden); });
+        if (!item) {
+            if (typeof alproAlert === 'function') alproAlert('No se encontró la orden #' + numOrden);
+            else alert('No se encontró la orden #' + numOrden);
+            return;
+        }
+        let productos = [];
+        try {
+            productos = JSON.parse(item.detallesPedido || '[]');
+        } catch (e) {
+            productos = [];
+        }
+        if (!Array.isArray(productos) || productos.length === 0) {
+            if (typeof alproAlert === 'function') {
+                alproAlert('Esta orden no tiene hoja de pedido guardada (sin productos en el detalle).\nSolo se puede reimprimir si se registró con hoja de pedido.');
+            } else {
+                alert('Esta orden no tiene hoja de pedido guardada.');
+            }
+            return;
+        }
+        if (typeof ejecutarImpresionPedidoFisico !== 'function') {
+            alert('Función de impresión no disponible.');
+            return;
+        }
+        ejecutarImpresionPedidoFisico({
+            orden: item.orden,
+            fecha: item.fecha,
+            inst: item.inst || '',
+            pers: item.pers || '',
+            responsable: item.responsable || '',
+            despachado: !!item.despachado,
+            hora: item.hora || '',
+            producto: item.producto || '',
+            tipoCompra: item.tipoCompra || 'Normal',
+            nog: item.nog || '',
+            observaciones: item.observaciones || '',
+            detallesPedido: item.detallesPedido
+        });
+        if (typeof window.petNotify === 'function') {
+            window.petNotify('Reimprimiendo hoja de la orden #' + numOrden, '🖨️', 2800, 'ok');
+        }
+    } catch (err) {
+        console.error(err);
+        if (typeof alproAlert === 'function') alproAlert('No se pudo reimprimir: ' + (err && err.message ? err.message : err));
+    }
+}
+
 function ejecutarImpresionPedidoFisico(datos) {
     const divImpresion = document.createElement('div');
     divImpresion.id = 'seccion-impresion-exclusiva';
