@@ -8172,9 +8172,9 @@ setTimeout(function() {
     var actual = getDumplingColorKey();
     var ov = document.createElement('div');
     ov.id = 'modalDumplingColorAlpro';
-    ov.setAttribute('style', 'position:fixed;inset:0;z-index:999999;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:16px;');
+    ov.setAttribute('style', 'position:fixed;inset:0;z-index:999999;background:rgba(15,23,42,0);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity 0.28s ease, background 0.28s ease;');
     var card = document.createElement('div');
-    card.setAttribute('style', 'background:#fff;color:#0f172a;border-radius:16px;padding:20px 18px;width:100%;max-width:340px;box-shadow:0 20px 40px rgba(0,0,0,.25);font-family:system-ui,sans-serif;');
+    card.setAttribute('style', 'background:#fff;color:#0f172a;border-radius:16px;padding:20px 18px;width:100%;max-width:340px;box-shadow:0 20px 40px rgba(0,0,0,.25);font-family:system-ui,sans-serif;transform:translateY(18px) scale(0.94);opacity:0;transition:transform 0.32s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease;');
     card.innerHTML = '<div style="font-weight:800;font-size:16px;margin-bottom:4px;">🥟 Color de tu Dumpling</div>' +
       '<div style="font-size:12px;color:#64748b;margin-bottom:12px;">Elige un tono suave. Puedes cambiarlo después desde el menú de la mascota.</div>';
     var grid = document.createElement('div');
@@ -8203,16 +8203,26 @@ setTimeout(function() {
     btnO.type = 'button';
     btnO.textContent = 'Usar color';
     btnO.setAttribute('style', 'flex:1;padding:10px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-weight:700;cursor:pointer;');
-    function cerrar() { try { ov.remove(); } catch (e) {} }
-    btnC.onclick = cerrar;
+    function cerrar(cb) {
+      ov.style.opacity = '0';
+      ov.style.background = 'rgba(15,23,42,0)';
+      card.style.transform = 'translateY(14px) scale(0.94)';
+      card.style.opacity = '0';
+      setTimeout(function() {
+        try { ov.remove(); } catch (e) {}
+        if (typeof cb === 'function') cb();
+      }, 280);
+    }
+    btnC.onclick = function() { cerrar(); };
     btnO.onclick = function() {
       try { localStorage.setItem('alpro_dumpling_color', actual); } catch (e) {}
-      cerrar();
-      if (typeof window.aplicarSkinHamster === 'function') window.aplicarSkinHamster('dumpling');
-      if (typeof window.petNotify === 'function') {
-        var nm = (DUMPLING_COLORES[actual] || {}).nombre || actual;
-        window.petNotify('Dumpling: ' + nm, '🥟', 2800, 'ok', { mood: 'happy' });
-      }
+      cerrar(function() {
+        if (typeof window.aplicarSkinHamster === 'function') window.aplicarSkinHamster('dumpling');
+        if (typeof window.petNotify === 'function') {
+          var nm = (DUMPLING_COLORES[actual] || {}).nombre || actual;
+          window.petNotify('Dumpling: ' + nm, '🥟', 2800, 'ok', { mood: 'happy' });
+        }
+      });
     };
     ov.onclick = function(e) { if (e.target === ov) cerrar(); };
     row.appendChild(btnC);
@@ -8220,6 +8230,15 @@ setTimeout(function() {
     card.appendChild(row);
     ov.appendChild(card);
     document.body.appendChild(ov);
+    // entrada
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        ov.style.opacity = '1';
+        ov.style.background = 'rgba(15,23,42,.55)';
+        card.style.transform = 'translateY(0) scale(1)';
+        card.style.opacity = '1';
+      });
+    });
   }
   window.abrirModalColorDumpling = abrirModalColorDumpling;
 
