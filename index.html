@@ -557,6 +557,72 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
 .hamster-mood-sleep .hamster-eyes-closed,
 .hamster-mood-happy-closed .hamster-eyes-closed,
 .hamster-mood-secret .hamster-eyes-closed { display: block; }
+
+/* === Vida pasiva de la mascota (sin hambre ni castigos) === */
+#hamsterAvatar {
+  transform-origin: 50% 85%;
+  transition: filter 0.25s ease;
+}
+#hamsterAvatar.hamster-breathe {
+  animation: hamsterBreathe 3.6s ease-in-out infinite;
+}
+#hamsterAvatar.hamster-look-left {
+  animation: hamsterLookLeft 1.45s ease-in-out;
+}
+#hamsterAvatar.hamster-look-right {
+  animation: hamsterLookRight 1.45s ease-in-out;
+}
+#hamsterAvatar.hamster-hop {
+  animation: hamsterHop 0.55s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+#hamsterAvatar.hamster-wiggle {
+  animation: hamsterWiggle 0.65s ease-in-out;
+}
+#hamsterAvatar:hover {
+  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.28));
+}
+
+.hamster-cariño-piece {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10055;
+  font-size: 14px;
+  line-height: 1;
+  animation: hamsterCariñoFloat 1.15s ease-out forwards;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.12));
+}
+@keyframes hamsterCariñoFloat {
+  0% { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  18% { opacity: 1; transform: translate(var(--dx), -10px) scale(1.15); }
+  100% { transform: translate(calc(var(--dx) * 1.35), -52px) scale(0.8); opacity: 0; }
+}
+@keyframes hamsterBreathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.04, 0.97); }
+}
+@keyframes hamsterLookLeft {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  40% { transform: rotate(-8deg) translateX(-3px); }
+  70% { transform: rotate(-3deg) translateX(-1px); }
+}
+@keyframes hamsterLookRight {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  40% { transform: rotate(8deg) translateX(3px); }
+  70% { transform: rotate(3deg) translateX(1px); }
+}
+@keyframes hamsterHop {
+  0% { transform: translateY(0) scale(1, 1); }
+  28% { transform: translateY(-11px) scale(1.06, 0.94); }
+  55% { transform: translateY(-3px) scale(0.98, 1.03); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes hamsterWiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+  75% { transform: rotate(-4deg); }
+}
+
 /* Confetti */
 .hamster-confetti-piece {
   position: fixed;
@@ -7688,7 +7754,36 @@ gato: [
     }
   }
 
-  function lanzarConfetti() {
+  
+  function lanzarCariños(tipo, cantidad) {
+    const els = getEls();
+    if (!els.avatar) return;
+    const rect = els.avatar.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height * 0.32;
+    tipo = tipo || 'heart';
+    cantidad = Math.min(cantidad || 5, 8);
+    const pool = tipo === 'star'
+      ? ['⭐', '✨', '🌟', '⭐', '✨']
+      : tipo === 'mix'
+      ? ['💗', '⭐', '💖', '✨', '💕', '🌟']
+      : ['💗', '💖', '💕', '💓', '💗'];
+    for (let i = 0; i < cantidad; i++) {
+      const p = document.createElement('span');
+      p.className = 'hamster-cariño-piece';
+      p.textContent = pool[i % pool.length];
+      const dx = (Math.random() - 0.5) * 58;
+      p.style.left = (cx + (Math.random() - 0.5) * 18) + 'px';
+      p.style.top = cy + 'px';
+      p.style.setProperty('--dx', dx + 'px');
+      p.style.animationDelay = (i * 0.06) + 's';
+      p.style.fontSize = (12 + Math.random() * 7) + 'px';
+      document.body.appendChild(p);
+      setTimeout(function() { try { p.remove(); } catch (e) {} }, 1400);
+    }
+  }
+
+function lanzarConfetti() {
     const els = getEls();
     if (!els.avatar) return;
     const rect = els.avatar.getBoundingClientRect();
@@ -7706,6 +7801,65 @@ gato: [
       document.body.appendChild(p);
       setTimeout(function() { p.remove(); }, 1200);
     }
+  }
+
+
+  // --- Vida visual de la mascota ---
+  function mascotaPlayAnim(cls, ms) {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av) return;
+    // no pelear con breathe: pausar breathe durante anim puntual
+    av.classList.remove('hamster-look-left', 'hamster-look-right', 'hamster-hop', 'hamster-wiggle');
+    // force reflow
+    void av.offsetWidth;
+    av.classList.add(cls);
+    clearTimeout(av._animT);
+    av._animT = setTimeout(function() {
+      av.classList.remove(cls);
+    }, ms || 700);
+  }
+
+  function mascotaReaccionPorMood(mood) {
+    if (mood === 'happy' || mood === 'happy-closed') {
+      mascotaPlayAnim('hamster-hop', 600);
+      try { lanzarCariños(mood === 'happy-closed' ? 'mix' : 'heart', 4); } catch (eC) {}
+    } else if (mood === 'worried') mascotaPlayAnim('hamster-wiggle', 650);
+    else if (mood === 'secret') mascotaPlayAnim('hamster-look-left', 900);
+  }
+
+  function startMascotaVida() {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av) return;
+    av.classList.add('hamster-breathe');
+
+    function nextIdleDelay() {
+      return (7000 + Math.random() * 11000); // 7–18 s
+    }
+    function idleTick() {
+      try {
+        if (document.hidden) {
+          window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
+          return;
+        }
+        var menu = document.getElementById('hamsterSkinMenu');
+        if (menu && menu.classList.contains('visible')) {
+          window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
+          return;
+        }
+        // si está en mood sleep (modo oscuro quieto), solo respira
+        if (av.classList.contains('hamster-mood-sleep') && Math.random() < 0.7) {
+          window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
+          return;
+        }
+        var r = Math.random();
+        if (r < 0.42) mascotaPlayAnim('hamster-look-left', 1500);
+        else if (r < 0.84) mascotaPlayAnim('hamster-look-right', 1500);
+        else mascotaPlayAnim('hamster-wiggle', 700);
+      } catch (e) {}
+      window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
+    }
+    clearTimeout(window.__hamsterVidaT);
+    window.__hamsterVidaT = setTimeout(idleTick, 5000 + Math.random() * 4000);
   }
 
   function notify(text, icon, duration, kind, extras) {
@@ -7743,6 +7897,7 @@ gato: [
     }
 
     setHamsterMood(mood);
+    try { mascotaReaccionPorMood(mood); } catch (eR) {}
     if (extras.confetti) lanzarConfetti();
 
     clearTimeout(hideTimeout);
@@ -7888,6 +8043,16 @@ gato: [
         window.abrirMenuSkinsHamster(e.clientX, e.clientY);
       }
     });
+    // Acariciar: hover ocasional → corazones (no spam)
+    els.avatar.addEventListener('mouseenter', function() {
+      var now = Date.now();
+      if (window.__hamsterPetAt && now - window.__hamsterPetAt < 4500) return;
+      window.__hamsterPetAt = now;
+      try {
+        mascotaPlayAnim('hamster-wiggle', 500);
+        lanzarCariños('heart', 3);
+      } catch (ePet) {}
+    });
   }
 
   window.onHamsterClick = handleSingleClick;
@@ -7908,6 +8073,7 @@ gato: [
     bindAvatarClicks();
     if (typeof window.cargarSkinHamsterGuardada === 'function') window.cargarSkinHamsterGuardada();
     if (isDarkTheme()) setHamsterMood('sleep');
+    try { startMascotaVida(); } catch (eV) {}
     setTimeout(function() {
       var msg = (typeof window.mensajeBienvenidaPersonalizado === 'function')
         ? window.mensajeBienvenidaPersonalizado()
@@ -8357,9 +8523,10 @@ SKIN_SVG.slime =
 '<path d="M68 52 Q77 47 88 52" stroke="#15803d" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
 /* ojos cerrados (feliz) */
 '<g class="hamster-eyes-closed" id="hamsterEyesClosed"><path d="M33 64Q43 74 53 64" stroke="#1e293b" stroke-width="3.3" fill="none" stroke-linecap="round"/><path d="M67 64Q77 74 87 64" stroke="#1e293b" stroke-width="3.3" fill="none" stroke-linecap="round"/></g>' +
-/* pico amarillo chiquito */
-'<path d="M54 76 L60 86 L66 76 Z" fill="#fbbf24"/>' +
-'<path d="M56 76.5 L60 83 L64 76.5 Z" fill="#fde68a"/>' +
+/* pico amarillo más visible */
+'<path d="M51 74 L60 92 L69 74 Z" fill="#fbbf24"/>' +
+'<path d="M54 75 L60 88 L66 75 Z" fill="#fde68a"/>' +
+'<path d="M57 76 L60 84 L63 76 Z" fill="#fef3c7" opacity=".7"/>' +
 /* sonrojo */
 '<ellipse cx="28" cy="76" rx="9" ry="6" fill="#fb7185" opacity=".5"/>' +
 '<ellipse cx="92" cy="76" rx="9" ry="6" fill="#fb7185" opacity=".5"/>';
@@ -8513,6 +8680,11 @@ SKIN_SVG.slime =
       return;
     }
     try { ajustarGorritoSkin(key); } catch (eHat) {}
+    try {
+      var av2 = document.getElementById('hamsterAvatar');
+      if (av2) av2.classList.add('hamster-breathe');
+      mascotaPlayAnim('hamster-hop', 600);
+    } catch (eLife) {}
     localStorage.setItem('alpro_skin_activa', key);
     var meta = SKIN_META[key] || { nombre: key, emoji: '✨' };
     if (typeof window.playAlproFx === 'function') window.playAlproFx('skin');
