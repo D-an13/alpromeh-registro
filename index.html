@@ -548,15 +548,60 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
 .idle-animation { animation: hamsterFloat 3s ease-in-out infinite; }
 .eye-blink { transform-origin: center; animation: hamsterBlink 4s infinite; }
 .pop-anim { animation: hamsterPop 0.35s ease-out; }
-.hamster-hat { display: none; }
+.hamster-hat { display: none !important; }
 .hamster-eyes-closed { display: none; }
-.hamster-mood-sleep .hamster-hat { display: block; }
+.hamster-mood-sleep .hamster-hat { display: none !important; }
 .hamster-mood-sleep .eye-blink,
 .hamster-mood-happy-closed .eye-blink,
 .hamster-mood-secret .eye-blink { display: none; }
 .hamster-mood-sleep .hamster-eyes-closed,
 .hamster-mood-happy-closed .hamster-eyes-closed,
 .hamster-mood-secret .hamster-eyes-closed { display: block; }
+
+/* Sueño: zzz + luna + boca O (sin gorrito) */
+#hamsterAvatar,
+.hamster-svg,
+.hamster-widget {
+  overflow: visible !important;
+}
+.hamster-zzz-overlay {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s ease;
+}
+.hamster-mood-sleep .hamster-zzz-overlay {
+  opacity: 1;
+}
+.hamster-zzz-overlay.zzz-hiding {
+  opacity: 0 !important;
+}
+.hamster-zzz-overlay text {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  paint-order: stroke fill;
+  stroke: rgba(15, 23, 42, 0.12);
+  stroke-width: 0.5px;
+}
+.hamster-zzz-overlay .z1 { animation: hamsterZzzFloat 2s ease-in-out infinite; fill: #818cf8; }
+.hamster-zzz-overlay .z2 { animation: hamsterZzzFloat 2s ease-in-out 0.35s infinite; fill: #a78bfa; }
+.hamster-zzz-overlay .z3 { animation: hamsterZzzFloat 2s ease-in-out 0.7s infinite; fill: #c4b5fd; }
+@keyframes hamsterZzzFloat {
+  0%   { opacity: 0; transform: translate(0, 4px) scale(0.7); }
+  12%  { opacity: 0; transform: translate(0, 2px) scale(0.8); }
+  28%  { opacity: 1; transform: translate(2px, -2px) scale(1.05); }
+  55%  { opacity: 0.9; transform: translate(4px, -8px) scale(1.08); }
+  78%  { opacity: 0.35; transform: translate(6px, -12px) scale(1.1); }
+  100% { opacity: 0; transform: translate(7px, -14px) scale(1.12); }
+}
+.hamster-mood-sleep #hamsterMouth {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hamsterSnoreMouth 2.2s ease-in-out infinite;
+}
+@keyframes hamsterSnoreMouth {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.18, 1.22); }
+}
 
 /* === Vida pasiva de la mascota (sin hambre ni castigos) === */
 #hamsterAvatar {
@@ -7704,9 +7749,61 @@ gato: [
            document.body.classList.contains('dark-mode');
   }
 
-  function setHamsterMood(mood) {
+  
+  function inyectarSuenoMascota() {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av) return;
+    av.querySelectorAll('.hamster-zzz-overlay, .hamster-hat-overlay').forEach(function(n) {
+      try { n.remove(); } catch (e) {}
+    });
+    var ns = 'http://www.w3.org/2000/svg';
+    function el(name, attrs) {
+      var n = document.createElementNS(ns, name);
+      if (attrs) Object.keys(attrs).forEach(function(k) { n.setAttribute(k, attrs[k]); });
+      return n;
+    }
+    var z = el('g', { 'class': 'hamster-zzz-overlay' });
+    function zLetter(ch, x, y, size, cls) {
+      var node = el('text', {
+        x: String(x), y: String(y),
+        'font-size': String(size),
+        'font-family': 'Segoe UI, system-ui, sans-serif',
+        'font-weight': '900',
+        'class': cls
+      });
+      node.textContent = ch;
+      return node;
+    }
+    z.appendChild(zLetter('z', 84, 48, 13, 'z1'));
+    z.appendChild(zLetter('z', 94, 38, 16, 'z2'));
+    z.appendChild(zLetter('Z', 104, 26, 18, 'z3'));
+    var moon = el('text', { x: '14', y: '28', 'font-size': '13', 'class': 'z2' });
+    moon.textContent = '🌙';
+    z.appendChild(moon);
+    av.appendChild(z);
+    if (av.classList.contains('hamster-mood-sleep')) {
+      z.style.opacity = '1';
+    }
+  }
+
+function setHamsterMood(mood) {
     const els = getEls();
     if (!els.avatar) return;
+    var wasSleep = els.avatar.classList.contains('hamster-mood-sleep');
+    var zzzNode = els.avatar.querySelector('.hamster-zzz-overlay');
+    if (wasSleep && mood !== 'sleep' && zzzNode) {
+      zzzNode.classList.add('zzz-hiding');
+      zzzNode.style.opacity = '0';
+      clearTimeout(window.__zzzHideT);
+      window.__zzzHideT = setTimeout(function() {
+        try {
+          if (zzzNode && !els.avatar.classList.contains('hamster-mood-sleep')) {
+            zzzNode.style.opacity = '';
+            zzzNode.classList.remove('zzz-hiding');
+          }
+        } catch (eZ) {}
+      }, 560);
+    }
     els.avatar.classList.remove(
       'hamster-mood-happy', 'hamster-mood-happy-closed', 'hamster-mood-worried',
       'hamster-mood-thinking', 'hamster-mood-sleep', 'hamster-mood-secret'
@@ -7720,23 +7817,69 @@ gato: [
       'secret': 'hamster-mood-secret'
     };
     if (map[mood]) els.avatar.classList.add(map[mood]);
+    if (mood === 'sleep') {
+      try {
+        if (zzzNode) {
+          zzzNode.classList.remove('zzz-hiding');
+          zzzNode.style.opacity = '';
+        }
+        inyectarSuenoMascota();
+      } catch (eS) {}
+    }
 
-    // Boca según humor: SOLO hámster base.
-    // Las skins ya traen la boca en su posición correcta; no se sobrescribe.
+    // Boca: O roncando (un poco más abajo). Picos: no tocar boca.
     if (els.mouth) {
       var skinActiva = 'hamster';
       try { skinActiva = localStorage.getItem('alpro_skin_activa') || 'hamster'; } catch (e) {}
-      if (!skinActiva || skinActiva === 'hamster') {
-        if (mood === 'happy' || mood === 'happy-closed') {
-          els.mouth.setAttribute('d', 'M 52 65 Q 60 74 68 65');
-        } else if (mood === 'worried') {
-          els.mouth.setAttribute('d', 'M 52 70 Q 60 66 68 70');
-        } else if (mood === 'thinking') {
-          els.mouth.setAttribute('d', 'M 54 68 Q 60 68 66 68');
-        } else if (mood === 'sleep' || mood === 'secret') {
-          els.mouth.setAttribute('d', 'M 54 67 Q 60 71 66 67');
-        } else {
-          els.mouth.setAttribute('d', 'M 54 66 Q 60 70 66 66');
+      var skinsPico = { pollito: 1, pinguino: 1, buho: 1, quetzal: 1 };
+      var esPico = !!skinsPico[skinActiva];
+      var esHamster = (!skinActiva || skinActiva === 'hamster');
+
+      if (mood === 'sleep' && !esPico) {
+        if (!els.mouth.hasAttribute('data-orig-d')) {
+          els.mouth.setAttribute('data-orig-d', els.mouth.getAttribute('d') || '');
+          els.mouth.setAttribute('data-orig-fill', els.mouth.getAttribute('fill') != null ? els.mouth.getAttribute('fill') : '');
+          els.mouth.setAttribute('data-orig-stroke', els.mouth.getAttribute('stroke') != null ? els.mouth.getAttribute('stroke') : '');
+          els.mouth.setAttribute('data-orig-sw', els.mouth.getAttribute('stroke-width') != null ? els.mouth.getAttribute('stroke-width') : '');
+        }
+        // O rellena, centrada y un poco más abajo
+        els.mouth.setAttribute('d', 'M 60 78 m -5.5 0 a 5.5 4.8 0 1 0 11 0 a 5.5 4.8 0 1 0 -11 0');
+        els.mouth.setAttribute('fill', '#1e293b');
+        els.mouth.setAttribute('stroke', '#0f172a');
+        els.mouth.setAttribute('stroke-width', '1.2');
+      } else {
+        if (els.mouth.hasAttribute('data-orig-d')) {
+          var od = els.mouth.getAttribute('data-orig-d');
+          els.mouth.setAttribute('d', od || 'M 54 66 Q 60 70 66 66');
+          var of = els.mouth.getAttribute('data-orig-fill');
+          var os = els.mouth.getAttribute('data-orig-stroke');
+          var osw = els.mouth.getAttribute('data-orig-sw');
+          if (of !== null && of !== '') els.mouth.setAttribute('fill', of);
+          else els.mouth.setAttribute('fill', 'none');
+          if (os !== null && os !== '') els.mouth.setAttribute('stroke', os);
+          else els.mouth.removeAttribute('stroke');
+          if (osw !== null && osw !== '') els.mouth.setAttribute('stroke-width', osw);
+          else els.mouth.removeAttribute('stroke-width');
+          els.mouth.removeAttribute('data-orig-d');
+          els.mouth.removeAttribute('data-orig-fill');
+          els.mouth.removeAttribute('data-orig-stroke');
+          els.mouth.removeAttribute('data-orig-sw');
+        }
+        if (esHamster) {
+          if (mood === 'happy' || mood === 'happy-closed') {
+            els.mouth.setAttribute('d', 'M 52 65 Q 60 74 68 65');
+          } else if (mood === 'worried') {
+            els.mouth.setAttribute('d', 'M 52 70 Q 60 66 68 70');
+          } else if (mood === 'thinking') {
+            els.mouth.setAttribute('d', 'M 54 68 Q 60 68 66 68');
+          } else if (mood === 'secret') {
+            els.mouth.setAttribute('d', 'M 54 67 Q 60 71 66 67');
+          } else if (mood !== 'sleep') {
+            els.mouth.setAttribute('d', 'M 54 66 Q 60 70 66 66');
+          }
+          els.mouth.setAttribute('fill', 'none');
+          els.mouth.setAttribute('stroke', '#1e293b');
+          if (!els.mouth.getAttribute('stroke-width')) els.mouth.setAttribute('stroke-width', '2');
         }
       }
     }
@@ -8073,6 +8216,7 @@ function lanzarConfetti() {
     bindAvatarClicks();
     if (typeof window.cargarSkinHamsterGuardada === 'function') window.cargarSkinHamsterGuardada();
     if (isDarkTheme()) setHamsterMood('sleep');
+    else { try { inyectarSuenoMascota(); } catch (e0) {} }
     try { startMascotaVida(); } catch (eV) {}
     setTimeout(function() {
       var msg = (typeof window.mensajeBienvenidaPersonalizado === 'function')
@@ -8683,7 +8827,12 @@ SKIN_SVG.slime =
     try {
       var av2 = document.getElementById('hamsterAvatar');
       if (av2) av2.classList.add('hamster-breathe');
-      mascotaPlayAnim('hamster-hop', 600);
+      if (typeof isDarkTheme === 'function' && isDarkTheme()) {
+        setHamsterMood('sleep');
+      } else {
+        mascotaPlayAnim('hamster-hop', 600);
+        try { inyectarSuenoMascota(); } catch (eZ) {}
+      }
     } catch (eLife) {}
     localStorage.setItem('alpro_skin_activa', key);
     var meta = SKIN_META[key] || { nombre: key, emoji: '✨' };
