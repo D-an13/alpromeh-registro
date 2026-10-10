@@ -527,11 +527,9 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
 .hamster-svg {
   width: 78px;
   height: 78px;
-  cursor: pointer;
+  cursor: default;
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
-  transition: transform 0.2s ease;
 }
-.hamster-svg:hover { transform: scale(1.08); }
 @keyframes hamsterFloat {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
@@ -547,6 +545,26 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
 }
 .idle-animation { animation: hamsterFloat 3s ease-in-out infinite; }
 .eye-blink { transform-origin: center; animation: hamsterBlink 4s infinite; }
+.eye-blink.hamster-double-blink {
+  animation: hamsterDoubleBlink 0.7s ease-in-out 1;
+}
+@keyframes hamsterDoubleBlink {
+  0%, 100% { transform: scaleY(1); }
+  15% { transform: scaleY(0.08); }
+  30% { transform: scaleY(1); }
+  50% { transform: scaleY(0.08); }
+  65% { transform: scaleY(1); }
+}
+/* Ojitos miran el tip: suben y bajan suave */
+#hamsterEyesOpen,
+.eye-blink {
+  transition: transform 0.5s ease;
+}
+#hamsterAvatar.hamster-look-bubble #hamsterEyesOpen,
+#hamsterAvatar.hamster-look-bubble .eye-blink {
+  transform: translateY(-5px);
+}
+
 .pop-anim { animation: hamsterPop 0.35s ease-out; }
 .hamster-hat { display: none !important; }
 .hamster-eyes-closed { display: none; }
@@ -624,7 +642,7 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
   animation: hamsterWiggle 0.65s ease-in-out;
 }
 #hamsterAvatar:hover {
-  filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.28));
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
 }
 
 .hamster-cariño-piece {
@@ -643,7 +661,7 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
 }
 @keyframes hamsterBreathe {
   0%, 100% { transform: scale(1, 1); }
-  50% { transform: scale(1.04, 0.97); }
+  50% { transform: scale(1.045, 0.97); }
 }
 @keyframes hamsterLookLeft {
   0%, 100% { transform: rotate(0deg) translateX(0); }
@@ -656,10 +674,9 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
   70% { transform: rotate(3deg) translateX(1px); }
 }
 @keyframes hamsterHop {
-  0% { transform: translateY(0) scale(1, 1); }
-  28% { transform: translateY(-11px) scale(1.06, 0.94); }
-  55% { transform: translateY(-3px) scale(0.98, 1.03); }
-  100% { transform: translateY(0) scale(1, 1); }
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-12px); }
+  70% { transform: translateY(-3px); }
 }
 @keyframes hamsterWiggle {
   0%, 100% { transform: rotate(0); }
@@ -7842,8 +7859,12 @@ function setHamsterMood(mood) {
           els.mouth.setAttribute('data-orig-stroke', els.mouth.getAttribute('stroke') != null ? els.mouth.getAttribute('stroke') : '');
           els.mouth.setAttribute('data-orig-sw', els.mouth.getAttribute('stroke-width') != null ? els.mouth.getAttribute('stroke-width') : '');
         }
-        // O rellena, centrada y un poco más abajo
-        els.mouth.setAttribute('d', 'M 60 78 m -5.5 0 a 5.5 4.8 0 1 0 11 0 a 5.5 4.8 0 1 0 -11 0');
+        // O roncando: hamster/fantasma/pulpo/slime un poquito más arriba; resto un poquito más abajo
+        var oy = 79;
+        if (skinActiva === 'hamster' || skinActiva === 'fantasma' || skinActiva === 'pulpo' || skinActiva === 'slime') {
+          oy = 74;
+        }
+        els.mouth.setAttribute('d', 'M 60 ' + oy + ' m -5 0 a 5 4.2 0 1 0 10 0 a 5 4.2 0 1 0 -10 0');
         els.mouth.setAttribute('fill', '#1e293b');
         els.mouth.setAttribute('stroke', '#0f172a');
         els.mouth.setAttribute('stroke-width', '1.2');
@@ -7948,17 +7969,94 @@ function lanzarConfetti() {
 
 
   // --- Vida visual de la mascota ---
-  function mascotaPlayAnim(cls, ms) {
+  
+  function mascotaParpadeoDoble() {
     var av = document.getElementById('hamsterAvatar');
     if (!av) return;
-    // no pelear con breathe: pausar breathe durante anim puntual
-    av.classList.remove('hamster-look-left', 'hamster-look-right', 'hamster-hop', 'hamster-wiggle');
-    // force reflow
+    if (av.classList.contains('hamster-mood-sleep') ||
+        av.classList.contains('hamster-mood-happy-closed') ||
+        av.classList.contains('hamster-mood-secret')) return;
+    var eyes = av.querySelectorAll('.eye-blink');
+    if (!eyes.length) return;
+    eyes.forEach(function(e) {
+      e.classList.remove('hamster-double-blink');
+      void e.offsetWidth;
+      e.classList.add('hamster-double-blink');
+    });
+    setTimeout(function() {
+      eyes.forEach(function(e) { e.classList.remove('hamster-double-blink'); });
+    }, 750);
+  }
+
+  function mascotaMirarGlobo() {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av) return;
+    if (av.classList.contains('hamster-mood-sleep') ||
+        av.classList.contains('hamster-mood-happy-closed') ||
+        av.classList.contains('hamster-mood-secret')) return;
+
+    var targets = [];
+    var open = av.querySelector('#hamsterEyesOpen');
+    if (open) targets.push(open);
+    av.querySelectorAll('g.eye-blink, .eye-blink').forEach(function(n) {
+      if (targets.indexOf(n) < 0) targets.push(n);
+    });
+    if (!targets.length) return;
+
+    targets.forEach(function(el) {
+      try {
+        el.style.animation = 'none';
+        el.style.transition = 'transform 0.55s ease';
+        el.style.transform = 'translateY(0px)';
+        void el.getBoundingClientRect();
+        el.style.transform = 'translateY(-5px)';
+      } catch (e) {}
+    });
+    av.classList.add('hamster-look-bubble');
+
+    clearTimeout(av._lookBubbleT);
+    clearTimeout(av._lookBubbleT2);
+    // ~2s mirando, luego baja suave y sigue normal
+    av._lookBubbleT = setTimeout(function() {
+      targets.forEach(function(el) {
+        try {
+          el.style.transition = 'transform 0.6s ease';
+          el.style.transform = 'translateY(0px)';
+        } catch (e) {}
+      });
+      av._lookBubbleT2 = setTimeout(function() {
+        targets.forEach(function(el) {
+          try {
+            el.style.transition = '';
+            el.style.transform = '';
+            el.style.animation = '';
+          } catch (e) {}
+        });
+        av.classList.remove('hamster-look-bubble');
+      }, 620);
+    }, 2000);
+  }
+
+function mascotaPlayAnim(cls, ms) {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av) return;
+    var hadBreathe = av.classList.contains('hamster-breathe');
+    av.classList.remove(
+      'hamster-breathe',
+      'hamster-look-left', 'hamster-look-right',
+      'hamster-hop', 'hamster-wiggle'
+    );
     void av.offsetWidth;
     av.classList.add(cls);
     clearTimeout(av._animT);
     av._animT = setTimeout(function() {
       av.classList.remove(cls);
+      if (hadBreathe) {
+        // Reinicio suave de respiración (sin scale de hop encima)
+        av.classList.remove('hamster-breathe');
+        void av.offsetWidth;
+        av.classList.add('hamster-breathe');
+      }
     }, ms || 700);
   }
 
@@ -7995,9 +8093,10 @@ function lanzarConfetti() {
           return;
         }
         var r = Math.random();
-        if (r < 0.42) mascotaPlayAnim('hamster-look-left', 1500);
-        else if (r < 0.84) mascotaPlayAnim('hamster-look-right', 1500);
-        else mascotaPlayAnim('hamster-wiggle', 700);
+        if (r < 0.28) mascotaPlayAnim('hamster-look-left', 1500);
+        else if (r < 0.56) mascotaPlayAnim('hamster-look-right', 1500);
+        else if (r < 0.82) mascotaPlayAnim('hamster-wiggle', 700);
+        else mascotaParpadeoDoble();
       } catch (e) {}
       window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
     }
@@ -8033,14 +8132,14 @@ function lanzarConfetti() {
 
     els.bubble.classList.add('visible');
 
-    if (els.avatar) {
-      els.avatar.classList.remove('pop-anim');
-      void els.avatar.offsetWidth;
-      els.avatar.classList.add('pop-anim');
-    }
-
+    // Clic/tip: solo saltito (sin pop). Pop solo al cambiar skin.
     setHamsterMood(mood);
     try { mascotaReaccionPorMood(mood); } catch (eR) {}
+    if (mood !== 'sleep' && Math.random() < 0.70) {
+      setTimeout(function() {
+        try { mascotaMirarGlobo(); } catch (eL) {}
+      }, 750);
+    }
     if (extras.confetti) lanzarConfetti();
 
     clearTimeout(hideTimeout);
@@ -8191,6 +8290,7 @@ function lanzarConfetti() {
       var now = Date.now();
       if (window.__hamsterPetAt && now - window.__hamsterPetAt < 4500) return;
       window.__hamsterPetAt = now;
+      // Como tu codigo: balanceo suave + corazones (no es pop de escala)
       try {
         mascotaPlayAnim('hamster-wiggle', 500);
         lanzarCariños('heart', 3);
@@ -8663,8 +8763,6 @@ SKIN_SVG.slime =
 /* ojos abiertos — grandes, cafés, con brillo */
 '<g class="eye-blink" id="hamsterEyesOpen"><circle cx="43" cy="64" r="10" fill="#1e293b"/><circle cx="40.2" cy="60.8" r="3.5" fill="#fff"/><circle cx="45.5" cy="66" r="1.3" fill="#fff" opacity=".7"/><circle cx="77" cy="64" r="10" fill="#1e293b"/><circle cx="74.2" cy="60.8" r="3.5" fill="#fff"/><circle cx="79.5" cy="66" r="1.3" fill="#fff" opacity=".7"/></g>' +
 /* cejas suaves */
-'<path d="M32 52 Q43 47 52 52" stroke="#15803d" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
-'<path d="M68 52 Q77 47 88 52" stroke="#15803d" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
 /* ojos cerrados (feliz) */
 '<g class="hamster-eyes-closed" id="hamsterEyesClosed"><path d="M33 64Q43 74 53 64" stroke="#1e293b" stroke-width="3.3" fill="none" stroke-linecap="round"/><path d="M67 64Q77 74 87 64" stroke="#1e293b" stroke-width="3.3" fill="none" stroke-linecap="round"/></g>' +
 /* pico amarillo más visible */
@@ -8830,6 +8928,14 @@ SKIN_SVG.slime =
       if (typeof isDarkTheme === 'function' && isDarkTheme()) {
         setHamsterMood('sleep');
       } else {
+        try {
+          var avPop = document.getElementById('hamsterAvatar');
+          if (avPop) {
+            avPop.classList.remove('pop-anim');
+            void avPop.offsetWidth;
+            avPop.classList.add('pop-anim');
+          }
+        } catch (eP) {}
         mascotaPlayAnim('hamster-hop', 600);
         try { inyectarSuenoMascota(); } catch (eZ) {}
       }
