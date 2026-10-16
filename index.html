@@ -4776,6 +4776,257 @@ tbody.animar-entrada {
     color: #000000 !important;
   }
 }
+
+/* ➕ Botón accesos (Uiverse) + mini-menú — colores siguen --primary de la app */
+#btnMenuAccesosAlpro {
+  position: fixed;
+  bottom: 20px;
+  left: 18px;
+  z-index: 9999;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+#btnMenuAccesosAlpro:hover,
+#btnMenuAccesosAlpro.menu-open {
+  transform: rotate(90deg);
+}
+#btnMenuAccesosAlpro .alpro-plus-svg {
+  width: 36px;
+  height: 36px;
+  stroke: var(--primary, #3b82f6);
+  fill: none;
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+#btnMenuAccesosAlpro:hover .alpro-plus-svg,
+#btnMenuAccesosAlpro.menu-open .alpro-plus-svg {
+  fill: var(--primary-deep, var(--primary, #1e40af));
+  stroke: var(--primary, #3b82f6);
+}
+#btnMenuAccesosAlpro:active .alpro-plus-svg {
+  stroke: color-mix(in srgb, var(--primary, #3b82f6) 55%, white);
+  fill: var(--primary, #2563eb);
+  transition-duration: 0s;
+}
+#btnMenuAccesosAlpro .alpro-plus-svg path {
+  stroke-width: 1.6;
+}
+
+/* Mini-menú flotante — entrada/salida premium en cascada */
+#menuAccesosAlpro {
+  position: fixed;
+  bottom: 64px;
+  left: 14px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 228px;
+  padding: 10px;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(226,232,240,0.95);
+  border-radius: 18px;
+  box-shadow:
+    0 18px 50px rgba(15,23,42,0.14),
+    0 4px 12px rgba(15,23,42,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.9);
+  transform-origin: bottom left;
+  transition:
+    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.38s cubic-bezier(0.34, 1.45, 0.64, 1),
+    visibility 0.38s;
+  pointer-events: none;
+}
+[data-theme="dark"] #menuAccesosAlpro {
+  background: rgba(30,41,59,0.97);
+  border-color: rgba(71,85,105,0.9);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,0.5),
+    0 4px 12px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+#menuAccesosAlpro.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+#menuAccesosAlpro.closing {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.94);
+  pointer-events: none;
+  transition:
+    opacity 0.18s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
+}
+#menuAccesosAlpro .mac-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 11px 12px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+#menuAccesosAlpro.open .mac-item {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.18s ease;
+}
+#menuAccesosAlpro.open .mac-item:nth-child(1) { transition-delay: 0.05s; }
+#menuAccesosAlpro.open .mac-item:nth-child(2) { transition-delay: 0.1s; }
+#menuAccesosAlpro.open .mac-item:nth-child(3) { transition-delay: 0.15s; }
+#menuAccesosAlpro.open .mac-item:nth-child(4) { transition-delay: 0.2s; }
+[data-theme="dark"] #menuAccesosAlpro .mac-item {
+  color: #f1f5f9;
+}
+#menuAccesosAlpro .mac-item:hover {
+  background: color-mix(in srgb, var(--primary, #3b82f6) 10%, transparent);
+  transform: translateX(2px);
+}
+[data-theme="dark"] #menuAccesosAlpro .mac-item:hover {
+  background: color-mix(in srgb, var(--primary, #3b82f6) 18%, transparent);
+}
+#menuAccesosAlpro .mac-item:active {
+  background: color-mix(in srgb, var(--primary, #3b82f6) 16%, transparent);
+}
+#menuAccesosAlpro .mac-item.disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+#menuAccesosAlpro.open .mac-item.disabled {
+  opacity: 0.48;
+}
+#menuAccesosAlpro .mac-item.disabled:hover {
+  background: transparent;
+  transform: none;
+}
+/* Iconos SVG en cuadritos de color sólido */
+#menuAccesosAlpro .mac-ico {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(15,23,42,0.12);
+}
+#menuAccesosAlpro .mac-ico svg {
+  display: block;
+}
+#menuAccesosAlpro .mac-ico-fotos { background: #2563eb; }
+#menuAccesosAlpro .mac-ico-sanitarios { background: #059669; }
+#menuAccesosAlpro .mac-ico-guate { background: #d97706; }
+#menuAccesosAlpro .mac-ico-fact { background: #7c3aed; }
+#menuAccesosAlpro .mac-label {
+  flex: 1;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+#menuAccesosAlpro .mac-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 3px 7px;
+  border-radius: 7px;
+}
+[data-theme="dark"] #menuAccesosAlpro .mac-badge {
+  background: #334155;
+  color: #94a3b8;
+}
+
+/* (modal catálogo styles moved near the modal HTML) */
+.alpro-foto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 14px;
+}
+.alpro-foto-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+  padding: 0;
+  font-family: inherit;
+}
+.alpro-foto-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.12);
+}
+.alpro-foto-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  background: #f1f5f9;
+}
+.alpro-foto-card .alpro-foto-name {
+  font-size: 0.7rem;
+  padding: 6px 8px;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.alpro-foto-lightbox {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.alpro-foto-lightbox img {
+  max-width: min(100%, 900px);
+  max-height: calc(100% - 70px);
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
 </style>
 </head>
 <body>
@@ -12430,6 +12681,27 @@ function sumarAlprocoinsLocales(monedasGanadas) {
         display: inline-flex !important;
     }
 }
+/* Botón + / menú accesos: siempre visible */
+#btnMenuAccesosAlpro {
+    display: inline-flex !important;
+}
+@media (max-width: 1023px) {
+    #btnMenuAccesosAlpro {
+        bottom: 14px !important;
+        left: 12px !important;
+        width: 36px !important;
+        height: 36px !important;
+    }
+    #btnMenuAccesosAlpro .alpro-plus-svg {
+        width: 34px !important;
+        height: 34px !important;
+    }
+    #menuAccesosAlpro {
+        bottom: 56px !important;
+        left: 10px !important;
+        min-width: 200px;
+    }
+}
 
 /* 🌐 CONTENEDOR PADRE CON PERSPECTIVA 3D */
 #modalTiendaAlpro {
@@ -12497,11 +12769,51 @@ function sumarAlprocoinsLocales(monedasGanadas) {
 }
 </style>
 
-<!-- 🪙 MARCADOR COMPACTO PREMIUM -->
-<div id="contadorMonedasCompu" onclick="toggleTiendaAlpro()" style="position: fixed; top: 15px; left: 15px; z-index: 9999; align-items: center; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 16px; font-weight: 600; font-size: 14px; color: #0f172a; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s;" onmouseenter="this.style.transform='scale(1.05)'" onmouseleave="this.style.transform='scale(1)'">
+<!-- 🪙 MARCADOR COMPACTO PREMIUM (solo tienda) -->
+<div id="contadorMonedasCompu" role="button" tabindex="0" title="Abrir Alprotienda" style="position: fixed; top: 15px; left: 15px; z-index: 9999; display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 16px; font-weight: 600; font-size: 14px; color: #0f172a; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s;">
     <span style="margin-right: 6px; font-size: 16px;">🪙</span>
     <span id="numero-alprocoins" style="color: #c2410c; font-weight: 700;">0</span>
 </div>
+
+<!-- ➕ Botón accesos (Uiverse) + mini-menú abajo izquierda -->
+<button type="button" id="btnMenuAccesosAlpro" title="Accesos" aria-label="Menú de accesos" aria-expanded="false" aria-haspopup="true">
+  <svg class="alpro-plus-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"></path>
+    <path d="M8 12H16"></path>
+    <path d="M12 16V8"></path>
+  </svg>
+</button>
+<div id="menuAccesosAlpro" role="menu" aria-label="Accesos rápidos">
+  <button type="button" class="mac-item" data-accion="fotos" role="menuitem" id="macItemFotos" onclick="event.preventDefault();event.stopPropagation();if(typeof window.abrirCatalogoFotosAlpro==='function'){window.abrirCatalogoFotosAlpro();}else{window.open('https://drive.google.com/drive/folders/1jQpcN3QVgfG4utqhvOmmkoaQ43Dnxq76?usp=sharing','_blank','noopener,noreferrer');}">
+    <span class="mac-ico mac-ico-fotos" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l1.5-2h7L17 7h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/><circle cx="12" cy="13" r="3.2"/></svg>
+    </span>
+    <span class="mac-label">Fotos</span>
+  </button>
+  <button type="button" class="mac-item disabled" data-accion="sanitarios" role="menuitem" disabled>
+    <span class="mac-ico mac-ico-sanitarios" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v4H9z"/><path d="M8 7h8v13a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V7z"/><path d="M12 11v6M9 14h6"/></svg>
+    </span>
+    <span class="mac-label">Registros sanitarios</span>
+    <span class="mac-badge">Pronto</span>
+  </button>
+  <button type="button" class="mac-item disabled" data-accion="guatecompras" role="menuitem" disabled>
+    <span class="mac-ico mac-ico-guate" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+    </span>
+    <span class="mac-label">Guatecompras</span>
+    <span class="mac-badge">Pronto</span>
+  </button>
+  <button type="button" class="mac-item disabled" data-accion="facturacion" role="menuitem" disabled>
+    <span class="mac-ico mac-ico-fact" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+    </span>
+    <span class="mac-label">Facturación y cotización</span>
+    <span class="mac-badge">Pronto</span>
+  </button>
+</div>
+
+
 
 <!-- 💾 MODAL RESPALDO / RECUPERACIÓN (exportar · importar) -->
 <div id="modalRespaldoAlpro" style="display:none; position:fixed; inset:0; z-index:10050; background:rgba(15,23,42,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px; font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;" onclick="if(event.target===this){ var c=this.querySelector('[role=\'dialog\']'); c.className='modal-zoom-out'; setTimeout(()=>{ cerrarModalRespaldoAlpro(); c.className='modal-zoom-in'; },180); }">
@@ -13048,6 +13360,25 @@ const URL_NUBE_SECRETA = "https://kvdb.io/7N8vYFwM5qK2uX1pZ89aB/pines_alpro_";
 
 // 🎪 2. CONTROL DE APERTURA Y CIERRE
 function toggleTiendaAlpro() {
+    try {
+      var cat = document.getElementById('modalCatalogoFotosAlpro');
+      if (cat) {
+        cat.classList.remove('mfe-open', 'mfe-closing');
+        cat.style.display = 'none';
+        cat.style.opacity = '';
+        cat.setAttribute('aria-hidden', 'true');
+      }
+    } catch (eCat) {}
+    try {
+      var menuAcc = document.getElementById('menuAccesosAlpro');
+      var btnAcc = document.getElementById('btnMenuAccesosAlpro');
+      if (menuAcc) menuAcc.classList.remove('open');
+      if (btnAcc) {
+        btnAcc.classList.remove('menu-open');
+        btnAcc.setAttribute('aria-expanded', 'false');
+      }
+    } catch (eMenu) {}
+
     const tiendaModal = document.getElementById('modalTiendaAlpro');
     const cuerpo = document.getElementById('cuerpoTienda');
     if (!tiendaModal || !cuerpo) return;
@@ -14514,6 +14845,390 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 200);
   }
+</script>
+
+
+
+
+<!-- 📷 CATÁLOGO FOTOS ALPROMEH -->
+<div id="modalCatalogoFotosAlpro" aria-hidden="true">
+  <div id="cardCatalogoFotosAlpro" role="dialog" aria-modal="true" aria-labelledby="tituloCatalogoFotos">
+    <div class="mcat-head">
+      <div class="mcat-titles">
+        <div id="tituloCatalogoFotos">📷 Catálogo de fotos</div>
+        <div class="mcat-sub">Elegí una carpeta · las miniaturas se ven aquí mismo</div>
+      </div>
+      <div class="mcat-actions">
+        <a id="btnAbrirDriveFotosTab" href="https://drive.google.com/drive/folders/1jQpcN3QVgfG4utqhvOmmkoaQ43Dnxq76?usp=sharing" target="_blank" rel="noopener noreferrer">Drive ↗</a>
+        <button type="button" id="btnCerrarCatalogoFotos" title="Cerrar">✕</button>
+      </div>
+    </div>
+    <div id="mcatFoldersBar" class="mcat-folders" role="tablist" aria-label="Carpetas de fotos"></div>
+    <div id="cuerpoCatalogoFotosAlpro">
+      <iframe id="iframeCatalogoDrive" title="Fotos ALPROMEH" src="about:blank" allowfullscreen></iframe>
+    </div>
+    <div class="mcat-foot">Las carpetas se abren aquí. Si una foto se abre en Drive al tocarla, es limitación de Google; usá <b>Drive ↗</b> para descargar.</div>
+  </div>
+</div>
+<style>
+/* Modal catálogo */
+#modalCatalogoFotosAlpro {
+  display: none;
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+  width: 100vw !important; height: 100vh !important;
+  z-index: 2147483000 !important;
+  background: rgba(15, 23, 42, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+  margin: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease, background 0.28s ease, backdrop-filter 0.28s ease;
+}
+#modalCatalogoFotosAlpro.mfe-open {
+  display: flex !important;
+  opacity: 1;
+  pointer-events: auto;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+#modalCatalogoFotosAlpro.mfe-closing {
+  display: flex !important;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(15, 23, 42, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+#cardCatalogoFotosAlpro {
+  background: #fff;
+  color: #0f172a;
+  width: min(980px, 96vw);
+  height: min(88vh, 820px);
+  border-radius: 18px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  position: relative;
+  z-index: 1;
+  transform: translateY(28px) scale(0.94);
+  opacity: 0;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+#modalCatalogoFotosAlpro.mfe-open #cardCatalogoFotosAlpro {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+#modalCatalogoFotosAlpro.mfe-closing #cardCatalogoFotosAlpro {
+  transform: translateY(16px) scale(0.96);
+  opacity: 0;
+  transition: transform 0.24s ease, opacity 0.22s ease;
+}
+#modalCatalogoFotosAlpro .mcat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  background: #f8fafc;
+}
+#modalCatalogoFotosAlpro .mcat-titles { min-width: 0; }
+#tituloCatalogoFotos { font-weight: 800; font-size: 1.02rem; }
+#modalCatalogoFotosAlpro .mcat-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+#modalCatalogoFotosAlpro .mcat-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+#btnAbrirDriveFotosTab {
+  text-decoration: none; border: none; background: var(--primary, #2563eb); color: #fff;
+  font-weight: 700; font-size: 0.78rem; padding: 8px 12px; border-radius: 10px;
+  cursor: pointer; white-space: nowrap; font-family: inherit; display: inline-flex; align-items: center;
+}
+#btnCerrarCatalogoFotos {
+  border: 1px solid #cbd5e1; background: #fff; color: #334155;
+  width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; line-height: 1;
+}
+/* Barra de carpetas */
+.mcat-folders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  max-height: 88px;
+  overflow-y: auto;
+}
+.mcat-chip {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+  white-space: nowrap;
+}
+.mcat-chip:hover { border-color: var(--primary, #2563eb); color: var(--primary, #2563eb); }
+.mcat-chip.active {
+  background: var(--primary, #2563eb);
+  border-color: var(--primary, #2563eb);
+  color: #fff;
+}
+.mcat-chip:active { transform: scale(0.97); }
+#cuerpoCatalogoFotosAlpro {
+  flex: 1; min-height: 0; display: flex; flex-direction: column; background: #f1f5f9;
+}
+#iframeCatalogoDrive {
+  flex: 1; width: 100%; border: 0; min-height: 280px; background: #f8fafc;
+}
+#modalCatalogoFotosAlpro .mcat-foot {
+  padding: 8px 14px; font-size: 0.72rem; color: #64748b;
+  border-top: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0;
+}
+[data-theme="dark"] #cardCatalogoFotosAlpro { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+[data-theme="dark"] #modalCatalogoFotosAlpro .mcat-head,
+[data-theme="dark"] #modalCatalogoFotosAlpro .mcat-foot,
+[data-theme="dark"] .mcat-folders { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] .mcat-chip { background: #1e293b; border-color: #475569; color: #e2e8f0; }
+[data-theme="dark"] .mcat-chip.active { background: var(--primary, #3b82f6); border-color: var(--primary, #3b82f6); color: #fff; }
+[data-theme="dark"] #btnCerrarCatalogoFotos { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+</style>
+<script>
+(function () {
+  var ROOT_ID = '1jQpcN3QVgfG4utqhvOmmkoaQ43Dnxq76';
+  var FOTOS_URL = 'https://drive.google.com/drive/folders/' + ROOT_ID + '?usp=sharing';
+  // Subcarpetas (mismas del Drive compartido) — se abren DENTRO del modal
+  var CARPETAS = [
+    { id: ROOT_ID, nombre: 'Todas' },
+    { id: '1J6MS3tftcBH54equem9Ets-6aGcTI98y', nombre: 'Agujas' },
+    { id: '1snxSP-_SWBHVUaAm4EN0Ntz4jZiFFLxL', nombre: 'Alimentación' },
+    { id: '1t_N3uZjTJPDyzSCtD9h5Cs5p2fWSo09R', nombre: 'Aspiración' },
+    { id: '16OIC61ZuF04jxlshs4K9_3niseOqruR5', nombre: 'Bolsas esterilizar' },
+    { id: '1hDGmGYib8UuBrdvvQDF78Unxm1unDRQ6', nombre: 'Catéter IV' },
+    { id: '1CUBu7QNL9kHsA4pvy4_GmUPECBT9VCxs', nombre: 'Jeringas' },
+    { id: '15dAla2kf9v0SSpEVd69ai1OulHOkxhfq', nombre: 'Muletas' },
+    { id: '1J5oXvDmqPlKLH6ZLC8-9wsc8XWSrxSc9', nombre: 'Nuevos productos' }
+  ];
+  var carpetaActiva = ROOT_ID;
+  var cerrando = false;
+
+  function embedUrl(id) {
+    return 'https://drive.google.com/embeddedfolderview?id=' + id + '#grid';
+  }
+
+  function pintarChips() {
+    var bar = document.getElementById('mcatFoldersBar');
+    if (!bar) return;
+    bar.innerHTML = '';
+    CARPETAS.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mcat-chip' + (c.id === carpetaActiva ? ' active' : '');
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', c.id === carpetaActiva ? 'true' : 'false');
+      b.textContent = c.nombre;
+      b.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        cargarCarpeta(c.id);
+      });
+      bar.appendChild(b);
+    });
+  }
+
+  function cargarCarpeta(id) {
+    carpetaActiva = id || ROOT_ID;
+    var iframe = document.getElementById('iframeCatalogoDrive');
+    if (iframe) iframe.src = embedUrl(carpetaActiva);
+    var driveLink = document.getElementById('btnAbrirDriveFotosTab');
+    if (driveLink) driveLink.href = 'https://drive.google.com/drive/folders/' + carpetaActiva + '?usp=sharing';
+    pintarChips();
+  }
+
+  window.cerrarMenuAccesosAlpro = function () {
+    var menu = document.getElementById('menuAccesosAlpro');
+    var btn = document.getElementById('btnMenuAccesosAlpro');
+    if (menu) {
+      menu.classList.remove('open');
+      menu.classList.add('closing');
+      setTimeout(function () { menu.classList.remove('closing'); }, 200);
+    }
+    if (btn) {
+      btn.classList.remove('menu-open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  };
+
+  window.abrirCatalogoFotosAlpro = function () {
+    var m = document.getElementById('modalCatalogoFotosAlpro');
+    if (!m) {
+      window.open(FOTOS_URL, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    try {
+      var tienda = document.getElementById('modalTiendaAlpro');
+      if (tienda && tienda.style.display && tienda.style.display !== 'none') {
+        tienda.style.display = 'none';
+        tienda.style.backgroundColor = 'rgba(15,23,42,0)';
+        var cuerpo = document.getElementById('cuerpoTienda');
+        if (cuerpo) {
+          cuerpo.classList.remove('tienda-unfold', 'tienda-fold');
+          cuerpo.style.transform = '';
+          cuerpo.style.opacity = '';
+        }
+      }
+    } catch (e) {}
+    try { if (window.cerrarMenuAccesosAlpro) window.cerrarMenuAccesosAlpro(); } catch (e2) {}
+
+    try {
+      if (m.parentNode !== document.body) document.body.appendChild(m);
+    } catch (eApp) {}
+
+    cerrando = false;
+    m.classList.remove('mfe-closing');
+    // mostrar primero (display) y luego animar
+    m.style.cssText = [
+      'display:flex',
+      'position:fixed',
+      'top:0','left:0','right:0','bottom:0',
+      'width:100vw','height:100vh',
+      'z-index:2147483000',
+      'align-items:center',
+      'justify-content:center',
+      'padding:12px',
+      'box-sizing:border-box',
+      'margin:0',
+      'pointer-events:auto',
+      'visibility:visible'
+    ].join(';');
+    void m.offsetWidth;
+    m.classList.add('mfe-open');
+    m.setAttribute('aria-hidden', 'false');
+    cargarCarpeta(carpetaActiva || ROOT_ID);
+    try {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } catch (e3) {}
+  };
+
+  window.cerrarCatalogoFotosAlpro = function () {
+    var m = document.getElementById('modalCatalogoFotosAlpro');
+    if (!m || cerrando) return;
+    cerrando = true;
+    m.classList.remove('mfe-open');
+    m.classList.add('mfe-closing');
+    try {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    } catch (e) {}
+    setTimeout(function () {
+      m.classList.remove('mfe-closing');
+      m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'display:none';
+      cerrando = false;
+    }, 280);
+  };
+
+  function wire() {
+    var btn = document.getElementById('btnMenuAccesosAlpro');
+    if (btn && !btn._alproMenuBound) {
+      btn._alproMenuBound = true;
+      btn.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var menu = document.getElementById('menuAccesosAlpro');
+        if (!menu) return;
+        if (menu.classList.contains('open')) window.cerrarMenuAccesosAlpro();
+        else {
+          menu.classList.remove('closing');
+          menu.classList.add('open');
+          btn.classList.add('menu-open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+
+    var fotos = document.getElementById('macItemFotos');
+    if (fotos && !fotos._alproFotosBound) {
+      fotos._alproFotosBound = true;
+      fotos.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.abrirCatalogoFotosAlpro();
+      });
+    }
+
+    var btnX = document.getElementById('btnCerrarCatalogoFotos');
+    if (btnX && !btnX._bound) {
+      btnX._bound = true;
+      btnX.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.cerrarCatalogoFotosAlpro();
+      });
+    }
+    var m = document.getElementById('modalCatalogoFotosAlpro');
+    if (m && !m._bound) {
+      m._bound = true;
+      m.addEventListener('click', function (ev) {
+        if (ev.target === m) window.cerrarCatalogoFotosAlpro();
+      });
+    }
+
+    var coins = document.getElementById('contadorMonedasCompu');
+    if (coins && !coins._alproCoinsBound) {
+      coins._alproCoinsBound = true;
+      coins.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.cerrarMenuAccesosAlpro();
+        window.cerrarCatalogoFotosAlpro();
+        if (typeof window.toggleTiendaAlpro === 'function') window.toggleTiendaAlpro();
+      });
+    }
+
+    if (!document._alproMenuOutsideBound) {
+      document._alproMenuOutsideBound = true;
+      document.addEventListener('click', function (ev) {
+        var menuEl = document.getElementById('menuAccesosAlpro');
+        var btnEl = document.getElementById('btnMenuAccesosAlpro');
+        if (!menuEl || !menuEl.classList.contains('open')) return;
+        if (menuEl.contains(ev.target)) return;
+        if (btnEl && (btnEl === ev.target || btnEl.contains(ev.target))) return;
+        window.cerrarMenuAccesosAlpro();
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var menu = document.getElementById('menuAccesosAlpro');
+      if (menu && menu.classList.contains('open')) {
+        window.cerrarMenuAccesosAlpro();
+        return;
+      }
+      var mod = document.getElementById('modalCatalogoFotosAlpro');
+      if (mod && mod.classList.contains('mfe-open')) window.cerrarCatalogoFotosAlpro();
+    });
+
+    pintarChips();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();
 </script>
 
 <!-- Modal Frase del Equipo (solo lápiz) -->
