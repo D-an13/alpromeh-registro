@@ -14856,22 +14856,40 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="mcat-head">
       <div class="mcat-titles">
         <div id="tituloCatalogoFotos">📷 Catálogo de fotos</div>
-        <div class="mcat-sub">Elegí una carpeta · las miniaturas se ven aquí mismo</div>
+        <div class="mcat-sub">Buscá, mirá y subí fotos sin salir de la app</div>
       </div>
       <div class="mcat-actions">
-        <a id="btnAbrirDriveFotosTab" href="https://drive.google.com/drive/folders/1jQpcN3QVgfG4utqhvOmmkoaQ43Dnxq76?usp=sharing" target="_blank" rel="noopener noreferrer">Drive ↗</a>
+        <button type="button" id="btnSubirFotoAlpro" class="mcat-btn-primary" title="Subir foto a esta carpeta">＋ Subir</button>
         <button type="button" id="btnCerrarCatalogoFotos" title="Cerrar">✕</button>
+      </div>
+    </div>
+    <div class="mcat-toolbar">
+      <div class="mcat-search-wrap">
+        <svg class="mcat-search-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="mcatSearch" placeholder="Buscar producto o nombre de foto…" autocomplete="off" />
       </div>
     </div>
     <div id="mcatFoldersBar" class="mcat-folders" role="tablist" aria-label="Carpetas de fotos"></div>
     <div id="cuerpoCatalogoFotosAlpro">
-      <iframe id="iframeCatalogoDrive" title="Fotos ALPROMEH" src="about:blank" allowfullscreen></iframe>
+      <div id="mcatStatus" class="mcat-status">Cargando fotos…</div>
+      <div id="mcatGrid" class="mcat-grid" style="display:none;"></div>
     </div>
-    <div class="mcat-foot">Las carpetas se abren aquí. Si una foto se abre en Drive al tocarla, es limitación de Google; usá <b>Drive ↗</b> para descargar.</div>
+    <div class="mcat-foot">Clic en una foto → se abre en Drive para verla o descargarla. Subí a la carpeta activa.</div>
+  </div>
+  <input type="file" id="mcatFileInput" accept="image/*" multiple style="display:none;" />
+</div>
+<!-- Lightbox foto -->
+<div id="mcatLightbox" aria-hidden="true">
+  <div class="mcat-lb-inner">
+    <img id="mcatLbImg" alt="Vista ampliada" />
+    <div id="mcatLbName" style="color:#e2e8f0;font-size:0.85rem;font-weight:600;text-align:center;max-width:90%;word-break:break-word;"></div>
+    <div class="mcat-lb-actions">
+      <a id="mcatLbDownload" href="#" download class="mcat-btn-primary">⬇ Descargar</a>
+      <button type="button" id="mcatLbClose" class="mcat-btn-ghost">Cerrar</button>
+    </div>
   </div>
 </div>
 <style>
-/* Modal catálogo */
 #modalCatalogoFotosAlpro {
   display: none;
   position: fixed !important;
@@ -14888,7 +14906,7 @@ document.addEventListener('DOMContentLoaded', () => {
   margin: 0 !important;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.28s ease, background 0.28s ease, backdrop-filter 0.28s ease;
+  transition: opacity 0.28s ease, background 0.28s ease;
 }
 #modalCatalogoFotosAlpro.mfe-open {
   display: flex !important;
@@ -14903,14 +14921,12 @@ document.addEventListener('DOMContentLoaded', () => {
   opacity: 0;
   pointer-events: none;
   background: rgba(15, 23, 42, 0);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
 }
 #cardCatalogoFotosAlpro {
   background: #fff;
   color: #0f172a;
   width: min(980px, 96vw);
-  height: min(88vh, 820px);
+  height: min(90vh, 860px);
   border-radius: 18px;
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
   display: flex;
@@ -14933,85 +14949,154 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: transform 0.24s ease, opacity 0.22s ease;
 }
 #modalCatalogoFotosAlpro .mcat-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px 14px;
-  border-bottom: 1px solid #e2e8f0;
-  flex-shrink: 0;
-  background: #f8fafc;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 14px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; background: #f8fafc;
 }
 #modalCatalogoFotosAlpro .mcat-titles { min-width: 0; }
 #tituloCatalogoFotos { font-weight: 800; font-size: 1.02rem; }
 #modalCatalogoFotosAlpro .mcat-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
 #modalCatalogoFotosAlpro .mcat-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-#btnAbrirDriveFotosTab {
-  text-decoration: none; border: none; background: var(--primary, #2563eb); color: #fff;
-  font-weight: 700; font-size: 0.78rem; padding: 8px 12px; border-radius: 10px;
-  cursor: pointer; white-space: nowrap; font-family: inherit; display: inline-flex; align-items: center;
+.mcat-btn-primary {
+  border: none; background: var(--primary, #2563eb); color: #fff; font-weight: 700;
+  font-size: 0.8rem; padding: 8px 12px; border-radius: 10px; cursor: pointer;
+  font-family: inherit; white-space: nowrap;
+}
+.mcat-btn-primary:hover { filter: brightness(1.06); }
+.mcat-btn-primary:disabled { opacity: 0.55; cursor: wait; }
+.mcat-btn-ghost {
+  border: 1px solid #cbd5e1; background: #fff; color: #334155; font-weight: 700;
+  font-size: 0.8rem; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-family: inherit;
 }
 #btnCerrarCatalogoFotos {
   border: 1px solid #cbd5e1; background: #fff; color: #334155;
   width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; line-height: 1;
 }
-/* Barra de carpetas */
+.mcat-toolbar { padding: 10px 12px 0; flex-shrink: 0; background: #fff; }
+.mcat-search-wrap {
+  position: relative; display: flex; align-items: center;
+}
+.mcat-search-ico {
+  position: absolute; left: 12px; color: #94a3b8; pointer-events: none;
+}
+#mcatSearch {
+  width: 100%; box-sizing: border-box;
+  border: 1.5px solid #e2e8f0; border-radius: 12px;
+  padding: 10px 12px 10px 38px; font-size: 0.9rem; font-family: inherit;
+  background: #f8fafc; color: #0f172a; outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+#mcatSearch:focus {
+  border-color: var(--primary, #2563eb);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #2563eb) 20%, transparent);
+  background: #fff;
+}
 .mcat-folders {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 10px 12px;
-  background: #f1f5f9;
-  border-bottom: 1px solid #e2e8f0;
-  flex-shrink: 0;
-  max-height: 88px;
-  overflow-y: auto;
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px;
+  background: #fff; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+  max-height: 88px; overflow-y: auto;
 }
 .mcat-chip {
-  border: 1px solid #cbd5e1;
-  background: #fff;
-  color: #334155;
-  font-family: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+  border: 1px solid #cbd5e1; background: #fff; color: #334155;
+  font-family: inherit; font-size: 0.72rem; font-weight: 700;
+  padding: 6px 10px; border-radius: 999px; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   white-space: nowrap;
 }
 .mcat-chip:hover { border-color: var(--primary, #2563eb); color: var(--primary, #2563eb); }
 .mcat-chip.active {
-  background: var(--primary, #2563eb);
-  border-color: var(--primary, #2563eb);
-  color: #fff;
+  background: var(--primary, #2563eb); border-color: var(--primary, #2563eb); color: #fff;
 }
-.mcat-chip:active { transform: scale(0.97); }
 #cuerpoCatalogoFotosAlpro {
-  flex: 1; min-height: 0; display: flex; flex-direction: column; background: #f1f5f9;
+  flex: 1; min-height: 0; overflow: auto; background: #f8fafc; position: relative;
 }
-#iframeCatalogoDrive {
-  flex: 1; width: 100%; border: 0; min-height: 280px; background: #f8fafc;
+.mcat-status {
+  padding: 40px 20px; text-align: center; color: #64748b; font-size: 0.92rem; line-height: 1.5;
+}
+.mcat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+  gap: 12px;
+  padding: 14px;
+}
+.mcat-card {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;
+  cursor: pointer; padding: 0; text-align: left; font-family: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  display: flex; flex-direction: column;
+}
+.mcat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.1);
+}
+.mcat-card-imgwrap {
+  width: 100%;
+  height: 148px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.mcat-card img {
+  max-width: 100%;
+  max-height: 148px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+.mcat-card-name {
+  padding: 8px 10px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  min-height: 3.2em;
 }
 #modalCatalogoFotosAlpro .mcat-foot {
   padding: 8px 14px; font-size: 0.72rem; color: #64748b;
   border-top: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0;
 }
+/* Lightbox */
+#mcatLightbox {
+  display: none; position: fixed; inset: 0; z-index: 2147483010;
+  background: rgba(15,23,42,0.88); align-items: center; justify-content: center;
+  padding: 16px; box-sizing: border-box;
+}
+#mcatLightbox.open { display: flex; }
+.mcat-lb-inner { max-width: min(920px, 96vw); max-height: 92vh; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#mcatLbImg { max-width: 100%; max-height: 75vh; border-radius: 12px; object-fit: contain; background: #0f172a; }
+.mcat-lb-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 [data-theme="dark"] #cardCatalogoFotosAlpro { background: #1e293b; color: #f1f5f9; border-color: #334155; }
 [data-theme="dark"] #modalCatalogoFotosAlpro .mcat-head,
 [data-theme="dark"] #modalCatalogoFotosAlpro .mcat-foot,
-[data-theme="dark"] .mcat-folders { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] .mcat-toolbar { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] #mcatSearch { background: #1e293b; border-color: #334155; color: #f1f5f9; }
 [data-theme="dark"] .mcat-chip { background: #1e293b; border-color: #475569; color: #e2e8f0; }
 [data-theme="dark"] .mcat-chip.active { background: var(--primary, #3b82f6); border-color: var(--primary, #3b82f6); color: #fff; }
-[data-theme="dark"] #btnCerrarCatalogoFotos { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+[data-theme="dark"] #cuerpoCatalogoFotosAlpro { background: #0f172a; }
+[data-theme="dark"] .mcat-card { background: #1e293b; border-color: #334155; }
+[data-theme="dark"] .mcat-card-imgwrap { background: #0f172a; }
+[data-theme="dark"] .mcat-card-name { color: #e2e8f0; }
+[data-theme="dark"] #btnCerrarCatalogoFotos, [data-theme="dark"] .mcat-btn-ghost { background: #1e293b; color: #e2e8f0; border-color: #475569; }
 </style>
 <script>
 (function () {
+  /* ═══════════════════════════════════════════════════════════
+     CONFIG: pegá aquí la URL de tu Web App de Apps Script
+     (Implementar → Nueva implementación → Tipo: aplicación web
+      Ejecutar como: Yo · Quién tiene acceso: Cualquiera)
+     ═══════════════════════════════════════════════════════════ */
+  var ALPRO_FOTOS_API = 'https://script.google.com/macros/s/AKfycbwN13GbAMyrXKkUuEoM9L9c_AYvI0gbRJUMATU0z7iY5Sc-DHCx2lQIsoHo_hLwoswy7w/exec';
+
   var ROOT_ID = '1jQpcN3QVgfG4utqhvOmmkoaQ43Dnxq76';
-  var FOTOS_URL = 'https://drive.google.com/drive/folders/' + ROOT_ID + '?usp=sharing';
-  // Subcarpetas (mismas del Drive compartido) — se abren DENTRO del modal
   var CARPETAS = [
-    { id: ROOT_ID, nombre: 'Todas' },
+    { id: ROOT_ID, nombre: 'Todas', recursive: true },
     { id: '1J6MS3tftcBH54equem9Ets-6aGcTI98y', nombre: 'Agujas' },
     { id: '1snxSP-_SWBHVUaAm4EN0Ntz4jZiFFLxL', nombre: 'Alimentación' },
     { id: '1t_N3uZjTJPDyzSCtD9h5Cs5p2fWSo09R', nombre: 'Aspiración' },
@@ -15021,11 +15106,20 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: '15dAla2kf9v0SSpEVd69ai1OulHOkxhfq', nombre: 'Muletas' },
     { id: '1J5oXvDmqPlKLH6ZLC8-9wsc8XWSrxSc9', nombre: 'Nuevos productos' }
   ];
+
   var carpetaActiva = ROOT_ID;
+  var listaActual = [];
   var cerrando = false;
 
-  function embedUrl(id) {
-    return 'https://drive.google.com/embeddedfolderview?id=' + id + '#grid';
+  function thumbUrl(id) { return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w600'; }
+  function viewUrl(id) { return 'https://drive.google.com/uc?export=view&id=' + id; }
+  function downloadUrl(id) { return 'https://drive.usercontent.google.com/download?id=' + id + '&export=download&confirm=t'; }
+
+  function setStatus(msg) {
+    var s = document.getElementById('mcatStatus');
+    var g = document.getElementById('mcatGrid');
+    if (s) { s.style.display = msg ? 'block' : 'none'; s.innerHTML = msg || ''; }
+    if (g && msg) g.style.display = 'none';
   }
 
   function pintarChips() {
@@ -15036,8 +15130,6 @@ document.addEventListener('DOMContentLoaded', () => {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'mcat-chip' + (c.id === carpetaActiva ? ' active' : '');
-      b.setAttribute('role', 'tab');
-      b.setAttribute('aria-selected', c.id === carpetaActiva ? 'true' : 'false');
       b.textContent = c.nombre;
       b.addEventListener('click', function (ev) {
         ev.preventDefault();
@@ -15048,13 +15140,199 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function renderGrid(files) {
+    var grid = document.getElementById('mcatGrid');
+    if (!grid) return;
+    var q = ((document.getElementById('mcatSearch') || {}).value || '').trim().toLowerCase();
+    var filtered = (files || []).filter(function (f) {
+      if (!q) return true;
+      return (f.name || '').toLowerCase().indexOf(q) !== -1;
+    });
+    grid.innerHTML = '';
+    if (!filtered.length) {
+      setStatus(q ? 'No hay fotos que coincidan con “' + q.replace(/</g,'') + '”.' : 'Esta carpeta no tiene fotos todavía. Usá <b>＋ Subir</b>.');
+      return;
+    }
+    setStatus('');
+    grid.style.display = 'grid';
+    filtered.forEach(function (f) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mcat-card';
+      btn.title = f.name || '';
+      var wrap = document.createElement('div');
+      wrap.className = 'mcat-card-imgwrap';
+      var img = document.createElement('img');
+      img.loading = 'lazy';
+      img.alt = f.name || '';
+      img.src = thumbUrl(f.id);
+      img.onerror = function () {
+        if (this.dataset.fallback) return;
+        this.dataset.fallback = '1';
+        this.src = viewUrl(f.id);
+      };
+      wrap.appendChild(img);
+      var name = document.createElement('div');
+      name.className = 'mcat-card-name';
+      name.textContent = f.name || f.id;
+      btn.appendChild(wrap);
+      btn.appendChild(name);
+      btn.addEventListener('click', function () {
+        window.open('https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/view', '_blank', 'noopener,noreferrer');
+      });
+      grid.appendChild(btn);
+    });
+  }
+
+  function openLightbox(f) {
+    var lb = document.getElementById('mcatLightbox');
+    var im = document.getElementById('mcatLbImg');
+    var dl = document.getElementById('mcatLbDownload');
+    if (!lb || !im || !dl) return;
+    im.src = viewUrl(f.id);
+    im.alt = f.name || '';
+    var lbName = document.getElementById('mcatLbName');
+    if (lbName) lbName.textContent = f.name || '';
+    var fname = f.name || 'foto-alpromeh.jpg';
+    dl.href = downloadUrl(f.id);
+    dl.setAttribute('download', fname);
+    dl.title = 'Descargar ' + fname;
+    dl.onclick = function (ev) {
+      // Google a veces bloquea download directo: abrir URL de descarga en pestaña
+      ev.preventDefault();
+      var a = document.createElement('a');
+      a.href = downloadUrl(f.id);
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+  }
+  function closeLightbox() {
+    var lb = document.getElementById('mcatLightbox');
+    if (lb) { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); }
+  }
+
+  function apiUrl(params) {
+    var base = (ALPRO_FOTOS_API || '').replace(/\/$/, '');
+    if (!base) return '';
+    var q = Object.keys(params || {}).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }).join('&');
+    return base + (q ? '?' + q : '');
+  }
+
   function cargarCarpeta(id) {
     carpetaActiva = id || ROOT_ID;
-    var iframe = document.getElementById('iframeCatalogoDrive');
-    if (iframe) iframe.src = embedUrl(carpetaActiva);
-    var driveLink = document.getElementById('btnAbrirDriveFotosTab');
-    if (driveLink) driveLink.href = 'https://drive.google.com/drive/folders/' + carpetaActiva + '?usp=sharing';
     pintarChips();
+    var meta = CARPETAS.find(function (c) { return c.id === carpetaActiva; }) || { id: carpetaActiva };
+    listaActual = [];
+    if (!ALPRO_FOTOS_API) {
+      setStatus(
+        'Falta conectar el servidor de fotos.<br><br>' +
+        'En Apps Script creá una Web App con el código de listado/subida<br>' +
+        'y pegá la URL en <code>ALPRO_FOTOS_API</code> dentro del HTML.'
+      );
+      return;
+    }
+    setStatus('Cargando fotos…');
+    var url = apiUrl({
+      action: 'list',
+      folderId: carpetaActiva,
+      recursive: meta.recursive ? '1' : '0'
+    });
+    fetch(url, { method: 'GET' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && data.error) throw new Error(data.error);
+        listaActual = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
+        renderGrid(listaActual);
+      })
+      .catch(function (err) {
+        console.error(err);
+        setStatus('No se pudieron cargar las fotos. Revisá la Web App y que la carpeta esté compartida.<br><small>' + (err.message || '') + '</small>');
+      });
+  }
+
+  function compressImage(file, maxW, quality) {
+    return new Promise(function (resolve, reject) {
+      if (!file.type || file.type.indexOf('image/') !== 0) {
+        reject(new Error('Solo imágenes'));
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          var w = img.width, h = img.height;
+          if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+          var canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          var dataUrl = canvas.toDataURL('image/jpeg', quality);
+          var base64 = dataUrl.split(',')[1];
+          resolve({ base64: base64, mimeType: 'image/jpeg', name: (file.name || 'foto').replace(/\.\w+$/, '') + '.jpg' });
+        };
+        img.onerror = reject;
+        img.src = reader.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function subirArchivos(fileList) {
+    if (!ALPRO_FOTOS_API) {
+      alert('Primero configurá ALPRO_FOTOS_API con la URL de tu Web App de Apps Script.');
+      return;
+    }
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+    var btn = document.getElementById('btnSubirFotoAlpro');
+    if (btn) { btn.disabled = true; btn.textContent = 'Subiendo…'; }
+    setStatus('Subiendo ' + files.length + ' foto(s) a esta carpeta…');
+
+    var folderId = carpetaActiva === ROOT_ID ? ROOT_ID : carpetaActiva;
+    // Si está en "Todas", subir a la raíz (fotos sueltas)
+    var chain = Promise.resolve();
+    var ok = 0, fail = 0;
+    files.forEach(function (file) {
+      chain = chain.then(function () {
+        return compressImage(file, 1600, 0.85).then(function (payload) {
+          return fetch(ALPRO_FOTOS_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'upload',
+              folderId: folderId,
+              filename: payload.name,
+              mimeType: payload.mimeType,
+              data: payload.base64
+            })
+          }).then(function (r) { return r.json(); }).then(function (res) {
+            if (res && res.error) throw new Error(res.error);
+            ok++;
+          });
+        }).catch(function (e) {
+          console.error(e);
+          fail++;
+        });
+      });
+    });
+    chain.then(function () {
+      if (btn) { btn.disabled = false; btn.textContent = '＋ Subir'; }
+      cargarCarpeta(carpetaActiva);
+      if (typeof window.notify === 'function') {
+        window.notify(ok ? ('Listo: ' + ok + ' foto(s) subida(s)' + (fail ? ', ' + fail + ' fallaron' : '')) : 'No se pudo subir', ok ? '✅' : '⚠️', 4000);
+      } else if (ok) {
+        alert('Se subieron ' + ok + ' foto(s).');
+      }
+    });
   }
 
   window.cerrarMenuAccesosAlpro = function () {
@@ -15073,66 +15351,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.abrirCatalogoFotosAlpro = function () {
     var m = document.getElementById('modalCatalogoFotosAlpro');
-    if (!m) {
-      window.open(FOTOS_URL, '_blank', 'noopener,noreferrer');
-      return;
-    }
+    if (!m) return;
     try {
       var tienda = document.getElementById('modalTiendaAlpro');
       if (tienda && tienda.style.display && tienda.style.display !== 'none') {
         tienda.style.display = 'none';
         tienda.style.backgroundColor = 'rgba(15,23,42,0)';
-        var cuerpo = document.getElementById('cuerpoTienda');
-        if (cuerpo) {
-          cuerpo.classList.remove('tienda-unfold', 'tienda-fold');
-          cuerpo.style.transform = '';
-          cuerpo.style.opacity = '';
-        }
       }
     } catch (e) {}
-    try { if (window.cerrarMenuAccesosAlpro) window.cerrarMenuAccesosAlpro(); } catch (e2) {}
-
-    try {
-      if (m.parentNode !== document.body) document.body.appendChild(m);
-    } catch (eApp) {}
-
+    try { window.cerrarMenuAccesosAlpro(); } catch (e2) {}
+    try { if (m.parentNode !== document.body) document.body.appendChild(m); } catch (e3) {}
     cerrando = false;
     m.classList.remove('mfe-closing');
-    // mostrar primero (display) y luego animar
-    m.style.cssText = [
-      'display:flex',
-      'position:fixed',
-      'top:0','left:0','right:0','bottom:0',
-      'width:100vw','height:100vh',
-      'z-index:2147483000',
-      'align-items:center',
-      'justify-content:center',
-      'padding:12px',
-      'box-sizing:border-box',
-      'margin:0',
-      'pointer-events:auto',
-      'visibility:visible'
-    ].join(';');
+    m.style.cssText = 'display:flex;position:fixed;inset:0;width:100vw;height:100vh;z-index:2147483000;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;margin:0;pointer-events:auto;visibility:visible';
     void m.offsetWidth;
     m.classList.add('mfe-open');
     m.setAttribute('aria-hidden', 'false');
-    cargarCarpeta(carpetaActiva || ROOT_ID);
     try {
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-    } catch (e3) {}
+    } catch (e4) {}
+    cargarCarpeta(carpetaActiva);
   };
 
   window.cerrarCatalogoFotosAlpro = function () {
     var m = document.getElementById('modalCatalogoFotosAlpro');
     if (!m || cerrando) return;
     cerrando = true;
+    closeLightbox();
     m.classList.remove('mfe-open');
     m.classList.add('mfe-closing');
     try {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      document.body.style.touchAction = '';
     } catch (e) {}
     setTimeout(function () {
       m.classList.remove('mfe-closing');
@@ -15160,7 +15411,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-
     var fotos = document.getElementById('macItemFotos');
     if (fotos && !fotos._alproFotosBound) {
       fotos._alproFotosBound = true;
@@ -15170,24 +15420,48 @@ document.addEventListener('DOMContentLoaded', () => {
         window.abrirCatalogoFotosAlpro();
       });
     }
-
     var btnX = document.getElementById('btnCerrarCatalogoFotos');
     if (btnX && !btnX._bound) {
       btnX._bound = true;
       btnX.addEventListener('click', function (ev) {
         ev.preventDefault();
-        ev.stopPropagation();
         window.cerrarCatalogoFotosAlpro();
       });
     }
     var m = document.getElementById('modalCatalogoFotosAlpro');
     if (m && !m._bound) {
       m._bound = true;
-      m.addEventListener('click', function (ev) {
-        if (ev.target === m) window.cerrarCatalogoFotosAlpro();
+      // Solo se cierra con la X (o Escape). Clic afuera no cierra:
+      // evita perder la búsqueda o la carpeta por un clic accidental.
+    }
+    var search = document.getElementById('mcatSearch');
+    if (search && !search._bound) {
+      search._bound = true;
+      search.addEventListener('input', function () { renderGrid(listaActual); });
+    }
+    var btnUp = document.getElementById('btnSubirFotoAlpro');
+    var fileIn = document.getElementById('mcatFileInput');
+    if (btnUp && fileIn && !btnUp._bound) {
+      btnUp._bound = true;
+      btnUp.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        fileIn.value = '';
+        fileIn.click();
+      });
+      fileIn.addEventListener('change', function () {
+        if (fileIn.files && fileIn.files.length) subirArchivos(fileIn.files);
       });
     }
-
+    var lbClose = document.getElementById('mcatLbClose');
+    var lb = document.getElementById('mcatLightbox');
+    if (lbClose && !lbClose._bound) {
+      lbClose._bound = true;
+      lbClose.addEventListener('click', closeLightbox);
+    }
+    if (lb && !lb._bound) {
+      lb._bound = true;
+      lb.addEventListener('click', function (ev) { if (ev.target === lb) closeLightbox(); });
+    }
     var coins = document.getElementById('contadorMonedasCompu');
     if (coins && !coins._alproCoinsBound) {
       coins._alproCoinsBound = true;
@@ -15199,7 +15473,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof window.toggleTiendaAlpro === 'function') window.toggleTiendaAlpro();
       });
     }
-
     if (!document._alproMenuOutsideBound) {
       document._alproMenuOutsideBound = true;
       document.addEventListener('click', function (ev) {
@@ -15211,18 +15484,15 @@ document.addEventListener('DOMContentLoaded', () => {
         window.cerrarMenuAccesosAlpro();
       });
     }
-
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
+      var lbEl = document.getElementById('mcatLightbox');
+      if (lbEl && lbEl.classList.contains('open')) { closeLightbox(); return; }
       var menu = document.getElementById('menuAccesosAlpro');
-      if (menu && menu.classList.contains('open')) {
-        window.cerrarMenuAccesosAlpro();
-        return;
-      }
+      if (menu && menu.classList.contains('open')) { window.cerrarMenuAccesosAlpro(); return; }
       var mod = document.getElementById('modalCatalogoFotosAlpro');
       if (mod && mod.classList.contains('mfe-open')) window.cerrarCatalogoFotosAlpro();
     });
-
     pintarChips();
   }
 
