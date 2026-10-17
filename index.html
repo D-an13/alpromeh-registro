@@ -12796,12 +12796,11 @@ function sumarAlprocoinsLocales(monedasGanadas) {
     </span>
     <span class="mac-label">Registros sanitarios</span>
   </button>
-  <button type="button" class="mac-item disabled" data-accion="guatecompras" role="menuitem" disabled>
+  <button type="button" class="mac-item" data-accion="guatecompras" role="menuitem" id="macItemGuatecompras" onclick="event.preventDefault();event.stopPropagation();if(typeof window.abrirCatalogoGuatecomprasAlpro==='function'){window.abrirCatalogoGuatecomprasAlpro();}">
     <span class="mac-ico mac-ico-guate" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
     </span>
     <span class="mac-label">Guatecompras</span>
-    <span class="mac-badge">Pronto</span>
   </button>
   <button type="button" class="mac-item disabled" data-accion="facturacion" role="menuitem" disabled>
     <span class="mac-ico mac-ico-fact" aria-hidden="true">
@@ -15922,6 +15921,602 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireSan);
   else wireSan();
+})();
+</script>
+
+<!-- 📑 GUATECOMPRAS ALPROMEH -->
+<div id="modalCatalogoGuateAlpro" aria-hidden="true">
+  <div id="cardCatalogoGuateAlpro" role="dialog" aria-modal="true" aria-labelledby="tituloCatalogoGuate">
+    <div class="mgua-head">
+      <div class="mgua-titles">
+        <div id="tituloCatalogoGuate">📑 Documentos Guatecompras</div>
+        <div class="mgua-sub">Legales en PDF y cartas Word editables</div>
+      </div>
+      <div class="mgua-actions">
+        <button type="button" id="btnSubirGuateAlpro" class="mgua-btn-primary" title="Subir archivo">＋ Subir</button>
+        <button type="button" id="btnCerrarCatalogoGuate" title="Cerrar">✕</button>
+      </div>
+    </div>
+    <div id="mguaReminders" class="mgua-reminders" aria-live="polite"></div>
+    <div class="mgua-tabs" role="tablist">
+      <button type="button" class="mgua-tab active" data-tab="pdf" role="tab" aria-selected="true">📄 PDF legales</button>
+      <button type="button" class="mgua-tab" data-tab="word" role="tab" aria-selected="false">📝 Word (cartas)</button>
+    </div>
+    <div class="mgua-toolbar">
+      <div class="mgua-search-wrap">
+        <svg class="mgua-search-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="mguaSearch" placeholder="Buscar documento…" autocomplete="off" />
+      </div>
+    </div>
+    <div id="cuerpoCatalogoGuateAlpro">
+      <div id="mguaStatus" class="mgua-status">Cargando documentos…</div>
+      <div id="mguaList" class="mgua-list" style="display:none;"></div>
+    </div>
+    <div class="mgua-foot">Clic → abrir en Drive. RTU y Solvencia Fiscal se renuevan cada mes; Solvencia Patronal y Declaración Jurada cada año.</div>
+  </div>
+  <input type="file" id="mguaFileInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple style="display:none;" />
+</div>
+<style>
+#modalCatalogoGuateAlpro {
+  display: none;
+  position: fixed !important;
+  inset: 0 !important; width: 100vw !important; height: 100vh !important;
+  z-index: 2147483000 !important;
+  background: rgba(15, 23, 42, 0);
+  align-items: center; justify-content: center;
+  padding: 12px; box-sizing: border-box; margin: 0 !important;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.28s ease, background 0.28s ease;
+}
+#modalCatalogoGuateAlpro.mfe-open {
+  display: flex !important; opacity: 1; pointer-events: auto;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+#modalCatalogoGuateAlpro.mfe-closing {
+  display: flex !important; opacity: 0; pointer-events: none; background: rgba(15, 23, 42, 0);
+}
+#cardCatalogoGuateAlpro {
+  background: #fff; color: #0f172a;
+  width: min(760px, 96vw); height: min(90vh, 820px);
+  border-radius: 18px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid #e2e8f0; position: relative; z-index: 1;
+  transform: translateY(28px) scale(0.94); opacity: 0;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+#modalCatalogoGuateAlpro.mfe-open #cardCatalogoGuateAlpro { transform: translateY(0) scale(1); opacity: 1; }
+#modalCatalogoGuateAlpro.mfe-closing #cardCatalogoGuateAlpro {
+  transform: translateY(16px) scale(0.96); opacity: 0;
+  transition: transform 0.24s ease, opacity 0.22s ease;
+}
+.mgua-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 14px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; background: #f8fafc;
+}
+.mgua-titles { min-width: 0; }
+#tituloCatalogoGuate { font-weight: 800; font-size: 1.02rem; }
+.mgua-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+.mgua-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.mgua-btn-primary {
+  border: none; background: var(--primary, #2563eb); color: #fff; font-weight: 700;
+  font-size: 0.8rem; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-family: inherit;
+}
+.mgua-btn-primary:disabled { opacity: 0.55; cursor: wait; }
+#btnCerrarCatalogoGuate {
+  border: 1px solid #cbd5e1; background: #fff; color: #334155;
+  width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1.05rem;
+}
+.mgua-reminders {
+  display: none;
+  padding: 6px 12px 6px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.mgua-reminders.has-items { display: block; }
+.mgua-rem-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.mgua-rem-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 8px 4px 10px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  max-width: 100%;
+  min-width: 0;
+  cursor: default;
+}
+.mgua-rem-card.ok {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+.mgua-rem-card.warn {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+.mgua-rem-card.missing {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+.mgua-rem-label {
+  font-size: 0.72rem; font-weight: 700; color: #0f172a;
+  white-space: nowrap;
+}
+.mgua-rem-badge {
+  flex-shrink: 0;
+  font-size: 0.58rem; font-weight: 800;
+  padding: 2px 6px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.02em;
+}
+.mgua-rem-badge.ok { background: #bbf7d0; color: #166534; }
+.mgua-rem-badge.warn { background: #fde68a; color: #92400e; }
+.mgua-rem-badge.missing { background: #fecaca; color: #991b1b; }
+.mgua-rem-detail { display: none; }
+.mgua-rem-title, .mgua-rem-tip { display: none; }
+.mgua-rem-card[title] { cursor: help; }
+.mgua-tabs {
+  display: flex; gap: 6px; padding: 10px 12px 0; background: #fff; flex-shrink: 0;
+}
+.mgua-tab {
+  flex: 1; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569;
+  font-family: inherit; font-size: 0.8rem; font-weight: 700;
+  padding: 9px 10px; border-radius: 10px 10px 0 0; cursor: pointer;
+  border-bottom: none;
+}
+.mgua-tab.active {
+  background: #fff; color: var(--primary, #1e3a8a);
+  border-color: #e2e8f0; box-shadow: 0 -1px 0 #fff inset;
+  position: relative; z-index: 1;
+}
+.mgua-toolbar {
+  padding: 10px 12px; background: #fff; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+}
+.mgua-search-wrap { position: relative; display: flex; align-items: center; }
+.mgua-search-ico { position: absolute; left: 12px; color: #94a3b8; pointer-events: none; }
+#mguaSearch {
+  width: 100%; box-sizing: border-box;
+  border: 1.5px solid #e2e8f0; border-radius: 12px;
+  padding: 10px 12px 10px 38px; font-size: 0.9rem; font-family: inherit;
+  background: #f8fafc; color: #0f172a; outline: none;
+}
+#mguaSearch:focus {
+  border-color: var(--primary, #2563eb);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #2563eb) 20%, transparent);
+  background: #fff;
+}
+#cuerpoCatalogoGuateAlpro { flex: 1; min-height: 0; overflow: auto; background: #f8fafc; }
+.mgua-status { padding: 40px 20px; text-align: center; color: #64748b; font-size: 0.92rem; line-height: 1.5; }
+.mgua-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px 16px; }
+.mgua-row {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  font-family: inherit; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+  padding: 12px 14px; cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.mgua-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15,23,42,0.08);
+}
+.mgua-ico {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.mgua-ico.pdf { background: #fef2f2; color: #dc2626; }
+.mgua-ico.word { background: #eff6ff; color: #2563eb; }
+.mgua-ico svg { width: 22px; height: 22px; }
+.mgua-meta { min-width: 0; flex: 1; }
+.mgua-name { font-size: 0.88rem; font-weight: 700; color: #0f172a; word-break: break-word; line-height: 1.3; }
+.mgua-hint { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+.mgua-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 999px;
+  font-size: 0.65rem; font-weight: 700; vertical-align: middle;
+}
+.mgua-tag.mensual { background: #ffedd5; color: #9a3412; }
+.mgua-tag.anual { background: #e0e7ff; color: #3730a3; }
+.mgua-foot {
+  padding: 8px 14px; font-size: 0.72rem; color: #64748b;
+  border-top: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0;
+}
+[data-theme="dark"] #cardCatalogoGuateAlpro { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+[data-theme="dark"] .mgua-head, [data-theme="dark"] .mgua-foot, [data-theme="dark"] .mgua-toolbar,
+[data-theme="dark"] .mgua-tabs { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] .mgua-tab { background: #1e293b; border-color: #334155; color: #94a3b8; }
+[data-theme="dark"] .mgua-tab.active { background: #1e293b; color: #93c5fd; }
+[data-theme="dark"] #mguaSearch { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+[data-theme="dark"] #cuerpoCatalogoGuateAlpro { background: #0f172a; }
+[data-theme="dark"] .mgua-row { background: #1e293b; border-color: #334155; }
+[data-theme="dark"] .mgua-name { color: #f1f5f9; }
+[data-theme="dark"] .mgua-reminders { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] .mgua-rem-card { background: #1e293b; border-color: #334155; }
+[data-theme="dark"] .mgua-rem-card.ok { background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.35); }
+[data-theme="dark"] .mgua-rem-card.warn { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.35); }
+[data-theme="dark"] .mgua-rem-card.missing { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.35); }
+[data-theme="dark"] .mgua-rem-label { color: #f1f5f9; }
+[data-theme="dark"] #btnCerrarCatalogoGuate { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+[data-theme="dark"] .mgua-ico.pdf { background: rgba(220,38,38,0.2); color: #fca5a5; }
+[data-theme="dark"] .mgua-ico.word { background: rgba(37,99,235,0.2); color: #93c5fd; }
+</style>
+<script>
+(function () {
+  var ALPRO_DOCS_API = 'https://script.google.com/macros/s/AKfycbwN13GbAMyrXKkUuEoM9L9c_AYvI0gbRJUMATU0z7iY5Sc-DHCx2lQIsoHo_hLwoswy7w/exec';
+  var GUATE_FOLDER_ID = '1pY1A3KMNVfKuYuU4qMUi5TNFLVz5sRtS';
+
+  var listaAll = [];
+  var tabActiva = 'pdf';
+  var cerrando = false;
+
+  var MESES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+
+  function mesActual() {
+    return MESES[new Date().getMonth()];
+  }
+  function anioActual() {
+    return String(new Date().getFullYear());
+  }
+
+  function isPdf(f) {
+    var m = (f.mimeType || '').toLowerCase();
+    var n = (f.name || '').toLowerCase();
+    return m.indexOf('pdf') !== -1 || n.endsWith('.pdf');
+  }
+  function isWord(f) {
+    var m = (f.mimeType || '').toLowerCase();
+    var n = (f.name || '').toLowerCase();
+    return m.indexOf('word') !== -1 || m.indexOf('officedocument.word') !== -1 ||
+      n.endsWith('.doc') || n.endsWith('.docx');
+  }
+
+  function setStatus(msg) {
+    var st = document.getElementById('mguaStatus');
+    var list = document.getElementById('mguaList');
+    if (st) { st.style.display = msg ? 'block' : 'none'; st.innerHTML = msg || ''; }
+    if (list && msg) list.style.display = 'none';
+  }
+
+  function clasificarDoc(name) {
+    var u = (name || '').toUpperCase();
+    if (u.indexOf('RTU') !== -1) return 'rtu';
+    if (u.indexOf('SOLVENCIA FISCAL') !== -1) return 'solvencia_fiscal';
+    if (u.indexOf('SOLVENCIA PATRONAL') !== -1) return 'solvencia_patronal';
+    if (u.indexOf('DECLARACION JURADA') !== -1 || u.indexOf('DECLARACIÓN JURADA') !== -1) return 'declaracion_jurada';
+    return null;
+  }
+
+  function docTieneMesActual(name) {
+    var u = (name || '').toUpperCase();
+    return u.indexOf(mesActual()) !== -1;
+  }
+  function docTieneAnioActual(name) {
+    var u = (name || '').toUpperCase();
+    return u.indexOf(anioActual()) !== -1;
+  }
+
+  function actualizarRecordatorios(files) {
+    var box = document.getElementById('mguaReminders');
+    if (!box) return;
+    var pdfs = (files || []).filter(isPdf);
+    var keys = {
+      rtu: null,
+      solvencia_fiscal: null,
+      solvencia_patronal: null,
+      declaracion_jurada: null
+    };
+    pdfs.forEach(function (f) {
+      var k = clasificarDoc(f.name);
+      if (!k) return;
+      if (!keys[k] || (f.modified || 0) > (keys[k].modified || 0)) keys[k] = f;
+    });
+
+    var defs = [
+      { key: 'rtu', label: 'RTU', tipo: 'mensual' },
+      { key: 'solvencia_fiscal', label: 'Solv. Fiscal', tipo: 'mensual' },
+      { key: 'solvencia_patronal', label: 'Solv. Patronal', tipo: 'anual' },
+      { key: 'declaracion_jurada', label: 'Decl. Jurada', tipo: 'anual' }
+    ];
+
+    var mes = mesActual();
+    var anio = anioActual();
+    box.innerHTML = '<div class="mgua-rem-grid"></div>';
+    var grid = box.querySelector('.mgua-rem-grid');
+
+    defs.forEach(function (d) {
+      var f = keys[d.key];
+      var estado, badge, tip;
+      if (!f) {
+        estado = 'missing';
+        badge = 'Falta';
+        tip = d.tipo === 'mensual'
+          ? 'Falta. Subí el de ' + mes + ' ' + anio + '.'
+          : 'Falta. Subí el de ' + anio + '.';
+      } else if (d.tipo === 'mensual') {
+        if (docTieneMesActual(f.name)) {
+          estado = 'ok'; badge = 'Al día'; tip = f.name;
+        } else {
+          estado = 'warn'; badge = 'Renovar';
+          tip = 'Actual: ' + f.name + '. Subí ' + mes + ' ' + anio + ' (el anterior no se borra).';
+        }
+      } else {
+        if (docTieneAnioActual(f.name)) {
+          estado = 'ok'; badge = 'Al día'; tip = f.name;
+        } else {
+          estado = 'warn'; badge = 'Renovar';
+          tip = 'Actual: ' + f.name + '. Subí el de ' + anio + '.';
+        }
+      }
+      var card = document.createElement('div');
+      card.className = 'mgua-rem-card ' + estado;
+      card.title = tip;
+      card.innerHTML =
+        '<span class="mgua-rem-label"></span>' +
+        '<span class="mgua-rem-badge ' + estado + '">' + badge + '</span>';
+      card.querySelector('.mgua-rem-label').textContent = d.label;
+      grid.appendChild(card);
+    });
+    box.classList.add('has-items');
+  }
+
+  function tagHtml(name) {
+    var k = clasificarDoc(name);
+    if (k === 'rtu' || k === 'solvencia_fiscal') return '<span class="mgua-tag mensual">Mensual</span>';
+    if (k === 'solvencia_patronal' || k === 'declaracion_jurada') return '<span class="mgua-tag anual">Anual</span>';
+    return '';
+  }
+
+  function renderList() {
+    var list = document.getElementById('mguaList');
+    if (!list) return;
+    var q = ((document.getElementById('mguaSearch') || {}).value || '').trim().toLowerCase();
+    var filtered = (listaAll || []).filter(function (f) {
+      if (tabActiva === 'pdf' && !isPdf(f)) return false;
+      if (tabActiva === 'word' && !isWord(f)) return false;
+      if (q && (f.name || '').toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+    list.innerHTML = '';
+    if (!filtered.length) {
+      setStatus(q
+        ? 'No hay documentos que coincidan con “' + q.replace(/</g,'') + '”.'
+        : (tabActiva === 'pdf'
+          ? 'No hay PDFs en esta carpeta. Usá <b>＋ Subir</b>.'
+          : 'No hay documentos Word. Usá <b>＋ Subir</b>.'));
+      return;
+    }
+    setStatus('');
+    list.style.display = 'flex';
+    filtered.forEach(function (f) {
+      var word = isWord(f);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mgua-row';
+      btn.title = f.name || '';
+      btn.innerHTML =
+        '<span class="mgua-ico ' + (word ? 'word' : 'pdf') + '" aria-hidden="true">' +
+          (word
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>') +
+        '</span>' +
+        '<span class="mgua-meta">' +
+          '<div class="mgua-name"></div>' +
+          '<div class="mgua-hint">' + (word ? 'Word · editable en Drive' : 'PDF · ver o descargar en Drive') + '</div>' +
+        '</span>';
+      var nameEl = btn.querySelector('.mgua-name');
+      nameEl.textContent = f.name || f.id;
+      if (!word) {
+        var t = tagHtml(f.name);
+        if (t) nameEl.insertAdjacentHTML('beforeend', t);
+      }
+      btn.addEventListener('click', function () {
+        window.open('https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/view', '_blank', 'noopener,noreferrer');
+      });
+      list.appendChild(btn);
+    });
+  }
+
+  function apiUrl(params) {
+    var base = (ALPRO_DOCS_API || '').replace(/\/$/, '');
+    if (!base) return '';
+    var q = Object.keys(params || {}).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }).join('&');
+    return base + (q ? '?' + q : '');
+  }
+
+  function cargarDocs() {
+    listaAll = [];
+    if (!ALPRO_DOCS_API) {
+      setStatus('Falta la URL de la Web App.');
+      return;
+    }
+    setStatus('Cargando documentos…');
+    // Sin filtro mime: traemos todo y separamos en cliente (PDF / Word)
+    var url = apiUrl({
+      action: 'list',
+      folderId: GUATE_FOLDER_ID,
+      recursive: '0',
+      mime: ''
+    });
+    fetch(url, { method: 'GET' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && data.error) throw new Error(data.error);
+        listaAll = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
+        // Solo PDF y Word
+        listaAll = listaAll.filter(function (f) { return isPdf(f) || isWord(f); });
+        actualizarRecordatorios(listaAll);
+        renderList();
+      })
+      .catch(function (err) {
+        console.error(err);
+        setStatus('No se pudieron cargar los documentos.<br><small>' + (err.message || '') + '</small>');
+      });
+  }
+
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var dataUrl = reader.result || '';
+        var base64 = String(dataUrl).split(',')[1] || '';
+        resolve({
+          base64: base64,
+          mimeType: file.type || 'application/octet-stream',
+          name: file.name || ('doc_' + Date.now())
+        });
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function subirArchivos(fileList) {
+    if (!ALPRO_DOCS_API) {
+      alert('Falta la Web App de documentos.');
+      return;
+    }
+    var files = Array.prototype.slice.call(fileList || []);
+    if (!files.length) return;
+    var btn = document.getElementById('btnSubirGuateAlpro');
+    if (btn) { btn.disabled = true; btn.textContent = 'Subiendo…'; }
+    setStatus('Subiendo ' + files.length + ' archivo(s)…');
+    var chain = Promise.resolve();
+    var ok = 0, fail = 0;
+    files.forEach(function (file) {
+      chain = chain.then(function () {
+        return fileToBase64(file).then(function (payload) {
+          return fetch(ALPRO_DOCS_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'upload',
+              folderId: GUATE_FOLDER_ID,
+              filename: payload.name,
+              mimeType: payload.mimeType,
+              data: payload.base64
+            })
+          }).then(function (r) { return r.json(); }).then(function (res) {
+            if (res && res.error) throw new Error(res.error);
+            ok++;
+          });
+        }).catch(function (e) {
+          console.error(e);
+          fail++;
+        });
+      });
+    });
+    chain.then(function () {
+      if (btn) { btn.disabled = false; btn.textContent = '＋ Subir'; }
+      cargarDocs();
+      if (typeof window.notify === 'function') {
+        window.notify(ok ? ('Listo: ' + ok + ' archivo(s)' + (fail ? ', ' + fail + ' fallaron' : '')) : 'No se pudo subir', ok ? '✅' : '⚠️', 4000);
+      }
+    });
+  }
+
+  window.abrirCatalogoGuatecomprasAlpro = function () {
+    var m = document.getElementById('modalCatalogoGuateAlpro');
+    if (!m) return;
+    try {
+      if (typeof window.cerrarCatalogoFotosAlpro === 'function') window.cerrarCatalogoFotosAlpro();
+      if (typeof window.cerrarCatalogoSanitariosAlpro === 'function') window.cerrarCatalogoSanitariosAlpro();
+      if (typeof window.cerrarMenuAccesosAlpro === 'function') window.cerrarMenuAccesosAlpro();
+    } catch (e) {}
+    try { if (m.parentNode !== document.body) document.body.appendChild(m); } catch (e2) {}
+    cerrando = false;
+    m.classList.remove('mfe-closing');
+    m.style.cssText = 'display:flex;position:fixed;inset:0;width:100vw;height:100vh;z-index:2147483000;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;margin:0;pointer-events:auto;visibility:visible';
+    void m.offsetWidth;
+    m.classList.add('mfe-open');
+    m.setAttribute('aria-hidden', 'false');
+    try {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } catch (e3) {}
+    cargarDocs();
+  };
+
+  window.cerrarCatalogoGuatecomprasAlpro = function () {
+    var m = document.getElementById('modalCatalogoGuateAlpro');
+    if (!m || cerrando) return;
+    cerrando = true;
+    m.classList.remove('mfe-open');
+    m.classList.add('mfe-closing');
+    try {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    } catch (e) {}
+    setTimeout(function () {
+      m.classList.remove('mfe-closing');
+      m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'display:none';
+      cerrando = false;
+    }, 280);
+  };
+
+  function wireGuate() {
+    var item = document.getElementById('macItemGuatecompras');
+    if (item && !item._bound) {
+      item._bound = true;
+      item.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.abrirCatalogoGuatecomprasAlpro();
+      });
+    }
+    var btnX = document.getElementById('btnCerrarCatalogoGuate');
+    if (btnX && !btnX._bound) {
+      btnX._bound = true;
+      btnX.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        window.cerrarCatalogoGuatecomprasAlpro();
+      });
+    }
+    var search = document.getElementById('mguaSearch');
+    if (search && !search._bound) {
+      search._bound = true;
+      search.addEventListener('input', function () { renderList(); });
+    }
+    document.querySelectorAll('.mgua-tab').forEach(function (tab) {
+      if (tab._bound) return;
+      tab._bound = true;
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.mgua-tab').forEach(function (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        tabActiva = tab.getAttribute('data-tab') || 'pdf';
+        renderList();
+      });
+    });
+    var btnUp = document.getElementById('btnSubirGuateAlpro');
+    var fileIn = document.getElementById('mguaFileInput');
+    if (btnUp && fileIn && !btnUp._bound) {
+      btnUp._bound = true;
+      btnUp.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        fileIn.value = '';
+        fileIn.click();
+      });
+      fileIn.addEventListener('change', function () {
+        if (fileIn.files && fileIn.files.length) subirArchivos(fileIn.files);
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var mod = document.getElementById('modalCatalogoGuateAlpro');
+      if (mod && mod.classList.contains('mfe-open')) window.cerrarCatalogoGuatecomprasAlpro();
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireGuate);
+  else wireGuate();
 })();
 </script>
 
