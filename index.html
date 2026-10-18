@@ -12802,12 +12802,11 @@ function sumarAlprocoinsLocales(monedasGanadas) {
     </span>
     <span class="mac-label">Guatecompras</span>
   </button>
-  <button type="button" class="mac-item disabled" data-accion="facturacion" role="menuitem" disabled>
+  <button type="button" class="mac-item" data-accion="otros" role="menuitem" id="macItemOtrosDocs" onclick="event.preventDefault();event.stopPropagation();if(typeof window.abrirHubOtrosDocsAlpro==='function'){window.abrirHubOtrosDocsAlpro();}">
     <span class="mac-ico mac-ico-fact" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
     </span>
-    <span class="mac-label">Facturación y cotización</span>
-    <span class="mac-badge">Pronto</span>
+    <span class="mac-label">Otros documentos</span>
   </button>
 </div>
 
@@ -16517,6 +16516,561 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireGuate);
   else wireGuate();
+})();
+</script>
+
+<!-- 🔐 PIN docs sensibles ALPROMEH -->
+<div id="modalPinDocsAlpro" aria-hidden="true">
+  <div class="mpin-card" role="dialog" aria-modal="true" aria-labelledby="mpinTitulo">
+    <div class="mpin-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+    </div>
+    <h3 id="mpinTitulo">Acceso restringido</h3>
+    <p class="mpin-hint">Documentos internos. Ingresá el PIN para continuar.</p>
+    <input type="password" id="mpinInput" maxlength="8" inputmode="numeric" placeholder="••••" autocomplete="off" />
+    <div id="mpinError" class="mpin-error" style="display:none;">PIN incorrecto</div>
+    <div class="mpin-actions">
+      <button type="button" id="mpinCancel" class="mpin-btn-ghost">Cancelar</button>
+      <button type="button" id="mpinOk" class="mpin-btn-primary">Entrar</button>
+    </div>
+  </div>
+</div>
+<style>
+#modalPinDocsAlpro {
+  display: none; position: fixed; inset: 0; z-index: 2147483100;
+  align-items: center; justify-content: center; padding: 16px;
+  background: rgba(15,23,42,0); opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease, background 0.25s ease;
+}
+#modalPinDocsAlpro.mfe-open {
+  display: flex !important; opacity: 1; pointer-events: auto;
+  background: rgba(15,23,42,0.75);
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+}
+#modalPinDocsAlpro.mfe-closing { display: flex !important; opacity: 0; pointer-events: none; }
+.mpin-card {
+  background: #fff; color: #0f172a; width: min(360px, 94vw);
+  border-radius: 18px; padding: 22px 20px 18px; text-align: center;
+  border: 1px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.45);
+  transform: translateY(18px) scale(0.96); opacity: 0;
+  transition: transform 0.32s cubic-bezier(0.22,1,0.36,1), opacity 0.28s ease;
+}
+#modalPinDocsAlpro.mfe-open .mpin-card { transform: none; opacity: 1; }
+#modalPinDocsAlpro.mfe-closing .mpin-card { transform: translateY(12px) scale(0.97); opacity: 0; }
+.mpin-ico {
+  width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 14px;
+  background: #eef2ff; color: #4338ca;
+  display: flex; align-items: center; justify-content: center;
+}
+#mpinTitulo { margin: 0; font-size: 1.05rem; font-weight: 800; }
+.mpin-hint { margin: 6px 0 14px; font-size: 0.8rem; color: #64748b; line-height: 1.4; }
+#mpinInput {
+  width: 100%; box-sizing: border-box; text-align: center; letter-spacing: 0.35em;
+  font-size: 1.25rem; font-weight: 700; padding: 12px; border-radius: 12px;
+  border: 1.5px solid #e2e8f0; background: #f8fafc; color: #0f172a; outline: none;
+  font-family: inherit;
+}
+#mpinInput:focus { border-color: var(--primary,#2563eb); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary,#2563eb) 22%, transparent); background:#fff; }
+.mpin-error { color: #dc2626; font-size: 0.78rem; font-weight: 700; margin-top: 8px; }
+.mpin-actions { display: flex; gap: 8px; margin-top: 14px; }
+.mpin-btn-ghost, .mpin-btn-primary {
+  flex: 1; border-radius: 10px; padding: 10px; font-weight: 700; font-size: 0.85rem;
+  cursor: pointer; font-family: inherit; border: none;
+}
+.mpin-btn-ghost { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+.mpin-btn-primary { background: var(--primary,#2563eb); color: #fff; }
+[data-theme="dark"] .mpin-card { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+[data-theme="dark"] .mpin-ico { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+[data-theme="dark"] #mpinInput { background: #0f172a; border-color: #334155; color: #f1f5f9; }
+[data-theme="dark"] .mpin-btn-ghost { background: #0f172a; color: #e2e8f0; border-color: #475569; }
+</style>
+<script>
+(function () {
+  var ALPRO_DOCS_PIN = '0306';
+  var pinOkSession = false;
+  var pendingAfterPin = null;
+
+  function openPinModal(cb) {
+    pendingAfterPin = cb;
+    var m = document.getElementById('modalPinDocsAlpro');
+    if (!m) { if (cb) cb(); return; }
+    try { if (m.parentNode !== document.body) document.body.appendChild(m); } catch (e) {}
+    var inp = document.getElementById('mpinInput');
+    var err = document.getElementById('mpinError');
+    if (inp) { inp.value = ''; }
+    if (err) err.style.display = 'none';
+    m.classList.remove('mfe-closing');
+    m.style.display = 'flex';
+    void m.offsetWidth;
+    m.classList.add('mfe-open');
+    m.setAttribute('aria-hidden', 'false');
+    setTimeout(function () { if (inp) inp.focus(); }, 80);
+  }
+  function closePinModal() {
+    var m = document.getElementById('modalPinDocsAlpro');
+    if (!m) return;
+    m.classList.remove('mfe-open');
+    m.classList.add('mfe-closing');
+    setTimeout(function () {
+      m.classList.remove('mfe-closing');
+      m.style.display = 'none';
+      m.setAttribute('aria-hidden', 'true');
+    }, 260);
+    pendingAfterPin = null;
+  }
+  function tryPin() {
+    var inp = document.getElementById('mpinInput');
+    var err = document.getElementById('mpinError');
+    var val = (inp && inp.value) ? String(inp.value).trim() : '';
+    if (val === ALPRO_DOCS_PIN) {
+      pinOkSession = true;
+      var cb = pendingAfterPin;
+      pendingAfterPin = null;
+      closePinModal();
+      if (typeof cb === 'function') setTimeout(cb, 40);
+    } else {
+      if (err) err.style.display = 'block';
+      if (inp) { inp.value = ''; inp.focus(); }
+    }
+  }
+  /** Exige PIN una vez por sesión de pestaña; luego deja pasar */
+  window.alproRequireDocsPin = function (onOk) {
+    if (pinOkSession) {
+      if (typeof onOk === 'function') onOk();
+      return;
+    }
+    openPinModal(onOk);
+  };
+
+  function wirePin() {
+    var ok = document.getElementById('mpinOk');
+    var cancel = document.getElementById('mpinCancel');
+    var inp = document.getElementById('mpinInput');
+    if (ok && !ok._b) {
+      ok._b = true;
+      ok.addEventListener('click', function (e) { e.preventDefault(); tryPin(); });
+    }
+    if (cancel && !cancel._b) {
+      cancel._b = true;
+      cancel.addEventListener('click', function (e) { e.preventDefault(); closePinModal(); });
+    }
+    if (inp && !inp._b) {
+      inp._b = true;
+      inp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); tryPin(); }
+        if (e.key === 'Escape') { e.preventDefault(); closePinModal(); }
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wirePin);
+  else wirePin();
+
+  // Envolver aperturas sensibles (después de que existan las funciones)
+  function wrapSensitive() {
+    var origSan = window.abrirCatalogoSanitariosAlpro;
+    if (typeof origSan === 'function' && !origSan._pinWrapped) {
+      window.abrirCatalogoSanitariosAlpro = function () {
+        window.alproRequireDocsPin(function () { origSan(); });
+      };
+      window.abrirCatalogoSanitariosAlpro._pinWrapped = true;
+    }
+    var origGu = window.abrirCatalogoGuatecomprasAlpro;
+    if (typeof origGu === 'function' && !origGu._pinWrapped) {
+      window.abrirCatalogoGuatecomprasAlpro = function () {
+        window.alproRequireDocsPin(function () { origGu(); });
+      };
+      window.abrirCatalogoGuatecomprasAlpro._pinWrapped = true;
+    }
+  }
+  setTimeout(wrapSensitive, 0);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(wrapSensitive, 50); });
+})();
+</script>
+
+<!-- 📁 HUB OTROS DOCUMENTOS -->
+<div id="modalHubOtrosAlpro" aria-hidden="true">
+  <div id="cardHubOtrosAlpro" role="dialog" aria-modal="true" aria-labelledby="tituloHubOtros">
+    <div class="mhub-head">
+      <div>
+        <div id="tituloHubOtros">📁 Otros documentos</div>
+        <div class="mhub-sub">Elegí una categoría</div>
+      </div>
+      <button type="button" id="btnCerrarHubOtros" title="Cerrar">✕</button>
+    </div>
+    <div class="mhub-grid">
+      <button type="button" class="mhub-card mhub-cotiz" data-cat="cotizacion">
+        <span class="mhub-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h2M8 17h8M12 13h4"/></svg>
+        </span>
+        <span class="mhub-name">Cotización</span>
+        <span class="mhub-desc">Excel y formatos para cotizar</span>
+      </button>
+      <button type="button" class="mhub-card mhub-fact mhub-soon" data-cat="facturacion" disabled>
+        <span class="mhub-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
+        </span>
+        <span class="mhub-name">Facturación</span>
+        <span class="mhub-desc">Pronto</span>
+        <span class="mhub-badge">Pronto</span>
+      </button>
+      <button type="button" class="mhub-card mhub-cert mhub-soon" data-cat="certificados" disabled>
+        <span class="mhub-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 13.5L7 22l5-2 5 2-1.5-8.5"/><path d="M10 8h4"/></svg>
+        </span>
+        <span class="mhub-name">Certificados</span>
+        <span class="mhub-desc">Análisis y BPM · Pronto</span>
+        <span class="mhub-badge">Pronto</span>
+      </button>
+      <button type="button" class="mhub-card mhub-mues mhub-soon" data-cat="muestras" disabled>
+        <span class="mhub-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6l3 2"/><path d="M8 21h8"/><path d="M9 3h6l1 8a4 4 0 0 1-8 0L9 3z"/></svg>
+        </span>
+        <span class="mhub-name">Muestras</span>
+        <span class="mhub-desc">Envío de muestras · Pronto</span>
+        <span class="mhub-badge">Pronto</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 📊 CATÁLOGO COTIZACIÓN -->
+<div id="modalCatalogoCotizAlpro" aria-hidden="true">
+  <div id="cardCatalogoCotizAlpro" role="dialog" aria-modal="true">
+    <div class="mcot-head">
+      <div>
+        <div class="mcot-title">📊 Cotización</div>
+        <div class="mcot-sub">Archivos para cotizar · clic para abrir en Drive</div>
+      </div>
+      <div class="mcot-actions">
+        <button type="button" id="btnVolverHubCotiz" class="mcot-btn-ghost">← Categorías</button>
+        <button type="button" id="btnCerrarCatalogoCotiz" title="Cerrar">✕</button>
+      </div>
+    </div>
+    <div class="mcot-toolbar">
+      <div class="mcot-search-wrap">
+        <svg class="mcot-search-ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="mcotSearch" placeholder="Buscar archivo…" autocomplete="off" />
+      </div>
+    </div>
+    <div id="cuerpoCatalogoCotiz">
+      <div id="mcotStatus" class="mcot-status">Cargando…</div>
+      <div id="mcotList" class="mcot-list" style="display:none;"></div>
+    </div>
+    <div class="mcot-foot">Sin botón de subir: acá solo se consultan y descargan. Si hay que actualizar un archivo, se hace en Drive.</div>
+  </div>
+</div>
+<style>
+#modalHubOtrosAlpro, #modalCatalogoCotizAlpro {
+  display: none; position: fixed; inset: 0; z-index: 2147483000;
+  align-items: center; justify-content: center; padding: 12px;
+  background: rgba(15,23,42,0); opacity: 0; pointer-events: none;
+  transition: opacity 0.28s ease, background 0.28s ease;
+  box-sizing: border-box;
+}
+#modalHubOtrosAlpro.mfe-open, #modalCatalogoCotizAlpro.mfe-open {
+  display: flex !important; opacity: 1; pointer-events: auto;
+  background: rgba(15,23,42,0.78);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+#modalHubOtrosAlpro.mfe-closing, #modalCatalogoCotizAlpro.mfe-closing {
+  display: flex !important; opacity: 0; pointer-events: none;
+}
+#cardHubOtrosAlpro, #cardCatalogoCotizAlpro {
+  background: #fff; color: #0f172a; border-radius: 18px;
+  border: 1px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  transform: translateY(28px) scale(0.94); opacity: 0;
+  transition: transform 0.36s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+#modalHubOtrosAlpro.mfe-open #cardHubOtrosAlpro,
+#modalCatalogoCotizAlpro.mfe-open #cardCatalogoCotizAlpro { transform: none; opacity: 1; }
+#modalHubOtrosAlpro.mfe-closing #cardHubOtrosAlpro,
+#modalCatalogoCotizAlpro.mfe-closing #cardCatalogoCotizAlpro {
+  transform: translateY(16px) scale(0.96); opacity: 0;
+}
+#cardHubOtrosAlpro { width: min(520px, 96vw); }
+#cardCatalogoCotizAlpro { width: min(640px, 96vw); height: min(80vh, 640px); }
+.mhub-head, .mcot-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 16px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0;
+}
+#tituloHubOtros, .mcot-title { font-weight: 800; font-size: 1.05rem; }
+.mhub-sub, .mcot-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+#btnCerrarHubOtros, #btnCerrarCatalogoCotiz {
+  border: 1px solid #cbd5e1; background: #fff; color: #334155;
+  width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1.05rem;
+}
+.mhub-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px;
+}
+.mhub-card {
+  position: relative; text-align: left; font-family: inherit; cursor: pointer;
+  border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px 12px 12px;
+  background: #fff; transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  display: flex; flex-direction: column; gap: 4px;
+  animation: mhubIn 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.mhub-card:nth-child(1) { animation-delay: 0.04s; }
+.mhub-card:nth-child(2) { animation-delay: 0.08s; }
+.mhub-card:nth-child(3) { animation-delay: 0.12s; }
+.mhub-card:nth-child(4) { animation-delay: 0.16s; }
+@keyframes mhubIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.mhub-card:not(.mhub-soon):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15,23,42,0.1);
+}
+.mhub-card.mhub-soon { opacity: 0.72; cursor: not-allowed; }
+.mhub-icon {
+  width: 42px; height: 42px; border-radius: 12px; margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+.mhub-icon svg { width: 22px; height: 22px; }
+.mhub-cotiz .mhub-icon { background: #ecfdf5; color: #059669; }
+.mhub-fact .mhub-icon { background: #eff6ff; color: #2563eb; }
+.mhub-cert .mhub-icon { background: #fef3c7; color: #d97706; }
+.mhub-mues .mhub-icon { background: #faf5ff; color: #7c3aed; }
+.mhub-cotiz:not(.mhub-soon):hover { border-color: #34d399; }
+.mhub-name { font-size: 0.9rem; font-weight: 800; color: #0f172a; }
+.mhub-desc { font-size: 0.72rem; color: #64748b; line-height: 1.3; }
+.mhub-badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 999px;
+  background: #f1f5f9; color: #64748b;
+}
+.mcot-actions { display: flex; gap: 8px; align-items: center; }
+.mcot-btn-ghost {
+  border: 1px solid #cbd5e1; background: #fff; color: #334155;
+  font-weight: 700; font-size: 0.78rem; padding: 8px 10px; border-radius: 10px;
+  cursor: pointer; font-family: inherit;
+}
+.mcot-toolbar { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; background: #fff; flex-shrink: 0; }
+.mcot-search-wrap { position: relative; display: flex; align-items: center; }
+.mcot-search-ico { position: absolute; left: 12px; color: #94a3b8; pointer-events: none; }
+#mcotSearch {
+  width: 100%; box-sizing: border-box; border: 1.5px solid #e2e8f0; border-radius: 12px;
+  padding: 10px 12px 10px 38px; font-size: 0.9rem; font-family: inherit;
+  background: #f8fafc; color: #0f172a; outline: none;
+}
+#mcotSearch:focus {
+  border-color: var(--primary,#2563eb);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary,#2563eb) 20%, transparent);
+  background: #fff;
+}
+#cuerpoCatalogoCotiz { flex: 1; min-height: 0; overflow: auto; background: #f8fafc; }
+.mcot-status { padding: 36px 16px; text-align: center; color: #64748b; font-size: 0.9rem; }
+.mcot-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px 16px; }
+.mcot-row {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  font-family: inherit; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+  padding: 12px 14px; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.mcot-row:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,23,42,0.08); }
+.mcot-ico {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px;
+  background: #ecfdf5; color: #059669;
+  display: flex; align-items: center; justify-content: center;
+}
+.mcot-ico svg { width: 22px; height: 22px; }
+.mcot-name { font-size: 0.88rem; font-weight: 700; color: #0f172a; word-break: break-word; }
+.mcot-hint { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
+.mcot-foot {
+  padding: 8px 14px; font-size: 0.72rem; color: #64748b;
+  border-top: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0;
+}
+[data-theme="dark"] #cardHubOtrosAlpro, [data-theme="dark"] #cardCatalogoCotizAlpro {
+  background: #1e293b; color: #f1f5f9; border-color: #334155;
+}
+[data-theme="dark"] .mhub-head, [data-theme="dark"] .mcot-head, [data-theme="dark"] .mcot-foot,
+[data-theme="dark"] .mcot-toolbar { background: #0f172a; border-color: #334155; }
+[data-theme="dark"] .mhub-card { background: #1e293b; border-color: #334155; }
+[data-theme="dark"] .mhub-name, [data-theme="dark"] .mcot-name { color: #f1f5f9; }
+[data-theme="dark"] #cuerpoCatalogoCotiz { background: #0f172a; }
+[data-theme="dark"] .mcot-row { background: #1e293b; border-color: #334155; }
+[data-theme="dark"] #mcotSearch { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+[data-theme="dark"] #btnCerrarHubOtros, [data-theme="dark"] #btnCerrarCatalogoCotiz,
+[data-theme="dark"] .mcot-btn-ghost { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+</style>
+<script>
+(function () {
+  var ALPRO_DOCS_API = 'https://script.google.com/macros/s/AKfycbwN13GbAMyrXKkUuEoM9L9c_AYvI0gbRJUMATU0z7iY5Sc-DHCx2lQIsoHo_hLwoswy7w/exec';
+  var COTIZ_FOLDER_ID = '1WYgrBm-aaW4N43OChlzP0xEhp_gr7bZz';
+  var listaCotiz = [];
+  var cerrandoHub = false;
+  var cerrandoCotiz = false;
+
+  function openModal(id) {
+    var m = document.getElementById(id);
+    if (!m) return;
+    try { if (m.parentNode !== document.body) document.body.appendChild(m); } catch (e) {}
+    m.classList.remove('mfe-closing');
+    m.style.cssText = 'display:flex;position:fixed;inset:0;z-index:2147483000;align-items:center;justify-content:center;padding:12px;box-sizing:border-box;pointer-events:auto;visibility:visible';
+    void m.offsetWidth;
+    m.classList.add('mfe-open');
+    m.setAttribute('aria-hidden', 'false');
+    try {
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } catch (e2) {}
+  }
+  function closeModal(id, flagName) {
+    var m = document.getElementById(id);
+    if (!m) return;
+    if (flagName === 'hub' && cerrandoHub) return;
+    if (flagName === 'cotiz' && cerrandoCotiz) return;
+    if (flagName === 'hub') cerrandoHub = true;
+    if (flagName === 'cotiz') cerrandoCotiz = true;
+    m.classList.remove('mfe-open');
+    m.classList.add('mfe-closing');
+    setTimeout(function () {
+      m.classList.remove('mfe-closing');
+      m.style.cssText = 'display:none';
+      m.setAttribute('aria-hidden', 'true');
+      if (flagName === 'hub') cerrandoHub = false;
+      if (flagName === 'cotiz') cerrandoCotiz = false;
+      var hub = document.getElementById('modalHubOtrosAlpro');
+      var cot = document.getElementById('modalCatalogoCotizAlpro');
+      var pin = document.getElementById('modalPinDocsAlpro');
+      var any = (hub && hub.classList.contains('mfe-open')) ||
+        (cot && cot.classList.contains('mfe-open')) ||
+        (pin && pin.classList.contains('mfe-open'));
+      if (!any) {
+        try {
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+        } catch (e) {}
+      }
+    }, 280);
+  }
+
+  window.abrirHubOtrosDocsAlpro = function () {
+    window.alproRequireDocsPin(function () {
+      try {
+        if (typeof window.cerrarMenuAccesosAlpro === 'function') window.cerrarMenuAccesosAlpro();
+        if (typeof window.cerrarCatalogoFotosAlpro === 'function') window.cerrarCatalogoFotosAlpro();
+        if (typeof window.cerrarCatalogoSanitariosAlpro === 'function') window.cerrarCatalogoSanitariosAlpro();
+        if (typeof window.cerrarCatalogoGuatecomprasAlpro === 'function') window.cerrarCatalogoGuatecomprasAlpro();
+      } catch (e) {}
+      openModal('modalHubOtrosAlpro');
+    });
+  };
+  window.cerrarHubOtrosDocsAlpro = function () { closeModal('modalHubOtrosAlpro', 'hub'); };
+
+  function setCotizStatus(msg) {
+    var st = document.getElementById('mcotStatus');
+    var list = document.getElementById('mcotList');
+    if (st) { st.style.display = msg ? 'block' : 'none'; st.innerHTML = msg || ''; }
+    if (list && msg) list.style.display = 'none';
+  }
+  function renderCotiz() {
+    var list = document.getElementById('mcotList');
+    if (!list) return;
+    var q = ((document.getElementById('mcotSearch') || {}).value || '').trim().toLowerCase();
+    var filtered = (listaCotiz || []).filter(function (f) {
+      if (!q) return true;
+      return (f.name || '').toLowerCase().indexOf(q) !== -1;
+    });
+    list.innerHTML = '';
+    if (!filtered.length) {
+      setCotizStatus(q ? 'No hay archivos que coincidan.' : 'Esta carpeta aún no tiene archivos.');
+      return;
+    }
+    setCotizStatus('');
+    list.style.display = 'flex';
+    filtered.forEach(function (f) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mcot-row';
+      btn.title = f.name || '';
+      btn.innerHTML =
+        '<span class="mcot-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span>' +
+        '<span><div class="mcot-name"></div><div class="mcot-hint">Clic para abrir en Drive</div></span>';
+      btn.querySelector('.mcot-name').textContent = f.name || f.id;
+      btn.addEventListener('click', function () {
+        window.open('https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/view', '_blank', 'noopener,noreferrer');
+      });
+      list.appendChild(btn);
+    });
+  }
+  function cargarCotiz() {
+    listaCotiz = [];
+    setCotizStatus('Cargando…');
+    var url = ALPRO_DOCS_API + '?action=list&folderId=' + encodeURIComponent(COTIZ_FOLDER_ID) + '&recursive=0&mime=';
+    fetch(url, { method: 'GET' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && data.error) throw new Error(data.error);
+        listaCotiz = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
+        renderCotiz();
+      })
+      .catch(function (err) {
+        console.error(err);
+        setCotizStatus('No se pudieron cargar los archivos.<br><small>' + (err.message || '') + '</small>');
+      });
+  }
+  function abrirCotiz() {
+    window.cerrarHubOtrosDocsAlpro();
+    setTimeout(function () {
+      openModal('modalCatalogoCotizAlpro');
+      cargarCotiz();
+    }, 200);
+  }
+  window.cerrarCatalogoCotizAlpro = function () { closeModal('modalCatalogoCotizAlpro', 'cotiz'); };
+
+  function wireOtros() {
+    var item = document.getElementById('macItemOtrosDocs');
+    if (item && !item._b) {
+      item._b = true;
+      item.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.abrirHubOtrosDocsAlpro();
+      });
+    }
+    var xHub = document.getElementById('btnCerrarHubOtros');
+    if (xHub && !xHub._b) {
+      xHub._b = true;
+      xHub.addEventListener('click', function (e) { e.preventDefault(); window.cerrarHubOtrosDocsAlpro(); });
+    }
+    document.querySelectorAll('.mhub-card[data-cat="cotizacion"]').forEach(function (btn) {
+      if (btn._b) return;
+      btn._b = true;
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        abrirCotiz();
+      });
+    });
+    var xCot = document.getElementById('btnCerrarCatalogoCotiz');
+    if (xCot && !xCot._b) {
+      xCot._b = true;
+      xCot.addEventListener('click', function (e) { e.preventDefault(); window.cerrarCatalogoCotizAlpro(); });
+    }
+    var back = document.getElementById('btnVolverHubCotiz');
+    if (back && !back._b) {
+      back._b = true;
+      back.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.cerrarCatalogoCotizAlpro();
+        setTimeout(function () { openModal('modalHubOtrosAlpro'); }, 200);
+      });
+    }
+    var search = document.getElementById('mcotSearch');
+    if (search && !search._b) {
+      search._b = true;
+      search.addEventListener('input', renderCotiz);
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var cot = document.getElementById('modalCatalogoCotizAlpro');
+      if (cot && cot.classList.contains('mfe-open')) { window.cerrarCatalogoCotizAlpro(); return; }
+      var hub = document.getElementById('modalHubOtrosAlpro');
+      if (hub && hub.classList.contains('mfe-open')) window.cerrarHubOtrosDocsAlpro();
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireOtros);
+  else wireOtros();
 })();
 </script>
 
