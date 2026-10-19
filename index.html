@@ -88,6 +88,31 @@
         }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        /* Scrollbar principal acorde a la app */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary, #1e3a8a) color-mix(in srgb, var(--primary, #1e3a8a) 12%, transparent);
+        }
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+            width: 11px;
+            height: 11px;
+        }
+        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
+            background: color-mix(in srgb, var(--primary, #1e3a8a) 8%, var(--bg-body, #f0f2f5));
+            border-radius: 10px;
+        }
+        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+            background: color-mix(in srgb, var(--primary, #1e3a8a) 55%, #64748b);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary, #1e3a8a);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
         .contenedor { background: var(--bg-card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 950px; margin-bottom: 20px; border-top: 5px solid var(--primary); transition: transform 0.3s; }
         
         [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
@@ -722,7 +747,17 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
   padding: 6px;
   display: none;
   font-family: 'Segoe UI', system-ui, sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
+.hamster-skin-menu::-webkit-scrollbar { width: 5px; }
+.hamster-skin-menu::-webkit-scrollbar-track { background: transparent; }
+.hamster-skin-menu::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+.hamster-skin-menu::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+[data-theme="dark"] .hamster-skin-menu { scrollbar-color: #475569 transparent; }
+[data-theme="dark"] .hamster-skin-menu::-webkit-scrollbar-thumb { background: #475569; }
+.alpro-star-prem { color: #d97706; font-weight: 900; }
+[data-theme="dark"] .alpro-star-prem { color: #fbbf24; }
 [data-theme="dark"] .hamster-skin-menu {
   background: #1e293b;
   border-color: #334155;
@@ -827,31 +862,52 @@ html[data-bg="diagonal"] body {
 }
 /* Premium ligeros: solo CSS gradients fijos (sin animación, sin JS) */
 html[data-bg="aurora"] body {
-  background-color: #1e1b4b !important;
+  background-color: #0b1026 !important;
   background-image:
-    radial-gradient(1000px 520px at 12% -8%, rgba(99,102,241,0.55), transparent 58%),
-    radial-gradient(900px 480px at 95% 5%, rgba(168,85,247,0.40), transparent 52%),
-    radial-gradient(800px 420px at 40% 105%, rgba(34,211,238,0.28), transparent 55%),
-    linear-gradient(180deg, rgba(15,23,42,0.15), rgba(15,23,42,0.05)) !important;
+    radial-gradient(ellipse 90% 60% at 15% 0%, rgba(129,140,248,0.65), transparent 55%),
+    radial-gradient(ellipse 80% 50% at 90% 10%, rgba(192,132,252,0.50), transparent 50%),
+    radial-gradient(ellipse 70% 45% at 50% 100%, rgba(34,211,238,0.35), transparent 50%),
+    radial-gradient(ellipse 40% 30% at 70% 40%, rgba(244,114,182,0.18), transparent 60%),
+    linear-gradient(165deg, #0b1026 0%, #1e1b4b 45%, #0f172a 100%) !important;
   background-attachment: fixed !important;
+  background-size: 120% 120%, 130% 130%, 110% 110%, 100% 100%, 100% 100% !important;
+  animation: alproBgAurora 22s ease-in-out infinite alternate !important;
 }
 html[data-bg="atardecer"] body {
-  background-color: #7c2d12 !important;
+  background-color: #1c0a06 !important;
   background-image:
-    radial-gradient(1000px 540px at 5% 0%, rgba(234,88,12,0.55), transparent 58%),
-    radial-gradient(900px 480px at 100% 8%, rgba(190,24,93,0.35), transparent 52%),
-    radial-gradient(820px 440px at 50% 110%, rgba(245,158,11,0.30), transparent 55%),
-    linear-gradient(180deg, rgba(28,15,8,0.2), rgba(28,15,8,0.05)) !important;
+    radial-gradient(ellipse 95% 55% at 10% -5%, rgba(251,146,60,0.70), transparent 55%),
+    radial-gradient(ellipse 80% 50% at 95% 5%, rgba(225,29,72,0.45), transparent 50%),
+    radial-gradient(ellipse 70% 40% at 50% 110%, rgba(250,204,21,0.35), transparent 50%),
+    radial-gradient(ellipse 35% 25% at 40% 35%, rgba(255,255,255,0.08), transparent 70%),
+    linear-gradient(170deg, #431407 0%, #7c2d12 40%, #1c0a06 100%) !important;
   background-attachment: fixed !important;
+  background-size: 125% 125%, 120% 120%, 110% 110%, 100% 100%, 100% 100% !important;
+  animation: alproBgAtardecer 20s ease-in-out infinite alternate !important;
 }
 html[data-bg="oceano"] body {
-  background-color: #0c4a6e !important;
+  background-color: #042f4a !important;
   background-image:
-    radial-gradient(1000px 520px at 8% -5%, rgba(14,165,233,0.50), transparent 58%),
-    radial-gradient(920px 480px at 100% 0%, rgba(37,99,235,0.38), transparent 52%),
-    radial-gradient(800px 420px at 45% 110%, rgba(20,184,166,0.28), transparent 55%),
-    linear-gradient(180deg, rgba(8,20,35,0.22), rgba(8,20,35,0.05)) !important;
+    radial-gradient(ellipse 90% 55% at 5% 0%, rgba(56,189,248,0.55), transparent 55%),
+    radial-gradient(ellipse 85% 50% at 100% 5%, rgba(37,99,235,0.45), transparent 50%),
+    radial-gradient(ellipse 75% 45% at 40% 110%, rgba(45,212,191,0.32), transparent 52%),
+    radial-gradient(ellipse 30% 20% at 60% 30%, rgba(255,255,255,0.10), transparent 70%),
+    linear-gradient(175deg, #0c4a6e 0%, #075985 40%, #042f4a 100%) !important;
   background-attachment: fixed !important;
+  background-size: 120% 120%, 125% 125%, 110% 110%, 100% 100%, 100% 100% !important;
+  animation: alproBgOceano 24s ease-in-out infinite alternate !important;
+}
+@keyframes alproBgAurora {
+  0% { background-position: 0% 0%, 100% 0%, 50% 100%, 70% 40%, 0 0; }
+  100% { background-position: 15% 8%, 85% 12%, 45% 95%, 60% 50%, 0 0; }
+}
+@keyframes alproBgAtardecer {
+  0% { background-position: 0% 0%, 100% 0%, 50% 100%, 40% 35%, 0 0; }
+  100% { background-position: 10% 6%, 90% 10%, 55% 95%, 50% 40%, 0 0; }
+}
+@keyframes alproBgOceano {
+  0% { background-position: 0% 0%, 100% 0%, 40% 100%, 60% 30%, 0 0; }
+  100% { background-position: 12% 8%, 88% 10%, 50% 92%, 55% 40%, 0 0; }
 }
 html[data-theme="dark"][data-bg="menta"] body { background-color: #0f1f1a !important; }
 html[data-theme="dark"][data-bg="lavanda"] body { background-color: #1a1428 !important; }
@@ -1710,41 +1766,69 @@ input::-webkit-outer-spin-button,
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 15px 0 25px 0;
-    gap: 8px;
+    margin: 6px auto 14px auto;
+    gap: 0;
+    padding: 4px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    width: fit-content;
+    max-width: 100%;
+    box-shadow: none;
 }
 
 .step-dot {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    background: var(--input-bg);
-    border: 2px solid var(--border);
-    color: var(--text-main);
+    background: var(--input-bg, #fff);
+    border: 2px solid var(--border, #cbd5e1);
+    color: #94a3b8;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    transition: all 0.3s ease;
+    font-size: 11px;
+    font-weight: 800;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
 }
 
 .step-dot.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-    box-shadow: 0 0 10px rgba(0, 106, 255, 0.2);
+    background: var(--primary, #1e3a8a);
+    border-color: var(--primary, #1e3a8a);
+    color: #fff;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary, #1e3a8a) 30%, transparent);
+    transform: none;
 }
 
 .step-line {
     height: 2px;
-    width: 40px;
-    background: var(--border);
-    transition: all 0.3s ease;
+    width: 36px;
+    background: var(--border, #e2e8f0);
+    border-radius: 99px;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
 }
 
 .step-line.active {
-    background: var(--primary);
+    background: var(--primary, #1e3a8a);
+}
+
+[data-theme="dark"] .stepper-container {
+    background: transparent;
+    border: none;
+}
+[data-theme="dark"] .step-dot {
+    background: #1e293b;
+    border-color: #475569;
+    color: #64748b;
+}
+[data-theme="dark"] .step-dot.active {
+    background: var(--primary, #3b82f6);
+    border-color: var(--primary, #3b82f6);
+    color: #fff;
 }
 
 /* BOTONES DE NAVEGACIÓN SECUNDARIOS */
@@ -1837,8 +1921,8 @@ input::-webkit-outer-spin-button,
 }
 
 .nog-oculto {
-    /* Mantiene el display flex mientras corre la animación y luego el keyframe lo oculta */
-    display: flex !important; 
+    display: flex !important;
+    pointer-events: none;
     animation: salidaNog 0.22s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
@@ -1865,6 +1949,144 @@ input::-webkit-outer-spin-button,
     }
 }
 
+
+/* Menú reimprimir reportes por encima de filas del historial */
+#menuHistorialReportes.historial-reporte-container {
+  position: relative;
+  z-index: 2147482000;
+}
+#dropdownHistorialReportes {
+  z-index: 2147482000 !important;
+}
+.historial-reporte-container:has(#dropdownHistorialReportes[style*="display: block"]),
+.historial-reporte-container:has(#dropdownHistorialReportes[style*="display:block"]) {
+  z-index: 2147482000;
+}
+
+/* Paso 2 — Tipo contratación (UX moderna) */
+.alpro-tipo-box {
+  background: var(--input-bg, #fff);
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border, #e2e8f0);
+  margin-bottom: 15px;
+  overflow: visible;
+}
+.alpro-tipo-title {
+  display: block;
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary, #1e3a8a);
+  margin-bottom: 12px;
+}
+.alpro-tipo-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 4px;
+  background: color-mix(in srgb, var(--primary, #1e3a8a) 6%, var(--bg-body, #f0f2f5));
+  border-radius: 12px;
+  border: 1px solid var(--border, #e2e8f0);
+}
+.alpro-tipo-opt {
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+}
+.alpro-tipo-opt input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.alpro-tipo-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 11px 10px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main, #334155);
+  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+  user-select: none;
+}
+.alpro-tipo-opt input:checked + .alpro-tipo-pill {
+  background: var(--primary, #1e3a8a);
+  color: #fff;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary, #1e3a8a) 35%, transparent);
+}
+.alpro-tipo-opt:not(:has(input:checked)) .alpro-tipo-pill:hover {
+  background: color-mix(in srgb, var(--primary, #1e3a8a) 10%, transparent);
+}
+.alpro-nog-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease,
+    margin-top 0.28s ease,
+    transform 0.28s ease;
+}
+.alpro-nog-wrap.is-open {
+  max-height: 120px;
+  opacity: 1;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  padding: 4px 3px 6px;
+  pointer-events: auto;
+  transform: translateY(0);
+  overflow: visible;
+}
+.alpro-tipo-box { overflow: visible !important; }
+.alpro-nog-label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--text-main, #334155);
+}
+.alpro-nog-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 10px;
+  border: 1.5px solid var(--border, #cbd5e1);
+  background: var(--input-bg, #fff);
+  color: var(--text-main, #0f172a);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.alpro-nog-input:focus {
+  border-color: var(--primary, #2563eb);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #2563eb) 18%, transparent);
+  outline: none;
+}
+@keyframes alproNogIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+[data-theme="dark"] .alpro-tipo-seg {
+  background: color-mix(in srgb, var(--primary, #3b82f6) 12%, #0f172a);
+  border-color: #334155;
+}
+[data-theme="dark"] .alpro-tipo-opt input:checked + .alpro-tipo-pill {
+  background: var(--primary, #3b82f6);
+}
 /* ✨ EFECTO ZOOM PREMIUM PARA EL LAPICITO ALPROMEH */
 .btn-producto {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, background-color 0.2s ease !important;
@@ -5333,28 +5555,23 @@ tbody.animar-entrada {
             </div>
 
            <div id="seccionPaso2" style="display: none;">
-                <div style="background: var(--input-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 15px;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 10px; color: var(--primary);">TIPO DE CONTRATACIÓN:</label>
-                    
-                    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 5px; flex-wrap: wrap;">
-                        
-                       <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main);">
-    <input type="radio" name="tipoContratacion" value="Baja Cuantía" checked onchange="evaluarMostrarNog()"> Baja Cuantía
-</label>
-                        
-<div style="display: flex; align-items: center; gap: 50px;">
-    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main);">
-        <input type="radio" name="tipoContratacion" value="Compra Directa" onchange="evaluarMostrarNog()"> Compra Directa
-    </label>
-
-    <div id="contenedorCampoNog" style="display: none; align-items: center; gap: 6px;">
-        <label for="nogInput" style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">NOG:</label>
-        <input type="text" id="nogInput" placeholder="Ej: 30811163" style="width: 110px; padding: 4px 8px; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--border); margin: 0; box-sizing: border-box;">
-    </div>
-</div>
-
-</div>
-</div>
+                <div class="alpro-tipo-box">
+                    <label class="alpro-tipo-title">TIPO DE CONTRATACIÓN</label>
+                    <div class="alpro-tipo-seg" role="radiogroup" aria-label="Tipo de contratación">
+                        <label class="alpro-tipo-opt">
+                            <input type="radio" name="tipoContratacion" value="Baja Cuantía" checked onchange="evaluarMostrarNog()">
+                            <span class="alpro-tipo-pill">Baja Cuantía</span>
+                        </label>
+                        <label class="alpro-tipo-opt">
+                            <input type="radio" name="tipoContratacion" value="Compra Directa" onchange="evaluarMostrarNog()">
+                            <span class="alpro-tipo-pill">Compra Directa</span>
+                        </label>
+                    </div>
+                    <div id="contenedorCampoNog" class="alpro-nog-wrap">
+                        <label for="nogInput" class="alpro-nog-label">NOG</label>
+                        <input type="text" id="nogInput" class="alpro-nog-input" placeholder="Ej: 30811163" autocomplete="off">
+                    </div>
+                </div>
 
                 <div style="margin-bottom: 15px;">
     <label>OBSERVACIONES:</label>
@@ -5431,7 +5648,7 @@ tbody.animar-entrada {
                 </div>
                 
                 <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 15px;">
-                   <button type="button" class="btn-navegacion-pasos" style="width: 100%;" onclick="cambiarPaso(1)">
+                   <button type="button" class="btn-navegacion-pasos" style="width: 100%;" onclick="cambiarPaso(2)">
   <svg class="flecha-svg flecha-izquierda" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
     <path d="M19 12H5M12 19l-7-7 7-7"/>
   </svg>
@@ -5476,7 +5693,7 @@ tbody.animar-entrada {
                  onmouseenter="this.style.background='#fff7ed'; this.style.color='#ea580c';"
                  onmouseleave="this.style.background='none'; this.style.color='#64748b';">
                  ⋮
-                <div id="dropdownHistorialReportes" style="display: none; position: absolute; top: 110%; right: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08), 0 6px 8px -4px rgba(0, 0, 0, 0.08); width: 200px; z-index: 9999; padding: 5px; box-sizing: border-box; font-family: Arial, sans-serif;">
+                <div id="dropdownHistorialReportes" style="display: none; position: absolute; top: 110%; right: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08), 0 6px 8px -4px rgba(0, 0, 0, 0.08); width: 200px; z-index: 2147482000; padding: 5px; box-sizing: border-box; font-family: Arial, sans-serif;">
                     <div style="font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 6px 6px 6px; border-bottom: 1px solid #f1f5f9; margin-bottom: 3px; user-select: none; cursor: default; pointer-events: none;">
                         REIMPRIMIR REPORTES:
                     </div>
@@ -7328,11 +7545,32 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
             nogClear.value = '';
         }
 
+        // Reset tipo a Baja Cuantía y ocultar NOG
+        try {
+            var radioBaja = document.querySelector('input[name="tipoContratacion"][value="Baja Cuantía"]');
+            if (radioBaja) radioBaja.checked = true;
+            if (typeof evaluarMostrarNog === 'function') evaluarMostrarNog();
+        } catch (eNogReset) {}
+
         if (modoPedidoActivo) {
             const sw = document.getElementById('switchModoPedido');
             if (sw) sw.checked = false;
             modoPedidoActivo = false; 
             if (typeof alternarModoPedido === "function") alternarModoPedido();
+            // Reactivar Hoja de Pedido tras imprimir / monedas (un poco más de margen)
+            setTimeout(function () {
+                try {
+                    var sw2 = document.getElementById('switchModoPedido');
+                    if (sw2 && !sw2.checked) {
+                        sw2.checked = true;
+                        if (typeof alternarModoPedido === 'function') alternarModoPedido();
+                        // Paso 1: Guardar solo en paso 3
+                        var btnG = document.getElementById('btnGuardarRegistro');
+                        if (btnG) btnG.style.display = 'none';
+                        if (typeof cambiarPaso === 'function') cambiarPaso(1);
+                    }
+                } catch (eSw) {}
+            }, 5000);
         } else {
             // Asegurar Paso 1 visible y botón listo para la siguiente OC
             pasoActual = 1;
@@ -9712,7 +9950,9 @@ SKIN_SVG.slime =
     if (byKey.color && byKey.color.length) {
       extra += '<div class="hamster-skin-menu-title">Color</div><div class="hamster-pref-group">';
       byKey.color.forEach(function(p) {
-        extra += chip(p.nombre.replace('Color: ', ''), 'color', p.prefValue, p.prefValue === activaColor, p.prefValue);
+        var lab = (p.nombre || '').replace('Color: ', '').replace('Color Premium ', '★ ');
+        if (lab.indexOf('★') === 0) lab = '<span class="alpro-star-prem">★</span> ' + lab.replace(/^★\s*/, '');
+        extra += chip(lab, 'color', p.prefValue, p.prefValue === activaColor, p.prefValue);
       });
       extra += '</div>';
     }
@@ -9741,7 +9981,8 @@ SKIN_SVG.slime =
       extra += '<div class="hamster-skin-menu-title">Fondo (solo atrás)</div><div class="hamster-pref-group">';
       extra += chip('Original', 'bg', 'default', activaBg === 'default');
       byKey.bg.forEach(function(p) {
-        var short = (p.nombre || '').replace('Fondo ', '');
+        var short = (p.nombre || '').replace('Fondo: ', '').replace('Fondo ', '');
+        if (short.indexOf('★') === 0) short = '<span class="alpro-star-prem">★</span> ' + short.replace(/^★\s*/, '');
         extra += chip(short, 'bg', p.prefValue, p.prefValue === activaBg);
       });
       extra += '</div>';
@@ -9752,7 +9993,8 @@ SKIN_SVG.slime =
       extra += '<div class="hamster-skin-menu-title">Frase de arriba</div><div class="hamster-pref-group">';
       extra += chip('Original', 'frase', 'default', activaFrase === 'default');
       byKey.frase.forEach(function(p) {
-        var short = (p.nombre || '').replace('Frase: ', '').replace('Frase Premium: ', '★ ');
+        var short = (p.nombre || '').replace('Frase: ', '').replace('Frase Premium: ', '');
+        if (short.indexOf('★') === 0) short = '<span class="alpro-star-prem">★</span> ' + short.replace(/^★\s*/, '');
         extra += chip(short, 'frase', p.prefValue, p.prefValue === activaFrase);
       });
       extra += '</div>';
@@ -12220,25 +12462,19 @@ function evaluarMostrarNog() {
     const radioCompraDirecta = document.querySelector('input[name="tipoContratacion"][value="Compra Directa"]');
     const contenedorNog = document.getElementById('contenedorCampoNog');
     const inputNog = document.getElementById('nogInput');
-
     if (!contenedorNog) return;
 
-    if (radioCompraDirecta && radioCompraDirecta.checked) {
-        // --- MOSTRAR CON FADE PREMIUM ---
-        contenedorNog.classList.remove('nog-oculto');
-        contenedorNog.classList.add('nog-visible');
-        
-        if (inputNog) {
-            inputNog.setAttribute('required', 'required');
-        }
+    const esDirecta = !!(radioCompraDirecta && radioCompraDirecta.checked);
+
+    if (esDirecta) {
+        contenedorNog.hidden = false;
+        contenedorNog.classList.add('is-open');
+        if (inputNog) inputNog.setAttribute('required', 'required');
     } else {
-        // --- OCULTAR CON FADE PREMIUM (AL REVEZ) ---
-        contenedorNog.classList.remove('nog-visible');
-        contenedorNog.classList.add('nog-oculto'); 
-        
+        contenedorNog.classList.remove('is-open');
         if (inputNog) {
             inputNog.removeAttribute('required');
-            inputNog.value = ''; // Limpia el valor para que no arrastre basura
+            inputNog.value = '';
         }
     }
 }
@@ -12309,18 +12545,82 @@ function construirFilaArticuloHtml(art, index) {
     const cantidadConComas = art.cantidad.toLocaleString('en-US');
     const bordeInferior = "border-bottom: 1px solid #e2e8f0;";
     const bordeVertical = "border-right: 1px solid #e2e8f0;";
+    const inpBase = "width:100%;box-sizing:border-box;border:1px solid transparent;background:transparent;font:inherit;color:inherit;padding:4px 2px;border-radius:6px;outline:none;";
+    const inpFocus = "onfocus=\"this.style.borderColor='#93c5fd';this.style.background='#f8fafc';\" onblur=\"this.style.borderColor='transparent';this.style.background='transparent';\"";
     return `
             <tr data-art-idx="${index}" style="background: white;">
-                <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">${cantidadConComas}</td>
-                <td style="padding: 10px 8px; text-align: left; color: #475569; ${bordeInferior} ${bordeVertical}">${art.codigo}</td>
-                <td style="padding: 10px 8px; text-align: left; color: #0f172a; font-weight: 500; word-break: break-word; ${bordeInferior} ${bordeVertical}">${art.descripcion}</td>
-                <td style="padding: 10px 8px; text-align: right; color: #475569; ${bordeInferior} ${bordeVertical}">Q ${precioConComas}</td>
-                <td style="padding: 10px 12px 10px 8px; text-align: right; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">Q ${totalConComas}</td>
+                <td style="padding: 6px 4px; text-align: center; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">
+                  <input type="text" value="${cantidadConComas}" data-field="cantidad" ${inpFocus}
+                    onchange="actualizarArticuloPedido(${index}, 'cantidad', this.value)"
+                    style="${inpBase} text-align:center; font-weight:bold;" />
+                </td>
+                <td style="padding: 6px 4px; text-align: left; color: #475569; ${bordeInferior} ${bordeVertical}">
+                  <input type="text" value="${(art.codigo || '').replace(/"/g, '&quot;')}" data-field="codigo" ${inpFocus}
+                    onchange="actualizarArticuloPedido(${index}, 'codigo', this.value)"
+                    style="${inpBase}" />
+                </td>
+                <td style="padding: 6px 4px; text-align: left; color: #0f172a; font-weight: 500; word-break: break-word; ${bordeInferior} ${bordeVertical}">
+                  <input type="text" value="${(art.descripcion || '').replace(/"/g, '&quot;')}" data-field="descripcion" ${inpFocus}
+                    onchange="actualizarArticuloPedido(${index}, 'descripcion', this.value)"
+                    style="${inpBase} font-weight:500;" />
+                </td>
+                <td style="padding: 6px 4px; text-align: right; color: #475569; ${bordeInferior} ${bordeVertical}">
+                  <input type="text" value="${precioConComas}" data-field="precioU" ${inpFocus}
+                    onchange="actualizarArticuloPedido(${index}, 'precioU', this.value)"
+                    style="${inpBase} text-align:right;" />
+                </td>
+                <td style="padding: 10px 12px 10px 8px; text-align: right; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}" data-total-cell>Q ${totalConComas}</td>
                 <td style="padding: 10px 8px; text-align: center; ${bordeInferior}">
                     <button type="button" onclick="eliminarArticuloPedido(${index})" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1.1rem; padding:0; font-weight:bold;">✕</button>
                 </td>
             </tr>
         `;
+}
+
+function actualizarArticuloPedido(index, field, rawVal) {
+    if (!articulosPedidoActual || !articulosPedidoActual[index]) return;
+    var art = articulosPedidoActual[index];
+    if (field === 'cantidad') {
+        var cant = parseInt(String(rawVal).replace(/,/g, ''), 10);
+        if (isNaN(cant) || cant <= 0) {
+            renderizarTablaArticulos();
+            return;
+        }
+        art.cantidad = cant;
+    } else if (field === 'precioU') {
+        var precio = parseFloat(String(rawVal).replace(/,/g, ''));
+        if (isNaN(precio) || precio < 0) {
+            renderizarTablaArticulos();
+            return;
+        }
+        art.precioU = precio;
+    } else if (field === 'codigo') {
+        art.codigo = String(rawVal || '').trim() || 'N/A';
+    } else if (field === 'descripcion') {
+        var d = String(rawVal || '').trim();
+        if (!d) {
+            renderizarTablaArticulos();
+            return;
+        }
+        art.descripcion = d;
+    }
+    art.total = art.cantidad * art.precioU;
+    // Actualizar total de fila sin re-render completo si es posible
+    var tr = document.querySelector('#cuerpoTablaPedido tr[data-art-idx="' + index + '"]');
+    if (tr) {
+        var cell = tr.querySelector('[data-total-cell]');
+        if (cell) {
+            cell.textContent = 'Q ' + art.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        if (field === 'cantidad' || field === 'precioU') {
+            var cantInp = tr.querySelector('input[data-field="cantidad"]');
+            var preInp = tr.querySelector('input[data-field="precioU"]');
+            if (cantInp && field === 'cantidad') cantInp.value = art.cantidad.toLocaleString('en-US');
+            if (preInp && field === 'precioU') preInp.value = art.precioU.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+    }
+    actualizarTotalPedidoVista();
+    validarBloqueoBotonVerde();
 }
 
 function actualizarTotalPedidoVista() {
@@ -12334,73 +12634,25 @@ function actualizarTotalPedidoVista() {
 
 function renderizarTablaArticulos() {
     const cuerpo = document.getElementById('cuerpoTablaPedido');
+    if (!cuerpo) return;
     cuerpo.innerHTML = "";
 
-    // Aseguramos que la tabla colapse sus bordes para que las líneas divisorias no se quiebren
     if (cuerpo.parentElement) {
         cuerpo.parentElement.style.borderCollapse = "collapse";
     }
 
-    // Si la tabla se queda vacía, mostramos el mensaje elegante por defecto
     if (articulosPedidoActual.length === 0) {
         cuerpo.innerHTML = `<tr id="filaVaciaPedido"><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px; font-style:italic;">No hay productos agregados todavía.</td></tr>`;
-        
         const txtTotal = document.getElementById('txtTotalPedido');
         if (txtTotal) txtTotal.innerText = "0.00";
-        
         validarBloqueoBotonVerde();
         return;
     }
 
-    let totalGeneral = 0;
-
-   // Barremos el arreglo para construir las filas dinámicamente
     articulosPedidoActual.forEach((art, index) => {
-        totalGeneral += art.total;
-
-        const precioConComas = art.precioU.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const totalConComas = art.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const cantidadConComas = art.cantidad.toLocaleString('en-US');
-
-        const bordeInferior = "border-bottom: 1px solid #e2e8f0;";
-        const bordeVertical = "border-right: 1px solid #e2e8f0;"; 
-
-        cuerpo.innerHTML += `
-            <tr data-art-idx="${index}" style="background: white;">
-                <td style="padding: 10px 8px; text-align: center; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">${cantidadConComas}</td>
-                
-                <td style="padding: 10px 8px; text-align: left; color: #475569; ${bordeInferior} ${bordeVertical}">${art.codigo}</td>
-                
-                <td style="padding: 10px 8px; text-align: left; color: #0f172a; font-weight: 500; word-break: break-word; ${bordeInferior} ${bordeVertical}">${art.descripcion}</td>
-                
-                <td style="padding: 10px 8px; text-align: right; color: #475569; ${bordeInferior} ${bordeVertical}">Q ${precioConComas}</td>
-                
-<td style="padding: 10px 12px 10px 8px; text-align: right; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}">Q ${totalConComas}</td>
-                
-                <td style="padding: 10px 8px; text-align: center; ${bordeInferior}">
-                    <button type="button" onclick="eliminarArticuloPedido(${index})" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1.1rem; padding:0; font-weight:bold;">✕</button>
-                </td>
-            </tr>
-        `;
+        cuerpo.insertAdjacentHTML('beforeend', construirFilaArticuloHtml(art, index));
     });
-
-    const txtTotalValue = document.getElementById('txtTotalPedido');
-    if (txtTotalValue) {
-        txtTotalValue.innerText = totalGeneral.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    const idxAnim = window.__artLastIndex;
-    window.__artLastIndex = null;
-    if (typeof idxAnim === 'number' && cuerpo) {
-        requestAnimationFrame(function() {
-            var fila = cuerpo.querySelector('tr[data-art-idx="' + idxAnim + '"]');
-            if (fila) {
-                fila.classList.remove('art-row-enter');
-                void fila.offsetWidth;
-                fila.classList.add('art-row-enter');
-            }
-        });
-    }
+    actualizarTotalPedidoVista();
     validarBloqueoBotonVerde();
 }
 
@@ -13274,13 +13526,19 @@ const premios = [
     { id: 203, nombre: "Color: Coral", precio: 30, emoji: "🟠", colorBadge: "#ffedd5", colorTexto: "#9a3412", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#c2410c", prefDeep: "#9a3412", desc: "Coral profundo, menos chillante" },
     { id: 204, nombre: "Color: Índigo", precio: 30, emoji: "🟦", colorBadge: "#e0e7ff", colorTexto: "#312e81", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#4338ca", prefDeep: "#3730a3", desc: "Índigo serio, cerca del clásico" },
     { id: 205, nombre: "Color: Rosa", precio: 30, emoji: "💗", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#be185d", prefDeep: "#9d174d", desc: "Rosa sobrio para la interfaz" },
-    { id: 207, nombre: "Color: Ámbar", precio: 30, emoji: "🟡", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#b45309", prefDeep: "#92400e", desc: "Ámbar cálido y contenido" },
+    { id: 207, nombre: "Color: Teal", precio: 30, emoji: "🩵", colorBadge: "#ccfbf1", colorTexto: "#115e59", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#0f766e", prefDeep: "#115e59", desc: "Teal fresco, lejos del coral" },
     { id: 208, nombre: "Color: Fucsia", precio: 30, emoji: "💖", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#a21caf", prefDeep: "#86198f", desc: "Fucsia elegante, no neón" },
     { id: 209, nombre: "Color: Gris", precio: 30, emoji: "⬜", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#475569", prefDeep: "#334155", desc: "Gris elegante neutro" },
     { id: 206, nombre: "Color: Clásico", precio: 20, emoji: "🔵", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1e3a8a", prefDeep: "#1e40af", desc: "Azul original del sistema" },
-    { id: 212, nombre: "Color Premium Borgoña", precio: 70, emoji: "🍷", colorBadge: "#ffe4e6", colorTexto: "#9f1239", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#9f1239", prefDeep: "#881337", desc: "Rojo vino premium, sobrio y marcado" },
-    { id: 213, nombre: "Color Premium Bosque", precio: 70, emoji: "🌲", colorBadge: "#dcfce7", colorTexto: "#14532d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#166534", prefDeep: "#14532d", desc: "Verde bosque premium, profundo" },
-    { id: 214, nombre: "Color Premium Zafiro", precio: 70, emoji: "💎", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1d4ed8", prefDeep: "#1e3a8a", desc: "Azul zafiro premium, más vivo que el clásico" },
+    { id: 215, nombre: "Color: Cielo", precio: 30, emoji: "🌤️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#0284c7", prefDeep: "#0369a1", desc: "Azul cielo claro y fresco" },
+    { id: 216, nombre: "Color: Oliva", precio: 30, emoji: "🫒", colorBadge: "#ecfccb", colorTexto: "#3f6212", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#65a30d", prefDeep: "#3f6212", desc: "Verde oliva natural" },
+    { id: 217, nombre: "Color: Grafito", precio: 30, emoji: "⚫", colorBadge: "#e2e8f0", colorTexto: "#1e293b", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1e293b", prefDeep: "#0f172a", desc: "Grafito oscuro, distinto al gris" },
+    { id: 212, nombre: "Color: ★ Borgoña", precio: 35, emoji: "🍷", colorBadge: "#ffe4e6", colorTexto: "#9f1239", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#9f1239", prefDeep: "#881337", desc: "Rojo vino sobrio y marcado" },
+    { id: 213, nombre: "Color: ★ Bosque", precio: 35, emoji: "🌲", colorBadge: "#dcfce7", colorTexto: "#14532d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#166534", prefDeep: "#14532d", desc: "Verde bosque profundo" },
+    { id: 214, nombre: "Color: ★ Zafiro", precio: 35, emoji: "💎", colorBadge: "#dbeafe", colorTexto: "#1e3a8a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#1d4ed8", prefDeep: "#1e3a8a", desc: "Azul zafiro, más vivo que el clásico" },
+    { id: 218, nombre: "Color: ★ Medianoche", precio: 35, emoji: "🌙", colorBadge: "#e2e8f0", colorTexto: "#0f172a", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#0f172a", prefDeep: "#020617", desc: "Azul noche casi negro, elegante" },
+    { id: 219, nombre: "Color: ★ Cobre", precio: 35, emoji: "🪙", colorBadge: "#fef3c7", colorTexto: "#78350f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#b45309", prefDeep: "#78350f", desc: "Cobre dorado cálido" },
+    { id: 220, nombre: "Color: ★ Lavanda", precio: 35, emoji: "💜", colorBadge: "#ede9fe", colorTexto: "#4c1d95", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "color", prefValue: "#5b21b6", prefDeep: "#4c1d95", desc: "Lavanda profunda" },
     { id: 220, nombre: "Pack de bordes", precio: 35, emoji: "⬜", colorBadge: "#f1f5f9", colorTexto: "#334155", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "radius_pack", prefValue: "on", desc: "Elige en el menú: original, redondo o cuadrado" },
     { id: 230, nombre: "Pack de tabla", precio: 35, emoji: "📋", colorBadge: "#ecfdf5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "density_pack", prefValue: "on", desc: "Elige en el menú: original, compacta o cómoda" },
     { id: 250, nombre: "Fondo Menta", precio: 25, emoji: "🌿", colorBadge: "#d1fae5", colorTexto: "#047857", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "menta", desc: "Solo el fondo de la página (no las tarjetas)" },
@@ -13295,9 +13553,9 @@ const premios = [
     { id: 256, nombre: "Fondo Rayas", precio: 30, emoji: "╱", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "rayas", desc: "Textura suave de rayas detrás de todo" },
     { id: 260, nombre: "Fondo Cuadrícula", precio: 30, emoji: "▦", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "cuadricula", desc: "Cuadrícula suave detrás de todo" },
     { id: 261, nombre: "Fondo Diagonal", precio: 30, emoji: "⤢", colorBadge: "#f1f5f9", colorTexto: "#475569", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "diagonal", desc: "Rayas diagonales suaves detrás de todo" },
-    { id: 270, nombre: "Fondo Premium Aurora", precio: 80, emoji: "🌌", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "aurora", desc: "Fondo premium con luces suaves (ligero, solo CSS)" },
-    { id: 271, nombre: "Fondo Premium Atardecer", precio: 80, emoji: "🌇", colorBadge: "#ffedd5", colorTexto: "#c2410c", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "atardecer", desc: "Fondo premium cálido (ligero, solo CSS)" },
-    { id: 272, nombre: "Fondo Premium Océano", precio: 80, emoji: "🌊", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "oceano", desc: "Fondo premium fresco (ligero, solo CSS)" },
+    { id: 270, nombre: "Fondo: ★ Aurora", precio: 80, emoji: "🌌", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "aurora", desc: "Luces polares suaves en movimiento" },
+    { id: 271, nombre: "Fondo: ★ Atardecer", precio: 80, emoji: "🌇", colorBadge: "#ffedd5", colorTexto: "#c2410c", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "atardecer", desc: "Cielo al atardecer con brillo cálido" },
+    { id: 272, nombre: "Fondo: ★ Océano", precio: 80, emoji: "🌊", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "bg", prefValue: "oceano", desc: "Profundidades azules en movimiento" },
     // —— Estilo de frase motivacional ——
     { id: 280, nombre: "Frase: Verde", precio: 25, emoji: "💚", colorBadge: "#d1fae5", colorTexto: "#065f46", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "verde", desc: "Destello verde en la frase de arriba" },
     { id: 281, nombre: "Frase: Rosa", precio: 25, emoji: "💗", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "rosa", desc: "Destello rosa en la frase de arriba" },
@@ -13306,9 +13564,9 @@ const premios = [
     { id: 284, nombre: "Frase: Glitch", precio: 35, emoji: "⚡", colorBadge: "#e0e7ff", colorTexto: "#3730a3", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "glitch", desc: "Efecto glitch retro en la frase" },
     { id: 285, nombre: "Frase: Arcoíris", precio: 35, emoji: "🌈", colorBadge: "#fce7f3", colorTexto: "#9d174d", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "rainbow", desc: "Frase con brillo arcoíris" },
     { id: 286, nombre: "Frase: Partículas", precio: 35, emoji: "✨", colorBadge: "#ede9fe", colorTexto: "#5b21b6", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "particulas", desc: "Brillo suave tipo partículas" },
-    { id: 290, nombre: "Frase Premium: Dorada", precio: 70, emoji: "🥇", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "dorada", desc: "Frase con destello dorado premium" },
-    { id: 291, nombre: "Frase Premium: Holográfica", precio: 70, emoji: "💎", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "holo", desc: "Frase holográfica premium" },
-    { id: 292, nombre: "Frase Premium: Neón", precio: 70, emoji: "🔮", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "neon", desc: "Frase neón brillante premium" },
+    { id: 290, nombre: "Frase: ★ Dorada", precio: 70, emoji: "🥇", colorBadge: "#fef3c7", colorTexto: "#92400e", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "dorada", desc: "Frase con destello dorado premium" },
+    { id: 291, nombre: "Frase: ★ Holográfica", precio: 70, emoji: "💎", colorBadge: "#fae8ff", colorTexto: "#86198f", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "holo", desc: "Frase holográfica premium" },
+    { id: 292, nombre: "Frase: ★ Neón", precio: 70, emoji: "🔮", colorBadge: "#cffafe", colorTexto: "#0e7490", esUnico: true, prefijo: "PF", tipo: "pref", prefKey: "frase", prefValue: "neon", desc: "Frase neón brillante premium" },
     // —— Mascotas (skins) ——
     { id: 101, nombre: "Skin: Gato Travesura", precio: 40, emoji: "🐱", colorBadge: "#ffedd5", colorTexto: "#c2410c", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "gato", desc: "Desbloquea la skin del gato travieso en tu mascota" },
     { id: 102, nombre: "Skin: Ajolote", precio: 40, emoji: "🦎", colorBadge: "#fce7f3", colorTexto: "#be185d", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "ajolote", desc: "Desbloquea la skin del ajolote rosa" },
@@ -16527,8 +16785,9 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
     <h3 id="mpinTitulo">Acceso restringido</h3>
     <p class="mpin-hint">Documentos internos. Ingresá el PIN para continuar.</p>
+    <p class="mpin-pista">Pista: Fecha de fundación (día y mes)</p>
     <input type="password" id="mpinInput" maxlength="8" inputmode="numeric" placeholder="••••" autocomplete="off" />
-    <div id="mpinError" class="mpin-error" style="display:none;">PIN incorrecto</div>
+    <div id="mpinError" class="mpin-error" aria-live="polite"></div>
     <div class="mpin-actions">
       <button type="button" id="mpinCancel" class="mpin-btn-ghost">Cancelar</button>
       <button type="button" id="mpinOk" class="mpin-btn-primary">Entrar</button>
@@ -16561,6 +16820,42 @@ document.addEventListener('DOMContentLoaded', () => {
   width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 14px;
   background: #eef2ff; color: #4338ca;
   display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.mpin-ico.mpin-ico-bad {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  opacity: 1 !important;
+  animation: mpinFadeRojo 1.5s ease forwards;
+}
+@keyframes mpinFadeRojo {
+  0% { background: #fef2f2; color: #dc2626; }
+  35% { background: #fef2f2; color: #dc2626; }
+  100% { background: #eef2ff; color: #4338ca; }
+}
+[data-theme="dark"] .mpin-ico.mpin-ico-bad {
+  animation: mpinFadeRojoDark 1.5s ease forwards;
+}
+@keyframes mpinFadeRojoDark {
+  0% { background: rgba(220,38,38,0.25); color: #fca5a5; }
+  35% { background: rgba(220,38,38,0.25); color: #fca5a5; }
+  100% { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+}
+.mpin-card.mpin-card-shake {
+  animation: mpinCardShake 0.4s ease;
+}
+@keyframes mpinCardShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+.mpin-pista {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-style: italic;
 }
 #mpinTitulo { margin: 0; font-size: 1.05rem; font-weight: 800; }
 .mpin-hint { margin: 6px 0 14px; font-size: 0.8rem; color: #64748b; line-height: 1.4; }
@@ -16571,7 +16866,13 @@ document.addEventListener('DOMContentLoaded', () => {
   font-family: inherit;
 }
 #mpinInput:focus { border-color: var(--primary,#2563eb); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary,#2563eb) 22%, transparent); background:#fff; }
-.mpin-error { color: #dc2626; font-size: 0.78rem; font-weight: 700; margin-top: 8px; }
+.mpin-error {
+  color: #dc2626; font-size: 0.78rem; font-weight: 700;
+  margin-top: 8px; min-height: 1.15rem; line-height: 1.15rem;
+  opacity: 0; transition: opacity 0.2s ease;
+  text-align: center;
+}
+.mpin-error.is-visible { opacity: 1; }
 .mpin-actions { display: flex; gap: 8px; margin-top: 14px; }
 .mpin-btn-ghost, .mpin-btn-primary {
   flex: 1; border-radius: 10px; padding: 10px; font-weight: 700; font-size: 0.85rem;
@@ -16581,6 +16882,8 @@ document.addEventListener('DOMContentLoaded', () => {
 .mpin-btn-primary { background: var(--primary,#2563eb); color: #fff; }
 [data-theme="dark"] .mpin-card { background: #1e293b; color: #f1f5f9; border-color: #334155; }
 [data-theme="dark"] .mpin-ico { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+[data-theme="dark"] .mpin-pista { color: #64748b; }
+
 [data-theme="dark"] #mpinInput { background: #0f172a; border-color: #334155; color: #f1f5f9; }
 [data-theme="dark"] .mpin-btn-ghost { background: #0f172a; color: #e2e8f0; border-color: #475569; }
 </style>
@@ -16598,7 +16901,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var inp = document.getElementById('mpinInput');
     var err = document.getElementById('mpinError');
     if (inp) { inp.value = ''; }
-    if (err) err.style.display = 'none';
+    if (err) { err.textContent = ''; err.classList.remove('is-visible'); }
     m.classList.remove('mfe-closing');
     m.style.display = 'flex';
     void m.offsetWidth;
@@ -16629,8 +16932,27 @@ document.addEventListener('DOMContentLoaded', () => {
       closePinModal();
       if (typeof cb === 'function') setTimeout(cb, 40);
     } else {
-      if (err) err.style.display = 'block';
+      if (err) {
+        err.textContent = 'PIN incorrecto';
+        err.classList.add('is-visible');
+      }
       if (inp) { inp.value = ''; inp.focus(); }
+      var ico = document.querySelector('#modalPinDocsAlpro .mpin-ico');
+      if (ico) {
+        ico.classList.remove('mpin-ico-bad');
+        void ico.offsetWidth;
+        ico.classList.add('mpin-ico-bad');
+        clearTimeout(ico._t);
+        ico._t = setTimeout(function () { ico.classList.remove('mpin-ico-bad'); }, 1500);
+      }
+      var card = document.querySelector('#modalPinDocsAlpro .mpin-card');
+      if (card) {
+        card.classList.remove('mpin-card-shake');
+        void card.offsetWidth;
+        card.classList.add('mpin-card-shake');
+        clearTimeout(card._t);
+        card._t = setTimeout(function () { card.classList.remove('mpin-card-shake'); }, 450);
+      }
     }
   }
   /** Exige PIN una vez por sesión de pestaña; luego deja pasar */
