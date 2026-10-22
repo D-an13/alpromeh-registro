@@ -15200,6 +15200,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
     <div id="mcatFoldersBar" class="mcat-folders" role="tablist" aria-label="Carpetas de fotos"></div>
+    <div id="mcatSubFoldersBar" class="mcat-subfolders" role="tablist" aria-label="Subcarpetas"></div>
     <div id="cuerpoCatalogoFotosAlpro">
       <div id="mcatStatus" class="mcat-status">Cargando fotos…</div>
       <div id="mcatGrid" class="mcat-grid" style="display:none;"></div>
@@ -15388,6 +15389,62 @@ document.addEventListener('DOMContentLoaded', () => {
   word-break: break-word;
   min-height: 3.2em;
 }
+
+.mcat-subfolders {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 12px 10px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+.mcat-subfolders.is-visible { display: flex; }
+.mcat-subchip {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.mcat-subchip:hover { border-color: var(--primary, #2563eb); color: var(--primary, #2563eb); }
+.mcat-subchip.active {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+.mcat-card-meta {
+  padding: 6px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mcat-card-folder {
+  display: inline-flex;
+  align-self: flex-start;
+  max-width: 100%;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 2px 6px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid transparent;
+}
+.mcat-card-meta .mcat-card-name {
+  padding: 0;
+  min-height: 0;
+}
 #modalCatalogoFotosAlpro .mcat-foot {
   padding: 8px 14px; font-size: 0.72rem; color: #64748b;
   border-top: 1px solid #e2e8f0; background: #f8fafc; flex-shrink: 0;
@@ -15427,15 +15484,15 @@ document.addEventListener('DOMContentLoaded', () => {
   var ROOT_ID = '1jQpcN3QVgfG4utqhvOmmkoaQ43Dnxq76';
   var CARPETAS_BASE = [
     { id: ROOT_ID, nombre: 'Todas', recursive: true },
-    { id: '1J6MS3tftcBH54equem9Ets-6aGcTI98y', nombre: 'Agujas' },
-    { id: '1snxSP-_SWBHVUaAm4EN0Ntz4jZiFFLxL', nombre: 'Alimentación' },
-    { id: '1t_N3uZjTJPDyzSCtD9h5Cs5p2fWSo09R', nombre: 'Aspiración' },
-    { id: '16OIC61ZuF04jxlshs4K9_3niseOqruR5', nombre: 'Bolsas esterilizar' },
-    { id: '1hDGmGYib8UuBrdvvQDF78Unxm1unDRQ6', nombre: 'Catéter IV' },
-    { id: '1CUBu7QNL9kHsA4pvy4_GmUPECBT9VCxs', nombre: 'Jeringas' },
-    { id: '15dAla2kf9v0SSpEVd69ai1OulHOkxhfq', nombre: 'Muletas' },
-    { id: '1J5oXvDmqPlKLH6ZLC8-9wsc8XWSrxSc9', nombre: 'Nuevos productos' },
-    { id: '1UYTJdfZxnSINU9vBk04S7ghw8NzAIGII', nombre: 'Punzocortantes' }
+    { id: '1J6MS3tftcBH54equem9Ets-6aGcTI98y', nombre: 'Agujas', recursive: true },
+    { id: '1snxSP-_SWBHVUaAm4EN0Ntz4jZiFFLxL', nombre: 'Alimentación', recursive: true },
+    { id: '1t_N3uZjTJPDyzSCtD9h5Cs5p2fWSo09R', nombre: 'Aspiración', recursive: true },
+    { id: '16OIC61ZuF04jxlshs4K9_3niseOqruR5', nombre: 'Bolsas esterilizar', recursive: true },
+    { id: '1hDGmGYib8UuBrdvvQDF78Unxm1unDRQ6', nombre: 'Catéter IV', recursive: true },
+    { id: '1CUBu7QNL9kHsA4pvy4_GmUPECBT9VCxs', nombre: 'Jeringas', recursive: true },
+    { id: '15dAla2kf9v0SSpEVd69ai1OulHOkxhfq', nombre: 'Muletas', recursive: true },
+    { id: '1J5oXvDmqPlKLH6ZLC8-9wsc8XWSrxSc9', nombre: 'Nuevos productos', recursive: true },
+    { id: '1UYTJdfZxnSINU9vBk04S7ghw8NzAIGII', nombre: 'Punzocortantes', recursive: true }
   ];
   var CARPETAS = CARPETAS_BASE.slice();
 
@@ -15490,7 +15547,7 @@ document.addEventListener('DOMContentLoaded', () => {
           var bonito = nombre.toLowerCase().replace(/(^|\s|\-)(\S)/g, function (m, a, b) {
             return a + b.toUpperCase();
           });
-          extras.push({ id: id, nombre: bonito });
+          extras.push({ id: id, nombre: bonito, recursive: true });
         });
         extras.sort(function (a, b) {
           return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' });
@@ -15554,11 +15611,41 @@ document.addEventListener('DOMContentLoaded', () => {
         this.src = viewUrl(f.id);
       };
       wrap.appendChild(img);
+      var meta = document.createElement('div');
+      meta.className = 'mcat-card-meta';
+      // Etiqueta solo en vista "Todas" (no dentro de una subcarpeta ya filtrada)
+      var folderLabel = (f.folderName || f.parentName || f.folder || '').trim();
+      if (folderLabel && !subcarpetaActiva) {
+        var cat = CARPETAS.find(function (c) { return c.id === carpetaActiva; });
+        var catNom = cat ? (cat.nombre || '').toLowerCase() : '';
+        // Ocultar si el label es la misma categoría principal
+        if (folderLabel.toLowerCase() !== catNom && carpetaActiva !== ROOT_ID) {
+          var badge = document.createElement('span');
+          badge.className = 'mcat-card-folder';
+          badge.textContent = folderLabel;
+          var col = colorSubcarpeta(folderLabel);
+          badge.style.color = col.fg;
+          badge.style.background = col.bg;
+          badge.style.borderColor = col.bd;
+          meta.appendChild(badge);
+        } else if (carpetaActiva === ROOT_ID && folderLabel) {
+          // En "Todas" del root también ayuda ver de qué carpeta viene
+          var badgeR = document.createElement('span');
+          badgeR.className = 'mcat-card-folder';
+          badgeR.textContent = folderLabel;
+          var colR = colorSubcarpeta(folderLabel);
+          badgeR.style.color = colR.fg;
+          badgeR.style.background = colR.bg;
+          badgeR.style.borderColor = colR.bd;
+          meta.appendChild(badgeR);
+        }
+      }
       var name = document.createElement('div');
       name.className = 'mcat-card-name';
       name.textContent = f.name || f.id;
+      meta.appendChild(name);
       btn.appendChild(wrap);
-      btn.appendChild(name);
+      btn.appendChild(meta);
       btn.addEventListener('click', function () {
         window.open('https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/view', '_blank', 'noopener,noreferrer');
       });
@@ -15608,10 +15695,141 @@ document.addEventListener('DOMContentLoaded', () => {
     return base + (q ? '?' + q : '');
   }
 
+  function bonitoNombreCarpeta(nombre) {
+    return (nombre || '').trim().toLowerCase().replace(/(^|\s|\-)(\S)/g, function (m, a, b) {
+      return a + b.toUpperCase();
+    });
+  }
+
+
+  // Colores estables por nombre de subcarpeta (misma carpeta = mismo color)
+  function colorSubcarpeta(nombre) {
+    var palette = [
+      { fg: '#5b21b6', bg: '#ede9fe', bd: '#c4b5fd' },
+      { fg: '#9f1239', bg: '#ffe4e6', bd: '#fda4af' },
+      { fg: '#075985', bg: '#e0f2fe', bd: '#7dd3fc' },
+      { fg: '#166534', bg: '#dcfce7', bd: '#86efac' },
+      { fg: '#9a3412', bg: '#ffedd5', bd: '#fdba74' },
+      { fg: '#1e40af', bg: '#dbeafe', bd: '#93c5fd' },
+      { fg: '#86198f', bg: '#fae8ff', bd: '#e879f9' },
+      { fg: '#0f766e', bg: '#ccfbf1', bd: '#5eead4' },
+      { fg: '#a16207', bg: '#fef9c3', bd: '#fde047' },
+      { fg: '#334155', bg: '#f1f5f9', bd: '#cbd5e1' }
+    ];
+    var str = String(nombre || '').toUpperCase();
+    var h = 0;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) - h) + str.charCodeAt(i);
+    h = Math.abs(h);
+    return palette[h % palette.length];
+  }
+
+  function pintarSubChips() {
+    var bar = document.getElementById('mcatSubFoldersBar');
+    if (!bar) return;
+    bar.innerHTML = '';
+    if (!subcarpetasActuales.length || carpetaActiva === ROOT_ID) {
+      bar.classList.remove('is-visible');
+      return;
+    }
+    bar.classList.add('is-visible');
+    // Chip "Todas" dentro de la categoría
+    var all = document.createElement('button');
+    all.type = 'button';
+    all.className = 'mcat-subchip' + (!subcarpetaActiva ? ' active' : '');
+    all.textContent = 'Todas';
+    all.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      subcarpetaActiva = null;
+      pintarSubChips();
+      cargarFotosDeCarpeta(carpetaActiva, true, null);
+    });
+    bar.appendChild(all);
+    subcarpetasActuales.forEach(function (sc) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mcat-subchip' + (subcarpetaActiva === sc.id ? ' active' : '');
+      b.textContent = sc.nombre;
+      b.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        subcarpetaActiva = sc.id;
+        pintarSubChips();
+        // Solo esa subcarpeta; etiqueta en cada card
+        cargarFotosDeCarpeta(sc.id, true, sc.nombre);
+      });
+      bar.appendChild(b);
+    });
+  }
+
+  function cargarFotosDeCarpeta(folderId, recursive, forceFolderName) {
+    listaActual = [];
+    setStatus('Cargando fotos…');
+    var url = apiUrl({
+      action: 'list',
+      folderId: folderId,
+      recursive: recursive ? '1' : '0',
+      mime: 'image'
+    });
+    fetch(url, { method: 'GET' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data && data.error) throw new Error(data.error);
+        listaActual = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
+        if (forceFolderName) {
+          listaActual.forEach(function (f) {
+            if (f && !f.folderName) f.folderName = forceFolderName;
+          });
+        }
+        renderGrid(listaActual);
+      })
+      .catch(function (err) {
+        console.error(err);
+        setStatus('No se pudieron cargar las fotos. Revisá la Web App y que la carpeta esté compartida.<br><small>' + (err.message || '') + '</small>');
+      });
+  }
+
+  function cargarSubcarpetasYFotos() {
+    subcarpetasActuales = [];
+    subcarpetaActiva = null;
+    pintarSubChips();
+    if (carpetaActiva === ROOT_ID) {
+      cargarFotosDeCarpeta(ROOT_ID, true, null);
+      return;
+    }
+    // Pedir subcarpetas del nivel actual
+    var urlSub = apiUrl({
+      action: 'list',
+      folderId: carpetaActiva,
+      recursive: '0',
+      mime: 'folder'
+    });
+    fetch(urlSub, { method: 'GET' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var files = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
+        subcarpetasActuales = files.filter(esCarpetaDrive).map(function (f) {
+          return {
+            id: f.id || f.fileId,
+            nombre: bonitoNombreCarpeta(f.name || f.title || 'Carpeta')
+          };
+        }).filter(function (x) { return x.id; });
+        pintarSubChips();
+      })
+      .catch(function () {
+        subcarpetasActuales = [];
+        pintarSubChips();
+      })
+      .then(function () {
+        // Siempre cargar fotos (recursivo) de la categoría
+        cargarFotosDeCarpeta(carpetaActiva, true, null);
+      });
+  }
+
   function cargarCarpeta(id) {
     carpetaActiva = id || ROOT_ID;
+    subcarpetaActiva = null;
     pintarChips();
-    var meta = CARPETAS.find(function (c) { return c.id === carpetaActiva; }) || { id: carpetaActiva };
     listaActual = [];
     if (!ALPRO_FOTOS_API) {
       setStatus(
@@ -15621,24 +15839,7 @@ document.addEventListener('DOMContentLoaded', () => {
       );
       return;
     }
-    setStatus('Cargando fotos…');
-    var url = apiUrl({
-      action: 'list',
-      folderId: carpetaActiva,
-      recursive: meta.recursive ? '1' : '0',
-      mime: 'image'
-    });
-    fetch(url, { method: 'GET' })
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (data && data.error) throw new Error(data.error);
-        listaActual = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
-        renderGrid(listaActual);
-      })
-      .catch(function (err) {
-        console.error(err);
-        setStatus('No se pudieron cargar las fotos. Revisá la Web App y que la carpeta esté compartida.<br><small>' + (err.message || '') + '</small>');
-      });
+    cargarSubcarpetasYFotos();
   }
 
   function compressImage(file, maxW, quality) {
