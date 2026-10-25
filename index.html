@@ -5825,7 +5825,7 @@ tbody.animar-entrada {
 
         <!-- Encabezado -->
         <div style="text-align: center; margin-bottom: 26px;">
-            <h3 style="margin: 0; color: #0f172a; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <h3 style="margin: 0; color: #0f172a; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 16px;">
                 📅 <span>Filtrar por Fechas</span>
             </h3>
         </div>
@@ -13003,31 +13003,62 @@ function sumarAlprocoinsLocales(monedasGanadas) {
     #alproCoinsStack { display: flex !important; }
 }
 #contadorMonedasCompu { display: inline-flex !important; }
-#btnMiniClickerAlpro {
-    position: relative; width: 42px; height: 42px; border-radius: 50%;
-    border: none; cursor: pointer; padding: 0;
-    display: inline-flex; align-items: center; justify-content: center;
-    background: transparent; overflow: visible; z-index: 1;
-    transition: transform 0.2s ease;
+#btnMiniClickerAlpro.mck-3d-btn {
+    --mck-p: var(--primary, #1e3a8a);
+    width: 34px;
+    height: 30px;
+    border: none;
+    outline: 5px solid color-mix(in srgb, var(--mck-p) 38%, transparent);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    background: transparent;
+    padding: 0;
+    transition: outline-color 0.25s ease, transform 0.15s ease, filter 0.2s ease, opacity 0.2s ease;
 }
-#btnMiniClickerAlpro::before {
-    content: ""; position: absolute; inset: -4px;
-    background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b);
-    z-index: -2; filter: blur(5px); border-radius: 50%; opacity: 0.85;
-    animation: mckHueSpin 7s linear infinite;
+#btnMiniClickerAlpro.mck-3d-btn .mck-3d-back {
+    background: color-mix(in srgb, var(--mck-p) 55%, #0f172a);
+    border-radius: 999px;
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
 }
-#btnMiniClickerAlpro::after {
-    content: ""; position: absolute; inset: 2px;
-    background: var(--primary, #1e3a8a);
-    border-radius: 50%; z-index: -1;
-    transition: background 0.25s ease;
+#btnMiniClickerAlpro.mck-3d-btn .mck-3d-front {
+    background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--mck-p) 75%, #000) 12%,
+      var(--mck-p) 45%,
+      color-mix(in srgb, var(--mck-p) 70%, #fff) 100%
+    );
+    box-shadow: 0 0.45em 0.85em -0.15em color-mix(in srgb, var(--mck-p) 40%, #000);
+    border-radius: 999px;
+    position: absolute;
+    border: 1px solid color-mix(in srgb, var(--mck-p) 50%, #0f172a);
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-12%);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-#btnMiniClickerAlpro svg { position: relative; z-index: 1; }
-#btnMiniClickerAlpro:hover { transform: scale(1.06); }
-#btnMiniClickerAlpro:active { transform: scale(0.97); }
-#btnMiniClickerAlpro.is-locked { opacity: 0.55; filter: grayscale(0.5); }
-#btnMiniClickerAlpro.is-locked::before { animation: none; filter: blur(6px) grayscale(0.6); opacity: 0.5; }
-@keyframes mckHueSpin { to { transform: rotate(360deg); } }
+#btnMiniClickerAlpro.mck-3d-btn:hover {
+    outline-color: color-mix(in srgb, var(--mck-p) 55%, transparent);
+}
+#btnMiniClickerAlpro.mck-3d-btn:active .mck-3d-front,
+#btnMiniClickerAlpro.mck-3d-btn.mck-press .mck-3d-front {
+    transform: translateY(0%);
+    box-shadow: 0 0;
+}
+#btnMiniClickerAlpro.is-locked {
+    opacity: 0.55;
+    filter: grayscale(0.4);
+}
+
+}
+ }
 
 /* Botón + / menú accesos: siempre visible */
 #btnMenuAccesosAlpro {
@@ -13118,15 +13149,14 @@ function sumarAlprocoinsLocales(monedasGanadas) {
 </style>
 
 <!-- 🪙 MARCADOR + minijuego clic (desktop) -->
-<div id="alproCoinsStack" style="position: fixed; top: 15px; left: 15px; z-index: 9999; display: none; flex-direction: column; align-items: flex-start; gap: 14px;">
+<div id="alproCoinsStack" style="position: fixed; top: 15px; left: 15px; z-index: 9999; display: none; flex-direction: column; align-items: flex-start; gap: 16px;">
 <div id="contadorMonedasCompu" role="button" tabindex="0" title="Abrir Alprotienda" style="display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.6); padding: 6px 14px; border-radius: 16px; font-weight: 600; font-size: 14px; color: #0f172a; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; transition: transform 0.2s;">
     <span style="margin-right: 6px; font-size: 16px;">🪙</span>
     <span id="numero-alprocoins" style="color: #c2410c; font-weight: 700;">0</span>
 </div>
-<button type="button" id="btnMiniClickerAlpro" title="Bonus diario" aria-label="Bonus diario de Alprocoins">
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
-    <path d="M13.2504 3.75L14.2504 4.75M14.2504 4.75L19.2504 9.75M14.2504 4.75L3.75038 15.25C2.36967 16.6307 2.36966 18.8693 3.75038 20.25C5.13109 21.6307 7.36967 21.6307 8.75038 20.25L19.2504 9.75M19.2504 9.75L20.2504 10.75M6.73862 12.75H15.7347M20 6V5.99M19.2504 2.5C19.2504 2.91421 18.9146 3.25 18.5004 3.25C18.0862 3.25 17.7504 2.91421 17.7504 2.5C17.7504 2.08579 18.0862 1.75 18.5004 1.75C18.9146 1.75 19.2504 2.08579 19.2504 2.5ZM20.25 6C20.25 6.13807 20.1381 6.25 20 6.25C19.8619 6.25 19.75 6.13807 19.75 6C19.75 5.86193 19.8619 5.75 20 5.75C20.1381 5.75 20.25 5.86193 20.25 6Z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
+<button type="button" id="btnMiniClickerAlpro" class="mck-3d-btn" title="Bonus diario" aria-label="Bonus diario de Alprocoins">
+  <span class="mck-3d-back" aria-hidden="true"></span>
+  <span class="mck-3d-front" aria-hidden="true"></span>
 </button>
 </div>
 
