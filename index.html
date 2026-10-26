@@ -52,7 +52,46 @@
         .btn-producto { background: var(--primary); color: white; border: none; border-radius: 8px; width: 45px; height: 42px; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
         .btn-producto.lleno { background: #10b981 !important; }
 
-        /* --- CLASE: ANULADA --- */
+        
+/* Basurero eliminar artículo paso 3 — centrado, tapa abre hacia la derecha/arriba */
+button.delete-button-art {
+  position: relative;
+  padding: 2px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  vertical-align: middle;
+  overflow: visible;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+button.delete-button-art .trash-svg {
+  width: 28px;
+  height: 32px;
+  overflow: visible;
+  display: block;
+  transition: transform 0.25s ease;
+}
+button.delete-button-art .lid-group {
+  /* bisagra a la DERECHA → lado izquierdo de la tapa SUBE */
+  transform-origin: 48px 21px;
+  transition: transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+button.delete-button-art:hover .lid-group {
+  transform: rotate(48deg);
+}
+button.delete-button-art:active .lid-group {
+  transform: rotate(32deg);
+}
+button.delete-button-art:hover .trash-svg {
+  transform: scale(1.06);
+}
+
+/* --- CLASE: ANULADA --- */
         .color-anulada { 
             background-color: #475569 !important; 
             color: #ffffff !important; 
@@ -5753,7 +5792,7 @@ tbody.animar-entrada {
         
         <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: wrap; gap: 8px;">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">Ordenes de Hoy</button>
-            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()">Preparando</button>
+            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()" style="display:none !important;" aria-hidden="true" tabindex="-1">Preparando</button>
             <button id="filtroAtraso" class="btn-filtro" style="background: #a35f5f;" onclick="toggleFiltroAtraso()">En Atraso (+2d)</button>
         </div>
 
@@ -6484,10 +6523,37 @@ function cargarFraseMotivacional() {
   }
   window.alproMostrarFrasePrioritaria = function () {
     loadCache();
-    // Prioridad suave: ~75% frases del equipo, ~25% del sistema (si hay equipo)
-    if (pool.length && Math.random() < 0.75) {
-      var it = pool[Math.floor(Math.random() * pool.length)];
-      setPantalla(it.texto, true, it.id);
+    // Prioridad: última del equipo > otras del equipo (más nuevas más peso) > sistema
+    // ~80% equipo si hay frases; dentro del equipo la última pesa mucho más
+    if (pool.length && Math.random() < 0.80) {
+      var it = null;
+      if (pool.length === 1) {
+        it = pool[0];
+      } else {
+        var r = Math.random();
+        if (r < 0.55) {
+          // ~55% de las veces del equipo: la última agregada
+          it = pool[pool.length - 1];
+        } else {
+          // resto: peso por antigüedad (las más nuevas pesan más; la última ya tuvo su cupo)
+          var weights = [];
+          var total = 0;
+          for (var i = 0; i < pool.length - 1; i++) {
+            var w = (i + 1) * (i + 1);
+            weights.push(w);
+            total += w;
+          }
+          var t = Math.random() * total;
+          var acc = 0;
+          it = pool[0];
+          for (var j = 0; j < weights.length; j++) {
+            acc += weights[j];
+            if (t <= acc) { it = pool[j]; break; }
+          }
+        }
+      }
+      if (it) setPantalla(it.texto, true, it.id);
+      else setPantalla(sistemaRandom(), false, null);
     } else {
       setPantalla(sistemaRandom(), false, null);
     }
@@ -7551,11 +7617,11 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
                     // 🎲 TÓMBOLA DE PREMIOS REBALANCEADA (20 elementos en total - Máximo 7)
                     // Ajustamos las apariciones para eliminar el 8 y potenciar el 7:
                     const bolsaPremios = [
-                        3, 3, 3,          // 15% de probabilidad (Normal)
-                        4, 4, 4, 4,       // 20% de probabilidad (Normal)
-                        5, 5, 5, 5, 5,    // 25% de probabilidad (¡Muy Común! 🟢)
-                        6, 6, 6, 6, 6,    // 25% de probabilidad (¡Muy Común! 🟢)
-                        7, 7, 7           // 15% de probabilidad (Raro 🔵 - Subió un 5%)
+                        3, 3, 3, 3, 3, 3,       // 30%
+                        4, 4, 4, 4, 4, 4, 4,    // 35%
+                        5, 5, 5, 5, 5,          // 25%
+                        6,                      // 5%
+                        7                       // 5%
                     ]; 
                     
                     // Al elegir uno al azar de esta lista, el sistema respetará las probabilidades
@@ -12643,8 +12709,21 @@ function construirFilaArticuloHtml(art, index) {
                     style="${inpBase} text-align:right;" />
                 </td>
                 <td style="padding: 10px 12px 10px 8px; text-align: right; font-weight: bold; color: #0f172a; ${bordeInferior} ${bordeVertical}" data-total-cell>Q ${totalConComas}</td>
-                <td style="padding: 10px 8px; text-align: center; ${bordeInferior}">
-                    <button type="button" onclick="eliminarArticuloPedido(${index})" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:1.1rem; padding:0; font-weight:bold;">✕</button>
+                <td style="padding: 10px 4px; text-align: center; vertical-align: middle; ${bordeInferior}">
+                    <button type="button" class="delete-button-art" onclick="eliminarArticuloPedido(${index})" aria-label="Eliminar artículo">
+                      <svg class="trash-svg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <g class="trash-body">
+                          <rect x="18" y="26" width="28" height="28" rx="3" ry="3" fill="#e74c3c"></rect>
+                          <rect x="24" y="32" width="3" height="16" rx="1" fill="#c0392b" opacity="0.55"></rect>
+                          <rect x="30.5" y="32" width="3" height="16" rx="1" fill="#c0392b" opacity="0.55"></rect>
+                          <rect x="37" y="32" width="3" height="16" rx="1" fill="#c0392b" opacity="0.55"></rect>
+                        </g>
+                        <g class="lid-group">
+                          <rect x="14" y="18" width="36" height="7" rx="2" ry="2" fill="#c0392b"></rect>
+                          <rect x="26" y="13" width="12" height="5" rx="1.5" ry="1.5" fill="#c0392b"></rect>
+                        </g>
+                      </svg>
+                    </button>
                 </td>
             </tr>
         `;
