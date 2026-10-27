@@ -15325,7 +15325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="mcat-head">
       <div class="mcat-titles">
         <div id="tituloCatalogoFotos">📷 Catálogo de fotos</div>
-        <div class="mcat-sub">Buscá, mirá y subí fotos sin salir de la app</div>
+        <div class="mcat-sub">Busca, mira y sube fotos de alta calidad</div>
       </div>
       <div class="mcat-actions">
         <button type="button" id="btnSubirFotoAlpro" class="mcat-btn-primary" title="Subir foto a esta carpeta">＋ Subir</button>
@@ -16325,7 +16325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="msan-head">
       <div class="msan-titles">
         <div id="tituloCatalogoSanitarios">📄 Registros sanitarios</div>
-        <div class="msan-sub">Buscá y subí PDFs sin salir de la app</div>
+        <div class="msan-sub">Busca y sube registros para el equipo</div>
       </div>
       <div class="msan-actions">
         <button type="button" id="btnSubirSanitarioAlpro" class="msan-btn-primary" title="Subir PDF">＋ Subir PDF</button>
@@ -16749,7 +16749,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="mgua-head">
       <div class="mgua-titles">
         <div id="tituloCatalogoGuate">📑 Documentos Guatecompras</div>
-        <div class="mgua-sub">Legales en PDF y cartas Word editables</div>
+        <div class="mgua-sub">Documentos Legales en PDF y cartas editables para eventear</div>
       </div>
       <div class="mgua-actions">
         <button type="button" id="btnSubirGuateAlpro" class="mgua-btn-primary" title="Subir archivo">＋ Subir</button>
@@ -17577,7 +17577,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="mhub-head">
       <div>
         <div id="tituloHubOtros">📁 Otros documentos</div>
-        <div class="mhub-sub">Elegí una categoría</div>
+        <div class="mhub-sub">Elige una categoría</div>
       </div>
       <button type="button" id="btnCerrarHubOtros" title="Cerrar">✕</button>
     </div>
@@ -17587,31 +17587,28 @@ document.addEventListener('DOMContentLoaded', () => {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h2M8 17h8M12 13h4"/></svg>
         </span>
         <span class="mhub-name">Cotización</span>
-        <span class="mhub-desc">Excel y formatos para cotizar</span>
+        <span class="mhub-desc">Formatos para Cotizaciones</span>
       </button>
-      <button type="button" class="mhub-card mhub-fact mhub-soon" data-cat="facturacion" disabled>
+      <button type="button" class="mhub-card mhub-fact" data-cat="facturacion">
         <span class="mhub-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg>
         </span>
         <span class="mhub-name">Facturación</span>
-        <span class="mhub-desc">Pronto</span>
-        <span class="mhub-badge">Pronto</span>
+        <span class="mhub-desc">Cartas, formatos y archivos de facturación</span>
       </button>
-      <button type="button" class="mhub-card mhub-cert mhub-soon" data-cat="certificados" disabled>
+      <button type="button" class="mhub-card mhub-cert" data-cat="certificados">
         <span class="mhub-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.5 13.5L7 22l5-2 5 2-1.5-8.5"/><path d="M10 8h4"/></svg>
         </span>
         <span class="mhub-name">Certificados</span>
-        <span class="mhub-desc">Análisis y BPM · Pronto</span>
-        <span class="mhub-badge">Pronto</span>
+        <span class="mhub-desc">Certificados de Análisis y BPM</span>
       </button>
-      <button type="button" class="mhub-card mhub-mues mhub-soon" data-cat="muestras" disabled>
+      <button type="button" class="mhub-card mhub-mues" data-cat="muestras">
         <span class="mhub-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6l3 2"/><path d="M8 21h8"/><path d="M9 3h6l1 8a4 4 0 0 1-8 0L9 3z"/></svg>
         </span>
         <span class="mhub-name">Muestras</span>
-        <span class="mhub-desc">Envío de muestras · Pronto</span>
-        <span class="mhub-badge">Pronto</span>
+        <span class="mhub-desc">Envío de muestras</span>
       </button>
     </div>
   </div>
@@ -17717,6 +17714,9 @@ document.addEventListener('DOMContentLoaded', () => {
 .mhub-cert .mhub-icon { background: #fef3c7; color: #d97706; }
 .mhub-mues .mhub-icon { background: #faf5ff; color: #7c3aed; }
 .mhub-cotiz:not(.mhub-soon):hover { border-color: #34d399; }
+.mhub-fact:not(.mhub-soon):hover { border-color: #60a5fa; }
+.mhub-cert:not(.mhub-soon):hover { border-color: #fbbf24; }
+.mhub-mues:not(.mhub-soon):hover { border-color: #a78bfa; }
 .mhub-name { font-size: 0.9rem; font-weight: 800; color: #0f172a; }
 .mhub-desc { font-size: 0.72rem; color: #64748b; line-height: 1.3; }
 .mhub-badge {
@@ -17754,10 +17754,20 @@ document.addEventListener('DOMContentLoaded', () => {
 .mcot-row:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15,23,42,0.08); }
 .mcot-ico {
   flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px;
-  background: #ecfdf5; color: #059669;
+  background: #f1f5f9; color: #64748b;
   display: flex; align-items: center; justify-content: center;
 }
+.mcot-ico.excel { background: #ecfdf5; color: #059669; }
+.mcot-ico.word { background: #eff6ff; color: #2563eb; }
+.mcot-ico.pdf { background: #fef2f2; color: #dc2626; }
+.mcot-ico.folder { background: #fff7ed; color: #ea580c; }
+.mcot-ico.other { background: #f1f5f9; color: #64748b; }
 .mcot-ico svg { width: 22px; height: 22px; }
+[data-theme="dark"] .mcot-ico.excel { background: rgba(5,150,105,0.2); color: #6ee7b7; }
+[data-theme="dark"] .mcot-ico.word { background: rgba(37,99,235,0.2); color: #93c5fd; }
+[data-theme="dark"] .mcot-ico.pdf { background: rgba(220,38,38,0.2); color: #fca5a5; }
+[data-theme="dark"] .mcot-ico.folder { background: rgba(234,88,12,0.2); color: #fdba74; }
+[data-theme="dark"] .mcot-ico.other { background: rgba(100,116,139,0.25); color: #cbd5e1; }
 .mcot-name { font-size: 0.88rem; font-weight: 700; color: #0f172a; word-break: break-word; }
 .mcot-hint { font-size: 0.72rem; color: #64748b; margin-top: 2px; }
 .mcot-foot {
@@ -17780,8 +17790,34 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 (function () {
   var ALPRO_DOCS_API = 'https://script.google.com/macros/s/AKfycbwN13GbAMyrXKkUuEoM9L9c_AYvI0gbRJUMATU0z7iY5Sc-DHCx2lQIsoHo_hLwoswy7w/exec';
-  var COTIZ_FOLDER_ID = '1WYgrBm-aaW4N43OChlzP0xEhp_gr7bZz';
-  var listaCotiz = [];
+  var CATS = {
+    cotizacion: {
+      folderId: '1WYgrBm-aaW4N43OChlzP0xEhp_gr7bZz',
+      title: '📊 Cotización',
+      sub: 'Formatos para cotizaciones · clic para abrir en Drive',
+      recursive: '0'
+    },
+    facturacion: {
+      folderId: '1KkzSNsz5-N3ekE64pTEdM04UAguM39v6',
+      title: '💳 Facturación',
+      sub: 'Cartas y archivos · incluye Cartas de Compromiso y Desastres',
+      recursive: '1'
+    },
+    certificados: {
+      folderId: '1ttlKB_dNknQbs6wSxvgPRlzp6Gssty0_',
+      title: '🏅 Certificados',
+      sub: 'Certificados de Análisis y BPM · clic para abrir en Drive',
+      recursive: '1'
+    },
+    muestras: {
+      folderId: '1htq25H3_MnDdJ3QaxEu6gXJMPa_Wqn89',
+      title: '🧪 Muestras',
+      sub: 'Envío de muestras · clic para abrir en Drive',
+      recursive: '1'
+    }
+  };
+  var listaDocs = [];
+  var catActiva = 'cotizacion';
   var cerrandoHub = false;
   var cerrandoCotiz = false;
 
@@ -17834,59 +17870,120 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         if (typeof window.cerrarMenuAccesosAlpro === 'function') window.cerrarMenuAccesosAlpro();
         if (typeof window.cerrarCatalogoFotosAlpro === 'function') window.cerrarCatalogoFotosAlpro();
-        if (typeof window.cerrarCatalogoSanitariosAlpro === 'function') window.cerrarCatalogoSanitariosAlpro();
-        if (typeof window.cerrarCatalogoGuatecomprasAlpro === 'function') window.cerrarCatalogoGuatecomprasAlpro();
       } catch (e) {}
       openModal('modalHubOtrosAlpro');
     });
   };
   window.cerrarHubOtrosDocsAlpro = function () { closeModal('modalHubOtrosAlpro', 'hub'); };
 
-  function setCotizStatus(msg) {
+  function setCotizStatus(html) {
     var st = document.getElementById('mcotStatus');
     var list = document.getElementById('mcotList');
-    if (st) { st.style.display = msg ? 'block' : 'none'; st.innerHTML = msg || ''; }
-    if (list && msg) list.style.display = 'none';
+    if (st) {
+      st.style.display = html ? 'block' : 'none';
+      st.innerHTML = html || '';
+    }
+    if (list && html) list.style.display = 'none';
   }
+
+  function isFolder(f) {
+    if (!f) return false;
+    if (f.isFolder === true || f.folder === true || (f.type || '') === 'folder') return true;
+    var m = String(f.mimeType || '');
+    return m === 'application/vnd.google-apps.folder' || m === 'folder';
+  }
+
+  function docKind(f) {
+    if (isFolder(f)) return 'folder';
+    var name = String(f.name || '').toLowerCase();
+    var mime = String(f.mimeType || '').toLowerCase();
+    if (/\.(xlsx|xls|xlsb|xlsm|csv)$/i.test(name) ||
+        mime.indexOf('spreadsheet') !== -1 ||
+        mime.indexOf('excel') !== -1) return 'excel';
+    if (/\.(docx|doc|odt|rtf)$/i.test(name) ||
+        mime.indexOf('word') !== -1 ||
+        mime === 'application/msword' ||
+        mime.indexOf('opendocument.text') !== -1) return 'word';
+    if (/\.pdf$/i.test(name) || mime === 'application/pdf') return 'pdf';
+    if (mime.indexOf('google-apps.document') !== -1) return 'word';
+    if (mime.indexOf('google-apps.spreadsheet') !== -1) return 'excel';
+    return 'other';
+  }
+
+  function openDriveItem(f) {
+    if (!f || !f.id) return;
+    if (isFolder(f)) {
+      window.open('https://drive.google.com/drive/folders/' + encodeURIComponent(f.id), '_blank', 'noopener,noreferrer');
+    } else {
+      window.open('https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/view', '_blank', 'noopener,noreferrer');
+    }
+  }
+
   function renderCotiz() {
     var list = document.getElementById('mcotList');
+    var search = document.getElementById('mcotSearch');
     if (!list) return;
-    var q = ((document.getElementById('mcotSearch') || {}).value || '').trim().toLowerCase();
-    var filtered = (listaCotiz || []).filter(function (f) {
+    var q = (search && search.value) ? String(search.value).trim().toLowerCase() : '';
+    var filtered = listaDocs.filter(function (f) {
       if (!q) return true;
-      return (f.name || '').toLowerCase().indexOf(q) !== -1;
+      var name = String(f.name || '').toLowerCase();
+      var parent = String(f.parentName || f.folderName || f.parent || '').toLowerCase();
+      return name.indexOf(q) !== -1 || parent.indexOf(q) !== -1;
     });
     list.innerHTML = '';
     if (!filtered.length) {
-      setCotizStatus(q ? 'No hay archivos que coincidan.' : 'Esta carpeta aún no tiene archivos.');
+      setCotizStatus(q
+        ? 'No hay archivos que coincidan con “' + q.replace(/</g, '') + '”.'
+        : 'No hay archivos en esta carpeta.');
       return;
     }
     setCotizStatus('');
     list.style.display = 'flex';
     filtered.forEach(function (f) {
+      var kind = docKind(f);
+      var parent = f.parentName || f.folderName || f.parent || '';
+      var typeHint = kind === 'folder' ? 'Carpeta'
+        : kind === 'excel' ? 'Excel'
+        : kind === 'word' ? 'Word'
+        : kind === 'pdf' ? 'PDF'
+        : 'Archivo';
+      var hint = kind === 'folder'
+        ? 'Carpeta · clic para abrir en Drive'
+        : (parent ? (typeHint + ' · ' + parent + ' · clic para abrir') : (typeHint + ' · clic para abrir en Drive'));
+      var ico = kind === 'folder'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>'
+        : kind === 'pdf'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>'
+        : kind === 'word'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>';
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'mcot-row';
       btn.title = f.name || '';
       btn.innerHTML =
-        '<span class="mcot-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span>' +
-        '<span><div class="mcot-name"></div><div class="mcot-hint">Clic para abrir en Drive</div></span>';
+        '<span class="mcot-ico ' + kind + '" aria-hidden="true">' + ico + '</span>' +
+        '<span><div class="mcot-name"></div><div class="mcot-hint"></div></span>';
       btn.querySelector('.mcot-name').textContent = f.name || f.id;
-      btn.addEventListener('click', function () {
-        window.open('https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/view', '_blank', 'noopener,noreferrer');
-      });
+      btn.querySelector('.mcot-hint').textContent = hint;
+      btn.addEventListener('click', function () { openDriveItem(f); });
       list.appendChild(btn);
     });
   }
-  function cargarCotiz() {
-    listaCotiz = [];
+
+  function cargarCatalogo() {
+    var cfg = CATS[catActiva] || CATS.cotizacion;
+    listaDocs = [];
     setCotizStatus('Cargando…');
-    var url = ALPRO_DOCS_API + '?action=list&folderId=' + encodeURIComponent(COTIZ_FOLDER_ID) + '&recursive=0&mime=';
+    var url = ALPRO_DOCS_API +
+      '?action=list&folderId=' + encodeURIComponent(cfg.folderId) +
+      '&recursive=' + encodeURIComponent(cfg.recursive || '0') +
+      '&mime=';
     fetch(url, { method: 'GET' })
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data && data.error) throw new Error(data.error);
-        listaCotiz = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
+        listaDocs = (data && data.files) ? data.files : (Array.isArray(data) ? data : []);
         renderCotiz();
       })
       .catch(function (err) {
@@ -17894,13 +17991,25 @@ document.addEventListener('DOMContentLoaded', () => {
         setCotizStatus('No se pudieron cargar los archivos.<br><small>' + (err.message || '') + '</small>');
       });
   }
-  function abrirCotiz() {
+
+  function abrirCatalogo(cat) {
+    var cfg = CATS[cat];
+    if (!cfg) return;
+    catActiva = cat;
+    var titleEl = document.querySelector('#modalCatalogoCotizAlpro .mcot-title');
+    var subEl = document.querySelector('#modalCatalogoCotizAlpro .mcot-sub');
+    if (titleEl) titleEl.textContent = cfg.title;
+    if (subEl) subEl.textContent = cfg.sub;
+    var search = document.getElementById('mcotSearch');
+    if (search) search.value = '';
     window.cerrarHubOtrosDocsAlpro();
     setTimeout(function () {
       openModal('modalCatalogoCotizAlpro');
-      cargarCotiz();
+      cargarCatalogo();
     }, 200);
   }
+
+  function abrirCotiz() { abrirCatalogo('cotizacion'); }
   window.cerrarCatalogoCotizAlpro = function () { closeModal('modalCatalogoCotizAlpro', 'cotiz'); };
 
   function wireOtros() {
@@ -17918,12 +18027,13 @@ document.addEventListener('DOMContentLoaded', () => {
       xHub._b = true;
       xHub.addEventListener('click', function (e) { e.preventDefault(); window.cerrarHubOtrosDocsAlpro(); });
     }
-    document.querySelectorAll('.mhub-card[data-cat="cotizacion"]').forEach(function (btn) {
+    document.querySelectorAll('.mhub-card[data-cat]').forEach(function (btn) {
       if (btn._b) return;
       btn._b = true;
       btn.addEventListener('click', function (e) {
         e.preventDefault();
-        abrirCotiz();
+        var cat = btn.getAttribute('data-cat');
+        if (cat && CATS[cat]) abrirCatalogo(cat);
       });
     });
     var xCot = document.getElementById('btnCerrarCatalogoCotiz');
