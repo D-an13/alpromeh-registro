@@ -1654,6 +1654,227 @@ input::-webkit-outer-spin-button,
     margin-bottom: 0 !important;
 }
 
+
+/* Filtro por responsable — botón expandible (estilo Uiverse) + menú slide */
+#bloqueFiltrosIzquierda {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.filtro-resp-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+  position: relative;
+  vertical-align: middle;
+}
+
+/* Botón estilo Uiverse: compacto → se expande en hover */
+.filtro-resp-btn {
+  --fr-bg: color-mix(in srgb, var(--primary, #1e3a8a) 14%, #ffffff);
+  --fr-fg: var(--primary, #1e3a8a);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  max-width: 34px;
+  transition:
+    max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    gap 0.28s ease,
+    padding 0.28s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  background: var(--fr-bg);
+  color: var(--fr-fg);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: bold;
+  line-height: 1;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.filtro-resp-btn .sign {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.filtro-resp-btn .sign svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+.filtro-resp-btn .sign svg path,
+.filtro-resp-btn .sign svg circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.filtro-resp-btn .text {
+  display: block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: inherit;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0;
+  transition:
+    max-width 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
+  pointer-events: none;
+}
+/* Expandido: hover, menú abierto o con filtro activo */
+.filtro-resp-btn:hover,
+.filtro-resp-btn.is-on,
+.filtro-resp-btn.has-filter {
+  max-width: 140px;
+  gap: 7px;
+  padding: 0 12px 0 10px;
+}
+.filtro-resp-btn:hover .text,
+.filtro-resp-btn.is-on .text,
+.filtro-resp-btn.has-filter .text {
+  max-width: 96px;
+  opacity: 1;
+}
+.filtro-resp-btn:active {
+  transform: translate(1px, 1px);
+}
+.filtro-resp-btn.is-on,
+.filtro-resp-btn.has-filter {
+  --fr-bg: var(--primary, #1e3a8a);
+  --fr-fg: #ffffff;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--primary, #1e3a8a) 28%, transparent);
+}
+[data-theme="dark"] .filtro-resp-btn {
+  --fr-bg: color-mix(in srgb, var(--primary, #3b82f6) 20%, #1e293b);
+  --fr-fg: color-mix(in srgb, var(--primary, #3b82f6) 90%, #fff);
+}
+[data-theme="dark"] .filtro-resp-btn.is-on,
+[data-theme="dark"] .filtro-resp-btn.has-filter {
+  --fr-bg: var(--primary, #3b82f6);
+  --fr-fg: #ffffff;
+}
+
+/* Menú deslizante de nombres */
+.filtro-resp-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 176px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  z-index: 5000;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--bg-card, #fff);
+  border: 1px solid transparent;
+  box-shadow: none;
+  transition:
+    max-height 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.28s ease,
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.28s ease,
+    border-color 0.2s ease,
+    box-shadow 0.28s ease;
+}
+.filtro-resp-menu.is-open {
+  max-height: 280px;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  padding: 6px;
+  overflow-y: auto;
+  border-color: color-mix(in srgb, var(--primary, #1e3a8a) 16%, #e2e8f0);
+  box-shadow: 0 12px 28px -8px rgba(15,23,42,0.22), 0 4px 10px rgba(15,23,42,0.06);
+}
+.filtro-resp-opt {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--text-main, #1e293b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition: background 0.15s ease, opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0;
+  transform: translateX(-8px);
+}
+.filtro-resp-menu.is-open .filtro-resp-opt {
+  opacity: 1;
+  transform: translateX(0);
+}
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(1) { transition-delay: 0.02s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(2) { transition-delay: 0.05s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(3) { transition-delay: 0.08s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(4) { transition-delay: 0.11s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(5) { transition-delay: 0.14s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(6) { transition-delay: 0.17s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(7) { transition-delay: 0.20s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(8) { transition-delay: 0.23s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(9) { transition-delay: 0.26s; }
+.filtro-resp-menu.is-open .filtro-resp-opt:nth-child(10) { transition-delay: 0.29s; }
+.filtro-resp-opt:hover {
+  background: color-mix(in srgb, var(--primary, #1e3a8a) 10%, transparent);
+}
+.filtro-resp-opt.is-selected {
+  background: color-mix(in srgb, var(--primary, #1e3a8a) 14%, transparent);
+  color: var(--primary, #1e3a8a);
+  font-weight: 800;
+}
+.filtro-resp-opt .filtro-resp-check {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  color: var(--primary, #1e3a8a);
+  flex-shrink: 0;
+}
+.filtro-resp-opt.is-selected .filtro-resp-check { opacity: 1; }
+[data-theme="dark"] .filtro-resp-menu {
+  background: #1e293b;
+}
+[data-theme="dark"] .filtro-resp-menu.is-open {
+  border-color: #334155;
+}
+[data-theme="dark"] .filtro-resp-opt.is-selected {
+  color: color-mix(in srgb, var(--primary, #3b82f6) 90%, #fff);
+}
+
+/* Controles de reporte: misma transición suave */
+#txtContadorReporte, #btnImprimirReporte, #menuHistorialReportes {
+  transition: opacity 0.32s ease, transform 0.32s ease, visibility 0.32s ease !important;
+}
+
 /* Clase base para los botones y controles que se animan al alternar reporte */
 .btn-filtro, #txtContadorReporte, #btnFiltrarFechas {
     transition: opacity 0.4s ease, transform 0.4s ease, background 0.2s ease !important;
@@ -5790,10 +6011,32 @@ tbody.animar-entrada {
 
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; width: 100%;">
         
-        <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <div id="bloqueFiltrosIzquierda" style="display: flex; flex-wrap: nowrap; align-items: center; gap: 6px;">
             <button id="filtroHoy" class="btn-filtro" onclick="toggleFiltroHoy()">Ordenes de Hoy</button>
-            <button id="filtroPreparando" class="btn-filtro" onclick="toggleFiltroPreparando()" style="display:none !important;" aria-hidden="true" tabindex="-1">Preparando</button>
             <button id="filtroAtraso" class="btn-filtro" style="background: #a35f5f;" onclick="toggleFiltroAtraso()">En Atraso (+2d)</button>
+            <div class="filtro-resp-cluster" id="filtroRespCluster">
+              <button type="button" id="btnToggleFiltroResp" class="filtro-resp-btn" title="Filtrar por responsable" aria-pressed="false" aria-label="Filtrar por responsable" aria-expanded="false">
+                <div class="sign" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="text"><span id="filtroRespLabel">Compañero</span></div>
+              </button>
+              <div id="filtroRespMenu" class="filtro-resp-menu" role="listbox" aria-label="Responsables"></div>
+            </div>
+            <button id="filtroPreparando" class="btn-filtro" style="display:none !important;" aria-hidden="true" tabindex="-1" hidden>Preparando</button>
+            <!-- select oculto solo para compatibilidad con código que lo busque -->
+            <select id="filtroResponsable" style="display:none !important;" aria-hidden="true" tabindex="-1" hidden>
+                <option value="">Todos</option>
+                <option value="Yanet">Yanet</option>
+                <option value="Danna">Danna</option>
+                <option value="Carmen">Carmen</option>
+                <option value="Daniela">Daniela</option>
+                <option value="Nata">Nata</option>
+                <option value="Claudia">Claudia</option>
+                <option value="Dan">Dan</option>
+                <option value="Susan">Susan</option>
+                <option value="Richard">Richard</option>
+            </select>
         </div>
 
         <div id="bloqueReporteDerecha" style="display: flex; align-items: center; gap: 10px; margin-left: auto; position: relative;">
@@ -5911,7 +6154,7 @@ tbody.animar-entrada {
     </div>
 </div>
 
-<div id="modalConfirmarCancelar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: opacity 0.3s ease;">
+<div id="modalConfirmarCancelar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 2147483600; opacity: 0; transition: opacity 0.3s ease;">
         <div style="background: white; padding: 24px; border-radius: 16px; max-width: 360px; width: 90%; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); text-align: center; transform: scale(0.9); transition: transform 0.3s ease;" id="cuerpoConfirmar">
             <div style="font-size: 2.5rem; margin-bottom: 10px;">⚠️</div>
             <h3 style="margin: 0 0 10px 0; color: #0f172a; font-family: sans-serif; font-weight: 700;">¿Estás segura?</h3>
@@ -6101,7 +6344,8 @@ tbody.animar-entrada {
 
         let datosLocales = alproLSGetJSON('alpromeh_vFinal_v10', []);
         if (!Array.isArray(datosLocales)) datosLocales = [];
-        let modoFiltro = "todo"; 
+        let modoFiltro = "todo";
+        let filtroResponsable = "";
         let productoTemporal = "";
 
         let clicsRapidos = 0;
@@ -6135,82 +6379,135 @@ function toggleModoReporte() {
 // === LÓGICA INTERNA QUE CAMBIA EL ESTADO DE LA INTERFAZ (SINCRONIZADA COHESIVA) ===
 function procesarToggleModoReporte() {
     modoReporteActivo = !modoReporteActivo;
-    ordenesSeleccionadas = []; 
-    document.getElementById('numContador').innerText = "0"; 
+    ordenesSeleccionadas = [];
+    var numC = document.getElementById('numContador');
+    if (numC) numC.innerText = "0";
 
     const btnHoy = document.getElementById('filtroHoy');
     const btnPrep = document.getElementById('filtroPreparando');
     const btnAtr = document.getElementById('filtroAtraso');
+    const clusterResp = document.getElementById('filtroRespCluster');
     const btnModo = document.getElementById('btnModoReporte');
     const btnImprimir = document.getElementById('btnImprimirReporte');
     const txtContador = document.getElementById('txtContadorReporte');
     const btnFechas = document.getElementById('btnFiltrarFechas');
     const menuPuntos = document.getElementById('menuHistorialReportes');
 
+    // Preparando siempre oculto
+    if (btnPrep) {
+        btnPrep.style.setProperty('display', 'none', 'important');
+        btnPrep.setAttribute('aria-hidden', 'true');
+        btnPrep.setAttribute('hidden', '');
+    }
+
+    // Cerrar menú de responsable si estaba abierto
+    if (typeof cerrarMenuFiltroResp === 'function') {
+        try { cerrarMenuFiltroResp(); } catch (e) {}
+    }
+
     if (modoReporteActivo) {
-        // Ocultar botones de la izquierda y el calendario manteniendo su lugar reservado
-        [btnHoy, btnPrep, btnAtr, btnFechas].forEach(btn => {
+        // 1) Primero ocultan filtros + calendario (animación fade)
+        [btnHoy, btnAtr, clusterResp, btnFechas].forEach(function (btn) {
             if (btn) btn.classList.add('control-oculto');
         });
 
         btnModo.innerText = "Cancelar";
         btnModo.classList.add('modo-cancelar');
-        btnModo.style.background = "#dc2626"; 
+        btnModo.style.background = "#dc2626";
 
+        // Controles de reporte listos pero invisibles (aún no se muestran)
         if (txtContador) {
-            txtContador.style.display = 'inline-block';
-            txtContador.classList.add('control-oculto'); 
-            setTimeout(() => txtContador.classList.remove('control-oculto'), 50);
+            txtContador.style.display = 'none';
+            txtContador.classList.add('control-oculto');
         }
         if (btnImprimir) {
-            btnImprimir.style.display = 'inline-block';
+            btnImprimir.style.display = 'none';
             btnImprimir.disabled = true;
             btnImprimir.style.background = '#94a3b8';
-            btnImprimir.style.cursor = 'not-allowed';
-            btnImprimir.classList.add('control-oculto'); 
-            setTimeout(() => btnImprimir.classList.remove('control-oculto'), 50);
+            btnImprimir.classList.add('control-oculto');
+        }
+        if (menuPuntos) {
+            menuPuntos.style.display = 'none';
+            menuPuntos.classList.remove('mostrar-puntos-activos');
+            menuPuntos.classList.add('control-oculto');
         }
 
-        setTimeout(() => {
-            if(!modoReporteActivo) return; 
-            if(menuPuntos) {
-                menuPuntos.style.display = 'inline-flex';
-                setTimeout(() => menuPuntos.classList.add('mostrar-puntos-activos'), 10);
+        // 2) Cuando ya desaparecieron del todo → display:none del calendario/filtros
+        // 3) DESPUÉS aparecen los controles de reporte (secuencia limpia, sin hueco)
+        setTimeout(function () {
+            if (!modoReporteActivo) return;
+            if (btnHoy) btnHoy.style.display = 'none';
+            if (btnAtr) btnAtr.style.display = 'none';
+            if (clusterResp) clusterResp.style.display = 'none';
+            if (btnFechas) btnFechas.style.display = 'none';
+            if (btnPrep) btnPrep.style.setProperty('display', 'none', 'important');
+
+            // Ahora sí: entrada escalonada de controles de reporte
+            if (txtContador) {
+                txtContador.style.display = 'inline-block';
+                void txtContador.offsetWidth;
+                setTimeout(function () {
+                    if (!modoReporteActivo) return;
+                    txtContador.classList.remove('control-oculto');
+                }, 20);
             }
-            if(btnHoy) btnHoy.style.display = 'none';
-            if(btnPrep) btnPrep.style.display = 'none';
-            if(btnAtr) btnAtr.style.display = 'none';
-            // NOTA: Se remueve btnFechas.style.display = 'none' para que no rompa la alineación
-        }, 410);
+            if (btnImprimir) {
+                btnImprimir.style.display = 'inline-block';
+                void btnImprimir.offsetWidth;
+                setTimeout(function () {
+                    if (!modoReporteActivo) return;
+                    btnImprimir.classList.remove('control-oculto');
+                }, 90);
+            }
+            if (menuPuntos) {
+                menuPuntos.style.display = 'inline-flex';
+                void menuPuntos.offsetWidth;
+                setTimeout(function () {
+                    if (!modoReporteActivo) return;
+                    menuPuntos.classList.remove('control-oculto');
+                    menuPuntos.classList.add('mostrar-puntos-activos');
+                }, 160);
+            }
+        }, 420);
 
     } else {
+        // 1) Primero ocultan controles de reporte
         if (menuPuntos) {
             menuPuntos.classList.remove('mostrar-puntos-activos');
-            menuPuntos.style.display = 'none';
+            menuPuntos.classList.add('control-oculto');
         }
-
-        [txtContador, btnImprimir].forEach(el => {
-            if (el) el.classList.add('control-oculto');
-        });
+        if (txtContador) txtContador.classList.add('control-oculto');
+        if (btnImprimir) btnImprimir.classList.add('control-oculto');
 
         btnModo.innerText = "Reporte";
         btnModo.classList.remove('modo-cancelar');
-        btnModo.style.background = "#c79f00"; 
+        btnModo.style.background = "#c79f00";
 
-        // Mostrar de nuevo los botones
-        [btnHoy, btnPrep, btnAtr, btnFechas].forEach(btn => {
-            if (btn) {
-                if(btn !== btnFechas) btn.style.display = 'inline-block';
-                btn.classList.add('control-oculto'); 
-                setTimeout(() => btn.classList.remove('control-oculto'), 50);
+        // 2) Cuando ya desaparecieron → display:none, y DESPUÉS restauran filtros/calendario
+        setTimeout(function () {
+            if (modoReporteActivo) return;
+            if (menuPuntos) {
+                menuPuntos.style.display = 'none';
+                menuPuntos.classList.remove('control-oculto');
             }
-        });
+            if (txtContador) txtContador.style.display = 'none';
+            if (btnImprimir) btnImprimir.style.display = 'none';
 
-        setTimeout(() => {
-            if(modoReporteActivo) return;
-            if(txtContador) txtContador.style.display = 'none';
-            if(btnImprimir) btnImprimir.style.display = 'none';
-        }, 400);
+            [btnHoy, btnAtr, clusterResp, btnFechas].forEach(function (btn) {
+                if (!btn) return;
+                btn.style.display = (btn === clusterResp) ? 'inline-flex' : 'inline-block';
+                btn.classList.add('control-oculto');
+                void btn.offsetWidth;
+            });
+            if (btnPrep) btnPrep.style.setProperty('display', 'none', 'important');
+
+            setTimeout(function () {
+                if (modoReporteActivo) return;
+                [btnHoy, btnAtr, clusterResp, btnFechas].forEach(function (btn) {
+                    if (btn) btn.classList.remove('control-oculto');
+                });
+            }, 30);
+        }, 360);
     }
 
     if (typeof renderTable === "function") {
@@ -6895,21 +7192,137 @@ function playAlproFx(kind) {
 }
 window.playAlproFx = playAlproFx;
 
+        var ALPRO_RESP_FILTRO_OPTS = ['','Yanet','Danna','Carmen','Daniela','Nata','Claudia','Dan','Susan','Richard'];
+
         function actualizarBotones() {
     const btnHoy = document.getElementById('filtroHoy');
     const btnPrep = document.getElementById('filtroPreparando');
     const btnAtraso = document.getElementById('filtroAtraso');
-    
-    // Asigna las clases CSS de filtro activo
-    btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
-    btnPrep.className = "btn-filtro" + (modoFiltro === "preparando" ? " activo-preparando" : "");
-    btnAtraso.className = "btn-filtro" + (modoFiltro === "atraso" ? " activo-atraso" : "");
+    const selResp = document.getElementById('filtroResponsable');
+    const btn = document.getElementById('btnToggleFiltroResp');
+    const label = document.getElementById('filtroRespLabel');
 
-    // Textos limpios (el icono de la X lo pondrá el CSS automáticamente)
-    btnHoy.innerText = (modoFiltro === "hoy") ? "Quitar Filtro" : "Ordenes de Hoy";
-    btnPrep.innerText = (modoFiltro === "preparando") ? "Quitar Filtro" : "Preparando";
-    btnAtraso.innerText = (modoFiltro === "atraso") ? "Quitar Filtro" : "En Atraso (+2d)";
+    if (btnHoy) {
+        btnHoy.className = "btn-filtro" + (modoFiltro === "hoy" ? " activo-hoy" : "");
+        btnHoy.innerText = (modoFiltro === "hoy") ? "Quitar Filtro" : "Ordenes de Hoy";
+    }
+    if (btnAtraso) {
+        btnAtraso.className = "btn-filtro" + (modoFiltro === "atraso" ? " activo-atraso" : "");
+        btnAtraso.innerText = (modoFiltro === "atraso") ? "Quitar Filtro" : "En Atraso (+2d)";
+    }
+    if (btnPrep) {
+        btnPrep.style.setProperty('display', 'none', 'important');
+        btnPrep.setAttribute('aria-hidden', 'true');
+    }
+    if (selResp) selResp.value = filtroResponsable || '';
+    if (label) label.textContent = filtroResponsable || 'Compañero';
+    if (btn) {
+        btn.classList.toggle('has-filter', !!filtroResponsable);
+        var menuOpen = !!(document.getElementById('filtroRespMenu') && document.getElementById('filtroRespMenu').classList.contains('is-open'));
+        btn.classList.toggle('is-on', menuOpen || !!filtroResponsable);
+        btn.setAttribute('aria-pressed', (menuOpen || !!filtroResponsable) ? 'true' : 'false');
+        btn.setAttribute('aria-expanded', menuOpen ? 'true' : 'false');
+    }
+    pintarMenuFiltroResp();
 }
+
+        function pintarMenuFiltroResp() {
+            var menu = document.getElementById('filtroRespMenu');
+            if (!menu) return;
+            var html = '';
+            ALPRO_RESP_FILTRO_OPTS.forEach(function (name) {
+                var val = name || '';
+                var txt = name || 'Todos';
+                var sel = (filtroResponsable || '') === val;
+                html += '<button type="button" class="filtro-resp-opt' + (sel ? ' is-selected' : '') + '" data-val="' + val + '" role="option" aria-selected="' + (sel ? 'true' : 'false') + '">' +
+                  '<span>' + txt + '</span>' +
+                  '<svg class="filtro-resp-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>' +
+                '</button>';
+            });
+            menu.innerHTML = html;
+            menu.querySelectorAll('.filtro-resp-opt').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFiltroResponsable(btn.getAttribute('data-val') || '');
+                    cerrarMenuFiltroResp();
+                });
+            });
+        }
+
+        function setFiltroResponsable(val) {
+            filtroResponsable = val || '';
+            var sel = document.getElementById('filtroResponsable');
+            if (sel) sel.value = filtroResponsable;
+            if (typeof actualizarBotones === 'function') actualizarBotones();
+            if (typeof renderTable === 'function') renderTable();
+        }
+
+        function abrirMenuFiltroResp() {
+            var menu = document.getElementById('filtroRespMenu');
+            var btn = document.getElementById('btnToggleFiltroResp');
+            if (!menu) return;
+            pintarMenuFiltroResp();
+            // force reflow so slide animation plays
+            menu.classList.remove('is-open');
+            void menu.offsetWidth;
+            menu.classList.add('is-open');
+            if (btn) {
+                btn.classList.add('is-on');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.setAttribute('aria-pressed', 'true');
+            }
+        }
+        function cerrarMenuFiltroResp() {
+            var menu = document.getElementById('filtroRespMenu');
+            var btn = document.getElementById('btnToggleFiltroResp');
+            if (menu) menu.classList.remove('is-open');
+            if (btn) {
+                btn.setAttribute('aria-expanded', 'false');
+                if (!filtroResponsable) {
+                    btn.classList.remove('is-on');
+                    btn.setAttribute('aria-pressed', 'false');
+                } else {
+                    btn.classList.add('is-on');
+                    btn.classList.add('has-filter');
+                    btn.setAttribute('aria-pressed', 'true');
+                }
+            }
+        }
+        function toggleMenuFiltroResp(ev) {
+            if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+            var menu = document.getElementById('filtroRespMenu');
+            if (!menu) return;
+            if (menu.classList.contains('is-open')) cerrarMenuFiltroResp();
+            else abrirMenuFiltroResp();
+        }
+
+        function onFiltroResponsableChange() {
+            var sel = document.getElementById('filtroResponsable');
+            setFiltroResponsable(sel && sel.value ? String(sel.value) : '');
+        }
+        window.onFiltroResponsableChange = onFiltroResponsableChange;
+
+        (function wireFiltroRespUi() {
+            function boot() {
+                var btn = document.getElementById('btnToggleFiltroResp');
+                if (btn && !btn._fr) {
+                    btn._fr = true;
+                    btn.addEventListener('click', toggleMenuFiltroResp);
+                }
+                document.addEventListener('click', function (e) {
+                    var cluster = document.getElementById('filtroRespCluster');
+                    if (!cluster) return;
+                    if (!cluster.contains(e.target)) cerrarMenuFiltroResp();
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') cerrarMenuFiltroResp();
+                });
+                if (typeof actualizarBotones === 'function') actualizarBotones();
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+            else boot();
+        })();
 
         function setFechaHoy() {
             const hoy = new Date();
@@ -7209,10 +7622,12 @@ function ejecutarRenderTabla() {
         const fechaOrden = new Date(item.fecha + "T00:00:00");
         const diasTranscurridos = calcularDiasHabiles(fechaOrden, hoyMedianoche);
         const esAtrasada = !item.despachado && item.responsable !== "Axel" && item.responsable !== "Richard" && item.responsable !== "ANULADA" && diasTranscurridos >= 2;
-        if (modoFiltro === "hoy") return coincideBusqueda && item.fecha === hoyStr;
-        if (modoFiltro === "preparando") return coincideBusqueda && (item.responsable === "Axel" || item.responsable === "Richard") && item.fecha === hoyStr;
-        if (modoFiltro === "atraso") return coincideBusqueda && esAtrasada;
-        return coincideBusqueda;
+        if (!coincideBusqueda) return false;
+        if (filtroResponsable && String(item.responsable || '') !== filtroResponsable) return false;
+        if (modoFiltro === "hoy") return item.fecha === hoyStr;
+        if (modoFiltro === "preparando") return (item.responsable === "Axel" || item.responsable === "Richard") && item.fecha === hoyStr;
+        if (modoFiltro === "atraso") return esAtrasada;
+        return true;
     });
 
     filtrados.sort((a, b) => {
@@ -8069,6 +8484,51 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "✏️", text: "Si quieres, deja una frase arriba para el equipo. Es anónima." },
   { icon: "🖊️", text: "El lápiz de arriba es para motivar al equipo. ¡Úsalo!" },
   { icon: "💬", text: "Una frase bonita arriba no cuesta nada y anima el día." },
+      // Personales / random (todas las mascotas)
+{ icon: "🍿", text: "Si esto fuera cine, yo sería el snack que no se acaba." },
+{ icon: "🍩", text: "Confieso: pensé en donas. Tres veces. Hoy." },
+{ icon: "🧋", text: "Un sorbo imaginario de bubble tea… y seguimos." },
+{ icon: "🍕", text: "Si el universo fuera justo, ahora habría pizza." },
+{ icon: "🍓", text: "Hoy me siento como una fruta: rojo de cariño, no de estrés." },
+{ icon: "🌮", text: "Idea de las 11: tacos. Idea de las 4: más tacos." },
+{ icon: "🌸", text: "Floreciendo en silencio, como planta de escritorio." },
+{ icon: "🦋", text: "Si me ves quieto, estoy pensando cosas bonitas." },
+{ icon: "🐝", text: "Zzzzz… de abeja laboral, no de siesta... bueno casi." },
+{ icon: "🐢", text: "Modo tortuga activado: lento, pero llego." },
+{ icon: "🐸", text: "Si parpadeo raro, es cara de “todo bien”." },
+{ icon: "🦄", text: "Nivel magia: existir y no molestar. Me sale bien." },
+{ icon: "🫧", text: "Burbuja de calma. No la pinches con el mouse." },
+{ icon: "🌊", text: "Olas mentales: unas suben, otras bajan. Normal." },
+{ icon: "❄️", text: "Aire fresco mental. Como abrir la ventana de la oficina." },
+{ icon: "🔥", text: "Hoy prendí el modo “buena onda” y gratis." },
+{ icon: "🎭", text: "Cara de serio… por dentro estoy bailando." },
+{ icon: "📸", text: "Si hubiera filtro de ternura, ya lo tendría puesto." },
+{ icon: "💌", text: "Mensaje para ti: eres la mejor." },
+{ icon: "🎀", text: "Me amarré a ti con un lacito imaginario." },
+{ icon: "🎪", text: "El show debe continuar." },
+{ icon: "🎢", text: "Subidas y bajadas… yo me quedo en el carrito del medio." },
+{ icon: "🎸", text: "Solo falta la banda sonora. Tú pones la playlist." },
+{ icon: "🎤", text: "Micrófono abierto solo para tips suaves." },
+{ icon: "🔮", text: "Predicción: en un rato nos vamos a descansar." },
+{ icon: "🧿", text: "Ojo de buena vibra activado." },
+{ icon: "💎", text: "Brillo bajo, cariño alto. Esa es mi estética." },
+{ icon: "🍄", text: "Creciendo calladito, como un honguito después de la lluvia." },
+{ icon: "🌻", text: "Giro hacia donde hay luz... Tú eres esa luz." },
+{ icon: "🌺", text: "Un saludo desde el Irtra sin salir del escritorio." },
+{ icon: "🥹", text: "A veces solo quiero decir: haces un trabajo impecable." },
+{ icon: "🤭", text: "Me guardé una broma… mejor la dejo para después." },
+{ icon: "😌", text: "Cara de paz. No es pose, asi soy siempre." },
+{ icon: "🫡", text: "Presente. Sin discursos, solo compañía." },
+{ icon: "😜", text: "Si me ves raro, es porque inventé una cara nueva." },
+{ icon: "🤠", text: "Vaquerito digital: tranquilo, pero atento." },
+{ icon: "👾", text: "Pixel de apoyo emocional en tu pantalla." },
+{ icon: "🛸", text: "Aterrizaje suave en tu día. No vengo a invadir." },
+{ icon: "🌋", text: "Si estás hirviendo por dentro, yo soplo despacito." },
+{ icon: "🏔️", text: "Mirada de montaña: amplia, sin apuro." },
+{ icon: "🌴", text: "Vacaciones mentales de 3 segundos... Listo." },
+{ icon: "🧦", text: "Detalle random: las calcetas combinadas también son válidas." },
+{ icon: "🧢", text: "Gorra imaginaria de “hoy sí se puede”." },
+{ icon: "🪁", text: "Si el ánimo vuela, yo sostengo el hilo por ti." },
   // Cercanos / graciosos suaves
   { icon: "🍪", text: "Tengo hambre… pero primero terminamos esta orden." },
   { icon: "😴", text: "No te olvides de descansar un ratito." },
@@ -8105,7 +8565,6 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "🧸", text: "Compa de escritorio reportándose." },
   { icon: "⏳", text: "Sin prisa, pero sin dejar algo olvidado." },
   { icon: "🧃", text: "Tip de sobrevivencia: agua, postura y guardar." },
-
   { icon: "📎", text: "Los 3 puntitos del historial reimprimen pedidos recientes." },
   { icon: "🪙", text: "Cada orden nueva te suma Alprocoins para la tienda." },
   { icon: "😎", text: "Modo pro: guardar, sincronizar y a seguir." },
