@@ -18771,8 +18771,11 @@ document.addEventListener('DOMContentLoaded', () => {
   var COOLDOWN = 24 * 60 * 60 * 1000;
   var CLICK_PWR = 4.6;
   var DECAY_PER_SEC = 19;
+  // Anti-abuso: no contar clics más rápido que ~12/s (bloquea 2 ratones a la vez)
+  var MIN_CREDIT_GAP_MS = 85;
   var meter = 0, playing = false, ended = false, claimed = false, finalCoins = 0;
   var startTs = 0, raf = 0, lastTs = 0, waitTimer = 0, closing = false;
+  var lastCreditTs = 0;
 
   function $(id) { return document.getElementById(id); }
   function lastPlay() { return parseInt(localStorage.getItem(LS_KEY) || '0', 10) || 0; }
@@ -18945,7 +18948,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     if (remainingMs() > 0) return;
     meter = 0; playing = true; ended = false; claimed = false;
-    startTs = performance.now(); lastTs = 0;
+    startTs = performance.now(); lastTs = 0; lastCreditTs = 0;
     setBar(); stopLoop(); raf = requestAnimationFrame(tick);
   }
   function endGame() {
@@ -18978,11 +18981,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ended) return;
     if (!playing) startGame();
     if (!playing) return;
+    // Feedback visual siempre (se siente el clic)
+    var b = $('mckBtn');
+    if (b) {
+      b.classList.add('mck-hit');
+      setTimeout(function () { b.classList.remove('mck-hit'); }, 70);
+    }
+    // Solo cuenta el clic si pasó el intervalo mínimo (anti doble mouse / spam imposible)
+    var now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+    if (now - lastCreditTs < MIN_CREDIT_GAP_MS) return;
+    lastCreditTs = now;
     meter = Math.min(100, meter + CLICK_PWR);
     setBar();
-    var b = $('mckBtn');
-    b.classList.add('mck-hit');
-    setTimeout(function () { b.classList.remove('mck-hit'); }, 70);
   }
   function claim() {
     if (claimed || !ended) return;
