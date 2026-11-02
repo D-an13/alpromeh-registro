@@ -5330,7 +5330,7 @@ tbody.animar-entrada {
   }
 }
 
-/* ➕ Botón accesos (Uiverse) + mini-menú — colores siguen --primary de la app */
+/* ➕ Botón accesos: fondo suave transparente + bordes/trazo más oscuros (mismo --primary) */
 #btnMenuAccesosAlpro {
   position: fixed;
   bottom: 20px;
@@ -5341,38 +5341,41 @@ tbody.animar-entrada {
   padding: 0;
   margin: 0;
   border: none;
-  background: transparent;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary, #3b82f6) 15%, transparent);
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, background 0.2s ease;
 }
 #btnMenuAccesosAlpro:hover,
 #btnMenuAccesosAlpro.menu-open {
   transform: rotate(90deg);
+  background: color-mix(in srgb, var(--primary, #3b82f6) 22%, transparent);
 }
 #btnMenuAccesosAlpro .alpro-plus-svg {
   width: 36px;
   height: 36px;
-  stroke: var(--primary, #3b82f6);
-  fill: none;
-  transition: fill 0.3s ease, stroke 0.3s ease;
+  /* trazo más oscuro que el fondo suave */
+  stroke: color-mix(in srgb, var(--primary, #3b82f6) 58%, #0f172a 42%);
+  fill: none !important;
+  transition: stroke 0.25s ease;
 }
 #btnMenuAccesosAlpro:hover .alpro-plus-svg,
 #btnMenuAccesosAlpro.menu-open .alpro-plus-svg {
-  fill: var(--primary-deep, var(--primary, #1e40af));
-  stroke: var(--primary, #3b82f6);
+  fill: none !important;
+  stroke: color-mix(in srgb, var(--primary, #3b82f6) 45%, #0f172a 55%);
 }
 #btnMenuAccesosAlpro:active .alpro-plus-svg {
-  stroke: color-mix(in srgb, var(--primary, #3b82f6) 55%, white);
-  fill: var(--primary, #2563eb);
+  fill: none !important;
+  stroke: color-mix(in srgb, var(--primary, #3b82f6) 40%, #0f172a 60%);
   transition-duration: 0s;
 }
 #btnMenuAccesosAlpro .alpro-plus-svg path {
-  stroke-width: 1.6;
+  stroke-width: 1.75;
 }
 
 /* Mini-menú flotante — entrada/salida premium en cascada */
@@ -14270,16 +14273,16 @@ const premios = [
     // —— Productos únicos (una sola vez) ——
     { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: false, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
     { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: false, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
-    { id: 10, nombre: "Libreta de Notas", precio: 480, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
-    { id: 11, nombre: "Organizador de Lápices", precio: 480, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
+    { id: 10, nombre: "Libreta de Notas", precio: 600, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
+    { id: 11, nombre: "Organizador de Lápices", precio: 600, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
     { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: false, prefijo: "HV", desc: "Tu comida fresca y segura" },
-    { id: 13, nombre: "Mouse Sencillo", precio: 560, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
+    { id: 13, nombre: "Mouse Sencillo", precio: 700, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
     { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: false, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
-    { id: 15, nombre: "Audífonos Sencillos", precio: 640, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
-    { id: 16, nombre: "Almohada de Viaje", precio: 640, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
-    { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 1600, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
-    { id: 18, nombre: "Tarjeta de Regalo Pro", precio: 2400, emoji: "💳", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "TP", efectoEmoji: "filter: grayscale(1) contrast(1.2) brightness(1.3); display: inline-block;", desc: "Q120.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
-    { id: 19, nombre: "Tarjeta de Regalo Max", precio: 3200, emoji: "💳", colorBadge: "#fef9c3", colorTexto: "#451a03", esUnico: true, prefijo: "TM", efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;", desc: "Q160.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" }
+    { id: 15, nombre: "Audífonos Sencillos", precio: 800, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
+    { id: 16, nombre: "Almohada de Viaje", precio: 800, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
+    { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 2000, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
+    { id: 18, nombre: "Tarjeta de Regalo Pro", precio: 3000, emoji: "💳", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "TP", efectoEmoji: "filter: grayscale(1) contrast(1.2) brightness(1.3); display: inline-block;", desc: "Q120.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
+    { id: 19, nombre: "Tarjeta de Regalo Max", precio: 4000, emoji: "💳", colorBadge: "#fef9c3", colorTexto: "#451a03", esUnico: true, prefijo: "TM", efectoEmoji: "filter: sepia(1) hue-rotate(-15deg) saturate(4) brightness(1.1) contrast(1.1); display: inline-block;", desc: "Q160.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" }
 ];
 
 // 🔑 CONFIGURACIÓN SEGURA PARA TUS PINES
@@ -18769,10 +18772,10 @@ document.addEventListener('DOMContentLoaded', () => {
   var LS_KEY = 'alpro_minijuego_click_at';
   var DURATION = 6000;
   var COOLDOWN = 24 * 60 * 60 * 1000;
-  var CLICK_PWR = 4.6;
-  var DECAY_PER_SEC = 19;
-  // Anti-abuso: no contar clics más rápido que ~12/s (bloquea 2 ratones a la vez)
-  var MIN_CREDIT_GAP_MS = 85;
+  var CLICK_PWR = 4.5;
+  var DECAY_PER_SEC = 18.5;
+  // Tope ~14 clic/s: promedio natural ~5-6 monedas con un mouse
+  var MIN_CREDIT_GAP_MS = 72;
   var meter = 0, playing = false, ended = false, claimed = false, finalCoins = 0;
   var startTs = 0, raf = 0, lastTs = 0, waitTimer = 0, closing = false;
   var lastCreditTs = 0;
@@ -18794,13 +18797,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function coinsFromMeter(v) {
     var c = Math.max(1, Math.min(10, Math.floor(v / 10)));
-    if (v < 96) c = Math.min(c, 9);
-    if (v < 88) c = Math.min(c, 8);
-    if (v < 78) c = Math.min(c, 7);
-    if (v < 65) c = Math.min(c, 6);
-    if (v < 50) c = Math.min(c, 5);
-    if (v < 35) c = Math.min(c, 3);
-    if (v < 20) c = Math.min(c, 2);
+    if (v < 98) c = Math.min(c, 9);
+    if (v < 92) c = Math.min(c, 8);
+    if (v < 82) c = Math.min(c, 7);
+    if (v < 70) c = Math.min(c, 6);
+    if (v < 55) c = Math.min(c, 5);
+    if (v < 40) c = Math.min(c, 4);
+    if (v < 28) c = Math.min(c, 3);
+    if (v < 18) c = Math.min(c, 2);
     return c;
   }
   function liveText(v) {
