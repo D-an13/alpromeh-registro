@@ -5530,9 +5530,9 @@ tbody.animar-entrada {
 /* (modal catálogo styles moved near the modal HTML) */
 .alpro-foto-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
-  padding: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 10px;
+  padding: 12px;
 }
 .alpro-foto-card {
   background: #fff;
@@ -5551,14 +5551,14 @@ tbody.animar-entrada {
 }
 .alpro-foto-card img {
   width: 100%;
-  height: 120px;
+  height: 118px;
   object-fit: cover;
   display: block;
   background: #f1f5f9;
 }
 .alpro-foto-card .alpro-foto-name {
-  font-size: 0.7rem;
-  padding: 6px 8px;
+  font-size: 0.68rem;
+  padding: 5px 8px;
   color: #334155;
   white-space: nowrap;
   overflow: hidden;
@@ -15789,6 +15789,35 @@ document.addEventListener('DOMContentLoaded', () => {
         <div id="tituloCatalogoFotos">📷 Catálogo de fotos</div>
         <div class="mcat-sub">Busca, mira y sube fotos de alta calidad</div>
       </div>
+      <div class="mcat-tools" aria-label="Herramientas del catálogo">
+        <div class="mcat-tool mcat-tool-size" title="Tamaño de tarjetas">
+          <span class="mcat-size-hint mcat-size-min" aria-hidden="true">A</span>
+          <div class="mcat-slider-shell">
+            <input type="range" id="mcatSizeRange" min="0" max="100" value="0" step="1" aria-label="Tamaño de miniaturas" />
+          </div>
+          <span class="mcat-size-hint mcat-size-max" aria-hidden="true">A</span>
+        </div>
+        <div class="mcat-sort-cluster" id="mcatSortCluster" title="Ordenar fotos">
+          <button type="button" id="mcatSortBtn" class="mcat-sort-btn" aria-haspopup="listbox" aria-expanded="false">
+            <span class="mcat-sort-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h7M4 18h4"/><path d="M15 8l3-3 3 3M18 5v14"/></svg>
+            </span>
+            <span class="mcat-sort-text"><span id="mcatSortLabel">A → Z</span></span>
+          </button>
+          <div id="mcatSortMenu" class="mcat-sort-menu" role="listbox" aria-label="Ordenar fotos">
+            <button type="button" class="mcat-sort-opt is-active" data-value="az" role="option">A → Z</button>
+            <button type="button" class="mcat-sort-opt" data-value="za" role="option">Z → A</button>
+            <button type="button" class="mcat-sort-opt" data-value="new" role="option">Más recientes</button>
+            <button type="button" class="mcat-sort-opt" data-value="old" role="option">Más antiguas</button>
+          </div>
+          <select id="mcatSort" style="display:none !important;" aria-hidden="true" tabindex="-1" hidden>
+            <option value="az" selected>A → Z</option>
+            <option value="za">Z → A</option>
+            <option value="new">Más recientes</option>
+            <option value="old">Más antiguas</option>
+          </select>
+        </div>
+      </div>
       <div class="mcat-actions">
         <button type="button" id="btnSubirFotoAlpro" class="mcat-btn-primary" title="Subir foto a esta carpeta">＋ Subir</button>
         <button type="button" id="btnCerrarCatalogoFotos" title="Cerrar">✕</button>
@@ -15800,7 +15829,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <input type="search" id="mcatSearch" placeholder="Buscar producto o nombre de foto…" autocomplete="off" />
       </div>
     </div>
-    <div id="mcatFoldersBar" class="mcat-folders" role="tablist" aria-label="Carpetas de fotos"></div>
+    <div class="mcat-folders-shell">
+      <div id="mcatFoldersCollapse" class="mcat-folders-collapse is-open">
+        <div id="mcatFoldersBar" class="mcat-folders" role="tablist" aria-label="Carpetas de fotos"></div>
+      </div>
+      <button type="button" id="mcatFoldersToggle" class="mcat-fold-toggle" aria-expanded="true" title="Mostrar u ocultar carpetas">
+        <svg class="mcat-fold-chevron" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
     <div id="mcatSubFoldersBar" class="mcat-subfolders" role="tablist" aria-label="Subcarpetas"></div>
     <div id="cuerpoCatalogoFotosAlpro">
       <div id="mcatStatus" class="mcat-status">Cargando fotos…</div>
@@ -15857,8 +15893,8 @@ document.addEventListener('DOMContentLoaded', () => {
 #cardCatalogoFotosAlpro {
   background: #fff;
   color: #0f172a;
-  width: min(980px, 96vw);
-  height: min(90vh, 860px);
+  width: min(1120px, 97vw);
+  height: min(92vh, 920px);
   border-radius: 18px;
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
   display: flex;
@@ -15881,13 +15917,276 @@ document.addEventListener('DOMContentLoaded', () => {
   transition: transform 0.24s ease, opacity 0.22s ease;
 }
 #modalCatalogoFotosAlpro .mcat-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 12px 14px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; background: #f8fafc;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; background: #f8fafc;
+  flex-wrap: wrap;
 }
-#modalCatalogoFotosAlpro .mcat-titles { min-width: 0; }
+#modalCatalogoFotosAlpro .mcat-titles { min-width: 0; flex: 0 1 auto; }
 #tituloCatalogoFotos { font-weight: 800; font-size: 1.02rem; }
 #modalCatalogoFotosAlpro .mcat-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
-#modalCatalogoFotosAlpro .mcat-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+#modalCatalogoFotosAlpro .mcat-tools {
+  display: flex; align-items: center; justify-content: center; gap: 78px;
+  flex: 1 1 340px; min-width: 0; flex-wrap: nowrap;
+  padding: 0 24px;
+}
+#modalCatalogoFotosAlpro .mcat-tool {
+  display: inline-flex; align-items: center; gap: 7px;
+  box-sizing: border-box;
+  color: #475569; font-size: 0.72rem; font-weight: 700;
+  height: 34px;
+}
+/* Slider Uiverse: pastilla de color DENTRO del riel gris (extremos redondos) */
+#modalCatalogoFotosAlpro .mcat-tool-size {
+  background: transparent; border: none; box-shadow: none; padding: 0;
+  height: 34px; width: auto; gap: 8px;
+}
+#modalCatalogoFotosAlpro .mcat-size-hint {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 14px; line-height: 1; color: #94a3b8; font-weight: 800;
+  font-family: Georgia, 'Times New Roman', serif; user-select: none;
+  flex-shrink: 0;
+}
+#modalCatalogoFotosAlpro .mcat-size-min { font-size: 0.62rem; opacity: 0.85; }
+#modalCatalogoFotosAlpro .mcat-size-max { font-size: 0.95rem; color: color-mix(in srgb, var(--primary, #2563eb) 45%, #64748b); }
+.mcat-slider-shell {
+  position: relative;
+  width: 172px;
+  height: 34px;
+  background: #d8d8d8;
+  border-radius: 999px;
+  /* pastilla interior: padding en los 4 lados → color no llega al borde exterior */
+  padding: 5px;
+  box-sizing: border-box;
+  box-shadow:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.28),
+    1px 1px 2px rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+#mcatSizeRange {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px; /* extremos redondos, no puntiagudos */
+  outline: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    var(--primary, #10b981) 0%,
+    color-mix(in hsl, var(--primary, #10b981) 55%, hsl(calc(var(--mcat-hue, 160deg) + 45deg) 90% 52%)) 55%,
+    hsl(calc(var(--mcat-hue, 160deg) + 55deg) 95% 55%) 100%
+  );
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+#mcatSizeRange::-webkit-slider-runnable-track {
+  height: 100%;
+  border-radius: 999px;
+  background: transparent;
+}
+/* Perilla del mismo alto que la pastilla de color → llega al tope de la pastilla interior */
+#mcatSizeRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #7a8088 0deg, #c4c9cf 45deg, #eef1f5 90deg, #7a8088 135deg,
+    #4a4e54 180deg, #c4c9cf 225deg, #eef1f5 270deg, #7a8088 315deg, #7a8088 360deg
+  );
+  border: 2px solid #5a5e63;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  cursor: grab;
+}
+#mcatSizeRange::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(0.97); }
+#mcatSizeRange::-moz-range-track {
+  height: 24px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+}
+#mcatSizeRange::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #7a8088 0deg, #c4c9cf 45deg, #eef1f5 90deg, #7a8088 135deg,
+    #4a4e54 180deg, #c4c9cf 225deg, #eef1f5 270deg, #7a8088 315deg, #7a8088 360deg
+  );
+  border: 2px solid #5a5e63;
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+  cursor: grab;
+}
+/* Orden — estilo tipo Compañero */
+.mcat-sort-cluster {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.mcat-sort-btn {
+  --ms-bg: color-mix(in srgb, var(--primary, #1e3a8a) 14%, #ffffff);
+  --ms-fg: var(--primary, #1e3a8a);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 12px 0 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  background: var(--ms-bg);
+  color: var(--ms-fg);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.mcat-sort-btn:hover,
+.mcat-sort-btn.is-on {
+  --ms-bg: var(--primary, #1e3a8a);
+  --ms-fg: #ffffff;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--primary, #1e3a8a) 28%, transparent);
+}
+.mcat-sort-btn:active { transform: translate(1px, 1px); }
+.mcat-sort-ico {
+  width: 14px; height: 14px; flex: 0 0 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.mcat-sort-ico svg { display: block; }
+.mcat-sort-text { white-space: nowrap; }
+.mcat-sort-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
+  padding: 6px;
+  z-index: 40;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+.mcat-sort-menu.is-open {
+  display: flex;
+  animation: mcatSortIn 0.18s ease;
+}
+@keyframes mcatSortIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.mcat-sort-opt {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mcat-sort-opt:hover { background: color-mix(in srgb, var(--primary, #2563eb) 10%, #f8fafc); color: var(--primary, #1e3a8a); }
+.mcat-sort-opt.is-active {
+  background: color-mix(in srgb, var(--primary, #2563eb) 14%, #fff);
+  color: var(--primary, #1e3a8a);
+  font-weight: 700;
+}
+[data-theme="dark"] .mcat-sort-btn {
+  --ms-bg: color-mix(in srgb, var(--primary, #3b82f6) 20%, #1e293b);
+  --ms-fg: color-mix(in srgb, var(--primary, #3b82f6) 90%, #fff);
+}
+[data-theme="dark"] .mcat-sort-btn:hover,
+[data-theme="dark"] .mcat-sort-btn.is-on {
+  --ms-bg: var(--primary, #3b82f6);
+  --ms-fg: #fff;
+}
+[data-theme="dark"] .mcat-sort-menu {
+  background: #1e293b; border-color: #334155;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+}
+[data-theme="dark"] .mcat-sort-opt { color: #e2e8f0; }
+[data-theme="dark"] .mcat-sort-opt:hover { background: #334155; color: #fff; }
+[data-theme="dark"] .mcat-sort-opt.is-active {
+  background: color-mix(in srgb, var(--primary, #3b82f6) 22%, #1e293b);
+  color: #93c5fd;
+}
+#modalCatalogoFotosAlpro .mcat-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; margin-left: auto; }
+/* Carpetas: flecha en esquina (sin fila extra) */
+.mcat-folders-shell {
+  position: relative;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  min-height: 20px;
+}
+.mcat-fold-toggle {
+  position: absolute;
+  right: 8px;
+  bottom: 2px;
+  z-index: 3;
+  width: 22px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.mcat-fold-toggle:hover {
+  color: var(--primary, #2563eb);
+  background: color-mix(in srgb, var(--primary, #2563eb) 10%, transparent);
+}
+.mcat-fold-chevron {
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  display: block;
+}
+.mcat-fold-toggle[aria-expanded="true"] .mcat-fold-chevron { transform: rotate(180deg); }
+.mcat-fold-toggle[aria-expanded="false"] .mcat-fold-chevron { transform: rotate(0deg); }
+/* Ocultar rápido · mostrar un poco más lento */
+.mcat-folders-collapse {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease, opacity 0.22s ease;
+}
+.mcat-folders-collapse.is-open {
+  max-height: 120px;
+  opacity: 1;
+  transition: max-height 0.48s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease;
+}
 .mcat-btn-primary {
   border: none; background: var(--primary, #2563eb); color: #fff; font-weight: 700;
   font-size: 0.8rem; padding: 8px 12px; border-radius: 10px; cursor: pointer;
@@ -15923,8 +16222,8 @@ document.addEventListener('DOMContentLoaded', () => {
   background: #fff;
 }
 .mcat-folders {
-  display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px;
-  background: #fff; border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 36px 8px 12px;
+  background: #fff; border-bottom: none; flex-shrink: 0;
   max-height: 88px; overflow-y: auto;
 }
 .mcat-chip {
@@ -15946,12 +16245,13 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 .mcat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
-  gap: 12px;
-  padding: 14px;
+  /* --mcat-col / --mcat-img controlados por el slider (min actual → max original) */
+  grid-template-columns: repeat(auto-fill, minmax(var(--mcat-col, 108px), 1fr));
+  gap: 10px;
+  padding: 12px 12px 14px;
 }
 .mcat-card {
-  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 11px; overflow: hidden;
   cursor: pointer; padding: 0; text-align: left; font-family: inherit;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   display: flex; flex-direction: column;
@@ -15962,7 +16262,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 .mcat-card-imgwrap {
   width: 100%;
-  height: 148px;
+  height: var(--mcat-img, 92px);
   background: #f1f5f9;
   display: flex;
   align-items: center;
@@ -15971,18 +16271,18 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 .mcat-card img {
   max-width: 100%;
-  max-height: 148px;
+  max-height: var(--mcat-img, 92px);
   width: auto;
   height: auto;
   object-fit: contain;
   display: block;
 }
 .mcat-card-name {
-  padding: 8px 10px 10px;
-  font-size: 0.74rem;
+  padding: 5px 8px 8px;
+  font-size: 0.68rem;
   font-weight: 600;
   color: #334155;
-  line-height: 1.3;
+  line-height: 1.28;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -16028,10 +16328,10 @@ document.addEventListener('DOMContentLoaded', () => {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary, #2563eb) 25%, transparent);
 }
 .mcat-card-meta {
-  padding: 6px 10px 10px;
+  padding: 4px 7px 7px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 .mcat-card-folder {
   display: inline-flex;
@@ -16072,6 +16372,10 @@ document.addEventListener('DOMContentLoaded', () => {
 [data-theme="dark"] #modalCatalogoFotosAlpro .mcat-foot,
 [data-theme="dark"] .mcat-toolbar { background: #0f172a; border-color: #334155; }
 [data-theme="dark"] #mcatSearch { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+[data-theme="dark"] .mcat-folders-shell { background: #1e293b; border-color: #334155; }
+[data-theme="dark"] .mcat-fold-toggle { color: #94a3b8; background: transparent; }
+[data-theme="dark"] .mcat-slider-shell { background: #4b5563; }
+[data-theme="dark"] .mcat-folders { background: #1e293b; }
 [data-theme="dark"] .mcat-chip { background: #1e293b; border-color: #475569; color: #e2e8f0; }
 [data-theme="dark"] .mcat-chip.active { background: var(--primary, #3b82f6); border-color: var(--primary, #3b82f6); color: #fff; }
 [data-theme="dark"] #cuerpoCatalogoFotosAlpro { background: #0f172a; }
@@ -16190,13 +16494,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function applyMcatSize() {
+    var r = document.getElementById('mcatSizeRange');
+    var grid = document.getElementById('mcatGrid');
+    var card = document.getElementById('cardCatalogoFotosAlpro');
+    var v = r ? (parseInt(r.value, 10) || 0) / 100 : 0;
+    // Rango notorio: min compacto → max grande
+    var col = Math.round(108 + (168 - 108) * v);
+    var img = Math.round(92 + (158 - 92) * v);
+    var target = card || grid;
+    if (target) {
+      target.style.setProperty('--mcat-col', col + 'px');
+      target.style.setProperty('--mcat-img', img + 'px');
+    }
+    if (r) {
+      try {
+        var prim = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#10b981';
+        var tmp = document.createElement('div');
+        tmp.style.color = prim;
+        document.body.appendChild(tmp);
+        var rgb = getComputedStyle(tmp).color;
+        document.body.removeChild(tmp);
+        var m = rgb && rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+        if (m) {
+          var rr = +m[1] / 255, gg = +m[2] / 255, bb = +m[3] / 255;
+          var max = Math.max(rr, gg, bb), min = Math.min(rr, gg, bb);
+          var h = 0, d = max - min;
+          if (d) {
+            if (max === rr) h = ((gg - bb) / d + (gg < bb ? 6 : 0)) * 60;
+            else if (max === gg) h = ((bb - rr) / d + 2) * 60;
+            else h = ((rr - gg) / d + 4) * 60;
+          }
+          r.style.setProperty('--mcat-hue', Math.round(h) + 'deg');
+        }
+      } catch (e) {}
+    }
+  }
   function renderGrid(files) {
     var grid = document.getElementById('mcatGrid');
     if (!grid) return;
+    applyMcatSize();
     var q = ((document.getElementById('mcatSearch') || {}).value || '').trim().toLowerCase();
+    var sort = ((document.getElementById('mcatSort') || {}).value || 'az');
     var filtered = (files || []).filter(function (f) {
       if (!q) return true;
       return (f.name || '').toLowerCase().indexOf(q) !== -1;
+    });
+    filtered = filtered.slice().sort(function (a, b) {
+      var na = (a.name || '').toLowerCase();
+      var nb = (b.name || '').toLowerCase();
+      var ma = Number(a.modified || a.modifiedTime || 0) || 0;
+      var mb = Number(b.modified || b.modifiedTime || 0) || 0;
+      if (sort === 'za') return nb.localeCompare(na, 'es');
+      if (sort === 'new') return mb - ma || na.localeCompare(nb, 'es');
+      if (sort === 'old') return ma - mb || na.localeCompare(nb, 'es');
+      return na.localeCompare(nb, 'es');
     });
     grid.innerHTML = '';
     if (!filtered.length) {
@@ -16257,13 +16609,15 @@ document.addEventListener('DOMContentLoaded', () => {
           badge.style.color = col.fg;
           badge.style.background = col.bg;
           badge.style.borderColor = col.bd;
-          meta.appendChild(badge);
+          // se agrega DESPUÉS del nombre (abajo)
+          meta._folderBadge = badge;
         }
       }
       var name = document.createElement('div');
       name.className = 'mcat-card-name';
       name.textContent = f.name || f.id;
       meta.appendChild(name);
+      if (meta._folderBadge) meta.appendChild(meta._folderBadge);
       btn.appendChild(wrap);
       btn.appendChild(meta);
       btn.addEventListener('click', function () {
@@ -16718,6 +17072,65 @@ document.addEventListener('DOMContentLoaded', () => {
     if (search && !search._bound) {
       search._bound = true;
       search.addEventListener('input', function () { renderGrid(listaActual); });
+    }
+    var sizeR = document.getElementById('mcatSizeRange');
+    if (sizeR && !sizeR._bound) {
+      sizeR._bound = true;
+      sizeR.addEventListener('input', function () { applyMcatSize(); });
+      applyMcatSize();
+    }
+    var sortEl = document.getElementById('mcatSort');
+    var sortBtn = document.getElementById('mcatSortBtn');
+    var sortMenu = document.getElementById('mcatSortMenu');
+    var sortLabel = document.getElementById('mcatSortLabel');
+    function setMcatSort(val) {
+      val = val || 'az';
+      if (sortEl) sortEl.value = val;
+      if (sortLabel) {
+        var map = { az: 'A → Z', za: 'Z → A', 'new': 'Más recientes', old: 'Más antiguas' };
+        sortLabel.textContent = map[val] || val;
+      }
+      if (sortMenu) {
+        sortMenu.querySelectorAll('.mcat-sort-opt').forEach(function (o) {
+          o.classList.toggle('is-active', o.getAttribute('data-value') === val);
+        });
+      }
+      renderGrid(listaActual);
+    }
+    if (sortBtn && sortMenu && !sortBtn._bound) {
+      sortBtn._bound = true;
+      sortBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = sortMenu.classList.toggle('is-open');
+        sortBtn.classList.toggle('is-on', open);
+        sortBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      sortMenu.querySelectorAll('.mcat-sort-opt').forEach(function (opt) {
+        opt.addEventListener('click', function (e) {
+          e.stopPropagation();
+          setMcatSort(opt.getAttribute('data-value'));
+          sortMenu.classList.remove('is-open');
+          sortBtn.classList.remove('is-on');
+          sortBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (!sortMenu.classList.contains('is-open')) return;
+        var cl = document.getElementById('mcatSortCluster');
+        if (cl && cl.contains(e.target)) return;
+        sortMenu.classList.remove('is-open');
+        sortBtn.classList.remove('is-on');
+        sortBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    var foldBtn = document.getElementById('mcatFoldersToggle');
+    var foldBox = document.getElementById('mcatFoldersCollapse');
+    if (foldBtn && foldBox && !foldBtn._bound) {
+      foldBtn._bound = true;
+      foldBtn.addEventListener('click', function () {
+        var open = foldBox.classList.toggle('is-open');
+        foldBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
     }
     var btnUp = document.getElementById('btnSubirFotoAlpro');
     var fileIn = document.getElementById('mcatFileInput');
