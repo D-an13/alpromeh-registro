@@ -735,11 +735,41 @@ th { background: var(--primary); color: white; text-transform: uppercase; }
   40% { transform: translateY(-12px); }
   70% { transform: translateY(-3px); }
 }
+/* Racha de saltos: impulso (squash) → sube → aterriza (squash) → listo para el siguiente */
+#hamsterAvatar.hamster-hop-cycle {
+  animation: hamsterHopCycle 0.58s cubic-bezier(0.33, 1.1, 0.45, 1);
+}
+@keyframes hamsterHopCycle {
+  0%   { transform: translateY(0) scale(1, 1); }
+  12%  { transform: translateY(0) scale(1.14, 0.84); }
+  38%  { transform: translateY(-15px) scale(0.94, 1.06); }
+  62%  { transform: translateY(-4px) scale(1.02, 0.98); }
+  78%  { transform: translateY(0) scale(1.12, 0.86); }
+  100% { transform: translateY(0) scale(1, 1); }
+}
 @keyframes hamsterWiggle {
   0%, 100% { transform: rotate(0); }
   25% { transform: rotate(-7deg); }
   50% { transform: rotate(7deg); }
   75% { transform: rotate(-4deg); }
+}
+/* Traits: respiración exagerada (squishy) */
+#hamsterAvatar.hamster-breathe-squish {
+  animation: hamsterBreatheSquish 2.85s ease-in-out infinite;
+}
+@keyframes hamsterBreatheSquish {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.09, 0.86); }
+}
+/* Traits: flotar un momento (voladores) — nombre distinto al float idle viejo */
+#hamsterAvatar.hamster-float {
+  animation: hamsterPetFloat 3.1s cubic-bezier(0.33, 1.05, 0.52, 1);
+}
+@keyframes hamsterPetFloat {
+  0%   { transform: translateY(0); }
+  18%  { transform: translateY(-32px); }
+  72%  { transform: translateY(-30px); }
+  100% { transform: translateY(0); }
 }
 
 /* Confetti */
@@ -9127,30 +9157,168 @@ function lanzarConfetti() {
     }, 2000);
   }
 
-function mascotaPlayAnim(cls, ms) {
+/* Personalidad por skin: solo animaciones idle */
+  var SKIN_TRAITS = {
+    hamster: { },
+    gato: { },
+    ajolote: { hop: true },
+    buho: { float: true },
+    panda: { },
+    conejo: { hop: true },
+    robot: { },
+    mapache: { },
+    pollito: { float: true },
+    pinguino: { },
+    lobo: { },
+    koala: { },
+    shiba: { },
+    fantasma: { float: true, squish: true },
+    pulpo: { },
+    slime: { hop: true, squish: true },
+    dumpling: { squish: true },
+    mantequilla: { squish: true },
+    quetzal: { float: true }
+  };
+  function getActiveSkinKey() {
+    try { return localStorage.getItem('alpro_skin_activa') || 'hamster'; } catch (e) { return 'hamster'; }
+  }
+  function getSkinTraits() {
+    return SKIN_TRAITS[getActiveSkinKey()] || {};
+  }
+  function aplicarRespiracionSkin(av) {
+    if (!av) av = document.getElementById('hamsterAvatar');
+    if (!av) return;
+    var t = getSkinTraits();
+    av.classList.remove('hamster-breathe', 'hamster-breathe-squish');
+    if (t.squish) av.classList.add('hamster-breathe-squish');
+    else av.classList.add('hamster-breathe');
+  }
+  function mascotaEstaOcupada() {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av) return true;
+    if (window.__petAnimBusy) return true;
+    if (av.classList.contains('hamster-float')) return true;
+    if (av.classList.contains('hamster-look-bubble')) return true;
+    if (av.classList.contains('hamster-hop') || av.classList.contains('hamster-hop-cycle') || av.classList.contains('hamster-wiggle')) return true;
+    if (av.classList.contains('hamster-look-left') || av.classList.contains('hamster-look-right')) return true;
+    return false;
+  }
+
+  function mascotaPlayAnim(cls, ms) {
     var av = document.getElementById('hamsterAvatar');
     if (!av) return;
-    var hadBreathe = av.classList.contains('hamster-breathe');
+    // Ninguna animación pisa a otra
+    if (window.__petAnimBusy) return;
+    var hadBreathe = av.classList.contains('hamster-breathe') || av.classList.contains('hamster-breathe-squish');
+    var dur = ms || 700;
+    if (cls === 'hamster-float') dur = ms || 3100;
+
+    window.__petAnimBusy = true;
     av.classList.remove(
-      'hamster-breathe',
+      'hamster-breathe', 'hamster-breathe-squish',
       'hamster-look-left', 'hamster-look-right',
-      'hamster-hop', 'hamster-wiggle'
+      'hamster-hop', 'hamster-wiggle', 'hamster-float'
     );
     void av.offsetWidth;
     av.classList.add(cls);
+
+    // Volador: ojos cerrados mientras flota
+    var closedEyes = false;
+    if (cls === 'hamster-float') {
+      if (!av.classList.contains('hamster-mood-sleep')) {
+        av.classList.add('hamster-mood-happy-closed');
+        closedEyes = true;
+      }
+    }
+
     clearTimeout(av._animT);
     av._animT = setTimeout(function() {
       av.classList.remove(cls);
-      if (hadBreathe) {
-        // Reinicio suave de respiración (sin scale de hop encima)
-        av.classList.remove('hamster-breathe');
-        void av.offsetWidth;
-        av.classList.add('hamster-breathe');
+      if (closedEyes) {
+        av.classList.remove('hamster-mood-happy-closed');
+        // Si sigue modo oscuro, volver a sleep
+        try {
+          if (typeof isDarkTheme === 'function' && isDarkTheme() && typeof setHamsterMood === 'function') {
+            setHamsterMood('sleep');
+          }
+        } catch (eM) {}
       }
-    }, ms || 700);
+      window.__petAnimBusy = false;
+      if (hadBreathe) {
+        try { aplicarRespiracionSkin(av); } catch (e) {
+          av.classList.remove('hamster-breathe');
+          void av.offsetWidth;
+          av.classList.add('hamster-breathe');
+        }
+      }
+    }, dur);
+  }
+
+  /** Saltos seguidos (1–5): impulso → salto → aterrizaje; encadena con animationend */
+  function mascotaHopBurst() {
+    var av = document.getElementById('hamsterAvatar');
+    if (!av || window.__petAnimBusy) return;
+    var n = 1 + Math.floor(Math.random() * 5); // 1..5
+    var hadBreathe = av.classList.contains('hamster-breathe') || av.classList.contains('hamster-breathe-squish');
+    window.__petAnimBusy = true;
+    // Quitar respiración una sola vez al inicio (evita el "acercarse" entre saltos)
+    av.classList.remove(
+      'hamster-breathe', 'hamster-breathe-squish',
+      'hamster-look-left', 'hamster-look-right',
+      'hamster-hop', 'hamster-hop-cycle', 'hamster-wiggle', 'hamster-float'
+    );
+    var i = 0;
+    function finishBurst() {
+      clearTimeout(av._hopFallbackT);
+      clearTimeout(av._animT);
+      try { av.classList.remove('hamster-hop-cycle', 'hamster-hop'); } catch (e) {}
+      try { av.style.animation = ''; } catch (e0) {}
+      window.__petAnimBusy = false;
+      if (hadBreathe) {
+        try { aplicarRespiracionSkin(av); } catch (e2) {}
+      }
+    }
+    function oneHop() {
+      if (!av || i >= n) {
+        finishBurst();
+        return;
+      }
+      i++;
+      function onEnd(ev) {
+        if (ev && ev.target !== av) return;
+        if (ev && ev.animationName && ev.animationName.indexOf('hamsterHopCycle') === -1) return;
+        av.removeEventListener('animationend', onEnd);
+        av.classList.remove('hamster-hop-cycle');
+        // Micro-pausa y siguiente salto
+        clearTimeout(av._animT);
+        av._animT = setTimeout(oneHop, 50);
+      }
+      av.addEventListener('animationend', onEnd);
+      av.classList.remove('hamster-hop-cycle', 'hamster-hop');
+      // Forzar reinicio de la animación CSS
+      try { av.style.animation = 'none'; } catch (e3) {}
+      void av.offsetWidth;
+      try { av.style.animation = ''; } catch (e4) {}
+      av.classList.add('hamster-hop-cycle');
+      // Fallback por si animationend no dispara
+      clearTimeout(av._hopFallbackT);
+      av._hopFallbackT = setTimeout(function() {
+        try { av.removeEventListener('animationend', onEnd); } catch (e5) {}
+        av.classList.remove('hamster-hop-cycle');
+        oneHop();
+      }, 700);
+    }
+    oneHop();
   }
 
   function mascotaReaccionPorMood(mood) {
+    if (window.__petAnimBusy) {
+      // Solo partículas si está ocupada; no pisar animación
+      if (mood === 'happy' || mood === 'happy-closed') {
+        try { lanzarCariños(mood === 'happy-closed' ? 'mix' : 'heart', 3); } catch (eC) {}
+      }
+      return;
+    }
     if (mood === 'happy' || mood === 'happy-closed') {
       mascotaPlayAnim('hamster-hop', 600);
       try { lanzarCariños(mood === 'happy-closed' ? 'mix' : 'heart', 4); } catch (eC) {}
@@ -9161,10 +9329,14 @@ function mascotaPlayAnim(cls, ms) {
   function startMascotaVida() {
     var av = document.getElementById('hamsterAvatar');
     if (!av) return;
-    av.classList.add('hamster-breathe');
+    try { aplicarRespiracionSkin(av); } catch (eB) { av.classList.add('hamster-breathe'); }
 
     function nextIdleDelay() {
-      return (7000 + Math.random() * 11000); // 7–18 s
+      var t = getSkinTraits();
+      // Saltadores: idle más frecuente
+      if (t.hop) return (4200 + Math.random() * 7000); // 4–11 s
+      if (t.float) return (8000 + Math.random() * 10000); // 8–18 s
+      return (7000 + Math.random() * 11000); // 7–18 s terrestres
     }
     function idleTick() {
       try {
@@ -9182,11 +9354,38 @@ function mascotaPlayAnim(cls, ms) {
           window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
           return;
         }
+        // No interrumpir float / hop / tip en curso
+        if (window.__petAnimBusy || (typeof mascotaEstaOcupada === 'function' && mascotaEstaOcupada())) {
+          window.__hamsterVidaT = setTimeout(idleTick, 1800 + Math.random() * 1200);
+          return;
+        }
+        // No flotar/saltar encima de un tip visible
+        var bub2 = document.getElementById('hamsterBubble');
+        if (bub2 && bub2.classList.contains('visible')) {
+          window.__hamsterVidaT = setTimeout(idleTick, 2500 + Math.random() * 2000);
+          return;
+        }
+        var t = getSkinTraits();
         var r = Math.random();
-        if (r < 0.28) mascotaPlayAnim('hamster-look-left', 1500);
-        else if (r < 0.56) mascotaPlayAnim('hamster-look-right', 1500);
-        else if (r < 0.82) mascotaPlayAnim('hamster-wiggle', 700);
-        else mascotaParpadeoDoble();
+        if (t.hop) {
+          // Conejo / slime / ajolote: racha de 1–5 saltos + movimientos básicos
+          if (r < 0.70) mascotaHopBurst();
+          else if (r < 0.84) mascotaPlayAnim('hamster-look-left', 1400);
+          else if (r < 0.94) mascotaPlayAnim('hamster-wiggle', 650);
+          else mascotaParpadeoDoble();
+        } else if (t.float) {
+          // Voladores: subir alto, ojos cerrados, sostener
+          if (r < 0.45) mascotaPlayAnim('hamster-float', 3100);
+          else if (r < 0.70) mascotaPlayAnim('hamster-look-right', 1500);
+          else if (r < 0.88) mascotaPlayAnim('hamster-wiggle', 700);
+          else mascotaParpadeoDoble();
+        } else {
+          // Terrestres: vida suave (mira / se estira), casi sin saltos locos
+          if (r < 0.32) mascotaPlayAnim('hamster-look-left', 1500);
+          else if (r < 0.64) mascotaPlayAnim('hamster-look-right', 1500);
+          else if (r < 0.88) mascotaPlayAnim('hamster-wiggle', 700);
+          else mascotaParpadeoDoble();
+        }
       } catch (e) {}
       window.__hamsterVidaT = setTimeout(idleTick, nextIdleDelay());
     }
@@ -9375,15 +9574,23 @@ function mascotaPlayAnim(cls, ms) {
         window.abrirMenuSkinsHamster(e.clientX, e.clientY);
       }
     });
-    // Acariciar: hover ocasional → corazones (no spam)
+    // Acariciar: hover ocasional → corazones + balanceo suave (sin busy ni reiniciar respiración)
     els.avatar.addEventListener('mouseenter', function() {
       var now = Date.now();
       if (window.__hamsterPetAt && now - window.__hamsterPetAt < 4500) return;
       window.__hamsterPetAt = now;
-      // Como tu codigo: balanceo suave + corazones (no es pop de escala)
       try {
-        mascotaPlayAnim('hamster-wiggle', 500);
         lanzarCariños('heart', 3);
+        // Si hay animación especial (float/hop), solo corazones
+        if (window.__petAnimBusy) return;
+        var avh = els.avatar;
+        if (!avh) return;
+        // Wiggle suave SIN tocar breathe ni __petAnimBusy (evita el “acercarse”)
+        avh.classList.add('hamster-wiggle');
+        clearTimeout(avh._hoverWiggleT);
+        avh._hoverWiggleT = setTimeout(function() {
+          try { avh.classList.remove('hamster-wiggle'); } catch (e) {}
+        }, 480);
       } catch (ePet) {}
     });
   }
@@ -9430,6 +9637,17 @@ function mascotaPlayAnim(cls, ms) {
         }
         if (document.hidden) {
           window.__hamsterIdleT = setTimeout(tick, nextDelay());
+          return;
+        }
+        // No tips random mientras flota / salta / animación especial
+        if (window.__petAnimBusy || (typeof mascotaEstaOcupada === 'function' && mascotaEstaOcupada())) {
+          window.__hamsterIdleT = setTimeout(tick, 4000 + Math.random() * 3000);
+          return;
+        }
+        // Si ya hay un globo visible, esperar (no apilar tips random)
+        var bub = document.getElementById('hamsterBubble');
+        if (bub && bub.classList.contains('visible')) {
+          window.__hamsterIdleT = setTimeout(tick, 5000 + Math.random() * 4000);
           return;
         }
         var tip = (typeof pickSkinOrFunnyTip === 'function')
@@ -10031,6 +10249,10 @@ SKIN_SVG.slime =
       }
     } catch (eLife) {}
     localStorage.setItem('alpro_skin_activa', key);
+    try {
+      var avSkin = document.getElementById('hamsterAvatar');
+      if (avSkin) aplicarRespiracionSkin(avSkin);
+    } catch (eTr) {}
     var meta = SKIN_META[key] || { nombre: key, emoji: '✨' };
     if (typeof window.playAlproFx === 'function') window.playAlproFx('skin');
     if (typeof window.petNotify === 'function') {
