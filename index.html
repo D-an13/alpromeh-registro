@@ -16678,76 +16678,111 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Colores estables por nombre de subcarpeta (misma carpeta = mismo color)
   function colorSubcarpeta(nombre) {
-    // Normaliza: mayúsculas, sin acentos, solo letras/números
+    // Colores por NOMBRE de carpeta (estable), NO por cantidad de fotos.
+    // Evita choques: cada nombre distinto toma un tono libre de la paleta.
     function norm(str) {
       return String(str || '')
         .toUpperCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^A-Z0-9]+/g, ' ')
-        .trim();
+        .trim()
+        .replace(/\s+/g, ' ');
     }
-    var n = norm(nombre);
 
-    // 16 tonos bien separados
+    // 20 tonos bien separados (distintos en matiz, no solo saturación)
     var palette = [
-      { fg: '#1e40af', bg: '#dbeafe', bd: '#93c5fd' }, // 0 azul
-      { fg: '#166534', bg: '#dcfce7', bd: '#86efac' }, // 1 verde
-      { fg: '#0f766e', bg: '#ccfbf1', bd: '#5eead4' }, // 2 teal
-      { fg: '#9a3412', bg: '#ffedd5', bd: '#fdba74' }, // 3 naranja
-      { fg: '#5b21b6', bg: '#ede9fe', bd: '#c4b5fd' }, // 4 violeta
-      { fg: '#9f1239', bg: '#ffe4e6', bd: '#fda4af' }, // 5 rosa
-      { fg: '#a16207', bg: '#fef9c3', bd: '#fde047' }, // 6 mostaza
-      { fg: '#6d28d9', bg: '#f5f3ff', bd: '#a78bfa' }, // 7 índigo
-      { fg: '#be123c', bg: '#fff1f2', bd: '#fb7185' }, // 8 carmín
-      { fg: '#0369a1', bg: '#e0f2fe', bd: '#38bdf8' }, // 9 cielo
-      { fg: '#86198f', bg: '#fae8ff', bd: '#e879f9' }, // 10 fucsia
-      { fg: '#15803d', bg: '#f0fdf4', bd: '#4ade80' }, // 11 lima
-      { fg: '#b45309', bg: '#fff7ed', bd: '#fb923c' }, // 12 ámbar
-      { fg: '#c026d3', bg: '#fdf4ff', bd: '#f0abfc' }, // 13 magenta
-      { fg: '#075985', bg: '#f0f9ff', bd: '#7dd3fc' }, // 14 navy soft
-      { fg: '#334155', bg: '#f1f5f9', bd: '#94a3b8' }  // 15 pizarra
+      { fg: '#1d4ed8', bg: '#eff6ff', bd: '#60a5fa' }, // 0 azul
+      { fg: '#047857', bg: '#ecfdf5', bd: '#34d399' }, // 1 verde
+      { fg: '#b45309', bg: '#fffbeb', bd: '#fbbf24' }, // 2 ámbar
+      { fg: '#7c3aed', bg: '#f5f3ff', bd: '#a78bfa' }, // 3 violeta
+      { fg: '#be123c', bg: '#fff1f2', bd: '#fb7185' }, // 4 rosa
+      { fg: '#0e7490', bg: '#ecfeff', bd: '#22d3ee' }, // 5 cian
+      { fg: '#c2410c', bg: '#fff7ed', bd: '#fb923c' }, // 6 naranja
+      { fg: '#4f46e5', bg: '#eef2ff', bd: '#818cf8' }, // 7 índigo
+      { fg: '#15803d', bg: '#f0fdf4', bd: '#4ade80' }, // 8 lima
+      { fg: '#a21caf', bg: '#fdf4ff', bd: '#e879f9' }, // 9 fucsia
+      { fg: '#0369a1', bg: '#f0f9ff', bd: '#38bdf8' }, // 10 sky
+      { fg: '#a16207', bg: '#fefce8', bd: '#facc15' }, // 11 amarillo
+      { fg: '#9f1239', bg: '#fff1f2', bd: '#f43f5e' }, // 12 rojo
+      { fg: '#065f46', bg: '#ecfdf5', bd: '#10b981' }, // 13 esmeralda
+      { fg: '#6d28d9', bg: '#f5f3ff', bd: '#8b5cf6' }, // 14 púrpura
+      { fg: '#155e75', bg: '#ecfeff', bd: '#06b6d4' }, // 15 teal
+      { fg: '#9a3412', bg: '#fff7ed', bd: '#ea580c' }, // 16 cobre
+      { fg: '#1e40af', bg: '#eff6ff', bd: '#3b82f6' }, // 17 azul fuerte
+      { fg: '#86198f', bg: '#fdf4ff', bd: '#d946ef' }, // 18 magenta
+      { fg: '#334155', bg: '#f1f5f9', bd: '#94a3b8' }  // 19 pizarra
     ];
 
-    // Colores FIJOS por carpeta conocida (sin colisiones entre sí)
+    // Fijos para carpetas conocidas (sin choque entre sí)
     var fixed = {
       'AGUJAS': 0,
       'ALIMENTACION': 1,
-      'ASPIRACION': 2,
+      'ASPIRACION': 5,
       'BOLSAS ESTERILIZAR': 3,
       'BOLSAS PARA ESTERILIZAR': 3,
       'CATETER IV': 4,
       'CATETER INTRAVENOSO': 4,
-      'JERINGAS': 5,
+      'JERINGAS': 7,
       'MULETAS': 6,
       'MULETA': 6,
-      'NUEVOS PRODUCTOS': 7,
-      'NUEVOS PRODUCTOS ALPROMEH': 7,
-      'PUNZOCORTANTES': 8,
-      'DAMSA': 9,
-      'EMED': 10,
-      'OSTEO': 11
+      'NUEVOS PRODUCTOS': 8,
+      'NUEVOS PRODUCTOS ALPROMEH': 8,
+      'PUNZOCORTANTES': 12,
+      'DENTAL': 15,
+      'EQUIPO': 17,
+      'MASCARILLAS': 9,
+      'MATERIA PRIMA': 16,
+      'PRUEBAS': 11,
+      'TUBOS': 10,
+      'DAMSA': 14,
+      'EMED': 18,
+      'OSTEO': 13
     };
+
+    if (!window.__mcatColorCache) window.__mcatColorCache = {};
+    if (!window.__mcatColorUsed) window.__mcatColorUsed = {};
+
+    var n = norm(nombre);
+    if (!n) return palette[19];
+    if (window.__mcatColorCache[n]) return window.__mcatColorCache[n];
+
+    var idx = null;
     if (Object.prototype.hasOwnProperty.call(fixed, n)) {
-      return palette[fixed[n]];
-    }
-    // Match parcial (ej. "BOLSAS ESTERILIZAR" dentro de un nombre largo)
-    for (var key in fixed) {
-      if (Object.prototype.hasOwnProperty.call(fixed, key)) {
-        if (n.indexOf(key) !== -1 || key.indexOf(n) !== -1) {
-          return palette[fixed[key]];
+      idx = fixed[n];
+    } else {
+      for (var key in fixed) {
+        if (Object.prototype.hasOwnProperty.call(fixed, key)) {
+          if (n.indexOf(key) !== -1 || key.indexOf(n) !== -1) {
+            idx = fixed[key];
+            break;
+          }
         }
       }
     }
 
-    // Resto: hash estable sobre los 16 tonos
-    var h = 2166136261;
-    for (var i = 0; i < n.length; i++) {
-      h ^= n.charCodeAt(i);
-      h = Math.imul(h, 16777619);
+    if (idx === null) {
+      // Hash solo como punto de partida; si el tono ya está usado, busca el siguiente libre
+      var h = 2166136261;
+      for (var i = 0; i < n.length; i++) {
+        h ^= n.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      h = h >>> 0;
+      var start = h % palette.length;
+      idx = start;
+      for (var step = 0; step < palette.length; step++) {
+        var cand = (start + step) % palette.length;
+        if (!window.__mcatColorUsed[cand]) {
+          idx = cand;
+          break;
+        }
+      }
     }
-    h = h >>> 0;
-    return palette[h % palette.length];
+
+    window.__mcatColorUsed[idx] = true;
+    window.__mcatColorCache[n] = palette[idx];
+    return palette[idx];
   }
 
   function pintarSubChips() {
