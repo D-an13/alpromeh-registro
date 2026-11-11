@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALPROMEH - REGISTRO ORDENES</title>
-    <script>window.ALPRO_APP_BUILD='2026-11-09c';</script>
+    <script>window.ALPRO_APP_BUILD='2026-11-11a';</script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 
@@ -8720,19 +8720,19 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
 { icon: "🧢", text: "Gorra imaginaria de “hoy sí se puede”." },
 { icon: "🪁", text: "Si el ánimo vuela, yo sostengo el hilo por ti." },
   // Cercanos / graciosos suaves
-  { icon: "🍪", text: "Tengo hambre… pero primero terminamos esta orden." },
+  { icon: "🍪", text: "Vamos a comer… pero primero terminamos esta orden." },
   { icon: "😴", text: "No te olvides de descansar un ratito." },
   { icon: "👀", text: "Si parpadeo, es que estoy poniendo atención." },
   { icon: "🛋️", text: "Estirar hombros cuenta como productividad." },
   { icon: "🧃", text: "Hidratación nivel experto: un sorbito y seguimos." },
-  { icon: "🙈", text: "No juzgo typos… solo los campos vacíos." },
+  { icon: "🙈", text: "No juzgo nada… solo los campos vacíos." },
   { icon: "🥱", text: "Bostezo de soporte técnico. Sigo aquí igual." },
   { icon: "🫠", text: "Si el día se derrite, prioriza y seguimos." },
   { icon: "🐾", text: "Estoy aquí. Solo dame un clic si te trabas." },
   { icon: "🎵", text: "Modo playlist: orden por orden, sin prisa tonta." },
   { icon: "🧸", text: "Compañía virtual nivel tierno activada." },
   { icon: "🌤️", text: "Respira. La siguiente orden no se va a escapar." },
-  { icon: "🕹️", text: "Dale doble clic a la caja, no digas nada ¡shhh...!" },
+  { icon: "🕹️", text: "Dale doble clic a la caja... ¡shhh!" },
   { icon: "📦", text: "Otra cajita mental cerrada. Bien." },
   { icon: "🪄", text: "Si algo se siente trabado, un respiro y reintentamos." },
   { icon: "📎", text: "Yo no muerdo. Solo recuerdo atajos." },
@@ -9548,7 +9548,7 @@ function lanzarConfetti() {
     { icon: "🪴", text: "Fui a saludar a una plantita. Socialicé." },
     { icon: "🏃‍♂️", text: "¡Perdón! Correr al patio era de vida o muerte." },
     { icon: "🍃", text: "Fui al patio trasero un segundo... cosas de mascota." },
-    { icon: "📦", text: "Fui a revisar si faltaba alguna cajita… no había." },
+    { icon: "📦", text: "Fui a revisar si faltaba alguna caja en bodega… aún no habían." },
     { icon: "🥱", text: "Fui a darme un estirón de esos que crujen todo el cuerpo. Listo." },
     { icon: "🧘", text: "Fui a acostarme en medio del pasillo para estorbar." },
     { icon: "🦟", text: "¡Perdón! Vi una mosca y activé mi modo cazador." },
@@ -11406,29 +11406,64 @@ function actualizarContadores() {
     document.getElementById('count-hoy').innerText = hoyTotal;
     document.getElementById('count-listos').innerText = listasHoy;
 }
-// Build embebido: solo avisa si el remoto trae OTRO ALPRO_APP_BUILD (no ETag inestable)
+// Detección automática: huella del HTML en GitHub vs la última aceptada en este navegador
+function alproHashTexto(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0).toString(36);
+}
+
 async function chequearActualizacionAutomatica() {
     try {
-        var localBuild = (typeof window.ALPRO_APP_BUILD === 'string') ? window.ALPRO_APP_BUILD : '';
-        if (!localBuild) return;
-        var urlDestino = window.location.href.split('?')[0].split('#')[0] + '?alpro_build_check=' + Date.now();
+        var base = window.location.href.split('?')[0].split('#')[0];
+        var urlDestino = base + '?alpro_check=' + Date.now();
         var respuesta = await fetch(urlDestino, { method: 'GET', cache: 'no-store', credentials: 'same-origin' });
         if (!respuesta.ok) return;
         var html = await respuesta.text();
-        var m = html.match(/ALPRO_APP_BUILD\s*=\s*['"]([^'"]+)['"]/);
-        if (!m || !m[1]) return;
-        var remoto = m[1];
+        var remoteHash = alproHashTexto(html);
+        var key = 'alpro_content_hash_ok';
+        var okHash = null;
+        try { okHash = localStorage.getItem(key); } catch (eLS) {}
         var banner = document.getElementById('update-banner');
         if (!banner) return;
-        if (remoto !== localBuild) {
+
+        // También si cambió el ALPRO_APP_BUILD embebido (refuerzo)
+        var localBuild = (typeof window.ALPRO_APP_BUILD === 'string') ? window.ALPRO_APP_BUILD : '';
+        var m = html.match(/ALPRO_APP_BUILD\s*=\s*['"]([^'"]+)['"]/);
+        var remoteBuild = m && m[1] ? m[1] : '';
+        var buildDiff = !!(localBuild && remoteBuild && localBuild !== remoteBuild);
+        var hashDiff = !!(okHash && remoteHash && okHash !== remoteHash);
+
+        if (!okHash && remoteHash) {
+            try { localStorage.setItem(key, remoteHash); } catch (eSet) {}
+            if (!buildDiff) {
+                banner.style.display = 'none';
+                banner.onclick = null;
+                return;
+            }
+        }
+
+        if (hashDiff || buildDiff) {
             banner.style.display = 'block';
             banner.onclick = function () {
-                var base = window.location.origin + window.location.pathname;
-                window.location.replace(base + '?v=' + encodeURIComponent(remoto) + '&t=' + Date.now());
+                try { localStorage.setItem(key, remoteHash); } catch (e2) {}
+                // Recarga fuerte: nueva URL + bypass de caché del navegador
+                var dest = base + '?v=' + encodeURIComponent(remoteHash || String(Date.now())) + '&t=' + Date.now();
+                if (window.location.replace) {
+                    window.location.replace(dest);
+                } else {
+                    window.location.href = dest;
+                }
             };
         } else {
             banner.style.display = 'none';
             banner.onclick = null;
+            if (remoteHash) {
+                try { localStorage.setItem(key, remoteHash); } catch (e3) {}
+            }
         }
     } catch (e) {
         console.log('Error al verificar actualización');
