@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALPROMEH - REGISTRO ORDENES</title>
+    <script>window.ALPRO_APP_BUILD='2026-11-09c';</script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 
@@ -127,6 +128,74 @@ button.delete-button-art:hover .trash-svg {
         }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+
+/* —— Presencia: flotante, pro, sin empujar layout —— */
+#alproPresenciaBar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px) scale(0.96);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: min(44%, 240px);
+  padding: 5px 11px 5px 9px;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  color: #334155;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
+}
+#alproPresenciaBar.ap-visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0) scale(1);
+  border-color: color-mix(in srgb, var(--primary, #16a34a) 28%, rgba(148, 163, 184, 0.35));
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+[data-theme="dark"] #alproPresenciaBar {
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.82);
+  border-color: rgba(148, 163, 184, 0.22);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+[data-theme="dark"] #alproPresenciaBar.ap-visible {
+  border-color: color-mix(in srgb, var(--primary, #34d399) 35%, rgba(148, 163, 184, 0.25));
+}
+#alproPresenciaBar .ap-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary, #16a34a);
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary, #16a34a) 45%, transparent);
+  animation: apDotSoft 2s ease-out infinite;
+}
+@keyframes apDotSoft {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary, #16a34a) 40%, transparent); }
+  70% { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+#alproPresenciaBar #alproPresenciaTxt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
         /* Scrollbar principal acorde a la app */
         html {
             scrollbar-width: thin;
@@ -5939,6 +6008,7 @@ tbody.animar-entrada {
             <h2 style="text-align: center; margin: 0; color: var(--primary); font-weight: 800;">
                 <span id="triggerHuevo" style="cursor: pointer;">📦</span> REGISTRO ÓRDENES
             </h2>
+            <div id="alproPresenciaBar" aria-live="polite"><span class="ap-dot" aria-hidden="true"></span><span id="alproPresenciaTxt"></span></div>
 
             <div class="contenedor-switch-ios">
     <span class="label-switch-ios" id="textoSwitchPedido">HOJA DE PEDIDO</span>
@@ -8662,7 +8732,7 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
   { icon: "🎵", text: "Modo playlist: orden por orden, sin prisa tonta." },
   { icon: "🧸", text: "Compañía virtual nivel tierno activada." },
   { icon: "🌤️", text: "Respira. La siguiente orden no se va a escapar." },
-  { icon: "🕹️", text: "Si abres los minijuegos, yo no te juzgo… mucho." },
+  { icon: "🕹️", text: "Dale doble clic a la caja, no digas nada ¡shhh...!" },
   { icon: "📦", text: "Otra cajita mental cerrada. Bien." },
   { icon: "🪄", text: "Si algo se siente trabado, un respiro y reintentamos." },
   { icon: "📎", text: "Yo no muerdo. Solo recuerdo atajos." },
@@ -9468,7 +9538,7 @@ function lanzarConfetti() {
     { icon: "🧃", text: "Fui por jugo. Prioridades de mascota." },
     { icon: "🏥", text: "Fui a morder un empaque de jeringas. Estaba aburrido." },
     { icon: "📦", text: "Perdón, fui a quedarme dormido arriba de una caja en la bodega."  },
-    { icon: "📞", text: "Perdón… Fuia contestar una llamada. Nadie me entendió.." },
+    { icon: "📞", text: "Perdón, Fui a contestar una llamada. Nadie me entendió..." },
     { icon: "🧀", text: "Fui por un queso imaginario. Valió la pena." },
     { icon: "🧸", text: "Tuve que abrazar mi peluche un segundo." },
     { icon: "📑", text: "Fui a meter las patas en las facturas pendientes. Ya las firmé." },
@@ -11336,40 +11406,37 @@ function actualizarContadores() {
     document.getElementById('count-hoy').innerText = hoyTotal;
     document.getElementById('count-listos').innerText = listasHoy;
 }
-let huellaActual = null;
-
+// Build embebido: solo avisa si el remoto trae OTRO ALPRO_APP_BUILD (no ETag inestable)
 async function chequearActualizacionAutomatica() {
     try {
-        // 🔥 Agregamos un timestamp (?t=...) para que el servidor de GitHub no devuelva caché
-        const urlDestino = window.location.href.split('?')[0] + "?t=" + Date.now();
-        
-        const respuesta = await fetch(urlDestino, { method: 'HEAD', cache: 'no-cache' });
-        
-        const nuevaHuella = respuesta.headers.get('ETag') || respuesta.headers.get('Last-Modified');
-
-        if (huellaActual && nuevaHuella && huellaActual !== nuevaHuella) {
-            const banner = document.getElementById('update-banner');
+        var localBuild = (typeof window.ALPRO_APP_BUILD === 'string') ? window.ALPRO_APP_BUILD : '';
+        if (!localBuild) return;
+        var urlDestino = window.location.href.split('?')[0].split('#')[0] + '?alpro_build_check=' + Date.now();
+        var respuesta = await fetch(urlDestino, { method: 'GET', cache: 'no-store', credentials: 'same-origin' });
+        if (!respuesta.ok) return;
+        var html = await respuesta.text();
+        var m = html.match(/ALPRO_APP_BUILD\s*=\s*['"]([^'"]+)['"]/);
+        if (!m || !m[1]) return;
+        var remoto = m[1];
+        var banner = document.getElementById('update-banner');
+        if (!banner) return;
+        if (remoto !== localBuild) {
             banner.style.display = 'block';
-            
-            // 🔥 SOLUCIÓN DEFINITIVA: Forzamos la recarga rompiendo la caché de la página principal también
-            banner.onclick = () => {
-                window.location.href = window.location.origin + window.location.pathname + "?v=" + Date.now();
+            banner.onclick = function () {
+                var base = window.location.origin + window.location.pathname;
+                window.location.replace(base + '?v=' + encodeURIComponent(remoto) + '&t=' + Date.now());
             };
+        } else {
+            banner.style.display = 'none';
+            banner.onclick = null;
         }
-
-        huellaActual = nuevaHuella;
-        
     } catch (e) {
-        console.log("Error al verificar actualización");
+        console.log('Error al verificar actualización');
     }
 }
 
-// Ejecutar cada 2 minutos
-setInterval(chequearActualizacionAutomatica, 120000);
-
-
-// Primera ejecución al cargar para tener la huella inicial
-chequearActualizacionAutomatica();
+setInterval(chequearActualizacionAutomatica, 180000);
+setTimeout(chequearActualizacionAutomatica, 8000);
 
 if (typeof renderizarTiendaAlpro === "function") renderizarTiendaAlpro();
 
@@ -11752,6 +11819,8 @@ function reimprimirHojaPedidoOrden(numOrden) {
 }
 
 function ejecutarImpresionPedidoFisico(datos) {
+    try { if (typeof window.alproPresenciaOff === 'function') window.alproPresenciaOff(); } catch (ePrOff) {}
+
     const divImpresion = document.createElement('div');
     divImpresion.id = 'seccion-impresion-exclusiva';
     
@@ -13419,6 +13488,7 @@ function alternarModoPedido() {
             
             pasoActual = 1;
             guardandoAhora = false;
+            try { if (typeof window.alproPresenciaOff === 'function') window.alproPresenciaOff(); } catch (ePr) {}
             validarBloqueoBotonVerde();
             if (typeof ajustarValidacionesInputs === 'function') ajustarValidacionesInputs();
         }, 200);
@@ -13490,6 +13560,7 @@ function cambiarPaso(paso) {
     }
 
     pasoActual = paso;
+    try { document.dispatchEvent(new CustomEvent('alpro:paso', { detail: { paso: paso } })); } catch (ePaso) {}
 
     // Apagar contenedores y limpiar clases viejas
     for (let i = 1; i <= 3; i++) {
@@ -20073,6 +20144,231 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
   else wire();
+})();
+</script>
+
+
+<script>
+/* PRESENCIA — solo con N° de orden serio; nombres desde paso 2; entrada/salida suave */
+(function initAlproPresencia() {
+  var CLIENT_KEY = 'alpro_presencia_cid';
+  var HEART_MS_ACTIVO = 5000;   // mientras ingresás: avisar seguido
+  var HEART_MS_IDLE = 20000;
+  var POLL_MS_ACTIVO = 4000;    // buscar otros rápido
+  var POLL_MS_IDLE = 18000;
+  var STALE_MS = 35000;
+  var MIN_ORDEN_LEN = 1;
+  var burstUntil = 0;           // ~1 min de búsqueda rápida tras poner N° orden
+  var clientId = '';
+  try {
+    clientId = sessionStorage.getItem(CLIENT_KEY) || '';
+    if (!clientId) {
+      clientId = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      sessionStorage.setItem(CLIENT_KEY, clientId);
+    }
+  } catch (e) {
+    clientId = 'c' + Date.now().toString(36);
+  }
+
+  function scriptUrl() {
+    return (typeof URL_SCRIPT !== 'undefined' && URL_SCRIPT) ? URL_SCRIPT : '';
+  }
+
+  function ordenValue() {
+    var orden = document.getElementById('orden');
+    return orden && orden.value ? orden.value.trim() : '';
+  }
+
+  function estoyEscribiendoOrden() {
+    return ordenValue().length >= MIN_ORDEN_LEN;
+  }
+
+  function pasoNum() {
+    return (typeof pasoActual === 'number') ? pasoActual : 1;
+  }
+
+  function nombrePresencia() {
+    // Nombre solo desde paso 2 (ya eligieron RESPONSABLE ACTUAL en serio)
+    if (pasoNum() < 2) return '';
+    var sel = document.getElementById('responsableSelect');
+    if (sel && sel.value) {
+      var v = String(sel.value).trim();
+      if (v) return v.slice(0, 24);
+    }
+    return '';
+  }
+
+  function payloadOn() {
+    var nom = nombrePresencia();
+    return {
+      action: 'presencia',
+      clientId: clientId,
+      nombre: nom || 'Alguien',
+      anon: nom ? 0 : 1,
+      paso: pasoNum(),
+      ts: Date.now()
+    };
+  }
+
+  function sendOn() {
+    var u = scriptUrl();
+    if (!u || !estoyEscribiendoOrden()) return;
+    try {
+      fetch(u, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadOn()) });
+    } catch (e) {}
+  }
+
+  function sendOff() {
+    var u = scriptUrl();
+    if (!u) return;
+    try {
+      fetch(u, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({ action: 'presenciaOff', clientId: clientId, ts: Date.now() })
+      });
+    } catch (e) {}
+  }
+
+  function formatLista(rows, yoTambien) {
+    if (!rows || !rows.length) return '';
+    var names = [];
+    var seen = {};
+    rows.forEach(function (r) {
+      var label = (r.anon || !r.nombre || r.nombre === 'Alguien')
+        ? 'Alguien'
+        : String(r.nombre).trim();
+      if (!label) label = 'Alguien';
+      var key = label.toLowerCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      names.push(label);
+    });
+    if (!names.length) return '';
+    // 1 persona: nombre claro
+    if (names.length === 1) {
+      if (yoTambien) {
+        return names[0] === 'Alguien'
+          ? 'Alguien y tú están ingresando'
+          : (names[0] + ' y tú están ingresando');
+      }
+      return names[0] === 'Alguien'
+        ? 'Alguien está ingresando'
+        : (names[0] + ' está ingresando');
+    }
+    // 2 personas: nombres
+    if (names.length === 2) {
+      if (yoTambien) return names[0] + ', ' + names[1] + ' y tú';
+      return names[0] + ' y ' + names[1] + ' están ingresando';
+    }
+    // 3+: estilo "3 compañeros y tú…"
+    var n = names.length;
+    if (yoTambien) return n + ' compañeros y tú…';
+    return n + ' compañeros están ingresando';
+  }
+
+  var hideTimer = null;
+  function pintar(texto) {
+    var bar = document.getElementById('alproPresenciaBar');
+    var txt = document.getElementById('alproPresenciaTxt');
+    if (!bar || !txt) return;
+    if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+    if (!texto) {
+      bar.classList.remove('ap-visible');
+      hideTimer = setTimeout(function () {
+        if (!bar.classList.contains('ap-visible')) txt.textContent = '';
+      }, 400);
+      return;
+    }
+    txt.textContent = texto;
+    // force reflow for entrada if was hidden
+    if (!bar.classList.contains('ap-visible')) {
+      void bar.offsetWidth;
+    }
+    bar.classList.add('ap-visible');
+  }
+
+  function poll() {
+    var u = scriptUrl();
+    if (!u) return;
+    fetch(u + '?presencia=1&t=' + Date.now(), { redirect: 'follow', cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (raw) {
+        var data = null;
+        try { data = JSON.parse(raw); } catch (e1) {
+          var m = raw.match(/\{[\s\S]*\}/);
+          if (m) try { data = JSON.parse(m[0]); } catch (e2) {}
+        }
+        if (!data || !Array.isArray(data.activos)) return;
+        var ahora = Date.now();
+        var otros = data.activos.filter(function (a) {
+          if (!a || a.clientId === clientId) return false;
+          var ts = parseInt(a.ts, 10) || 0;
+          if ((ahora - ts) >= STALE_MS) return false;
+          return true;
+        });
+        var yoTambien = estoyEscribiendoOrden();
+        pintar(formatLista(otros, yoTambien));
+      })
+      .catch(function () {});
+  }
+
+  function enModoRapido() {
+    return estoyEscribiendoOrden() || Date.now() < burstUntil;
+  }
+
+  // Heartbeat adaptable
+  (function loopHeart() {
+    if (estoyEscribiendoOrden()) sendOn();
+    else sendOff();
+    setTimeout(loopHeart, enModoRapido() ? HEART_MS_ACTIVO : HEART_MS_IDLE);
+  })();
+
+  // Poll adaptable (más seguido si hay orden en curso o burst de 1 min)
+  (function loopPoll() {
+    poll();
+    setTimeout(loopPoll, enModoRapido() ? POLL_MS_ACTIVO : POLL_MS_IDLE);
+  })();
+
+  function activarBusquedaRapida() {
+    burstUntil = Date.now() + 60000; // 1 minuto buscando seguido
+    sendOn();
+    poll(); // al toque, sin esperar el intervalo
+  }
+
+  document.addEventListener('input', function (ev) {
+    if (!ev.target || ev.target.id !== 'orden') return;
+    if (estoyEscribiendoOrden()) activarBusquedaRapida();
+    else sendOff();
+  });
+  document.addEventListener('change', function (ev) {
+    if (!ev.target || ev.target.id !== 'orden') return;
+    if (estoyEscribiendoOrden()) activarBusquedaRapida();
+    else sendOff();
+  });
+  document.addEventListener('input', function (ev) {
+    if (ev.target && ev.target.id === 'persona' && estoyEscribiendoOrden()) sendOn();
+  });
+  document.addEventListener('change', function (ev) {
+    if (ev.target && ev.target.id === 'responsableSelect' && estoyEscribiendoOrden()) sendOn();
+  });
+  document.addEventListener('alpro:paso', function () {
+    if (estoyEscribiendoOrden()) {
+      activarBusquedaRapida();
+    } else {
+      sendOff();
+    }
+  });
+
+  // Salida al imprimir / terminar
+  window.alproPresenciaOff = function () {
+    sendOff();
+    pintar('');
+  };
+  window.alproPresenciaOn = sendOn;
+
+  window.addEventListener('beforeunload', function () { sendOff(); });
+  window.addEventListener('pagehide', function () { sendOff(); });
 })();
 </script>
 
