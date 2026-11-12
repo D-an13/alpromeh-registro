@@ -8559,6 +8559,27 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
     }
 }
         function showToast(msj, tipo) {
+            // Si la mascota está con el aviso de borrador, diferir toasts "ok" (p.ej. Sincronizado)
+            try {
+                var hasta = window.__alproBorradorNotifHasta || 0;
+                var esError = (tipo === true || tipo === 'warning');
+                if (!esError && hasta && Date.now() < hasta) {
+                    window.__alproToastCola = window.__alproToastCola || [];
+                    window.__alproToastCola.push([msj, tipo]);
+                    if (!window.__alproToastFlushTimer) {
+                        window.__alproToastFlushTimer = setTimeout(function flushAlproToast() {
+                            window.__alproToastFlushTimer = null;
+                            var cola = window.__alproToastCola || [];
+                            window.__alproToastCola = [];
+                            if (!cola.length) return;
+                            // Solo el último de sync/ok basta (evita spam)
+                            var last = cola[cola.length - 1];
+                            try { showToast(last[0], last[1]); } catch (eF) {}
+                        }, Math.max(300, hasta - Date.now() + 80));
+                    }
+                    return;
+                }
+            } catch (eDefer) {}
             // Centro de notificaciones: el hámster habla (ya no el cuadro verde/rojo)
             let icon = "👌";
             let kind = "ok";
@@ -20350,17 +20371,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function avisarMascotaRecuperado() {
-    // Bienvenida ~1.3s → este aviso ~4s después (~5.3s desde carga; boot ~0.45s)
+    // Bienvenida ~1.3s → este aviso ~4s después; bloquear "Sincronizado" mientras habla
     setTimeout(function () {
       try {
+        var dur = 4800;
+        window.__alproBorradorNotifHasta = Date.now() + dur + 400;
         if (typeof window.notify === 'function') {
-          window.notify('¡Hey! Guardé tu borrador', '💾', 4800, 'ok', {
+          window.notify('¡Hey! Guardé tu borrador', '💾', dur, 'ok', {
             mood: 'happy-closed',
             confetti: false
           });
         }
         confetiBorradorSuave();
-        // Salto más alto y un poco más lento
         setTimeout(function () {
           try {
             if (typeof mascotaPlayAnim === 'function') {
@@ -20433,13 +20455,15 @@ document.addEventListener('DOMContentLoaded', () => {
 /* PRESENCIA — solo con N° de orden serio; nombres desde paso 2; entrada/salida suave */
 (function initAlproPresencia() {
   var CLIENT_KEY = 'alpro_presencia_cid';
+  var CLIENT_KEY_LS = 'alpro_presencia_cid_ls'; // sobrevive refresh para apagar el id anterior
   var HEART_MS_ACTIVO = 5000;   // mientras ingresás: avisar seguido
   var HEART_MS_IDLE = 20000;
   var POLL_MS_ACTIVO = 4000;    // buscar otros rápido
   var POLL_MS_IDLE = 18000;
-  var STALE_MS = 35000;
+  var STALE_MS = 18000;         // más corto: evita “fantasma” de tu sesión anterior
   var MIN_ORDEN_LEN = 1;
   var burstUntil = 0;           // ~1 min de búsqueda rápida tras poner N° orden
+  var presenciaListo = false;   // no avisar hasta limpiar id viejo
   var clientId = '';
   try {
     clientId = sessionStorage.getItem(CLIENT_KEY) || '';
@@ -20450,6 +20474,14 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (e) {
     clientId = 'c' + Date.now().toString(36);
   }
+  // Apagar presencia de un clientId anterior (mismo navegador, otra pestaña/sesión)
+  try {
+    var prevId = localStorage.getItem(CLIENT_KEY_LS) || '';
+    if (prevId && prevId !== clientId) {
+      window.__alproPresenciaPrevId = prevId;
+    }
+    localStorage.setItem(CLIENT_KEY_LS, clientId);
+  } catch (eLs) {}
 
   function scriptUrl() {
     return (typeof URL_SCRIPT !== 'undefined' && URL_SCRIPT) ? URL_SCRIPT : '';
@@ -20493,20 +20525,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function sendOn() {
     var u = scriptUrl();
-    if (!u || !estoyEscribiendoOrden()) return;
+    if (!u || !presenciaListo || !estoyEscribiendoOrden()) return;
     try {
       fetch(u, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadOn()) });
     } catch (e) {}
   }
 
-  function sendOff() {
+  function sendOff(idOpt) {
     var u = scriptUrl();
     if (!u) return;
+    var id = idOpt || clientId;
     try {
       fetch(u, {
         method: 'POST',
         mode: 'no-cors',
-        body: JSON.stringify({ action: 'presenciaOff', clientId: clientId, ts: Date.now() })
+        body: JSON.stringify({ action: 'presenciaOff', clientId: id, ts: Date.now() })
       });
     } catch (e) {}
   }
@@ -20588,7 +20621,17 @@ document.addEventListener('DOMContentLoaded', () => {
           if ((ahora - ts) >= STALE_MS) return false;
           return true;
         });
+        if (!presenciaListo) return;
         var yoTambien = estoyEscribiendoOrden();
+        // Un solo “Alguien” anónimo suele ser eco de tu refresh; no mostrar solo por eso
+        if (otros.length === 1) {
+          var o0 = otros[0];
+          var esAnon = !!(o0.anon || !o0.nombre || o0.nombre === 'Alguien');
+          if (esAnon) {
+            pintar('');
+            return;
+          }
+        }
         pintar(formatLista(otros, yoTambien));
       })
       .catch(function () {});
@@ -20598,8 +20641,26 @@ document.addEventListener('DOMContentLoaded', () => {
     return estoyEscribiendoOrden() || Date.now() < burstUntil;
   }
 
+  // Apagar id anterior (refresh) y luego habilitar presencia
+  try {
+    if (window.__alproPresenciaPrevId) {
+      sendOff(window.__alproPresenciaPrevId);
+      window.__alproPresenciaPrevId = '';
+    }
+    sendOff(clientId); // limpio al abrir
+  } catch (eOff) {}
+  setTimeout(function () {
+    presenciaListo = true;
+    if (estoyEscribiendoOrden()) sendOn();
+    poll();
+  }, 1500);
+
   // Heartbeat adaptable
   (function loopHeart() {
+    if (!presenciaListo) {
+      setTimeout(loopHeart, 1000);
+      return;
+    }
     if (estoyEscribiendoOrden()) sendOn();
     else sendOff();
     setTimeout(loopHeart, enModoRapido() ? HEART_MS_ACTIVO : HEART_MS_IDLE);
