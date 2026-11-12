@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALPROMEH - REGISTRO ORDENES</title>
-    <script>window.ALPRO_APP_BUILD='2026-11-11a';</script>
+    <script>window.ALPRO_APP_BUILD='2026-11-12b';</script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 
@@ -195,6 +195,8 @@ button.delete-button-art:hover .trash-svg {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
 
         /* Scrollbar principal acorde a la app */
         html {
@@ -8280,6 +8282,7 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         } catch (eFav) {}
         
         articulosPedidoActual = [];
+        try { if (typeof window.alproBorradorLimpiar === 'function') window.alproBorradorLimpiar(); } catch (eBor) {}
         if (typeof renderizarTablaArticulos === "function") renderizarTablaArticulos();
 
         // 🛡️ Quitar required fantasma del NOG (evita bloqueo silencioso del siguiente guardado)
@@ -14925,21 +14928,21 @@ const premios = [
     { id: 117, nombre: "Skin: Mante", precio: 40, emoji: "🧈", colorBadge: "#fef9c3", colorTexto: "#a16207", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "mantequilla", desc: "Desbloquea a Mante, la mantequilla squishy" },
     { id: 118, nombre: "Skin: Quetzi", precio: 30, emoji: "🪶", colorBadge: "#d1fae5", colorTexto: "#047857", esUnico: true, prefijo: "SK", tipo: "skin", skinId: "quetzal", desc: "Desbloquea a Quetzi, el quetzal tierno de Guatemala" },
     // —— Antojos (se pueden volver a comprar) ——
-    { id: 1, nombre: "Gomitas", precio: 160, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM", desc: "Disfruta tu dosis de dulce diaria" },
-    { id: 2, nombre: "Maní", precio: 160, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN", desc: "El snack perfecto de media tarde" },
-    { id: 3, nombre: "Chicles", precio: 160, emoji: "🫧", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH", desc: "Refresca tu aliento con unos Stick de larga duración" },
-    { id: 4, nombre: "Ricito XL", precio: 360, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX", desc: "Nada mejor que un antojo XL" },
-    { id: 5, nombre: "Galletas", precio: 370, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL", desc: "Acompáñalas con tu café" },
-    { id: 8, nombre: "Chocolate Premium", precio: 400, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC", desc: "Disfruta de un buen chocolate premium JacQuot francés" },
-    { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 400, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP", desc: "El pack perfecto para que nunca falte tinta" },
+    { id: 1, nombre: "Gomitas", precio: 220, emoji: "🍬", colorBadge: "#fef3c7", colorTexto: "#d97706", esUnico: false, prefijo: "GM", desc: "Disfruta tu dosis de dulce diaria" },
+    { id: 2, nombre: "Maní", precio: 220, emoji: "🥜", colorBadge: "#ffedd5", colorTexto: "#ea580c", esUnico: false, prefijo: "MN", desc: "El snack perfecto de media tarde" },
+    { id: 3, nombre: "Chicles", precio: 220, emoji: "🫧", colorBadge: "#fee2e2", colorTexto: "#dc2626", esUnico: false, prefijo: "CH", desc: "Refresca tu aliento con unos Stick de larga duración" },
+    { id: 4, nombre: "Ricito XL", precio: 480, emoji: "🍿", colorBadge: "#fff1f2", colorTexto: "#e11d48", esUnico: false, prefijo: "RX", desc: "Nada mejor que un antojo XL" },
+    { id: 5, nombre: "Galletas", precio: 500, emoji: "🍪", colorBadge: "#f8fafc", colorTexto: "#475569", esUnico: false, prefijo: "GL", desc: "Acompáñalas con tu café" },
+    { id: 8, nombre: "Chocolate Premium", precio: 520, emoji: "🍫", colorBadge: "#fee2e2", colorTexto: "#b91c1c", esUnico: false, prefijo: "CC", desc: "Disfruta de un buen chocolate premium JacQuot francés" },
+    { id: 9, nombre: "Lapiceros de Gel (12 und)", precio: 520, emoji: "🖊️", colorBadge: "#e0f2fe", colorTexto: "#0369a1", esUnico: false, prefijo: "LP", desc: "El pack perfecto para que nunca falte tinta" },
     // —— Productos únicos (una sola vez) ——
-    { id: 7, nombre: "Taza", precio: 400, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: false, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
-    { id: 20, nombre: "Tupper de Plástico", precio: 400, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: false, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
+    { id: 7, nombre: "Taza", precio: 520, emoji: "☕", colorBadge: "#f3e8ff", colorTexto: "#7c3aed", esUnico: false, prefijo: "TZ", desc: "Disfruta de tu café matutino con una bonita taza" },
+    { id: 20, nombre: "Tupper de Plástico", precio: 520, emoji: "🍱", colorBadge: "#ecfdf5", colorTexto: "#047857", esUnico: false, prefijo: "TP2", desc: "Tu snack fresco y seguro" },
     { id: 10, nombre: "Libreta de Notas", precio: 600, emoji: "📓", colorBadge: "#e2e8f0", colorTexto: "#334155", esUnico: true, prefijo: "LB", desc: "Lo que tus mejores ideas merecen" },
     { id: 11, nombre: "Organizador de Lápices", precio: 600, emoji: "📇", colorBadge: "#f0fdf4", colorTexto: "#15803d", esUnico: true, prefijo: "OR", desc: "Mantené tu escritorio impecable con Studio" },
-    { id: 12, nombre: "Tupper de Vidrio", precio: 560, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: false, prefijo: "HV", desc: "Tu comida fresca y segura" },
+    { id: 12, nombre: "Tupper de Vidrio", precio: 720, emoji: "🫙", colorBadge: "#e0f2fe", colorTexto: "#0284c7", esUnico: false, prefijo: "HV", desc: "Tu comida fresca y segura" },
     { id: 13, nombre: "Mouse Sencillo", precio: 700, emoji: "🖱️", colorBadge: "#f1f5f9", colorTexto: "#0f172a", esUnico: true, prefijo: "MS", desc: "Mejora tu productividad con el Mouse Tech1" },
-    { id: 14, nombre: "Pack de Gaseosas", precio: 560, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: false, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
+    { id: 14, nombre: "Pack de Gaseosas", precio: 720, emoji: "🥤", colorBadge: "#fff1f2", colorTexto: "#be123c", esUnico: false, prefijo: "GS", desc: "Refrescáte con 8 latas de tus gaseosas favoritas" },
     { id: 15, nombre: "Audífonos Sencillos", precio: 800, emoji: "🎧", colorBadge: "#fae8ff", colorTexto: "#a21caf", esUnico: true, prefijo: "AD", desc: "Escuchá tu música favorita con Tech1" },
     { id: 16, nombre: "Almohada de Viaje", precio: 800, emoji: "💤", colorBadge: "#fff7ed", colorTexto: "#c2410c", esUnico: true, prefijo: "AV", desc: "Descansá como te mereces" },
     { id: 17, nombre: "Tarjeta de Regalo Básica", precio: 2000, emoji: "💳", colorBadge: "#d1fae5", colorTexto: "#064e3b", esUnico: true, prefijo: "TB", efectoEmoji: "filter: hue-rotate(265deg) saturate(2) brightness(0.65) contrast(1.1); display: inline-block;", desc: "Q80.00 para tus compras favoritas en Dollarcity. ¡Disfrútalo!" },
@@ -20182,6 +20185,249 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+
+<script>
+/* =========================================================
+   BORRADOR DE ORDEN — autoguardado silencioso (localStorage)
+   No pisa presencia ni el guardado a Sheets.
+   ========================================================= */
+(function initAlproBorradorOrden() {
+  var KEY = 'alpro_borrador_orden_v1';
+  var saveTimer = null;
+  var restoring = false;
+  var recoveredPayload = null;
+
+  function $(id) { return document.getElementById(id); }
+
+  function leerFormulario() {
+    var tipo = '';
+    var r = document.querySelector('input[name="tipoContratacion"]:checked');
+    if (r) tipo = r.value || '';
+    var arts = [];
+    try {
+      if (typeof articulosPedidoActual !== 'undefined' && Array.isArray(articulosPedidoActual)) {
+        arts = articulosPedidoActual.map(function (a) {
+          return {
+            codigo: a.codigo || '',
+            descripcion: a.descripcion || '',
+            cantidad: a.cantidad,
+            precioU: a.precioU,
+            total: a.total
+          };
+        });
+      }
+    } catch (e) {}
+    return {
+      v: 1,
+      ts: Date.now(),
+      paso: (typeof pasoActual === 'number') ? pasoActual : 1,
+      modoPedido: !!(typeof modoPedidoActivo !== 'undefined' && modoPedidoActivo),
+      orden: ($('orden') && $('orden').value) ? $('orden').value.trim() : '',
+      fecha: ($('fecha') && $('fecha').value) ? $('fecha').value : '',
+      institucion: ($('institucion') && $('institucion').value) ? $('institucion').value.trim() : '',
+      persona: ($('persona') && $('persona').value) ? $('persona').value.trim() : '',
+      responsable: ($('responsableSelect') && $('responsableSelect').value) ? $('responsableSelect').value : '',
+      tipoCompra: tipo,
+      nog: ($('nogInput') && $('nogInput').value) ? $('nogInput').value.trim() : '',
+      observaciones: ($('observacionesPedido') && $('observacionesPedido').value) ? $('observacionesPedido').value : '',
+      articulos: arts
+    };
+  }
+
+  function tieneContenido(d) {
+    if (!d) return false;
+    if (d.orden) return true;
+    if (d.institucion) return true;
+    if (d.persona) return true;
+    if (d.articulos && d.articulos.length) return true;
+    if (d.observaciones) return true;
+    return false;
+  }
+
+  function guardarSilencioso() {
+    if (restoring) return;
+    try {
+      var d = leerFormulario();
+      if (!tieneContenido(d)) return;
+      localStorage.setItem(KEY, JSON.stringify(d));
+    } catch (err) {}
+  }
+
+  function programarGuardado() {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(guardarSilencioso, 500);
+  }
+
+  function cargar() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      var d = JSON.parse(raw);
+      return d && typeof d === 'object' ? d : null;
+    } catch (e) { return null; }
+  }
+
+  function limpiar() {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    recoveredPayload = null;
+  }
+
+  function restaurar(d) {
+    if (!d || !tieneContenido(d)) return false;
+    restoring = true;
+    try {
+      if (d.orden && $('orden')) $('orden').value = d.orden;
+      if (d.fecha && $('fecha')) $('fecha').value = d.fecha;
+      if (d.institucion && $('institucion')) $('institucion').value = d.institucion;
+      if (d.persona && $('persona')) $('persona').value = d.persona;
+      if (d.responsable && $('responsableSelect')) {
+        $('responsableSelect').value = d.responsable;
+        try {
+          if (typeof aplicarColorUnico === 'function') aplicarColorUnico($('responsableSelect'));
+        } catch (eC) {}
+      }
+      if (d.nog && $('nogInput')) $('nogInput').value = d.nog;
+      if (d.observaciones && $('observacionesPedido')) $('observacionesPedido').value = d.observaciones;
+
+      if (d.tipoCompra) {
+        document.querySelectorAll('input[name="tipoContratacion"]').forEach(function (r) {
+          r.checked = (r.value === d.tipoCompra);
+        });
+        try { if (typeof evaluarMostrarNog === 'function') evaluarMostrarNog(); } catch (eN) {}
+      }
+
+      if (d.modoPedido) {
+        var sw = $('switchModoPedido');
+        if (sw) {
+          sw.checked = true;
+          try { if (typeof alternarModoPedido === 'function') alternarModoPedido(); } catch (eM) {}
+        }
+      }
+
+      if (typeof articulosPedidoActual !== 'undefined') {
+        articulosPedidoActual = Array.isArray(d.articulos) ? d.articulos.slice() : [];
+        try { if (typeof renderizarTablaArticulos === 'function') renderizarTablaArticulos(); } catch (eR) {}
+      }
+
+      var paso = parseInt(d.paso, 10) || 1;
+      if (paso > 1 && typeof cambiarPaso === 'function') {
+        setTimeout(function () {
+          try { cambiarPaso(paso); } catch (eP) {}
+        }, 100);
+      }
+    } finally {
+      setTimeout(function () { restoring = false; }, 300);
+    }
+    return true;
+  }
+
+  function confetiBorradorSuave() {
+    // Confeti amplio pero suave (no tapa la UI)
+    var colores = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#eab308', '#8b5cf6', '#34d399', '#f472b6'];
+    var n = 36;
+    for (var i = 0; i < n; i++) {
+      (function (idx) {
+        var p = document.createElement('div');
+        p.className = 'hamster-confetti-piece';
+        p.style.width = (6 + Math.random() * 5) + 'px';
+        p.style.height = (6 + Math.random() * 5) + 'px';
+        p.style.borderRadius = Math.random() > 0.5 ? '2px' : '50%';
+        p.style.left = (8 + Math.random() * 84) + 'vw';
+        p.style.top = (-4 + Math.random() * 12) + 'vh';
+        p.style.background = colores[idx % colores.length];
+        p.style.opacity = '0.85';
+        p.style.zIndex = '10040';
+        var dx = (Math.random() - 0.5) * 120;
+        var dy = 180 + Math.random() * 280;
+        p.style.setProperty('--cx', dx + 'px');
+        p.style.setProperty('--cy', dy + 'px');
+        p.style.animationDuration = (1.4 + Math.random() * 0.9) + 's';
+        document.body.appendChild(p);
+        setTimeout(function () { try { p.remove(); } catch (e) {} }, 2400);
+      })(i);
+    }
+  }
+
+  function avisarMascotaRecuperado() {
+    // Bienvenida ~1.3s → este aviso ~4s después (~5.3s desde carga; boot ~0.45s)
+    setTimeout(function () {
+      try {
+        if (typeof window.notify === 'function') {
+          window.notify('¡Hey! Guardé tu borrador', '💾', 4800, 'ok', {
+            mood: 'happy-closed',
+            confetti: false
+          });
+        }
+        confetiBorradorSuave();
+        // Salto más alto y un poco más lento
+        setTimeout(function () {
+          try {
+            if (typeof mascotaPlayAnim === 'function') {
+              mascotaPlayAnim('hamster-hop-high', 1000);
+            }
+          } catch (eH) {}
+        }, 80);
+      } catch (e) {}
+    }, 4900);
+  }
+
+  function boot() {
+    var d = cargar();
+    if (d && tieneContenido(d)) {
+      restaurar(d);
+      recoveredPayload = d;
+      avisarMascotaRecuperado();
+    }
+
+    ['orden', 'fecha', 'institucion', 'persona', 'nogInput', 'observacionesPedido'].forEach(function (id) {
+      document.addEventListener('input', function (ev) {
+        if (ev.target && ev.target.id === id) programarGuardado();
+      });
+      document.addEventListener('change', function (ev) {
+        if (ev.target && ev.target.id === id) programarGuardado();
+      });
+    });
+    document.addEventListener('change', function (ev) {
+      if (!ev.target) return;
+      if (ev.target.id === 'responsableSelect' || ev.target.name === 'tipoContratacion') programarGuardado();
+      if (ev.target.id === 'switchModoPedido') programarGuardado();
+    });
+    document.addEventListener('alpro:paso', function () { programarGuardado(); });
+
+    // Productos: envolver render una sola vez
+    if (typeof window.renderizarTablaArticulos === 'function' && !window.renderizarTablaArticulos._alproBor) {
+      var _orig = window.renderizarTablaArticulos;
+      window.renderizarTablaArticulos = function () {
+        var r = _orig.apply(this, arguments);
+        programarGuardado();
+        return r;
+      };
+      window.renderizarTablaArticulos._alproBor = true;
+    }
+
+    // Autoguardado periódico suave (tipo Word), sin avisar
+    setInterval(function () {
+      if (!restoring) guardarSilencioso();
+    }, 12000);
+
+    window.addEventListener('pagehide', function () { guardarSilencioso(); });
+    window.addEventListener('beforeunload', function () { guardarSilencioso(); });
+  }
+
+  window.alproBorradorLimpiar = limpiar;
+  window.alproBorradorGuardar = function () { guardarSilencioso(); };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 450); });
+  } else {
+    setTimeout(boot, 450);
+  }
+})();
+</script>
+
+})();
+</script>
 
 <script>
 /* PRESENCIA — solo con N° de orden serio; nombres desde paso 2; entrada/salida suave */
