@@ -8551,7 +8551,8 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
         if (JSON.stringify(datosMezclados) !== JSON.stringify(datosLocales)) {
             datosLocales = datosMezclados; 
             alproLSSetJSON('alpromeh_vFinal_v10', datosLocales);
-            renderTable(); 
+            renderTable();
+            if (typeof actualizarContadores === 'function') actualizarContadores();
             console.log("Sincronización inteligente completada.");
         }
     } catch(e) { 
@@ -11478,30 +11479,39 @@ const valorOriginal = celda.innerText.trim();
 }
 
 function actualizarContadores() {
-    const hoyInput = document.getElementById('fecha').value; 
+    // 📅 HOY real del calendario (NO la fecha del formulario de la orden en curso).
+    // Si usáramos #fecha, el borrador/autoguardado de una orden vieja haría
+    // saltar Urgentes/Hoy/Listas al restaurar o al sincronizar.
+    const _now = new Date();
+    const _off = _now.getTimezoneOffset() * 60000;
+    const hoyInput = new Date(_now.getTime() - _off).toISOString().split('T')[0];
     let urgentes = 0;
     let hoyTotal = 0;
     let listasHoy = 0;
 
-    datosLocales.forEach(item => {
-        // 1. Urgentes: No despachadas, no son de Axel/Anuladas y tienen fecha anterior a hoy
+    (Array.isArray(datosLocales) ? datosLocales : []).forEach(item => {
+        if (!item) return;
+        // 1. Urgentes: No despachadas, no son de Axel/Richard/Anuladas y tienen fecha anterior a hoy
         if (!item.despachado && item.responsable !== "Axel" && item.responsable !== "Richard" && item.responsable !== "ANULADA" && item.fecha < hoyInput) {
             urgentes++;
         }
-        // 2. Ingresadas Hoy: Todo lo que tiene la fecha del input
+        // 2. Ingresadas Hoy: fecha de la orden = hoy real
         if (item.fecha === hoyInput) {
             hoyTotal++;
         }
-        // 3. Listas Hoy: Marcadas como despachadas con la fecha del input
+        // 3. Listas Hoy: despachadas con fecha de hoy real
         if (item.despachado && item.fecha === hoyInput) {
             listasHoy++;
         }
     });
 
     // Inyectar valores en los spans
-    document.getElementById('count-atrasadas').innerText = urgentes;
-    document.getElementById('count-hoy').innerText = hoyTotal;
-    document.getElementById('count-listos').innerText = listasHoy;
+    const elA = document.getElementById('count-atrasadas');
+    const elH = document.getElementById('count-hoy');
+    const elL = document.getElementById('count-listos');
+    if (elA) elA.innerText = urgentes;
+    if (elH) elH.innerText = hoyTotal;
+    if (elL) elL.innerText = listasHoy;
 }
 // Detección automática: huella del HTML en GitHub vs la última aceptada en este navegador
 function alproHashTexto(str) {
