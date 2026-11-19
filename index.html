@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALPROMEH - REGISTRO ORDENES</title>
-    <script>window.ALPRO_APP_BUILD='2026-11-15d';</script>
+    <script>window.ALPRO_APP_BUILD='2026-11-19a';</script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 
@@ -247,6 +247,17 @@ button.delete-button-art:hover .trash-svg {
 
 
 
+
+
+/* Filas: sin animación continua en PCs lentas / prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  tr[class*="fila-estilo-"] {
+    animation: none !important;
+  }
+}
+html.alpro-filas-static tr[class*="fila-estilo-"] {
+  animation: none !important;
+}
 
 /* ========== ESTILOS DE FILA — tr continuo, decor detrás de datos ========== */
 tr[class*="fila-estilo-"] {
@@ -1325,35 +1336,32 @@ input::-webkit-outer-spin-button,
 #update-banner {
     display: none; 
     position: fixed; 
-    top: 20px; /* Separado del techo como en iOS */
+    top: 16px;
     left: 50%;
-    transform: translateX(-50%) translateY(-150%); /* Posición inicial para la animación de entrada */
-    width: 90%;
-    max-width: 500px; /* Se adapta perfecto a monitores o laptops */
+    transform: translateX(-50%) translateY(-150%);
+    width: 92%;
+    max-width: 520px;
     
-    /* El efecto Liquid Glass Puro */
-    background: rgba(255, 255, 255, 0.14); 
-    backdrop-filter: blur(25px) saturate(200%);
-    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    /* Más visible: no se confunde con el fondo */
+    background: linear-gradient(135deg, #ea580c 0%, #dc2626 55%, #b91c1c 100%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     
-    /* Estilo Cápsula / Isla Dinámica */
-    border-radius: 30px;
-    padding: 18px 24px; /* Más alto y cómodo para hacer clic */
-    z-index: 9999; 
+    border-radius: 18px;
+    padding: 16px 22px 14px;
+    z-index: 10050; 
     cursor: pointer; 
     
-    /* Tipografía y Estilo de Texto */
-    color: #111827; /* Gris oscuro premium ultra legible */
+    color: #fff;
     text-align: center; 
     font-weight: 800; 
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-    letter-spacing: 1.5px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     
-    /* Bordes de cristal y sombras profundas de iOS */
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.45), 0 0 0 4px rgba(234, 88, 12, 0.25);
     
     /* Animaciones: Entrada suave + Latido infinito de atención */
     animation: slideDownCapsule 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, 
@@ -5787,9 +5795,10 @@ tbody.animar-entrada {
     </div>
 </div>
 
-<div id="update-banner">
-    <span style="color: #ea580c; margin-right: 8px; font-size: 1rem; vertical-align: middle;">●</span>
-    <strong style="vertical-align: middle;">Nueva versión detectada • Actualizar aquí</strong>
+<div id="update-banner" role="button" tabindex="0" title="Clic para cargar la versión nueva">
+    <span style="display:inline-block;margin-right:10px;font-size:1.15rem;vertical-align:middle;">🔄</span>
+    <strong style="vertical-align:middle;letter-spacing:0.04em;">HAY UNA VERSIÓN NUEVA</strong>
+    <span style="display:block;margin-top:6px;font-size:0.78rem;font-weight:700;opacity:0.95;text-transform:none;letter-spacing:0.02em;">Toca aquí para actualizar · Si no, puedes ver datos viejos</span>
 </div>
 <!-- ☀️/🌙 BOTÓN ANIMADO TEMA OSCURO/CLARO (oculto visualmente; el hámster ocupa su lugar) -->
 <div class="themeToggle-container">
@@ -6199,7 +6208,7 @@ tbody.animar-entrada {
     <div class="busqueda-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;">
     
     <div style="width: 100%;">
-        <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 " onkeyup="renderTable()" style="width: 100%; box-sizing: border-box;">
+        <input type="text" id="inputBuscar" class="input-busqueda" placeholder="🔍 " onkeyup="renderTable()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" style="width: 100%; box-sizing: border-box;">
     </div>
 
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; width: 100%;">
@@ -11018,15 +11027,34 @@ SKIN_SVG.slime =
   }
   window.refrescarClasesFilasEstilo = refrescarClasesFilasEstilo;
 
+  
+  // PCs lentas: quitar animaciones de fila (el fondo estático se mantiene si hay estilo)
+  (function alproDetectFilasStatic() {
+    try {
+      var force = localStorage.getItem('alpro_filas_static') === '1';
+      var slow = false;
+      if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) slow = true;
+      if (navigator.deviceMemory && navigator.deviceMemory <= 4) slow = true;
+      if (force || slow) document.documentElement.classList.add('alpro-filas-static');
+    } catch (e) {}
+  })();
+
   (function initFilaEstilos() {
     function mergeRemote(remote) {
+      // Sheets = fuente de verdad. Si estilos_fila está {}, limpia el localStorage
+      // (evita Sakura/Cristal fantasma en PCs lentas que tenían datos viejos).
       if (!remote || typeof remote !== 'object') return;
-      var local = leerFilaEstilos();
-      var changed = false;
+      var limpio = {};
       Object.keys(remote).forEach(function(k) {
-        if (remote[k]) { local[k] = remote[k]; changed = true; }
+        if (remote[k]) limpio[k] = remote[k];
       });
-      if (changed) guardarFilaEstilos(local);
+      try {
+        var prev = JSON.stringify(leerFilaEstilos());
+        var next = JSON.stringify(limpio);
+        if (prev !== next) guardarFilaEstilos(limpio);
+      } catch (eM) {
+        guardarFilaEstilos(limpio);
+      }
       refrescarClasesFilasEstilo();
     }
     try {
@@ -11557,13 +11585,24 @@ async function chequearActualizacionAutomatica() {
             banner.style.display = 'block';
             banner.onclick = function () {
                 try { localStorage.setItem(key, remoteHash); } catch (e2) {}
-                // Recarga fuerte: nueva URL + bypass de caché del navegador
+                // Recarga fuerte: bypass caché (Service Worker / HTTP)
+                try {
+                  if (window.caches && caches.keys) {
+                    caches.keys().then(function (ks) {
+                      ks.forEach(function (k) { caches.delete(k); });
+                    });
+                  }
+                } catch (eC) {}
                 var dest = base + '?v=' + encodeURIComponent(remoteHash || String(Date.now())) + '&t=' + Date.now();
                 if (window.location.replace) {
                     window.location.replace(dest);
                 } else {
                     window.location.href = dest;
                 }
+            };
+            // Teclado accesible
+            banner.onkeydown = function (ev) {
+              if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); banner.onclick(); }
             };
         } else {
             banner.style.display = 'none';
@@ -20987,6 +21026,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('beforeunload', function () { sendOff(); });
   window.addEventListener('pagehide', function () { sendOff(); });
+})();
+</script>
+
+
+<script>
+/* Buscador: nunca persistir (ni autofill ni resto de sesión) */
+(function () {
+  function limpiarBuscador() {
+    try {
+      var ib = document.getElementById('inputBuscar');
+      if (!ib) return;
+      ib.value = '';
+      ib.setAttribute('autocomplete', 'off');
+    } catch (e) {}
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', limpiarBuscador);
+  } else {
+    limpiarBuscador();
+  }
+  window.addEventListener('pageshow', function () {
+    limpiarBuscador();
+    try { if (typeof renderTable === 'function') renderTable(); } catch (e2) {}
+  });
 })();
 </script>
 
