@@ -94,10 +94,19 @@ button.delete-button-art:hover .trash-svg {
 
 /* --- CLASE: ANULADA --- */
         .color-anulada { 
-            background-color: #475569 !important; 
-            color: #ffffff !important; 
+            background-color: #1e293b !important; 
+            color: #f1f5f9 !important; 
         }
-        .color-anulada td, .color-anulada select { color: #ffffff !important; }
+        .color-anulada td, .color-anulada select { 
+            color: #f1f5f9 !important; 
+            background-color: transparent !important;
+        }
+        .color-anulada td small { color: #94a3b8 !important; }
+        .color-anulada select {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+            border-color: #475569 !important;
+        }
 
         /* --- ANIMACIONES --- */
         @keyframes shake {
@@ -262,6 +271,7 @@ html.alpro-filas-static tr[class*="fila-estilo-"] {
 /* ========== ESTILOS DE FILA — tr continuo, decor detrás de datos ========== */
 tr[class*="fila-estilo-"] {
   position: relative;
+  contain: layout style;
 }
 tr[class*="fila-estilo-"] > td {
   position: relative;
@@ -288,7 +298,7 @@ tr.fila-estilo-aurora {
     #c4b5fd 0%, #ddd6fe 18%, #e9d5ff 35%, #fbcfe8 52%,
     #bae6fd 70%, #c4b5fd 88%, #ddd6fe 100%);
   background-size: 240% 100%;
-  animation: filaAurora 14s ease-in-out infinite alternate;
+  animation: filaAurora 22s ease-in-out infinite alternate;
 }
 tr.fila-estilo-aurora > td { color: #3730a3 !important; font-weight: 600; }
 tr.fila-estilo-aurora > td select { background: rgba(255,255,255,0.95) !important; color: #3730a3 !important; }
@@ -338,7 +348,7 @@ tr.fila-estilo-oro {
       #fbbf24 68%, #d97706 85%, #92400e 100%);
   background-size: 55% 100%, 100% 100%;
   background-repeat: no-repeat, no-repeat;
-  animation: filaOro 5s ease-in-out infinite alternate;
+  animation: filaOro 12s ease-in-out infinite alternate;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(120,53,15,0.18);
 }
 tr.fila-estilo-oro > td { color: #451a03 !important; font-weight: 600; }
@@ -362,7 +372,7 @@ tr.fila-estilo-cristal {
     linear-gradient(120deg, #9d174d 0%, #db2777 45%, #be185d 100%);
   background-size: 320px 72px, 320px 72px, 100% 100%;
   background-repeat: repeat, repeat, no-repeat;
-  animation: filaSakuraA 6s linear infinite;
+  animation: filaSakuraA 14s linear infinite;
 }
 tr.fila-estilo-cristal > td { color: #fdf2f8 !important; font-weight: 600; }
 tr.fila-estilo-cristal > td select { background: #fdf2f8 !important; color: #9d174d !important; }
@@ -379,7 +389,7 @@ tr.fila-estilo-ocean {
     linear-gradient(180deg, #38bdf8 0%, #0ea5e9 28%, #0284c7 47%, #0369a1 47%, #0369a1 100%);
   background-size: 320px 56px, 100% 100%;
   background-repeat: repeat-x, no-repeat;
-  animation: filaOcean 9s linear infinite;
+  animation: filaOcean 16s linear infinite;
 }
 tr.fila-estilo-ocean > td { color: #f0f9ff !important; font-weight: 600; }
 tr.fila-estilo-ocean > td select { background: #f0f9ff !important; color: #0c4a6e !important; }
@@ -412,7 +422,7 @@ tr.fila-estilo-holo {
   background-image: linear-gradient(110deg,
     #a5b4fc, #f0abfc, #67e8f9, #c4b5fd, #f9a8d4, #a5b4fc);
   background-size: 250% 100%;
-  animation: filaHolo 8s ease-in-out infinite alternate;
+  animation: filaHolo 16s ease-in-out infinite alternate;
 }
 tr.fila-estilo-holo > td { color: #1e1b4b !important; font-weight: 600; }
 tr.fila-estilo-holo > td select { background: rgba(255,255,255,0.95) !important; color: #1e1b4b !important; }
@@ -429,7 +439,7 @@ tr.fila-estilo-midnight {
     linear-gradient(180deg, #0f172a 0%, #1e293b 55%, #0f172a 100%);
   background-size: 320px 56px, 100% 100%;
   background-repeat: repeat-x, no-repeat;
-  animation: filaClouds 28s linear infinite;
+  animation: filaClouds 40s linear infinite;
 }
 tr.fila-estilo-midnight > td { color: #e2e8f0 !important; font-weight: 600; }
 tr.fila-estilo-midnight > td select { background: #e2e8f0 !important; color: #0f172a !important; }
@@ -455,7 +465,7 @@ tr.fila-estilo-prism {
     linear-gradient(180deg, rgba(255,255,255,0.35) 0%, transparent 40%, rgba(15,23,42,0.08) 100%);
   background-size: 48% 100%, 100% 100%, 100% 100%;
   background-repeat: no-repeat, no-repeat, no-repeat;
-  animation: filaPrism 5.5s ease-in-out infinite alternate;
+  animation: filaPrism 12s ease-in-out infinite alternate;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(99,102,241,0.15);
 }
 [data-theme="dark"] tr.fila-estilo-prism {
@@ -489,7 +499,7 @@ tr.fila-estilo-pixel {
     linear-gradient(135deg, #0f766e 0%, #1d4ed8 35%, #7c3aed 70%, #0f766e 100%);
   background-size: 12px 12px, 12px 12px, 100% 100%;
   background-repeat: repeat, repeat, no-repeat;
-  animation: filaPixel 4s ease-in-out infinite;
+  animation: filaPixel 10s ease-in-out infinite;
 }
 tr.fila-estilo-pixel > td { color: #ecfeff !important; font-weight: 600; }
 tr.fila-estilo-pixel > td select { background: #ecfeff !important; color: #134e4a !important; }
@@ -508,7 +518,7 @@ tr.fila-estilo-partitura {
       #7dd3fc 57%, #a5b4fc 71%, #e9d5ff 85%, #fca5a5 100%);
   background-size: 120px 56px, 300% 100%;
   background-repeat: repeat-x, no-repeat;
-  animation: filaPartituraMove 22s linear infinite alternate;
+  animation: filaPartituraMove 32s linear infinite alternate;
 }
 tr.fila-estilo-partitura > td { color: #1e1b4b !important; font-weight: 600; }
 tr.fila-estilo-partitura > td select { background: #ffffff !important; color: #4c1d95 !important; }
@@ -527,7 +537,7 @@ tr.fila-estilo-hex {
   background-size: 56px 56px, 200% 100%;
   background-position: 0 center, 0% 50%;
   background-repeat: repeat, no-repeat;
-  animation: filaHex 7s ease-in-out infinite;
+  animation: filaHex 14s ease-in-out infinite;
 }
 tr.fila-estilo-hex > td { color: #ccfbf1 !important; font-weight: 600; }
 tr.fila-estilo-hex > td select { background: #ccfbf1 !important; color: #134e4a !important; }
@@ -547,7 +557,7 @@ tr.fila-estilo-checker {
     linear-gradient(180deg, #292524 0%, #1c1917 100%);
   background-size: 16px 16px, 16px 16px, 16px 16px, 16px 16px, 100% 100%;
   background-position: 0 0, 0 8px, 8px -8px, -8px 0, 0 0;
-  animation: filaChecker 3.5s ease-in-out infinite;
+  animation: filaChecker 9s ease-in-out infinite;
 }
 tr.fila-estilo-checker > td { color: #fafaf9 !important; font-weight: 600; }
 tr.fila-estilo-checker > td select { background: #fafaf9 !important; color: #292524 !important; }
@@ -566,7 +576,7 @@ tr.fila-estilo-cross {
   background-size: 24px 24px, 24px 24px, 100% 100%;
   background-position: 0 0, 12px 12px, 0 0;
   background-repeat: repeat, repeat, no-repeat;
-  animation: filaCross 3.8s ease-in-out infinite;
+  animation: filaCross 9s ease-in-out infinite;
 }
 tr.fila-estilo-cross > td { color: #f5f3ff !important; font-weight: 600; }
 tr.fila-estilo-cross > td select { background: #f5f3ff !important; color: #5b21b6 !important; }
@@ -1334,68 +1344,86 @@ input::-webkit-outer-spin-button,
     cursor: pointer; transition: 0.3s; width: 100%;
 }
 #update-banner {
-    display: none; 
-    position: fixed; 
-    top: 16px;
+    display: none;
+    position: fixed;
+    top: 14px;
     left: 50%;
     transform: translateX(-50%) translateY(-150%);
-    width: 92%;
-    max-width: 520px;
-    
-    /* Más visible: no se confunde con el fondo */
-    background: linear-gradient(135deg, #ea580c 0%, #dc2626 55%, #b91c1c 100%);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    
-    border-radius: 18px;
-    padding: 16px 22px 14px;
-    z-index: 10050; 
-    cursor: pointer; 
-    
-    color: #fff;
-    text-align: center; 
-    font-weight: 800; 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    width: min(92vw, 560px);
+    max-width: 92vw;
+    min-width: min(280px, 92vw);
+    box-sizing: border-box;
+
+    /* Glass pastilla (inspirado Uiverse card + cápsula ancha) */
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 999px;
+
+    padding: 14px 28px 13px;
+    z-index: 10050;
+    cursor: pointer;
+
+    color: #0f172a;
+    text-align: center;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: 0.015em;
+    text-transform: none;
     font-size: 0.9rem;
-    
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 12px 40px rgba(220, 38, 38, 0.45), 0 0 0 4px rgba(234, 88, 12, 0.25);
-    
-    /* Animaciones: Entrada suave + Latido infinito de atención */
-    animation: slideDownCapsule 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, 
-               iosPulse 3s ease-in-out infinite alternate;
-    
-    /* Transición suave para los estados del mouse */
-    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+
+    animation: slideDownCapsule 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
 }
 
-/* 🔥 EFECTO HOVER: Eleva la tarjeta visualmente al pasar el mouse */
+[data-theme="dark"] #update-banner {
+    background: rgba(30, 41, 59, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #f8fafc;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.4);
+}
+
 #update-banner:hover {
-    background: rgba(255, 255, 255, 0.22);
-    /* La sombra crece hacia abajo simulando que la cápsula flota más alto */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18), 0 0 15px rgba(16, 185, 129, 0.3);
-    /* Efecto "Pop" de crecimiento nativo de Apple */
-    transform: translateX(-50%) translateY(2px) scale(1.02); 
+    border: 1px solid #475569;
+    background: rgba(255, 255, 255, 0.72);
+    transform: translateX(-50%) translateY(0) scale(1.03);
+    box-shadow: 14px 20px 56px rgba(0, 0, 0, 0.22);
+}
+[data-theme="dark"] #update-banner:hover {
+    border: 1px solid #94a3b8;
+    background: rgba(51, 65, 85, 0.75);
+}
+#update-banner .update-banner-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary, #16a34a);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary, #16a34a) 45%, transparent);
+    animation: updateDotPulse 1.8s ease-out infinite;
+    flex-shrink: 0;
+}
+/* Si el banner de búsqueda avanzada está visible, baja un poco el de actualización */
+body:has(.banner-historico[style*="display: flex"]) #update-banner,
+body:has(.banner-historico:not([style*="display: none"]):not([style*="display:none"])) #update-banner {
+    top: 58px;
+}
+@keyframes updateDotPulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary, #16a34a) 40%, transparent); }
+    70% { box-shadow: 0 0 0 8px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
 }
 
-/* 🔥 EFECTO ACTIVE: Se hunde cuando le dan clic (Feedback de botón real) */
 #update-banner:active {
-    transform: translateX(-50%) translateY(4px) scale(0.98);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(-50%) translateY(1px) scale(0.97) rotateZ(0.6deg);
+    box-shadow: 6px 10px 28px rgba(0, 0, 0, 0.16);
 }
 
-/* Animación de entrada estilo notificación de iPhone */
 @keyframes slideDownCapsule {
     from { transform: translateX(-50%) translateY(-150%); opacity: 0; }
     to { transform: translateX(-50%) translateY(0); opacity: 1; }
-}
-
-/* Animación de latido sutil para captar la atención de las chicas */
-@keyframes iosPulse {
-    0% { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12); }
-    100% { box-shadow: 0 12px 45px rgba(16, 185, 129, 0.25); /* Aura verde éxito parpadeando en el fondo */ }
 }
 
 /* --- OPTIMIZACIÓN PARA MÓVIL (SISTEMA HÍBRIDO) --- */
@@ -2231,74 +2259,120 @@ input::-webkit-outer-spin-button,
 }
 
 /* INDICADOR DE 3 PUNTOS (STEPPER COHESIVO) */
+/* From Uiverse.io by njesenberger - https://uiverse.io/njesenberger/friendly-otter-40
+   MIT License, Copyright (c) njesenberger (Nicolas Jesenberger)
+   Adaptado a 3 nodos (pasos 1-2-3) para ALPROMEH */
 .stepper-container {
+    --step-active: var(--primary, #1868e3);
+    --step-inactive: #d3d3d6;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 6px auto 14px auto;
-    gap: 0;
-    padding: 4px 10px;
-    background: transparent;
-    border: none;
-    border-radius: 0;
+    margin: 6px auto 12px auto;
+    padding: 0;
     width: fit-content;
     max-width: 100%;
+    background: transparent;
+    border: none;
     box-shadow: none;
+    aspect-ratio: 442 / 142;
+    height: 1.875em;
 }
 
-.step-dot {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: var(--input-bg, #fff);
-    border: 2px solid var(--border, #cbd5e1);
-    color: #94a3b8;
-    display: flex;
+.stepper-3-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.stepper-3-wrap .stepper-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    display: block;
+}
+
+.stepper-3-wrap .toggle-background {
+    fill: var(--step-active);
+    transition: fill 0.4s ease;
+}
+
+/* Números 1 2 3 encima */
+.stepper-3-nums {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    pointer-events: none;
+    z-index: 3;
+}
+.stepper-3-nums .step-dot {
+    width: auto !important;
+    height: auto !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 0.7em;
     font-weight: 800;
-    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-    position: relative;
-    z-index: 1;
-    flex-shrink: 0;
+    color: rgba(255, 255, 255, 0.82);
+    transition: color 0.35s ease;
 }
-
-.step-dot.active {
-    background: var(--primary, #1e3a8a);
-    border-color: var(--primary, #1e3a8a);
-    color: #fff;
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--primary, #1e3a8a) 30%, transparent);
-    transform: none;
+.stepper-3-nums .step-dot.active {
+    color: var(--step-active) !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .step-line {
-    height: 2px;
-    width: 36px;
-    background: var(--border, #e2e8f0);
-    border-radius: 99px;
-    transition: background 0.3s ease;
-    flex-shrink: 0;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
-.step-line.active {
-    background: var(--primary, #1e3a8a);
+/* —— Líquido (misma lógica que Uiverse: scale + translate del puente) —— */
+.stepper-blob {
+    fill: #fff;
+    transform-origin: center;
+    transition: transform 0.55s cubic-bezier(0.22, 0.7, 0.25, 1);
+    backface-visibility: hidden;
+}
+.stepper-bridge {
+    fill: #fff;
+    transform-origin: center;
+    transition: transform 0.65s cubic-bezier(0.22, 0.7, 0.25, 1);
 }
 
-[data-theme="dark"] .stepper-container {
-    background: transparent;
-    border: none;
-}
-[data-theme="dark"] .step-dot {
-    background: #1e293b;
-    border-color: #475569;
-    color: #64748b;
-}
-[data-theme="dark"] .step-dot.active {
-    background: var(--primary, #3b82f6);
-    border-color: var(--primary, #3b82f6);
-    color: #fff;
-}
+/* paso 1: blob izq + puente en 0 */
+.stepper-container[data-paso="1"] .stepper-blob.b1 { transform: scale(1); }
+.stepper-container[data-paso="1"] .stepper-blob.b2 { transform: scale(0); }
+.stepper-container[data-paso="1"] .stepper-blob.b3 { transform: scale(0); }
+.stepper-container[data-paso="1"] .stepper-bridge { transform: translateX(0); }
+
+/* paso 2: blob centro + puente +150 */
+.stepper-container[data-paso="2"] .stepper-blob.b1 { transform: scale(0); }
+.stepper-container[data-paso="2"] .stepper-blob.b2 { transform: scale(1); }
+.stepper-container[data-paso="2"] .stepper-blob.b3 { transform: scale(0); }
+.stepper-container[data-paso="2"] .stepper-bridge { transform: translateX(150px); }
+
+/* paso 3: blob der + puente +300 */
+.stepper-container[data-paso="3"] .stepper-blob.b1 { transform: scale(0); }
+.stepper-container[data-paso="3"] .stepper-blob.b2 { transform: scale(0); }
+.stepper-container[data-paso="3"] .stepper-blob.b3 { transform: scale(1); }
+.stepper-container[data-paso="3"] .stepper-bridge { transform: translateX(300px); }
+
+[data-theme="dark"] .stepper-container { background: transparent; }
+[data-theme="dark"] .stepper-3-nums .step-dot { color: rgba(255,255,255,0.75); }
+[data-theme="dark"] .stepper-3-nums .step-dot.active { color: var(--step-active) !important; }
 
 /* BOTONES DE NAVEGACIÓN SECUNDARIOS */
 .btn-navegacion-pasos {
@@ -3185,7 +3259,9 @@ input::-webkit-outer-spin-button,
 
 /* Animaciones Generales */
 @keyframes pulsoLuz {
-    0% { opacity: 0.3; transform: scale(0.85); }
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+}
     50% { opacity: 1; transform: scale(1.2); }
     100% { opacity: 0.3; transform: scale(0.85); }
 }
@@ -4676,7 +4752,7 @@ body.dark-mode .themeToggle-container {
 }
 
 
-/* ========== FRASE DEL EQUIPO (solo lápiz + modal) ========== */
+/* ========== FRASE DEL EQUIPO (lápiz + reacciones) ========== */
 .frase-row-equipo {
   display: flex;
   align-items: center;
@@ -4684,12 +4760,163 @@ body.dark-mode .themeToggle-container {
   gap: 8px;
   width: 100%;
   max-width: 95%;
-  margin: 6px auto 10px;
+  margin: 6px auto 4px;
+  position: relative;
 }
 .frase-row-equipo .frase-inspiradora {
   margin: 0 !important;
-  max-width: calc(100% - 40px);
+  max-width: calc(100% - 72px);
 }
+#btnFraseReaccion {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.28;
+  z-index: 20;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .25s ease, transform .25s ease, background .2s ease;
+  color: #475569;
+}
+#btnFraseReaccion:hover,
+#btnFraseReaccion[aria-expanded="true"] {
+  opacity: 0.95;
+  background: rgba(59, 130, 246, 0.12);
+  transform: scale(1.08);
+}
+[data-theme="dark"] #btnFraseReaccion { color: #94a3b8; }
+[data-theme="dark"] #btnFraseReaccion:hover,
+[data-theme="dark"] #btnFraseReaccion[aria-expanded="true"] {
+  background: rgba(148, 163, 184, 0.15);
+  color: #e2e8f0;
+}
+
+/* Picker: una sola pastilla (estilo imagen 3) */
+.frase-react-picker {
+  position: absolute;
+  /* pegado al botón de la carita (derecha de la frase) */
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.06);
+  transform-origin: 0% 0%;
+  animation: fraseReactIn 0.26s cubic-bezier(0.34, 1.35, 0.64, 1) both;
+}
+.frase-react-picker.closing {
+  animation: fraseReactOut 0.18s ease forwards;
+}
+/* Entra desde la izquierda = lado del botón que la abre */
+@keyframes fraseReactIn {
+  from { opacity: 0; transform: scale(0.82) translateX(-16px); }
+  to { opacity: 1; transform: scale(1) translateX(0); }
+}
+@keyframes fraseReactOut {
+  from { opacity: 1; transform: scale(1) translateX(0); }
+  to { opacity: 0; transform: scale(0.85) translateX(-12px); }
+}
+[data-theme="dark"] .frase-react-picker {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+}
+.frase-react-picker[hidden] { display: none !important; }
+.frase-react-picker button {
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+.frase-react-picker button:hover {
+  transform: translateY(-7px) scale(1.15);
+}
+.frase-react-picker button.mia {
+  /* selección sutil: sin anillo que se salga de la pastilla */
+  transform: scale(1.06);
+  filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.18));
+  background: rgba(15, 23, 42, 0.04);
+  border-radius: 50%;
+}
+[data-theme="dark"] .frase-react-picker button.mia {
+  background: rgba(255,255,255,0.08);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+}
+
+.frase-reacciones-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  min-height: 0;
+  margin: 2px auto 8px;
+  max-width: 95%;
+  padding: 0 8px;
+}
+.frase-reacciones-bar:empty { display: none; }
+.frase-reac-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.3;
+  animation: fraseChipPop 0.32s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+}
+.frase-reac-chip.mia {
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  background: #fff;
+}
+[data-theme="dark"] .frase-reac-chip.mia {
+  border-color: #475569;
+  background: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+.frase-reac-chip.out {
+  animation: fraseChipOut 0.2s ease forwards;
+}
+@keyframes fraseChipPop {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fraseChipOut {
+  to { opacity: 0; transform: scale(0.5); }
+}
+[data-theme="dark"] .frase-reac-chip {
+  background: #334155;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+.frase-reac-chip span.e { font-size: 0.95rem; }
+
+
 #btnFraseEquipoLapiz {
   flex-shrink: 0;
   width: 28px;
@@ -5796,9 +6023,11 @@ tbody.animar-entrada {
 </div>
 
 <div id="update-banner" role="button" tabindex="0" title="Clic para cargar la versión nueva">
-    <span style="display:inline-block;margin-right:10px;font-size:1.15rem;vertical-align:middle;">🔄</span>
-    <strong style="vertical-align:middle;letter-spacing:0.04em;">HAY UNA VERSIÓN NUEVA</strong>
-    <span style="display:block;margin-top:6px;font-size:0.78rem;font-weight:700;opacity:0.95;text-transform:none;letter-spacing:0.02em;">Toca aquí para actualizar · Si no, puedes ver datos viejos</span>
+    <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
+      <span class="update-banner-dot" aria-hidden="true"></span>
+      <strong style="font-size:0.92rem;letter-spacing:0.01em;">Nueva versión disponible</strong>
+    </span>
+    <span style="display:block;margin-top:4px;font-size:0.72rem;font-weight:600;opacity:0.78;letter-spacing:0.01em;">Toca para actualizar · Evita datos viejos</span>
 </div>
 <!-- ☀️/🌙 BOTÓN ANIMADO TEMA OSCURO/CLARO (oculto visualmente; el hámster ocupa su lugar) -->
 <div class="themeToggle-container">
@@ -5918,6 +6147,21 @@ tbody.animar-entrada {
             <p id="modalMsg">¿Estás seguro que deseas eliminar esta Orden de Compra?</p>
             
             <div id="contenedorMotivo" style="display: none; text-align: left; margin: 20px 0 15px 0; width: 100%;">
+                <label for="quienAnula" style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Quién anula:
+                </label>
+                <select id="quienAnula" style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 13px; margin-bottom: 12px; outline: none; background: var(--input-bg, #fff); color: var(--text-main, #1e293b);">
+                    <option value="">— Selecciona —</option>
+                    <option value="Yanet">Yanet</option>
+                    <option value="Danna">Danna</option>
+                    <option value="Carmen">Carmen</option>
+                    <option value="Daniela">Daniela</option>
+                    <option value="Nata">Nata</option>
+                    <option value="Claudia">Claudia</option>
+                    <option value="Dan">Dan</option>
+                    <option value="Susan">Susan</option>
+                    <option value="Richard">Richard</option>
+                </select>
                 <label for="motivoAnulacion" style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                     Motivo de la Anulación:
                 </label>
@@ -5963,7 +6207,24 @@ tbody.animar-entrada {
       <p id="fraseMotivacional" class="frase-inspiradora" data-equipo="0">
         "El trabajo en equipo divide los esfuerzos y multiplica los resultados."
       </p>
+      <button type="button" id="btnFraseReaccion" title="Reaccionar a esta frase" aria-label="Reaccionar" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/>
+          <path d="M8.5 13.5c.8 1.4 2 2.2 3.5 2.2s2.7-.8 3.5-2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          <circle cx="9" cy="10" r="1.1" fill="currentColor"/>
+          <circle cx="15" cy="10" r="1.1" fill="currentColor"/>
+        </svg>
+      </button>
+      <div id="fraseReactPicker" class="frase-react-picker" hidden>
+        <button type="button" data-emoji="👍" title="Me gusta">👍</button>
+        <button type="button" data-emoji="❤️" title="Me encanta">❤️</button>
+        <button type="button" data-emoji="😂" title="Jaja">😂</button>
+        <button type="button" data-emoji="😯" title="Wow">😯</button>
+        <button type="button" data-emoji="😡" title="Molesto">😡</button>
+        <button type="button" data-emoji="😭" title="Lloro">😭</button>
+      </div>
     </div>
+    <div id="fraseReaccionesBar" class="frase-reacciones-bar" aria-live="polite"></div>
 </div>
 
     <!-- MANTENEMOS TUS PASTILLAS ORIGINALES -->
@@ -6041,12 +6302,36 @@ tbody.animar-entrada {
 
         </div>
 
-       <div id="indicadorPasos" class="stepper-container" style="display: none;">
-            <div id="dot1" class="step-dot active">1</div>
-            <div id="line1" class="step-line"></div>
-            <div id="dot2" class="step-dot">2</div>
-            <div id="line2" class="step-line"></div>
-            <div id="dot3" class="step-dot">3</div>
+       <div id="indicadorPasos" class="stepper-container" style="display: none;" data-paso="1">
+            <!-- From Uiverse.io by njesenberger - https://uiverse.io/njesenberger/friendly-otter-40 (adaptado a 3 nodos) -->
+            <div class="stepper-3-wrap" aria-hidden="true">
+              <svg class="stepper-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 442 142">
+                <!-- 3 lóbulos unidos (misma curva que el original de 2, extendida) -->
+                <path class="toggle-background" d="M71 142C31.7878 142 0 110.212 0 71C0 31.7878 31.7878 0 71 0C110.212 0 119 30 146 30C173 30 182 0 221 0C260 0 269 30 296 30C323 30 332 0 371 0C410.212 0 442 31.7878 442 71C442 110.212 410.212 142 371 142C331.788 142 323 112 296 112C269 112 260 142 221 142C181.788 142 173 112 146 112C119 112 110.212 142 71 142Z"></path>
+                <g filter="url(#alproStepGoo3)">
+                  <!-- puente deslizante (translateX 0 / 150 / 300) -->
+                  <rect fill="#fff" rx="29" height="58" width="116" y="42" x="13" class="stepper-bridge"></rect>
+                  <!-- círculos: solo el activo en scale(1); el resto scale(0) — mismo truco Uiverse -->
+                  <rect fill="#fff" rx="58" height="114" width="114" y="14" x="14" class="stepper-blob b1"></rect>
+                  <rect fill="#fff" rx="58" height="114" width="114" y="14" x="164" class="stepper-blob b2"></rect>
+                  <rect fill="#fff" rx="58" height="114" width="114" y="14" x="314" class="stepper-blob b3"></rect>
+                </g>
+                <defs>
+                  <filter id="alproStepGoo3">
+                    <feGaussianBlur stdDeviation="10" result="blur" in="SourceGraphic"></feGaussianBlur>
+                    <feColorMatrix result="goo" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" mode="matrix" in="blur"></feColorMatrix>
+                    <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+                  </filter>
+                </defs>
+              </svg>
+              <div class="stepper-3-nums">
+                <div id="dot1" class="step-dot active">1</div>
+                <div id="dot2" class="step-dot">2</div>
+                <div id="dot3" class="step-dot">3</div>
+              </div>
+            </div>
+            <div id="line1" class="step-line" aria-hidden="true"></div>
+            <div id="line2" class="step-line" aria-hidden="true"></div>
         </div>
 
         <form id="formOrdenes" novalidate>
@@ -7013,6 +7298,7 @@ function cargarFraseMotivacional() {
     if (typeof window.syncFraseGlitchData === 'function') window.syncFraseGlitchData();
     else el.setAttribute('data-glitch', (el.innerText || '').trim());
     if (typeof window.alproWrapFraseParticulas === 'function') window.alproWrapFraseParticulas();
+    if (typeof window.alproRenderFraseReacciones === 'function') window.alproRenderFraseReacciones();
   }
   function sistemaRandom() {
     if (typeof frasesAlpromeh !== 'undefined' && frasesAlpromeh && frasesAlpromeh.length) {
@@ -7158,12 +7444,12 @@ function cargarFraseMotivacional() {
     if (editId) {
       var ok = false;
       pool = pool.map(function (x) {
-        if (x.id === editId) { ok = true; return { id: x.id, texto: texto }; }
+        if (x.id === editId) { ok = true; return { id: x.id, texto: texto, reacciones: x.reacciones || {} }; }
         return x;
       });
-      if (!ok) pool.push({ id: editId, texto: texto });
+      if (!ok) pool.push({ id: editId, texto: texto, reacciones: {} });
     } else {
-      pool.push({ id: uid(), texto: texto });
+      pool.push({ id: uid(), texto: texto, reacciones: {} });
     }
     if (pool.length > 80) pool = pool.slice(-80);
     saveCache(pool);
@@ -7264,6 +7550,229 @@ function cargarFraseMotivacional() {
   else boot();
 })();
 
+
+/* ========== REACCIONES A FRASE (1 por usuario, sync en pool equipo) ========== */
+(function () {
+  var EMOJIS = ['👍', '❤️', '😂', '😯', '😡', '😭'];
+  var LS_MINE = 'alpro_frase_mi_reac';   // { fraseKey: emoji }
+  var LS_SYS = 'alpro_frase_reac_sys';    // { fraseKey: { emoji: count } } para frases del sistema
+
+  function loadMine() {
+    try { return JSON.parse(localStorage.getItem(LS_MINE) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function saveMine(m) {
+    try { localStorage.setItem(LS_MINE, JSON.stringify(m || {})); } catch (e) {}
+  }
+  function loadSys() {
+    try { return JSON.parse(localStorage.getItem(LS_SYS) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function saveSys(m) {
+    try { localStorage.setItem(LS_SYS, JSON.stringify(m || {})); } catch (e) {}
+  }
+
+  function keyOfFrase() {
+    var el = document.getElementById('fraseMotivacional');
+    if (!el) return null;
+    var id = el.getAttribute('data-frase-id');
+    if (id) return { type: 'equipo', id: String(id) };
+    var t = (el.innerText || '').trim();
+    if (!t) return null;
+    return { type: 'sys', id: 's:' + t.slice(0, 100) };
+  }
+
+  function getCounts() {
+    var k = keyOfFrase();
+    if (!k) return {};
+    if (k.type === 'equipo') {
+      try {
+        var pool = JSON.parse(localStorage.getItem('alpro_frases_equipo_cache') || '[]') || [];
+        for (var i = 0; i < pool.length; i++) {
+          if (pool[i] && String(pool[i].id) === k.id) return Object.assign({}, pool[i].reacciones || {});
+        }
+      } catch (e) {}
+      return {};
+    }
+    return Object.assign({}, loadSys()[k.id] || {});
+  }
+
+  function setCounts(reacs) {
+    var k = keyOfFrase();
+    if (!k) return;
+    if (k.type === 'equipo') {
+      try {
+        var pool = JSON.parse(localStorage.getItem('alpro_frases_equipo_cache') || '[]') || [];
+        var found = false;
+        pool = pool.map(function (x) {
+          if (x && String(x.id) === k.id) {
+            found = true;
+            return { id: x.id, texto: x.texto, reacciones: reacs };
+          }
+          return x;
+        });
+        if (!found) return;
+        localStorage.setItem('alpro_frases_equipo_cache', JSON.stringify(pool));
+        if (typeof URL_SCRIPT !== 'undefined' && URL_SCRIPT) {
+          try {
+            fetch(URL_SCRIPT, {
+              method: 'POST',
+              redirect: 'follow',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ action: 'guardarFrasesEquipo', accion: 'guardarFrasesEquipo', frases: pool })
+            }).catch(function () {});
+          } catch (e) {}
+        }
+      } catch (e) {}
+    } else {
+      var sys = loadSys();
+      sys[k.id] = reacs;
+      saveSys(sys);
+    }
+  }
+
+  function myEmoji() {
+    var k = keyOfFrase();
+    if (!k) return '';
+    return loadMine()[k.id] || '';
+  }
+
+  function setMyEmoji(emoji) {
+    var k = keyOfFrase();
+    if (!k) return;
+    var m = loadMine();
+    if (!emoji) delete m[k.id];
+    else m[k.id] = emoji;
+    saveMine(m);
+  }
+
+  function renderBar() {
+    var bar = document.getElementById('fraseReaccionesBar');
+    if (!bar) return;
+    var map = getCounts();
+    var mine = myEmoji();
+    var html = '';
+    EMOJIS.forEach(function (e) {
+      var n = map[e] | 0;
+      if (n > 0) {
+        html += '<span class="frase-reac-chip' + (mine === e ? ' mia' : '') + '" data-emoji="' + e + '"><span class="e">' + e + '</span> ' + n + '</span>';
+      }
+    });
+    bar.innerHTML = html;
+  }
+
+  function highlightPicker() {
+    var picker = document.getElementById('fraseReactPicker');
+    if (!picker) return;
+    var mine = myEmoji();
+    Array.prototype.forEach.call(picker.querySelectorAll('button[data-emoji]'), function (btn) {
+      if (btn.getAttribute('data-emoji') === mine) btn.classList.add('mia');
+      else btn.classList.remove('mia');
+    });
+  }
+
+  /** Una sola reacción por usuario: cambiar reemplaza; mismo emoji quita */
+  function setReaction(emoji) {
+    if (EMOJIS.indexOf(emoji) < 0) return;
+    var map = getCounts();
+    var prev = myEmoji();
+    if (prev === emoji) {
+      // quitar
+      if (map[prev]) {
+        map[prev] = Math.max(0, (map[prev] | 0) - 1);
+        if (map[prev] === 0) delete map[prev];
+      }
+      setMyEmoji('');
+    } else {
+      if (prev && map[prev]) {
+        map[prev] = Math.max(0, (map[prev] | 0) - 1);
+        if (map[prev] === 0) delete map[prev];
+      }
+      map[emoji] = (map[emoji] | 0) + 1;
+      setMyEmoji(emoji);
+    }
+    setCounts(map);
+    renderBar();
+    highlightPicker();
+    closePicker();
+  }
+
+  function closePicker() {
+    var p = document.getElementById('fraseReactPicker');
+    var b = document.getElementById('btnFraseReaccion');
+    if (!p || p.hidden) {
+      if (b) b.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    p.classList.add('closing');
+    setTimeout(function () {
+      p.hidden = true;
+      p.classList.remove('closing');
+    }, 180);
+    if (b) b.setAttribute('aria-expanded', 'false');
+  }
+
+  function openPicker() {
+    var p = document.getElementById('fraseReactPicker');
+    var b = document.getElementById('btnFraseReaccion');
+    if (!p) return;
+    p.classList.remove('closing');
+    p.hidden = false;
+    highlightPicker();
+    if (b) b.setAttribute('aria-expanded', 'true');
+  }
+
+  function togglePicker(ev) {
+    if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+    var p = document.getElementById('fraseReactPicker');
+    if (!p) return;
+    if (p.hidden) openPicker();
+    else closePicker();
+  }
+
+  function bind() {
+    var btn = document.getElementById('btnFraseReaccion');
+    var picker = document.getElementById('fraseReactPicker');
+    if (btn && !btn.__reacBound) {
+      btn.__reacBound = true;
+      btn.addEventListener('click', togglePicker);
+    }
+    if (picker && !picker.__reacBound) {
+      picker.__reacBound = true;
+      picker.addEventListener('click', function (e) {
+        var t = e.target.closest('button[data-emoji]');
+        if (!t) return;
+        e.preventDefault();
+        e.stopPropagation();
+        setReaction(t.getAttribute('data-emoji'));
+      });
+    }
+    document.addEventListener('click', function (e) {
+      var p = document.getElementById('fraseReactPicker');
+      var b = document.getElementById('btnFraseReaccion');
+      if (!p || p.hidden) return;
+      if (p.contains(e.target) || (b && b.contains(e.target))) return;
+      closePicker();
+    });
+    renderBar();
+  }
+
+  window.alproRenderFraseReacciones = renderBar;
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  else bind();
+
+  function watchFrase() {
+    var el = document.getElementById('fraseMotivacional');
+    if (!el || el.__reacObs) return;
+    el.__reacObs = true;
+    var obs = new MutationObserver(function () {
+      closePicker();
+      renderBar();
+    });
+    obs.observe(el, { characterData: true, childList: true, subtree: true, attributes: true, attributeFilter: ['data-frase-id', 'data-equipo'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watchFrase);
+  else watchFrase();
+})();
 
 function syncFraseGlitchData() {
     var el = document.getElementById('fraseMotivacional');
@@ -7685,6 +8194,21 @@ window.onload = () => {
                 // Muestra el campo de texto y lo limpia para la nueva anulación
                 contenedorMotivo.style.display = 'block';
                 inputMotivo.value = '';
+                var selQuien = document.getElementById('quienAnula');
+                if (selQuien) {
+                  try {
+                    var defQ = '';
+                    if (typeof window.alproNombreUsuario === 'function') defQ = window.alproNombreUsuario() || '';
+                    if (!defQ) {
+                      var rs = document.getElementById('responsableSelect');
+                      if (rs && rs.value) defQ = rs.value;
+                    }
+                    if (!defQ) {
+                      try { defQ = localStorage.getItem('alpro_responsable_favorito') || localStorage.getItem('alpro_resp_fav') || ''; } catch(e){}
+                    }
+                    selQuien.value = defQ && Array.from(selQuien.options).some(function(o){return o.value===defQ;}) ? defQ : '';
+                  } catch (eQ) { selQuien.value = ''; }
+                }
 
                 title.innerText = "¿Anular Orden?";
                 title.style.color = "#dc2626";
@@ -7698,12 +8222,19 @@ window.onload = () => {
                 // Pasamos el inputMotivo a la función para validar que no vaya vacío
                 btnSi.onclick = function() { 
                     const motivoTexto = inputMotivo.value.trim();
+                    const selQuien = document.getElementById('quienAnula');
+                    const quienTexto = selQuien ? selQuien.value.trim() : '';
+                    if (!quienTexto) {
+                        alproAlert("❌ Selecciona quién anula la orden.");
+                        if (selQuien) selQuien.focus();
+                        return;
+                    }
                     if (motivoTexto === "") {
                         alproAlert("❌ Debes escribir un motivo para poder anular la orden.");
                         inputMotivo.focus();
                         return;
                     }
-                    anularOrden(numOrden, motivoTexto); 
+                    anularOrden(numOrden, motivoTexto, quienTexto); 
                     cerrarModal(); 
                 };
             }
@@ -7734,15 +8265,19 @@ window.onload = () => {
             }, 180);
         }
 
-      function anularOrden(numOrden, motivo) {
+      function anularOrden(numOrden, motivo, quien) {
             const item = datosLocales.find(d => d.orden.toString() === numOrden.toString());
+            if (!item) return;
             
             // 📅 Generamos la fecha del día del cambio
             const hoy = new Date();
             const fechaFormateada = hoy.toLocaleDateString('es-GT', {day: '2-digit', month: '2-digit', year: 'numeric'});
+            const quienTxt = (quien && String(quien).trim()) ? String(quien).trim() : '';
             
-            // 🔥 Guardamos todo el paquete en movimiento: "10/07/2026 - Duplicada por Carmen"
-            item.movimiento = `${fechaFormateada} - ${motivo}`; 
+            // 🔥 "10/07/2026 - Motivo (anuló: Carmen)"
+            item.movimiento = quienTxt
+              ? (fechaFormateada + ' - ' + motivo + ' (anuló: ' + quienTxt + ')')
+              : (fechaFormateada + ' - ' + motivo);
             
             item.ultimoMov = "ANULADA";
             item.responsable = "ANULADA";
@@ -7938,9 +8473,9 @@ onmouseover="this.style.opacity=0.6" onmouseout="this.style.opacity=0.28"
                 ${celdaOrdenHtml}
             </td>
             <td style="font-weight:normal;">${item.fecha.split('-').reverse().join('/')}</td>
-            <td style="font-weight:600; cursor:help;" 
-                title="Producto: ${item.detallesPedido ? obtenerVistaPreviaDescripcion(item.detallesPedido) : (item.producto || 'Sin descripción')}" 
-                ondblclick="editarInstitucion('${item.orden}', this)">
+            <td style="font-weight:600; cursor:${esAnulada ? 'not-allowed' : 'help'};" 
+                title="${esAnulada ? 'Orden anulada — no editable' : ('Producto: ' + (item.detallesPedido ? obtenerVistaPreviaDescripcion(item.detallesPedido) : (item.producto || 'Sin descripción')))}" 
+                ${esAnulada ? '' : `ondblclick="editarInstitucion('${item.orden}', this)"`}>
                 ${item.inst}
             </td>
             <td>
@@ -11109,18 +11644,7 @@ SKIN_SVG.slime =
           return;
         }
         var map = leerFilaEstilos();
-        // Un estilo = una sola persona a la vez
-        var ocupadoPor = null;
-        Object.keys(map).forEach(function(n) {
-          if (map[n] === estilo && n !== quien) ocupadoPor = n;
-        });
-        if (ocupadoPor) {
-          notifyPref(
-            'Ese estilo ya está en ' + ocupadoPor + '. Quítalo primero para usarlo en ' + quien + '.',
-            '⚠️'
-          );
-          return;
-        }
+        // Mismo estilo puede usarlo más de una persona (cada quien compró el suyo)
         map[quien] = estilo;
         guardarFilaEstilos(map);
         refrescarClasesFilasEstilo();
@@ -11462,6 +11986,16 @@ function cerrarAlproGames() {
 function editarInstitucion(numOrden, celda) {
     // Si ya hay un input, no hacer nada
     if (celda.querySelector('input')) return;
+    try {
+      var it = (typeof datosLocales !== 'undefined' && Array.isArray(datosLocales))
+        ? datosLocales.find(function(d){ return d && String(d.orden) === String(numOrden); })
+        : null;
+      if (it && (it.responsable === 'ANULADA' || it.ultimoMov === 'ANULADA')) {
+        if (typeof showToast === 'function') showToast('Orden anulada: no se puede editar el nombre');
+        else if (typeof alproAlert === 'function') alproAlert('Orden anulada: no se puede editar el nombre');
+        return;
+      }
+    } catch (eBl) {}
 
 const valorOriginal = celda.innerText.trim();
     celda.innerHTML = `
@@ -13760,12 +14294,33 @@ function cambiarPaso(paso) {
         seccionActiva.classList.add('animacion-paso');
     }
 
-    // Actualizar visualmente los colores de los puntitos activos
-    document.getElementById('dot1').className = `step-dot ${paso >= 1 ? 'active' : ''}`;
-    document.getElementById('line1').className = `step-line ${paso >= 2 ? 'active' : ''}`;
-    document.getElementById('dot2').className = `step-dot ${paso >= 2 ? 'active' : ''}`;
-    document.getElementById('line2').className = `step-line ${paso === 3 ? 'active' : ''}`;
-    document.getElementById('dot3').className = `step-dot ${paso === 3 ? 'active' : ''}`;
+    // Actualizar visualmente el indicador líquido 1-2-3
+    (function() {
+      var ind = document.getElementById('indicadorPasos');
+      var d1 = document.getElementById('dot1');
+      var d2 = document.getElementById('dot2');
+      var d3 = document.getElementById('dot3');
+      var l1 = document.getElementById('line1');
+      var l2 = document.getElementById('line2');
+      if (d1) d1.className = 'step-dot' + (paso === 1 ? ' active' : '');
+      if (d2) d2.className = 'step-dot' + (paso === 2 ? ' active' : '');
+      if (d3) d3.className = 'step-dot' + (paso === 3 ? ' active' : '');
+      if (l1) l1.className = 'step-line' + (paso >= 2 ? ' active' : '');
+      if (l2) l2.className = 'step-line' + (paso === 3 ? ' active' : '');
+      if (ind) {
+        var prev = ind.getAttribute('data-paso') || '1';
+        // Retraso breve para que el líquido se vea (no compite con overlay del hámster)
+        clearTimeout(ind._pasoVisT);
+        var applyPaso = function() {
+          ind.setAttribute('data-paso', String(paso));
+        };
+        if (String(prev) !== String(paso) && Number(paso) > Number(prev)) {
+          ind._pasoVisT = setTimeout(applyPaso, 320);
+        } else {
+          applyPaso();
+        }
+      }
+    })();
 
     // 🚀 EL CAMBIO NUEVO: Controlamos dinámicamente el botón de guardar
     const btnGuardar = document.getElementById('btnGuardarRegistro');
@@ -16340,6 +16895,56 @@ async function validarYPasarAlPaso2() {
   mostrarCargandoHamster();
 
   try {
+    // Normalizar espacios; chequeo local rápido
+    try {
+      var _norm = String(numOrden).replace(/\s+/g, '');
+      if (_norm !== numOrden && inputOrden) inputOrden.value = _norm;
+      numOrden = _norm || numOrden;
+      if (typeof datosLocales !== 'undefined' && Array.isArray(datosLocales)) {
+        var yaLocal = datosLocales.find(function(d) {
+          return d && String(d.orden).replace(/\s+/g, '') === String(numOrden);
+        });
+        if (yaLocal) {
+          ocultarCargandoHamster();
+          if (btnSiguiente) {
+            btnSiguiente.disabled = false;
+            btnSiguiente.innerHTML = textoOriginal;
+          }
+          // Reusar modal de existente con datos locales
+          var dataLocal = {
+            existe: true,
+            orden: yaLocal.orden,
+            fecha: yaLocal.fecha,
+            inst: yaLocal.inst,
+            pers: yaLocal.pers || yaLocal.persona,
+            responsable: yaLocal.responsable,
+            nombreHoja: 'Local / sincronizado',
+            totalVeces: 1
+          };
+          const lblOrden = document.getElementById('lblNumOrdenModal');
+          const txtVeces = document.getElementById('lblVecesModal');
+          const detalles = document.getElementById('detallesOrdenModal');
+          const modal = document.getElementById('modalOrdenExistente');
+          if (lblOrden) lblOrden.innerText = '#' + (dataLocal.orden || numOrden);
+          if (txtVeces) txtVeces.innerHTML = '';
+          if (detalles) {
+            detalles.innerHTML = '<strong>📂 Origen:</strong> ' + dataLocal.nombreHoja + '<br>' +
+              '<strong>📅 Fecha:</strong> ' + (dataLocal.fecha || 'N/A') + '<br>' +
+              '<strong>🏢 Institución:</strong> ' + (dataLocal.inst || 'N/A') + '<br>' +
+              '<strong>👤 Recibió:</strong> ' + (dataLocal.pers || 'N/A') + '<br>' +
+              '<strong>📋 Responsable:</strong> ' + (dataLocal.responsable || 'N/A');
+          }
+          if (modal) {
+            document.body.appendChild(modal);
+            modal.style.setProperty('display', 'flex', 'important');
+          } else {
+            alproAlert('Esta orden ya está en la tabla: #' + numOrden);
+          }
+          return;
+        }
+      }
+    } catch (eLoc) {}
+
     const url = `${URL_SCRIPT}?validarOrden=${encodeURIComponent(numOrden)}`;
     const response = await fetch(url, { redirect: 'follow' });
     const textData = await response.text(); 
@@ -20617,7 +21222,18 @@ document.addEventListener('DOMContentLoaded', () => {
     restoring = true;
     try {
       if (d.orden && $('orden')) $('orden').value = d.orden;
-      if (d.fecha && $('fecha')) $('fecha').value = d.fecha;
+      if ($('fecha')) {
+        // Casi siempre registran con fecha de HOY; si el borrador trae otra, usar hoy
+        try {
+          var _n = new Date();
+          var _off = _n.getTimezoneOffset() * 60000;
+          var hoyStr = new Date(_n.getTime() - _off).toISOString().split('T')[0];
+          if (d.fecha && d.fecha === hoyStr) $('fecha').value = d.fecha;
+          else $('fecha').value = hoyStr;
+        } catch (eF) {
+          if (d.fecha) $('fecha').value = d.fecha;
+        }
+      }
       if (d.institucion && $('institucion')) $('institucion').value = d.institucion;
       if (d.persona && $('persona')) $('persona').value = d.persona;
       if (d.responsable && $('responsableSelect')) {
@@ -21049,6 +21665,16 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('pageshow', function () {
     limpiarBuscador();
     try { if (typeof renderTable === 'function') renderTable(); } catch (e2) {}
+  });
+})();
+
+/* Pausar animaciones de filas cuando la pestaña no está visible (rendimiento) */
+(function(){
+  function setPaused(p){
+    try { document.documentElement.classList.toggle('alpro-filas-static', !!p); } catch(e){}
+  }
+  document.addEventListener('visibilitychange', function(){
+    setPaused(document.hidden);
   });
 })();
 </script>
