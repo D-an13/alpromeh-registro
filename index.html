@@ -118,22 +118,39 @@ button.delete-button-art:hover .trash-svg {
         }
         .shake { animation: shake 0.4s ease-in-out; border-top-color: #dc2626 !important; }
 
-        @keyframes pulse-red-intense {
-            0% { background-color: rgba(220, 38, 38, 0.1); }
-            50% { background-color: rgba(220, 38, 38, 0.4); }
-            100% { background-color: rgba(220, 38, 38, 0.1); }
+        /* Atrasadas: fondo FIJO + solo pulso del borde izquierdo (barato).
+           Antes se animaba background-color en TODA la fila → repaint masivo y bajos FPS. */
+        @keyframes pulse-red-edge {
+            0%, 100% { box-shadow: inset 7px 0 0 rgba(220, 38, 38, 0.55); }
+            50% { box-shadow: inset 7px 0 0 rgba(185, 28, 28, 1); }
         }
-        .alerta-total { animation: pulse-red-intense 1.5s infinite ease-in-out !important; }
-
-        @keyframes pulse-orange-border {
-            0% { border-left: 10px solid #ff9800; }
-            50% { border-left: 10px solid #e65100; }
-            100% { border-left: 10px solid #ff9800; }
+        tr.alerta-total {
+            background-color: #fecaca !important;
+            box-shadow: inset 7px 0 0 rgba(220, 38, 38, 0.75);
+            animation: pulse-red-edge 2.4s ease-in-out infinite !important;
+        }
+        tr.alerta-total > td {
+            background-color: transparent !important;
+        }
+        html.alpro-filas-static tr.alerta-total {
+            animation: none !important;
+            box-shadow: inset 7px 0 0 rgba(220, 38, 38, 0.85);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            tr.alerta-total { animation: none !important; }
         }
 
-        .alerta-duda { 
-            animation: pulse-orange-border 1.5s infinite ease-in-out !important;
+        @keyframes pulse-orange-edge {
+            0%, 100% { box-shadow: inset 7px 0 0 #ff9800; }
+            50% { box-shadow: inset 7px 0 0 #e65100; }
+        }
+        .alerta-duda {
             background-color: #f7fee7 !important;
+            box-shadow: inset 7px 0 0 #ff9800;
+            animation: pulse-orange-edge 2.4s ease-in-out infinite !important;
+        }
+        html.alpro-filas-static .alerta-duda {
+            animation: none !important;
         }
 
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding: 15px; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
@@ -4887,7 +4904,13 @@ body.dark-mode .themeToggle-container {
   font-weight: 700;
   color: #334155;
   line-height: 1.3;
+  cursor: pointer;
+  user-select: none;
   animation: fraseChipPop 0.32s cubic-bezier(0.34, 1.45, 0.64, 1) both;
+}
+.frase-reac-chip:hover {
+  filter: brightness(0.97);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1);
 }
 .frase-reac-chip.mia {
   border-color: #e2e8f0;
@@ -7731,6 +7754,7 @@ function cargarFraseMotivacional() {
   function bind() {
     var btn = document.getElementById('btnFraseReaccion');
     var picker = document.getElementById('fraseReactPicker');
+    var bar = document.getElementById('fraseReaccionesBar');
     if (btn && !btn.__reacBound) {
       btn.__reacBound = true;
       btn.addEventListener('click', togglePicker);
@@ -7745,11 +7769,24 @@ function cargarFraseMotivacional() {
         setReaction(t.getAttribute('data-emoji'));
       });
     }
+    /* Clic en una reacción ya puesta → abre el picker de emojis */
+    if (bar && !bar.__reacBound) {
+      bar.__reacBound = true;
+      bar.addEventListener('click', function (e) {
+        var chip = e.target.closest('.frase-reac-chip');
+        if (!chip) return;
+        e.preventDefault();
+        e.stopPropagation();
+        openPicker();
+      });
+    }
     document.addEventListener('click', function (e) {
       var p = document.getElementById('fraseReactPicker');
       var b = document.getElementById('btnFraseReaccion');
+      var barEl = document.getElementById('fraseReaccionesBar');
       if (!p || p.hidden) return;
       if (p.contains(e.target) || (b && b.contains(e.target))) return;
+      if (barEl && barEl.contains(e.target)) return;
       closePicker();
     });
     renderBar();
@@ -8135,11 +8172,11 @@ window.onload = () => {
     renderTable();
     sincronizar(); // Primera carga
 
-    // --- AUTO-SYNC CADA 20 SEGUNDOS ---
+    // --- AUTO-SYNC CADA 30s (antes 20s); no corre con pestaña oculta ---
     setInterval(() => {
-        console.log("Sincronizando automáticamente...");
+        if (document.hidden) return;
         sincronizarSilencioso(); 
-    }, 20000); 
+    }, 30000); 
 
     actualizarContadores();
 
@@ -8534,6 +8571,11 @@ window.iniciarMaquinaEscribir = function() {
     let estaBorrando = false;
 
     function animarPlaceholder() {
+        // Pestaña oculta: no actualizar placeholder cada 30–60ms
+        if (document.hidden) {
+            setTimeout(animarPlaceholder, 2500);
+            return;
+        }
         // Si el usuario ya dio click y escribió algo de verdad, detenemos la animación para no molestar
         if (inputBuscar.value !== "") {
             setTimeout(animarPlaceholder, 1000);
@@ -9053,11 +9095,11 @@ window.forzarRecargaDesdeSheets = forzarRecargaDesdeSheets;
 async function sincronizarSilencioso() {
 if (filtroHistoricoActivo) return;
 if (guardandoAhora) return;
+if (typeof document !== 'undefined' && document.hidden) return;
 
 // ⛔ FRENO DE MANO: Si el modal de advertencia de orden está visible, NO sincronizar
     const modal = document.getElementById('modalOrdenExistente');
 if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
-    console.log("⏸️ Sincronización pausada: El usuario tiene el modal de advertencia abierto.");
     return;
 }
     try {
@@ -9066,13 +9108,11 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
         const d = await r.json();
         
         if(!Array.isArray(d)) {
-            console.log("Auto-sync: respuesta no es array, se ignora.");
             return;
         }
 
         // 🛡️ NUNCA sobrescribir con vacío si hay datos locales
         if (d.length === 0 && Array.isArray(datosLocales) && datosLocales.length > 0) {
-            console.log("Auto-sync: nube vacía, se conservan datos locales (" + datosLocales.length + ").");
             return;
         }
 
@@ -9092,15 +9132,32 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
             }
         });
 
-        if (JSON.stringify(datosMezclados) !== JSON.stringify(datosLocales)) {
+        // Huella liviana (sin detallesPedido): evita serializar todo el historial cada ciclo
+        function alproHuellaOrdenes(arr) {
+            if (!arr || !arr.length) return '0';
+            var p = [String(arr.length)];
+            for (var i = 0; i < arr.length; i++) {
+                var o = arr[i] || {};
+                p.push(
+                    String(o.orden || ''),
+                    String(o.responsable || ''),
+                    o.despachado ? '1' : '0',
+                    String(o.fecha || ''),
+                    String(o.hora || ''),
+                    String(o.inst || o.institucion || '').slice(0, 24)
+                );
+            }
+            return p.join('\x1f');
+        }
+
+        if (alproHuellaOrdenes(datosMezclados) !== alproHuellaOrdenes(datosLocales)) {
             datosLocales = datosMezclados; 
             alproLSSetJSON('alpromeh_vFinal_v10', datosLocales);
             renderTable();
             if (typeof actualizarContadores === 'function') actualizarContadores();
-            console.log("Sincronización inteligente completada.");
         }
     } catch(e) { 
-        console.log("Auto-sync falló o no hay internet (datos locales intactos)");
+        /* offline: datos locales intactos */
     }
 }
         function showToast(msj, tipo) {
