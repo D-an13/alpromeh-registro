@@ -5732,28 +5732,13 @@ html.alpro-fx-density table {
     overflow: hidden !important;
 }
 
-/* 1. KEYFRAME (El blur se limpia rápido en el primer 30% del movimiento) */
+/* Entrada suave de tabla: solo un toque de opacidad (sin blur/scale → menos jank) */
 @keyframes entradaTablaPro {
-  0% {
-    opacity: 0;
-    filter: blur(3px);
-    transform: scale(0.97); /* Inicia un 3% más pequeña */
-  }
-  40% {
-    filter: blur(0px);
-  }
-  100% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: scale(1); /* Expande a su tamaño real */
-  }
+  0% { opacity: 0.92; }
+  100% { opacity: 1; }
 }
-
-/* 2. DURACIÓN ÁGIL (0.45s con frenado suave estilo iOS) */
 tbody.animar-entrada {
-    animation: entradaTablaPro 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    will-change: transform, opacity, filter;
-    transform-origin: top center;
+    animation: entradaTablaPro 0.2s ease-out forwards;
 }
 
 /* 🖨️ Aislamiento hoja de pedido: personalización no debe inflar celdas al imprimir */
@@ -6684,6 +6669,58 @@ tbody.animar-entrada {
     <script>
         let guardandoAhora = false;
         const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyyi9TtVH4EKKBDzRXPD0iHR0fBlnP59EtSEHrtY4jMkRz0z9nLVZlWIcIyD3UBlcf5/exec";
+
+        // 🛡️ Envío a Sheets resistente a cerrar la pestaña (sendBeacon + fetch de respaldo)
+        // No bloquea UI ni espera respuesta; prioriza que el POST salga aunque cierren al instante.
+        window.__alproPendientesNube = window.__alproPendientesNube || [];
+        function alproEnviarOrdenNube(item) {
+            try {
+                if (!item || typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) return;
+                item.miCambioReciente = item.miCambioReciente || Date.now();
+                var body = JSON.stringify(item);
+                var okBeacon = false;
+                try {
+                    if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+                        var blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+                        okBeacon = navigator.sendBeacon(URL_SCRIPT, blob);
+                    }
+                } catch (eB) { okBeacon = false; }
+                if (!okBeacon) {
+                    try {
+                        fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: body, keepalive: true })
+                            .catch(function () {});
+                    } catch (eF) {}
+                }
+                // Cola corta por si pagehide quiere reintentar (máx 8)
+                try {
+                    window.__alproPendientesNube.push(body);
+                    if (window.__alproPendientesNube.length > 8) {
+                        window.__alproPendientesNube = window.__alproPendientesNube.slice(-8);
+                    }
+                } catch (eQ) {}
+            } catch (e) {}
+        }
+        function alproFlushPendientesNube() {
+            try {
+                var q = window.__alproPendientesNube || [];
+                if (!q.length || typeof URL_SCRIPT === 'undefined' || !URL_SCRIPT) return;
+                for (var i = 0; i < q.length; i++) {
+                    try {
+                        if (navigator.sendBeacon) {
+                            navigator.sendBeacon(URL_SCRIPT, new Blob([q[i]], { type: 'text/plain;charset=UTF-8' }));
+                        } else {
+                            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: q[i], keepalive: true }).catch(function(){});
+                        }
+                    } catch (e1) {}
+                }
+                window.__alproPendientesNube = [];
+            } catch (e) {}
+        }
+        try {
+            window.addEventListener('pagehide', function () { alproFlushPendientesNube(); });
+            window.addEventListener('beforeunload', function () { alproFlushPendientesNube(); });
+        } catch (eL) {}
+
         // 🛡️ Lectura/escritura segura de localStorage (no tumba la app si hay datos corruptos)
         function alproLSGetJSON(key, fallback) {
             try {
@@ -8320,9 +8357,10 @@ window.onload = () => {
             item.responsable = "ANULADA";
             item.despachado = false;
             // item.hora = horaActual; // 👈 Lo dejamos intacto o que el servidor lo maneje para que no falle la actualización
+            item.miCambioReciente = Date.now();
             
             save();
-            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+            alproEnviarOrdenNube(item);
             
             renderTable(); 
             showToast("🚫 Orden " + numOrden + " anulada.");
@@ -8335,8 +8373,9 @@ window.onload = () => {
             item.movimiento = "✅ RECUPERADA";
             item.ultimoMov = "RECUPERADA";
             item.hora = horaActual;
+            item.miCambioReciente = Date.now();
             save();
-            fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+            alproEnviarOrdenNube(item);
             showToast("✅ Orden " + numOrden + " recuperada.");
         }
 
@@ -8344,20 +8383,7 @@ window.onload = () => {
 window.bordeTimeout = null;
 
 function renderTable() {
-    const tbody = document.getElementById('tablaBody');
-
-    // ⚡ PASO 1: Si ya hay filas visibles en pantalla, aplicamos desvanecimiento de salida primero
-    if (tbody && tbody.children.length > 0 && !tbody.classList.contains('animar-salida')) {
-        tbody.className = 'animar-salida';
-        
-        // Esperamos 120ms a que la tabla vieja se disuelva antes de renderizar los nuevos datos
-        setTimeout(() => {
-            ejecutarRenderTabla();
-        }, 120);
-        return;
-    }
-
-    // Si la tabla estaba vacía (ej. primera carga), renderizamos directo
+    // Actualización directa: sin fade-out (evita parpadeo y “tabla que se disuelve” en cada sync)
     ejecutarRenderTabla();
 }
 
@@ -8733,6 +8759,12 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
 
     datosLocales = datosLocales.filter(d => d.orden.toString() !== num.toString());
 
+    // Al actualizar: conservar si ya estaba despachada (no forzar false)
+    var despachadoGuardar = false;
+    if (yaExiste && ordenPrevia && ordenPrevia.despachado) {
+        despachadoGuardar = true;
+    }
+
     // 💡 SOLUCIÓN RECTIFICADA: Usamos 'detallesPedido' para que calce exactamente con tu función de impresión
     const payload = {
         orden: num, 
@@ -8740,7 +8772,9 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
         inst: document.getElementById('institucion').value, 
         pers: document.getElementById('persona').value,
         responsable: document.getElementById('responsableSelect').value, 
-        despachado: false,
+        despachado: despachadoGuardar,
+        // Protege el cambio local frente al auto-sync (evita que Sheets “devuelva” la versión vieja)
+        miCambioReciente: Date.now(),
         hora: horaARegistrar, 
         ultimaHora: horaARegistrar, 
         movimiento: "Ingreso/Edición: " + document.getElementById('persona').value, 
@@ -8781,12 +8815,7 @@ document.getElementById('formOrdenes').onsubmit = async function(e) {
 
     // === ENVIAMOS A GOOGLE SHEETS EN SEGUNDO PLANO (SIN AWAIT) ===
     // 🚀 Se ejecuta en el fondo. Si falla, el .catch interno lo maneja sin trabar nada.
-    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-        .catch(err => {
-            console.error("Error asíncrono en Sheets:", err);
-            // Si quieres avisar discretamente en pantalla sin bloquear el flujo:
-            // showToast("⚠️ Error al subir a la nube, guardado localmente.", true);
-        });
+    alproEnviarOrdenNube(payload);
     
     // === FLUJO INSTANTÁNEO EN PRIMER PLANO ===
     try {
@@ -8956,7 +8985,7 @@ function toggle(orden) {
     }
     item.miCambioReciente = Date.now();
     save();
-    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+    alproEnviarOrdenNube(item);
 }
 
 function cambiarResp(orden, nuevo) {
@@ -8971,7 +9000,7 @@ function cambiarResp(orden, nuevo) {
     item.ultimaHora = horaActual; 
     item.miCambioReciente = Date.now();
     save();
-    fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+    alproEnviarOrdenNube(item);
 }
 
 function save() {
@@ -9007,7 +9036,7 @@ async function traerDatosDesdeNube(opciones) {
 
     let datosMezclados = d.map(ordenGoogle => {
         const local = (datosLocales || []).find(l => String(l.orden) === String(ordenGoogle.orden));
-        if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) return local;
+        if (local && (Date.now() - (local.miCambioReciente || 0) < 120000)) return local;
         return ordenGoogle;
     });
 
@@ -9118,7 +9147,7 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
 
         const datosMezclados = d.map(ordenGoogle => {
             const local = datosLocales.find(l => String(l.orden) === String(ordenGoogle.orden));
-            if (local && (Date.now() - (local.miCambioReciente || 0) < 60000)) {
+            if (local && (Date.now() - (local.miCambioReciente || 0) < 120000)) {
                 return local; 
             }
             return ordenGoogle;
@@ -9144,7 +9173,9 @@ if (modal && modal.style.display !== 'none' && modal.style.display !== '') {
                     o.despachado ? '1' : '0',
                     String(o.fecha || ''),
                     String(o.hora || ''),
-                    String(o.inst || o.institucion || '').slice(0, 24)
+                    String(o.inst || o.institucion || '').slice(0, 24),
+                    String(o.producto || '').slice(0, 36),
+                    String((o.detallesPedido != null ? o.detallesPedido : '')).length
                 );
             }
             return p.join('\x1f');
@@ -12085,7 +12116,7 @@ const valorOriginal = celda.innerText.trim();
                 item.ultimoMov = "EDITADO";
                 item.miCambioReciente = Date.now();
                 save(); 
-                fetch(URL_SCRIPT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(item) });
+                alproEnviarOrdenNube(item);
                 showToast("Institución actualizada");
             }
         }
